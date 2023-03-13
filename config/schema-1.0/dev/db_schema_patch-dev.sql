@@ -998,6 +998,18 @@ CREATE TABLE `ommaterialsample` (
 
 ALTER TABLE `ommaterialsample`
   ADD UNIQUE INDEX `UQ_ommatsample_recordID` (`recordID`);
+  
+ALTER TABLE `ommaterialsample`
+  ADD UNIQUE INDEX `UQ_ommatsample_catNum` (`occid`, `catalogNumber`);
+#FIX: Run query below to identify records with duplicate material sample catalogNumbers for a given occurrence record. Catalog numbers need to be unique for each occurrence. The duplicate records need to be removed.  
+#SELECT occid, catalogNumber, count(*) as cnt FROM ommaterialsample WHERE catalogNumber IS NOT NULL GROUP BY occid, catalogNumber HAVING cnt > 1;
+
+
+ALTER TABLE `ommaterialsample`
+  ADD UNIQUE INDEX `UQ_ommatsample_guid` (`occid`, `guid`);
+#FIX: Run query below to identify records with duplicate material sample guid values for a given occurrence record. GUIDs need to be unique for each occurrence. The duplicate records need to be removed.  
+#SELECT occid, guid, count(*) as cnt FROM ommaterialsample WHERE guid IS NOT NULL GROUP BY occid, guid HAVING cnt > 1;
+
 
 INSERT INTO ctcontrolvocab(title,tableName,fieldName, limitToList)
   VALUES("Material Sample Type","ommaterialsample","sampleType",1);

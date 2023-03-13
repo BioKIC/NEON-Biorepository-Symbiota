@@ -1,15 +1,20 @@
 <?php
-use function PHPUnit\Framework\fileExists;
-
 include_once($SERVER_ROOT.'/classes/Manager.php');
 
 class SchemaManager extends Manager{
 
+	private $host;
+	private $database;
+	private $port;
+	private $username;
 	private $adminConn;
 	private $currentVersion;
-	private $verionDate;
-	private $versionHistory = array();
+	private $targetSchema;
 	private $activeTableArr;
+
+	private $logPath;
+	private $amendmentPath;
+	private $amendmentFH = false;
 
 	public function __construct(){
 		parent::__construct();
@@ -17,83 +22,150 @@ class SchemaManager extends Manager{
 
 	public function __destruct(){
 		parent::__destruct();
+		if($this->amendmentFH) fclose($this->amendmentFH);
 	}
 
-	public function installPatch($host, $username, $password, $database, $port, $schemaPatch){
-		$this->setVerboseMode(3);
-		$this->setLogFH($GLOBALS['SERVER_ROOT'] . '/content/logs/install/db_schema_patch-' . $schemaPatch. '_'.date('Y-m-d').'.log');
-		if($this->setDatabaseConnection($host, $username, $password, $database, $port)){
-			$this->logOrEcho('Connection to database established');
-			if($sqlArr = $this->readSchemaFile($schemaPatch)){
-				$this->logOrEcho('DB schema patch file read: '. count($sqlArr) . ' statements to apply');
-				foreach($sqlArr as $cnt => $stmtArr){
-					$this->logOrEcho('Statement #' . $cnt . ' (' . date("Y-m-d H:i:s") . ')');
-					$stmtType = '';
-					$targetTable = '';
-					$sql = '';
-					foreach($stmtArr as $fragment){
-						if(substr($fragment, 0, 1) == '#'){
-							//is comment
-							trim($fragment, '#');
-							$this->logOrEcho($fragment, 1);
-						}
-						elseif(!$stmtType){
-							if(preg_match('/`([a-z]+)`/', $fragment, $m)){
-								$targetTable = $m[1];
-							}
-							$stmtType = 'undefined';
-							if(strpos($fragment, 'schemaversion') !== false) $stmtType = 'schemaversion';
-							elseif(strpos($fragment, 'CREATE TABLE') === 0) $stmtType = 'CREATE TABLE';
-							elseif(strpos($fragment, 'ALTER TABLE') === 0){
-								$stmtType = 'ALTER TABLE';
-								$this->setActiveTable($targetTable);
-							}
-							elseif(strpos($fragment, 'INSERT') === 0) $stmtType = 'INSERT';
-							$this->logOrEcho('Statement type: ' . $stmtType, 1);
-							if($targetTable) $this->logOrEcho('Target table: ' . $targetTable, 1);
-						}
-						else{
-							if($stmtType == 'ALTER TABLE') $fragment = $this->verifyAlterTableFragment($fragment);
-							$sql .= ' ' . $fragment;
-						}
+	public function installPatch(){
+		if($this->targetSchema){
+			$this->logPath = $GLOBALS['SERVER_ROOT'] . '/content/logs/install/db_schema_patch-' . $this->targetSchema. '_'.date('Y-m-d').'.log';
+			$this->amendmentPath = $GLOBALS['SERVER_ROOT'] . '/content/logs/install/db_schema_patch-' . $this->targetSchema. '_' . time() . '_failed.sql';
+			$this->setVerboseMode(3);
+			$this->setLogFH($this->logPath);
+			if($this->setDatabaseConnection()){
+				$this->logOrEcho('Connection to database established ('.date('Y-m-d H:i:s').')');
+				if($sqlArr = $this->readSchemaFile()){
+					/*
+					foreach($sqlArr as $arr){
+						print_r($arr);
+						echo '<br>';
 					}
-					if($sql){
-						$this->logOrEcho('Statement: ' . $sql, 1);
-						if(!$this->conn->query($sql)){
-							$this->logOrEcho('ERROR applying statement: ' . $this->conn->error, 1);
-
+					return false;
+					*/
+					$this->logOrEcho('DB schema file analyzed: '. count($sqlArr) . ' statements to apply');
+					$cnt = 0;
+					foreach($sqlArr as $lineCnt => $stmtArr){
+						$cnt++;
+						$this->logOrEcho('Statement #' . ($cnt) . ' - line '.$lineCnt.' (' . date('Y-m-d H:i:s') . ')');
+						$stmtType = '';
+						$targetTable = '';
+						$sql ='';
+						foreach($stmtArr as $fragment){
+							if(substr($fragment, 0, 1) == '#'){
+								//is comment
+								trim($fragment, '#');
+								$this->logOrEcho($fragment, 1);
+							}
+							elseif(!$stmtType){
+								if(preg_match('/`([a-z]+)`/', $fragment, $m)){
+									$targetTable = $m[1];
+								}
+								$stmtType = 'undefined';
+								if(strpos($fragment, 'ALTER TABLE') === 0){
+									$stmtType = 'ALTER TABLE';
+									$this->setActiveTable($targetTable);
+								}
+								elseif(strpos($fragment, '/*!') === 0) $stmtType = 'Conditional statement';
+								elseif(preg_match('/^([A-Z\s]+)/', $fragment, $m)){
+									$stmtType = $m[1];
+								}
+								$this->logOrEcho('Type: ' . $stmtType . ($targetTable ? ' '.$targetTable : ''), 1);
+								$sql = $fragment;
+							}
+							else{
+								if($stmtType == 'ALTER TABLE') $fragment = $this->validateAlterTableFragment($fragment, 'w');
+								if($fragment) $sql .= ' ' . $fragment;
+							}
 						}
+						$sql = trim($sql, ',');
+						if($sql){
+							//$this->logOrEcho('Statement: ' . $sql, 1);
+							if($this->conn->query($sql)){
+								$this->logOrEcho('Success!', 1);
+								if(isset($this->warningArr['updated'])){
+									$this->logOrEcho('Following adjustments applied:', 2);
+									foreach($this->warningArr['updated'] as $adjustStr){
+										$this->logOrEcho($adjustStr, 3);
+									}
+									unset($this->warningArr['updated']);
+								}
+								if($this->warningArr){
+									//Add these warnings to amendment file since they should be reapplied
+									if(!$this->amendmentFH) $this->amendmentFH = fopen($this->amendmentPath, 'w');
+									$this->logOrEcho('Following fragments excluded due to errors:', 2);
+									$failedSql = '';
+									foreach($this->warningArr as $errCode => $errArr){
+										foreach($errArr as $colName => $frag){
+											if($errCode == 'exists') $this->logOrEcho($colName.' already exists ', 3);
+											elseif($errCode == 'missing') $this->logOrEcho($colName.' does not exists ', 3);
+											$failedSql .= $frag;
+										}
+									}
+									fwrite($this->amendmentFH, '# '.$targetTable."\n");
+									fwrite($this->amendmentFH, $failedSql."\n\n");
+								}
+							}
+							else{
+								if(!$this->amendmentFH) $this->amendmentFH = fopen($this->amendmentPath, 'w');
+								fwrite($this->amendmentFH, '# ERROR: '.$this->conn->error."\n\n");
+								fwrite($this->amendmentFH, $sql."\n\n");
+								$this->logOrEcho('ERROR: ' . $this->conn->error, 2);
+								$this->logOrEcho('SQL: ' . $sql, 2);
+								//break;
+							}
+						}
+						//Reset for next statement
+						unset($this->warningArr);
+						$this->warningArr = array();
+						flush();
+						ob_flush();
 					}
+					$this->logOrEcho('Finished: schema applied');
+					$logUrl = str_replace($GLOBALS['SERVER_ROOT'], $GLOBALS['CLIENT_ROOT'], $this->logPath);
+					$this->logOrEcho('Log file: <a href="' . $logUrl . '" target="_blank">' . $logUrl . '</a>');
+					$amendmentUrl = str_replace($GLOBALS['SERVER_ROOT'], $GLOBALS['CLIENT_ROOT'], $this->amendmentPath);
+					if($this->amendmentFH) $this->logOrEcho('Amendment (failed statements needing to be applied): ' . $amendmentUrl);
 				}
-			}
-			else{
-				$this->errorMessage = 'ERROR reading schema patch file';
 			}
 		}
 	}
 
-	private function readSchemaFile($schemaPatch){
+	private function readSchemaFile(){
 		$sqlArr = false;
-		$filename = $GLOBALS['SERVER_ROOT'] . '/config/schema-1.0/utf8/db_schema_patch-' . $schemaPatch . '.sql';
+		$filename = $GLOBALS['SERVER_ROOT'] . '/config/schema-1.0/utf8/db_schema';
+		if($this->targetSchema != '1.0') $filename .= '_patch';
+		$filename .= '-'.$this->targetSchema.'.sql';
 		if(file_exists($filename)){
-			$fileHandler = @fopen($filename, 'r');
-			if ($fileHandler) {
+			if($fileHandler = fopen($filename, 'r')){
 				$sqlArr = array();
-				$cnt = 0;
-				while ($line = fgets($fileHandler)) {
-					$line = trim($line);
+				$cnt = 1;
+				$index = 0;
+				$delimiter = ';';
+				while(!feof($fileHandler)) {
+					$line = trim(fgets($fileHandler));
 					if($line){
-						$sqlArr[$cnt][] = $line;
+						if(!$index) $index = $cnt;
+						if(substr($line, 0, 2) == '--') continue;
+						if(substr($line, 0, 9) == 'DELIMITER'){
+							$delimiter = trim(substr($line, 9));
+						}
+						else{
+							if($line){
+								$preservedIndex = $index;
+								if(substr($line, -(strlen($delimiter))) == $delimiter){
+									$line = substr($line, 0, -(strlen($delimiter)));
+									$index = 0;
+								}
+								$sqlArr[$preservedIndex][] = $line;
+							}
+						}
 					}
-					else{
-						$cnt++;
-					}
+					$cnt++;
 				}
 				fclose($fileHandler);
 			}
 		}
 		else{
-			$this->errorMessage = 'ABORT: db schema patch does not exist: ' . $filename;
+			$this->logOrEcho('ABORT: db schema patch does not exist: ' . $filename);
 			return false;
 		}
 		return $sqlArr;
@@ -104,37 +176,48 @@ class SchemaManager extends Manager{
 		if($targetTable){
 			$this->activeTableArr = array();
 			$sql = 'SHOW COLUMNS FROM ' . $targetTable;
-			$rs = $this->conn->query($sql);
-			while($r = $rs->fetch_object()){
-				$fieldName = strtolower($r->Field);
-				$type = $r->Type;
-				if(preg_match('/^[a-z]+/', $type, $m)){
-					$this->activeTableArr[$fieldName]['type'] = $m[1];
+			if($rs = $this->conn->query($sql)){
+				while($r = $rs->fetch_object()){
+					$fieldName = strtolower($r->Field);
+					$type = $r->Type;
+					if(preg_match('/^([a-z]+)/', $type, $m)){
+						$this->activeTableArr[$fieldName]['type'] = $m[1];
+					}
+					if(preg_match('#\(([\d]*?)\)#', $type, $n)){
+						$this->activeTableArr[$fieldName]['length'] = $n[1];
+					}
 				}
-				if(preg_match('#\(([\d]*?)\)#', $type, $n)){
-					$this->activeTableArr[$fieldName]['length'] = $n[1];
-				}
+				$rs->free();
 			}
-			$rs->free();
+			else{
+				$this->logOrEcho('ERROR: '.$this->conn->error, 2);
+				$this->logOrEcho($sql, 2);
+			}
 		}
 	}
 
-	private function verifyAlterTableFragment($fragment){
+	private function validateAlterTableFragment($fragment){
 		if($this->activeTableArr){
 			if(strpos($fragment, 'ADD COLUMN') !== false){
 				if(preg_match('/^ADD COLUMN `([A-Za-z]+)`/', $fragment, $m)){
 					$colName = strtolower($m[1]);
-					if(!array_key_exists($colName, $this->activeTableArr)) return false;
-
+					if(array_key_exists($colName, $this->activeTableArr)){
+						$this->warningArr['exists'][$colName] = $fragment;
+						return false;
+					}
 				}
 			}
 			elseif(strpos($fragment, 'CHANGE COLUMN') !== false){
 				if(preg_match('/^CHANGE COLUMN `([A-Za-z]+)` .+ VARCHAR\((\d+)\)/', $fragment, $m)){
 					$colName = strtolower($m[1]);
-					if(!array_key_exists($colName, $this->activeTableArr)) return false;
-					$colWidth = $m[1];
+					if(!array_key_exists($colName, $this->activeTableArr)){
+						$this->warningArr['missing'][$colName] = $fragment;
+						return false;
+					}
+					$colWidth = $m[2];
 					if(isset($this->activeTableArr[$colName]['length']) && $colWidth < $this->activeTableArr[$colName]['length']){
-						$fragment = preg_match_replace('/VARCHAR\((\d+)\)/', 'VARCHAR(' . $this->activeTableArr[$colName]['length'] . ')', $fragment);
+						$this->warningArr['updated'][$colName] = 'Field length expanded from '.$colWidth.' to '.$this->activeTableArr[$colName]['length'];
+						$fragment = preg_replace('/VARCHAR(\d+)/', 'VARCHAR(' . $this->activeTableArr[$colName]['length'] . ')', $fragment);
 					}
 				}
 			}
@@ -143,11 +226,12 @@ class SchemaManager extends Manager{
 	}
 
 	//Misc support functions
-	private function setDatabaseConnection($host, $username, $password, $database, $port){
-		if($host && $username && $password && $database && $port){
-			$this->conn = new mysqli($host, $username, $password, $database, $port);
+	private function setDatabaseConnection(){
+		$password = filter_var($_POST['password'], FILTER_SANITIZE_STRING);
+		if($this->host && $this->username && $password && $this->database && $this->port){
+			$this->conn = new mysqli($this->host, $this->username, $password, $this->database, $this->port);
 			if($this->conn->connect_error){
-				$this->errorMessage = 'Connection error: ' . $this->conn->connect_error;
+				$this->logOrEcho('Connection error: ' . $this->conn->connect_error);
 				return false;
 			}
 		}
@@ -158,29 +242,43 @@ class SchemaManager extends Manager{
 	}
 
 	//Misc data retrival functions
-	public function setVerionHistory(){
+	public function getVersionHistory(){
+		$versionHistory = false;
 		$sql = 'SELECT versionNumber, dateApplied FROM schemaversion ORDER BY id';
-		$rs = $this->conn->query($sql);
-		while($r = $rs->fetch_object()){
-			$this->versionHistory[$r->versionNumber] = $r->dateApplied;
-			$this->currentVersion = $r->versionNumber;
-			$this->versionDate = $r->dateApplied;
+		if($rs = $this->conn->query($sql)){
+			$versionHistory = array();
+			while($r = $rs->fetch_object()){
+				$versionHistory[$r->versionNumber] = $r->dateApplied;
+				$this->currentVersion = $r->versionNumber;
+			}
+			$rs->free();
 		}
-		$rs->free();
+		return $versionHistory;
 	}
 
 	//Setters and getters
+	public function setHost($h){
+		$this->host = $h;
+	}
+
+	public function setDatabase($db){
+		$this->database = $db;
+	}
+
+	public function setPort($p){
+		if(is_numeric($p)) $this->port = $p;
+	}
+
+	public function setUsername($u){
+		$this->username = $u;
+	}
+
 	public function getCurrentVersion(){
 		return $this->currentVersion;
 	}
 
-	public function getVersionDate(){
-		return $this->versionDate;
-	}
-
-	public function getVersionHistory(){
-		if(!$this->versionHistory) $this->setVerionHistory();
-		return $this->versionHistory;
+	public function setTargetSchema($schema){
+		$this->targetSchema = $schema;
 	}
 }
 ?>
