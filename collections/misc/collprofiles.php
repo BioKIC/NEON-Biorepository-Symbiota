@@ -406,7 +406,7 @@ if ($SYMB_UID) {
 						<div><b><?php echo (isset($LANG['GBIF_DATASET']) ? $LANG['GBIF_DATASET'] : 'GBIF Dataset page'); ?>:</b> <a href="<?php echo $dataUrl; ?>" target="_blank"><?php echo $dataUrl; ?></a></div>
 					</div>
 				<?php
-				} elseif ($collData['dynamicproperties'] && json_decode($collData['dynamicproperties'], true)['edi']) {
+				} elseif ($collData['dynamicproperties'] && array_key_exists('edi', json_decode($collData['dynamicproperties'], true))) {
 					$doiNum = json_decode($collData['dynamicproperties'], true)['edi'];
 					if (substr($doiNum, 0, 4) === 'doi:') {
 						$doiNum = substr($doiNum, 4);
@@ -440,7 +440,7 @@ if ($SYMB_UID) {
 						$collData['doi'] = $responseData->doi;
 						$_SESSION['colldata'] = $collData;
 						include($SERVER_ROOT . '/includes/citationgbif.php');
-					} elseif ($collData['dynamicproperties'] && json_decode($collData['dynamicproperties'], true)['edi']) { // If EDI DOI is available, fetch EDI format from API
+					} elseif ($collData['dynamicproperties'] && array_key_exists('edi', json_decode($collData['dynamicproperties'], true))) { // If EDI DOI is available, fetch EDI format from API
 						$doiNum = json_decode($collData['dynamicproperties'], true)['edi'];
 						if (substr($doiNum, 0, 4) === 'doi:') {
 							$doiNum = substr($doiNum, 4);
