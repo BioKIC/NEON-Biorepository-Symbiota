@@ -440,6 +440,14 @@ if ($SYMB_UID) {
 						$collData['doi'] = $responseData->doi;
 						$_SESSION['colldata'] = $collData;
 						include($SERVER_ROOT . '/includes/citationgbif.php');
+					} elseif ($collData['dynamicproperties'] && json_decode($collData['dynamicproperties'], true)['edi']) { // If EDI DOI is available, fetch EDI format from API
+						$doiNum = json_decode($collData['dynamicproperties'], true)['edi'];
+						if (substr($doiNum, 0, 4) === 'doi:') {
+							$doiNum = substr($doiNum, 4);
+						}
+						$collData['doi'] = $doiNum;
+						$_SESSION['colldata'] = $collData;
+						include($SERVER_ROOT . '/includes/citationedi.php');
 					} else {
 						include($SERVER_ROOT . '/includes/citationcollection.php');
 					}
