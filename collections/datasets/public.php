@@ -42,11 +42,44 @@ $ocArr = $datasetManager->getOccurrences($datasetid);
 			<div><?php echo $dArr['description']; ?></div>
 			<!-- Occurrences Summary -->
 			<p>This dataset includes <?php echo count($ocArr); ?> records.</p>
-
-			<p><a class="btn" href="<?php echo $searchUrl; ?>">View and download samples in this Dataset (List view)</a></p>
-			<p><a class="btn" href="<?php echo $tableUrl; ?>">View samples in this Dataset (Table view)</a></p>
-			<p><a class="btn" href="<?php echo $taxaUrl; ?>">View list of taxa in this Dataset</a></p>
-			<!-- <p><a href="#">Download this Dataset</a></p> -->
+			<!-- Is published at EDI? -->
+			<?php
+			if ($dArr['dynamicproperties'] && file_exists($SERVER_ROOT . '/includes/citationedi.php')) {
+				$dpArr = json_decode($dArr['dynamicproperties'], true);
+				if (array_key_exists('edi', $dpArr)) {
+					$doiNum = $dpArr['edi'];
+					if (substr($doiNum, 0, 4) == 'doi:') $doiNum = substr($doiNum, 4);
+					$dArr['doi'] = $doiNum;
+					$collData['collectionname'] = $dArr['name'];
+					$collData['doi'] = $doiNum;
+					$_SESSION['datasetdata'] = $dArr; ?>
+					<h4>View and download dataset:</h4>
+					<ul>
+						<li><a class="btn" href="<?php echo $searchUrl; ?>">View and download samples in this Dataset (List view)</a></li>
+						<li><a class="btn" href="<?php echo $tableUrl; ?>">View samples in this Dataset (Table view)</a></li>
+						<li><a class="btn" href="<?php echo $taxaUrl; ?>">View list of taxa in this Dataset</a></li>
+						<li><a class="btn" href="<?php echo 'https://doi.org/' . $doiNum; ?>">View data package version published at the Environmental Data Initiative</a></li>
+					</ul>
+					<h4>Cite this dataset:</h4>
+					<blockquote>
+						<?php include($SERVER_ROOT . '/includes/citationedi.php'); ?>
+					</blockquote>
+				<?php
+				}
+			} else {
+				?>
+				<h4>View and download dataset:</h4>
+				<ul>
+					<li><a class="btn" href="<?php echo $searchUrl; ?>">View and download samples in this Dataset (List view)</a></li>
+					<li><a class="btn" href="<?php echo $tableUrl; ?>">View samples in this Dataset (Table view)</a></li>
+					<li><a class="btn" href="<?php echo $taxaUrl; ?>">View list of taxa in this Dataset</a></li>
+				</ul>
+				<h4>Cite this dataset:</h4>
+				<blockquote>
+				<?php include($SERVER_ROOT . '/includes/citationdataset.php');
+			}
+				?>
+				</blockquote>
 		</ul>
 	</div>
 	<?php
