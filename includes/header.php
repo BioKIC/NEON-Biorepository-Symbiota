@@ -101,6 +101,9 @@ elseif (array_key_exists('CollAdmin', $USER_RIGHTS) || array_key_exists('CollEdi
 					<li>
 						<a href="<?php echo $CLIENT_ROOT; ?>/includes/usagepolicy.php" alt="Data Usage Policy">Data Usage Policy</a>
 					</li>
+					<li>
+						<a href="<?php echo $CLIENT_ROOT; ?>/misc/datasetpublishing.php" alt="Dataset Publishing">Dataset Publishing</a>
+					</li>
 				</ul>
 			</li>
 			<li>
