@@ -45,15 +45,15 @@ header("Content-Type: text/html; charset=" . $CHARSET);
 		<h2 class="anchor" id="dataset-publishing-toc">Table of Contents</h2>
 
 		<ol>
-			<li><a href="#h.92fs9knk10ri">Link your publications as Associate References in NEON Biorepository occurrence records</a></li>
-			<li><a href="#h.dupjcs7lsdqj">Create a NEON Biorepository Published Research Dataset</a>?</li>
+			<li><a href="#h.92fs9knk10ri">Link your publications as Associated References in NEON Biorepository occurrence records</a></li>
+			<li><a href="#h.dupjcs7lsdqj">Create a NEON Biorepository Published Research Dataset</a></li>
 			<li><a href="#h.svmnyswsw36">Publish value-added data to NEON Biorepository occurrence records</a></li>
 		</ol>
 
 		<!-- End of Table of Contents -->
 
 		<article>
-			<h3 class="anchor" id="h.92fs9knk10ri">1. Link your publications as Associate References in NEON Biorepository occurrence records</h3>
+			<h3 class="anchor" id="h.92fs9knk10ri">1. Link your publications as Associated References in NEON Biorepository occurrence records</h3>
 			<p>Researchers working with NEON Biorepository samples or sample data should provide NEON Biorepository personnel with a list of all samples used in their publications. We will then link citations to your work as Associated References in each sample occurrence record, highlighting your research contributions. For example, see the Associated References section of one such <a href="https://biorepo.neonscience.org/portal/collections/individual/index.php?occid=818122&clid=0" target="_blank" rel="noopener noreferrer">occurrence record</a>.</p>
 			<button><a href="#dataset-publishing-toc">Go back to TOC</a></button>
 		</article>
