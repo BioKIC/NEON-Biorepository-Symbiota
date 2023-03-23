@@ -119,16 +119,24 @@ $collManager = new OccurrenceCollectionProfile();
 			<h4 class="anchor" id="h.2.c">2C. Citing a NEON Biorepository <i>published research</i> or <i>special collections dataset</i></h4>
 			<p>To cite the use of occurrence records from an <a href="https://biorepo.neonscience.org/portal/collections/datasets/publiclist.php" target="_blank" rel="noopener noreferrer">existing published research or special collections dataset</a>, include the citations available from the relevant dataset page. When this dataset is associated with a prior publication, include the citation to the original publication, as well. For example, to cite the occurrence records associated with <a href="https://biorepo.neonscience.org/portal/collections/datasets/public.php?datasetid=157" target="_blank" rel="noopener noreferrer">Ayres 2019</a> include the following references:
 			<blockquote>
-				<!-- include citation file for dataset if it exists (citationdataset) -->
 				<?php
-				$citationFile = $SERVER_ROOT . '/includes/citationdataset.php';
+				$citationFile = $SERVER_ROOT . '/includes/citationedi.php';
 				$datasetid = 157;
 				$datasetManager = new OccurrenceDataset();
 				$dArr = $datasetManager->getPublicDatasetMetadata($datasetid);
-				if (file_exists($citationFile)) {
-					include($citationFile);
+				if ($dArr['dynamicproperties'] && file_exists($citationFile)) {
+					$dpArr = json_decode($dArr['dynamicproperties'], true);
+					if (array_key_exists('edi', $dpArr)) {
+						$doiNum = $dpArr['edi'];
+						if (substr($doiNum, 0, 4) == 'doi:') $doiNum = substr($doiNum, 4);
+						$dArr['doi'] = $doiNum;
+						$collData['collectionname'] = $dArr['name'];
+						$collData['doi'] = $doiNum;
+						$_SESSION['datasetdata'] = $dArr;
+						include($SERVER_ROOT . '/includes/citationedi.php');
+					}
 				} else {
-					echo 'Biodiversity occurrence data published by: NEON Biorepository Data Portal. Ayres 2019: Quantitative Guidelines for Establishing and Operating Soil Archives (ID: 157) https://biorepo.neonscience.org/portal/collections/list.php?datasetid=157 accessed via the NEON Biorepository Data Portal, <a href="http//:biorepo.neonscience.org/" target="_blank" rel="noopener noreferrer">http//:biorepo.neonscience.org/</a>, ' . date('Y-m-d');
+					echo 'NEON Biorepository Data Portal. 2023. Ayres 2019: Quantitative Guidelines for Establishing and Operating Soil Archives (repackaging of occurrences published by the NEON Biorepository Data Portal) Environmental Data Initiative. https://doi.org/10.6073/pasta/c0ef3707093822c173536421aeb02507 (Accessed via the NEON Biorepository Data Portal, https://biorepo.neonscience.org/, ' . date('Y-m-d') . ').';
 				}
 				?>
 			</blockquote>
