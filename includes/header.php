@@ -105,6 +105,9 @@ elseif (array_key_exists('CollAdmin', $USER_RIGHTS) || array_key_exists('CollEdi
 						<a href="<?php echo $CLIENT_ROOT; ?>/misc/datasetpublishing.php" alt="Dataset Publishing">Dataset Publishing</a>
 					</li>
 				</ul>
+			<li>
+				<a href="<?php echo $CLIENT_ROOT; ?>/misc/cite.php" target="_blank" rel="noopener noreferrer" alt="How to Cite">How to Cite</a>
+			</li>
 			</li>
 			<li>
 				<a href="#" alt="Additional Information">Additional Information</a>
