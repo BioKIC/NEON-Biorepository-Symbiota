@@ -99,9 +99,6 @@ elseif (array_key_exists('CollAdmin', $USER_RIGHTS) || array_key_exists('CollEdi
 						<a href="<?php echo $CLIENT_ROOT; ?>/misc/samplearchiverequest.php" alt="Sample Archival Request">Sample Archival Request</a>
 					</li>
 					<li>
-						<a href="<?php echo $CLIENT_ROOT; ?>/includes/usagepolicy.php" alt="Data Usage Policy">Data Usage Policy</a>
-					</li>
-					<li>
 						<a href="<?php echo $CLIENT_ROOT; ?>/misc/cite.php" target="_blank" rel="noopener noreferrer" alt="How to Cite">How to Cite</a>
 					</li>
 					<li>
