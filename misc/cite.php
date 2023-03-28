@@ -1,9 +1,6 @@
 <?php
 include_once('../config/symbini.php');
-include_once($SERVER_ROOT . '/classes/OccurrenceCollectionProfile.php');
-include_once($SERVER_ROOT . '/classes/OccurrenceDataset.php');
 header("Content-Type: text/html; charset=" . $CHARSET);
-$collManager = new OccurrenceCollectionProfile();
 ?>
 <html>
 
@@ -101,33 +98,8 @@ $collManager = new OccurrenceCollectionProfile();
 			<h4 class="anchor" id="h.2.b">2B. Citing particular NEON Biorepository <i>collections</i> as sources for occurrence data</h4>
 			<p>When your work relies on occurrence data from particular NEON Biorepository collections, use the preferred citation format published on the relevant collection details page under "Cite This Collection".</p>
 			<h4 class="anchor" id="h.2.c">2C. Citing a NEON Biorepository <i>published research</i> or <i>special collections dataset</i></h4>
-			<p>To cite the use of occurrence records from an <a href="https://biorepo.neonscience.org/portal/collections/datasets/publiclist.php" target="_blank" rel="noopener noreferrer">existing published research or special collections dataset</a>, include the citations available from the relevant dataset page. When this dataset is associated with a prior publication, include the citation to the original publication, as well. For example, to cite the occurrence records associated with <a href="https://biorepo.neonscience.org/portal/collections/datasets/public.php?datasetid=157" target="_blank" rel="noopener noreferrer">Ayres 2019</a> include the following references:
-			<blockquote>
-				<?php
-				$citationFile = $SERVER_ROOT . '/includes/citationedi.php';
-				$datasetid = 157;
-				$datasetManager = new OccurrenceDataset();
-				$dArr = $datasetManager->getPublicDatasetMetadata($datasetid);
-				if ($dArr['dynamicproperties'] && file_exists($citationFile)) {
-					$dpArr = json_decode($dArr['dynamicproperties'], true);
-					if (array_key_exists('edi', $dpArr)) {
-						$doiNum = $dpArr['edi'];
-						if (substr($doiNum, 0, 4) == 'doi:') $doiNum = substr($doiNum, 4);
-						$dArr['doi'] = $doiNum;
-						$collData['collectionname'] = $dArr['name'];
-						$collData['doi'] = $doiNum;
-						$_SESSION['datasetdata'] = $dArr;
-						include($SERVER_ROOT . '/includes/citationedi.php');
-					}
-				} else {
-					echo 'NEON Biorepository Data Portal. 2023. Ayres 2019: Quantitative Guidelines for Establishing and Operating Soil Archives (repackaging of occurrences published by the NEON Biorepository Data Portal) Environmental Data Initiative. https://doi.org/10.6073/pasta/c0ef3707093822c173536421aeb02507 (Accessed via the NEON Biorepository Data Portal, https://biorepo.neonscience.org/, ' . date('Y-m-d') . ').';
-				}
-				?>
-			</blockquote>
-			</p>
-			<p>In many cases, you should also cite the original publication associated with the dataset, which is also available on the dataset description page. Eg.:
-			<blockquote>Ayres, E. 2019. Quantitative Guidelines for Establishing and Operating Soil Archives. Soil Science Society of America Journal, 83(4): 973-981. <a href="https://doi.org/10.2136/sssaj2019.02.0050" target="_blank" rel="noopener noreferrer">https://doi.org/10.2136/sssaj2019.02.0050</a></blockquote>
-			</p>
+			<p>To cite the use of occurrence records from an <a href="https://biorepo.neonscience.org/portal/collections/datasets/publiclist.php" target="_blank" rel="noopener noreferrer">existing published research or special collections dataset</a>, include the citations available from the relevant dataset page under "Cite This Dataset".</p>
+			<p>In many cases, you should also cite the original publication associated with the dataset, which is available at the top of the dataset description page.</p>
 			<button><a href="#dataset-publishing-toc">Go back to TOC</a></button>
 		</article>
 		<article>
