@@ -158,7 +158,7 @@ header("Content-Type: text/html; charset=" . $CHARSET);
 
 		<article>
 			<h3 class="anchor" id="h.xh3whkfjnooh">Where can I read about your Data Usage Policy?</h3>
-			<p>To find guidelines for acceptable NEON Biorepository data use, navigate to the "<a href="https://biorepo.neonscience.org/portal/includes/usagepolicy.php" target="_blank" rel="noopener noreferrer">Data Usage Policy</a>" page found under "Sample Use" in the main menu. On this page you will find statements on appropriate use of sample data and images and recommended formats for citing NEON Biorepository data in your work.</p>
+			<p>To find guidelines for acceptable NEON Biorepository data use, navigate to the "<a href="https://biorepo.neonscience.org/portal/includes/cite.php" target="_blank" rel="noopener noreferrer">How to Cite</a>" page in the main menu. On this page you will find statements on appropriate use of sample data and images and recommended formats for citing NEON Biorepository data in your work.</p>
 			<button><a href="#getting-started-toc">Go back to TOC</a></button>
 		</article>
 
