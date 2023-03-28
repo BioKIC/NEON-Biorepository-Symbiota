@@ -99,23 +99,7 @@ $collManager = new OccurrenceCollectionProfile();
 			</blockquote>
 			</p>
 			<h4 class="anchor" id="h.2.b">2B. Citing particular NEON Biorepository <i>collections</i> as sources for occurrence data</h4>
-			<p>When your work relies on occurrence data from particular NEON Biorepository collections, use the preferred citation format published on the relevant collection details page. For example, to cite the <a href="https://biorepo.neonscience.org/portal/collections/misc/collprofiles.php?collid=20" target="_blank" rel="noopener noreferrer">NEON Biorepository fish voucher collection</a>, include the following in your publication:
-			<blockquote>
-				<?php
-				$citationFile = $SERVER_ROOT . '/includes/citationcollection.php';
-				$collid = 20;
-				$collManager->setCollid($collid);
-				$collData = $collManager->getCollectionMetadata();
-				$collData = $collData[$collid];
-				if (file_exists($citationFile)) {
-					echo 'NEON Biorepository ';
-					include($citationFile);
-				} else {
-					echo 'NEON Biorepository Fish Collection (Vouchers). Occurrence dataset (ID: 42e0872f-6223-4f8d-83f8-cd2f10e4b3c0) <a href="https://biorepo.neonscience.org/portal/content/dwca/NEON-FISC-V_DwC-A.zip" target="_blank" rel="noopener noreferrer">https://biorepo.neonscience.org/portal/content/dwca/NEON-FISC-V_DwC-A.zip</a> accessed via the NEON Biorepository Data Portal, <a href="http//:biorepo.neonscience.org/" target="_blank" rel="noopener noreferrer">http//:biorepo.neonscience.org/</a>, ' . date('Y-m-d');
-				}
-				?>
-			</blockquote>
-			</p>
+			<p>When your work relies on occurrence data from particular NEON Biorepository collections, use the preferred citation format published on the relevant collection details page under "Cite This Collection".</p>
 			<h4 class="anchor" id="h.2.c">2C. Citing a NEON Biorepository <i>published research</i> or <i>special collections dataset</i></h4>
 			<p>To cite the use of occurrence records from an <a href="https://biorepo.neonscience.org/portal/collections/datasets/publiclist.php" target="_blank" rel="noopener noreferrer">existing published research or special collections dataset</a>, include the citations available from the relevant dataset page. When this dataset is associated with a prior publication, include the citation to the original publication, as well. For example, to cite the occurrence records associated with <a href="https://biorepo.neonscience.org/portal/collections/datasets/public.php?datasetid=157" target="_blank" rel="noopener noreferrer">Ayres 2019</a> include the following references:
 			<blockquote>
