@@ -21,6 +21,10 @@ header("Content-Type: text/html; charset=" . $CHARSET);
 			margin: 2rem 0;
 		}
 
+		button {
+			width: fit-content;
+		}
+
 		.anchor {
 			padding-top: 50px;
 		}
