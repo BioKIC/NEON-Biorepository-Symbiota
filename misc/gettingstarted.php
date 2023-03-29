@@ -90,7 +90,7 @@ header("Content-Type: text/html; charset=" . $CHARSET);
 
 		<article>
 			<h3 class="anchor" id="h.svmnyswsw36">What is this portal (NEON Biorepository Data Portal)?</h3>
-			<p>The <a href="https://biorepo.neonscience.org/" target="_blank" rel="noopener noreferrer">NEON Biorepository data portal</a> is a <a href="https://symbiota.org/docs/project-summary/" target="_blank" rel="noopener noreferrer">Symbiota-based collections portal</a> that allows you to:
+			<p>The <a href="https://biorepo.neonscience.org/" target="_blank" rel="noopener noreferrer">NEON Biorepository data portal</a> is a <a href="https://symbiota.org/" target="_blank" rel="noopener noreferrer">Symbiota-based collections portal</a> that allows you to:
 			</p>
 			<ol start="1">
 				<li>Learn more about NEON samples and their suitability for your research interests</li>
