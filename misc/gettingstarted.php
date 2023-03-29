@@ -170,7 +170,7 @@ header("Content-Type: text/html; charset=" . $CHARSET);
 
 		<article>
 			<h3 class="anchor" id="h.1pdug3wj2waa">How can I publish my own sample-related data in the NEON Biorepository portal?</h3>
-			<p>Publishing sample-related data and citations to the NEON Biorepository portal after sample use is a way to increase the visibility of your work, can fulfill funder and journal requirements that data be made openly available, and is often a requirement in our sample use agreements. General guidelines can be found on the <a href="https://biorepo.neonscience.org/portal/misc/datasetpublishing.php" target="_blank" rel="noopener noreferrer"></a> page, but the specifics of any particular sample use case will be determined in collaboration with the NEON Biorepository team.</p>
+			<p>Publishing sample-related data and citations to the NEON Biorepository portal after sample use is a way to increase the visibility of your work, can fulfill funder and journal requirements that data be made openly available, and is often a requirement in our sample use agreements. General guidelines can be found on the <a href="https://biorepo.neonscience.org/portal/misc/datasetpublishing.php" target="_blank" rel="noopener noreferrer">"Dataset Publishing"</a> page, but the specifics of any particular sample use case will be determined in collaboration with the NEON Biorepository team.</p>
 			<button><a href="#getting-started-toc">Go back to TOC</a></button>
 		</article>
 
