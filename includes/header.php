@@ -12,7 +12,7 @@ elseif (array_key_exists('CollAdmin', $USER_RIGHTS) || array_key_exists('CollEdi
 			<!-- Main Site Logo -->
 			<li id="branding" style="vertical-align: top;">
 				<!-- NSF/Neon logo -->
-				<a href="https://www.neonscience.org/" title="Home" rel="home" class="branding-link active"><img src="<?php echo $CLIENT_ROOT; ?>/neon/images/neon-white-logo.svg" alt="NSF NEON | Open Data to Understand our Ecosystems"></a>
+				<a href="https://www.neonscience.org/" title="Home" rel="home" class="branding-link active"><img src="<?php echo $CLIENT_ROOT; ?>/neon/images/neon-white-logo_2023.svg" alt="NSF NEON | Open Data to Understand our Ecosystems"></a>
 			</li>
 			<li class="header-title">
 				<h1><a href="<?php echo $CLIENT_ROOT; ?>/">Biorepository Data Portal</a></h1>
