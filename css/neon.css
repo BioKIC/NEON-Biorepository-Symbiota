@@ -225,7 +225,7 @@ p a {
 @media (min-width: 426px) and (max-width: 1024px) {
   #header #branding .branding-link {
     display: block;
-    background-image: url(../neon/images/neon-white-logo.svg);
+    background-image: url(../neon/images/neon-white-logo_2023.svg);
     background-size: cover;
     background-position: center center;
     background-repeat: no-repeat;
@@ -266,7 +266,7 @@ p a {
   }
   #header #branding .branding-link {
     display: block;
-    background-image: url(../neon/images/neon-white-logo.svg);
+    background-image: url(../neon/images/neon-white-logo_2023.svg);
     /*background-image: url(/portal/images/layout/nsf-neon-logo.png);*/
     background-size: cover;
     background-position: center center;
