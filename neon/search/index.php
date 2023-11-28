@@ -59,7 +59,7 @@ $siteData = new DatasetsMetadata();
 							<label for="taxa" class="input-text--outlined">
 								<input type="text" name="taxa" id="taxa" data-chip="Taxa">
 								<span data-label="Taxon"></span></label>
-							<span class="assistive-text">Type at least 4 characters for quick suggestions. Separate multiple with commas.</span>
+							<span class="assistive-text">Type at least 4 characters for quick suggestions. Separate multiple with commas. Includes non-organismal groups.</span>
 						</div>
 						<div class="select-container">
 							<select name="taxontype">
