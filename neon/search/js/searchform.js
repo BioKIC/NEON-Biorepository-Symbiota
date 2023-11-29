@@ -461,7 +461,7 @@ function getParam(paramName) {
     switch (firstEl.tagName) {
       case 'INPUT':
         (firstEl.type === 'checkbox' && firstEl.checked) ||
-        (firstEl.type === 'text' && firstEl != '')
+        ((firstEl.type === 'text' || firstEl.type === 'number') && firstEl != '')
           ? (elementValues = firstEl.value)
           : '';
         break;
