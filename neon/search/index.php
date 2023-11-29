@@ -222,7 +222,7 @@ $siteData = new DatasetsMetadata();
 							<div>
 								<div>
 									<input type="checkbox" name="includeothercatnum" id="includeothercatnum" value="1" data-chip="Include other IDs" checked>
-									<label for="includeothercatnum">Include other catalog numbers and GUIds</label>
+									<label for="includeothercatnum">Include other sample identifiers (e.g. NEON sampleID, barcode, UUID)</label>
 								</div>
 								<div class="input-text-container">
 									<label for="" class="input-text--outlined">
