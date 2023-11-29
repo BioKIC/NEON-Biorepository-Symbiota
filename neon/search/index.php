@@ -298,13 +298,13 @@ $siteData = new DatasetsMetadata();
 										<label for="elevlow" class="input-text--outlined">
 											<input type="number" step="any" name="elevlow" id="elevlow" data-chip="Min Elevation">
 											<span data-label="Minimum Elevation"></span></label>
-										<span class="assistive-text">Only numbers.</span>
+										<span class="assistive-text">Meters</span>
 									</div>
 									<div class="input-text-container">
 										<label for="elevhigh" class="input-text--outlined">
 											<input type="number" step="any" name="elevhigh" id="elevhigh" data-chip="Max Elevation">
 											<span data-label="Maximum Elevation"></span></label>
-										<span class="assistive-text">Only numbers.</span>
+										<span class="assistive-text">Meters</span>
 									</div>
 								</div>
 							</div>
