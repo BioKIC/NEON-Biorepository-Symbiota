@@ -728,7 +728,7 @@ class TaxonProfile extends Manager {
 		if ((1 <= $numOccs) && ($numOccs <= $limitOccs)) {
 			$occSrcUrl = '../collections/list.php?usethes=1&taxa='.$this->tid;
 			if($collidStr != 'all') $occSrcUrl .= '&db='.$collidStr;
-			$occMsg = '<a class="btn" href="'.$occSrcUrl.'" target="_blank">Explore '.number_format($numOccs).' occurrences</a>';
+			$occMsg = '<a class="btn" href="'.$occSrcUrl.'" target="_blank">Explore '.number_format($numOccs).' NEON Biorepository occurrences</a>';
 		} elseif ($numOccs > $limitOccs) {
 			$occMsg = number_format($numOccs).' occurrences';
 		} elseif ($numOccs == 0) {
