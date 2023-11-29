@@ -1,8 +1,5 @@
 <?php
-// error_reporting(E_ALL);
-// ini_set('display_errors', '1');
 include_once('../../config/symbini.php');
-include_once('../../content/lang/index.' . $LANG_TAG . '.php');
 include_once($SERVER_ROOT . '/neon/classes/CollectionMetadata.php');
 include_once($SERVER_ROOT . '/neon/classes/DatasetsMetadata.php');
 header("Content-Type: text/html; charset=" . $CHARSET);
@@ -15,20 +12,15 @@ $siteData = new DatasetsMetadata();
 <head>
 	<title><?php echo $DEFAULT_TITLE; ?> Sample Search</title>
 	<?php
-	$activateJQuery = true;
-	if (file_exists($SERVER_ROOT . '/includes/head.php')) {
-		include_once($SERVER_ROOT . '/includes/head.php');
-	} else {
-		echo '<link href="' . $CLIENT_ROOT . '/css/jquery-ui.css" type="text/css" rel="stylesheet" />';
-		echo '<link href="' . $CLIENT_ROOT . '/css/base.css?ver=1" type="text/css" rel="stylesheet" />';
-		echo '<link href="' . $CLIENT_ROOT . '/css/main.css?ver=1" type="text/css" rel="stylesheet" />';
-	}
+	include_once($SERVER_ROOT . '/includes/head.php');
+	include_once($SERVER_ROOT . '/includes/googleanalytics.php');
 	?>
 	<script src="js/jquery-3.2.1.min.js" type="text/javascript"></script>
+	<script src="<?= $CLIENT_ROOT ?>/js/jquery-ui-1.12.1/jquery-ui.min.js" type="text/javascript"></script>
+	<script src="<?= $CLIENT_ROOT ?>/js/symb/api.taxonomy.taxasuggest.js" type="text/javascript"></script>
 	<script>
 		const clientRoot = '<?php echo $CLIENT_ROOT; ?>';
 	</script>
-	<?php include_once($SERVER_ROOT . '/includes/googleanalytics.php'); ?>
 	<!-- Search-specific styles -->
 	<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 	<link rel="stylesheet" href="../css/app.css?v=02">
@@ -457,7 +449,5 @@ $siteData = new DatasetsMetadata();
 	include($SERVER_ROOT . '/includes/footer.php');
 	?>
 </body>
-<script src="js/searchform.js" type="text/javascript"></script>
-<script src="<?php echo $CLIENT_ROOT . '/js/jquery-ui-1.12.1/jquery-ui.min.js'; ?>" type="text/javascript"></script>
-<script src="<?php echo $CLIENT_ROOT . '/js/symb/api.taxonomy.taxasuggest.js'; ?>" type="text/javascript"></script>
+<script src="js/searchform.js?ver=1" type="text/javascript"></script>
 </html>
