@@ -11,7 +11,6 @@ class OccurrenceCollectionProfile extends OmCollections
 	private $datasetKey;
 	private $endpointKey;
 	private $idigbioKey;
-	private $materialSampleIsActive = false;
 
 	public function __construct($connType = 'readonly')
 	{
@@ -45,7 +44,6 @@ class OccurrenceCollectionProfile extends OmCollections
 			}
 			if ($r['dynamicProperties'] && strpos($r['dynamicProperties'], 'matSample":{"status":1')) {
 				$this->collMeta[$r['collid']]['matSample'] = 1;
-				$this->materialSampleIsActive = true;
 			}
 			$uDate = '';
 			if ($r['uploaddate']) {
