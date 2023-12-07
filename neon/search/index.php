@@ -51,7 +51,7 @@ $siteData = new DatasetsMetadata();
 							<label for="taxa" class="input-text--outlined">
 								<input type="text" name="taxa" id="taxa" data-chip="Taxa">
 								<span data-label="Taxon"></span></label>
-							<span class="assistive-text">Type at least 4 characters for quick suggestions. Separate multiple with commas.</span>
+							<span class="assistive-text">Type at least 4 characters for quick suggestions. Separate multiple with commas. Includes non-organismal groups.</span>
 						</div>
 						<div class="select-container">
 							<select name="taxontype">
@@ -214,7 +214,7 @@ $siteData = new DatasetsMetadata();
 							<div>
 								<div>
 									<input type="checkbox" name="includeothercatnum" id="includeothercatnum" value="1" data-chip="Include other IDs" checked>
-									<label for="includeothercatnum">Include other catalog numbers and GUIds</label>
+									<label for="includeothercatnum">Include other sample identifiers (e.g. NEON sampleID, barcode, UUID)</label>
 								</div>
 								<div class="input-text-container">
 									<label for="" class="input-text--outlined">
@@ -290,13 +290,13 @@ $siteData = new DatasetsMetadata();
 										<label for="elevlow" class="input-text--outlined">
 											<input type="number" step="any" name="elevlow" id="elevlow" data-chip="Min Elevation">
 											<span data-label="Minimum Elevation"></span></label>
-										<span class="assistive-text">Only numbers.</span>
+										<span class="assistive-text">Meters</span>
 									</div>
 									<div class="input-text-container">
 										<label for="elevhigh" class="input-text--outlined">
 											<input type="number" step="any" name="elevhigh" id="elevhigh" data-chip="Max Elevation">
 											<span data-label="Maximum Elevation"></span></label>
-										<span class="assistive-text">Only numbers.</span>
+										<span class="assistive-text">Meters</span>
 									</div>
 								</div>
 							</div>
