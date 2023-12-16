@@ -727,5 +727,4 @@ $('.expansion-icon').click(function () {
     $(this).html('add_box').siblings('ul').addClass('collapsed');
   }
 });
-// Hides MOSC-BU checkboxes
-hideColCheckbox(58);
+
