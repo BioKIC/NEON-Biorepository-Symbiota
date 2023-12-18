@@ -653,7 +653,7 @@ function hideColCheckbox(collid) {
   colsToHide.forEach((col) => {
     let li = col.closest('li');
     let isInsideSearchNEONColls = li.closest('#biorepo-collections-list.modal');
-    if (isInsideSearchNEONFormColls) {
+    if (isInsideSearchNEONColls) {
       li.style.display = 'none';
     }
   });
