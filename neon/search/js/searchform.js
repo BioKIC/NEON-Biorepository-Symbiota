@@ -652,7 +652,10 @@ function hideColCheckbox(collid) {
   );
   colsToHide.forEach((col) => {
     let li = col.closest('li');
-    li.style.display = 'none';
+    let isInsideSearchNEONColls = li.closest('#biorepo-collections-list.modal');
+    if (isInsideSearchNEONColls) {
+      li.style.display = 'none';
+    }
   });
 }
 
