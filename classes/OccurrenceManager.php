@@ -164,16 +164,15 @@ class OccurrenceManager extends OccurrenceTaxaManager {
 					$tempTermArr[] = 'Locality IS NULL';
 				}
 				else{
-					$fullTextSearch = true;
-					if(strlen($value) < 4) $fullTextSearch = false;
-					elseif(strpos($value,' ')){
-						$wordArr = explode(' ',$value);
-						$fullTextSearch = false;
-						foreach($wordArr as $w){
-							if(strlen($w) > 3){
-								$fullTextSearch = true;
-								break;
-							}
+					$wordArr = explode(' ',$value);
+					$fullTextSearch = false;
+					foreach($wordArr as $w){
+						if(strlen($w) > 3){
+							$fullTextSearch = true;
+						}
+						if(in_array(strtolower($w),array('took'))){
+							$fullTextSearch = false;
+							break;
 						}
 					}
 					if($fullTextSearch) $fullTextArr[] = $this->cleanInStr(str_replace('"', '', $value));
@@ -265,7 +264,7 @@ class OccurrenceManager extends OccurrenceTaxaManager {
 			else{
 				$fullCollArr = array();
 				foreach($collectorArr AS $collStr){
-					if(strlen($collStr) == 2 || strlen($collStr) == 3 || in_array(strtolower($collStr),array('best','little','took'))){
+					if(strlen($collStr) == 2 || strlen($collStr) == 3 || in_array(strtolower($collStr),array('best','little'))){
 						//Need to avoid FULLTEXT stopwords interfering with return
 						$tempCollSqlArr[] = '(o.recordedBy LIKE "%'.$this->cleanInStr($collStr).'%")';
 						$tempCollTextArr[] = $collStr;
