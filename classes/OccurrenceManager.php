@@ -265,7 +265,7 @@ class OccurrenceManager extends OccurrenceTaxaManager {
 			else{
 				$fullCollArr = array();
 				foreach($collectorArr AS $collStr){
-					if(strlen($collStr) == 2 || strlen($collStr) == 3 || in_array(strtolower($collStr),array('best','little'))){
+					if(strlen($collStr) == 2 || strlen($collStr) == 3 || in_array(strtolower($collStr),array('best','little','took'))){
 						//Need to avoid FULLTEXT stopwords interfering with return
 						$tempCollSqlArr[] = '(o.recordedBy LIKE "%'.$this->cleanInStr($collStr).'%")';
 						$tempCollTextArr[] = $collStr;
