@@ -109,15 +109,15 @@ $taxaArr = $stats->getNeonTaxa();
 			<div class="row">
 				<div class="four columns">
 					<h4 class="centered">Data</h4>
-					<p>Visit the <a href="misc/cite.php">How to Cite</a> page for information on how to cite data obtained from the NEON Biorepository Data Portal.</p>
+					<p>Visit the <a href="misc/cite.php">How to Cite</a> page for information on how to cite NEON Biorepository data and samples.</p>
 				</div>
 				<div class="four columns">
-					<h4 class="centered">Specimens</h4>
-					<p>Please consult the <a href="https://www.neonscience.org/samples/find-samples">Archival Sample Request information page</a> to initiate inquiries about sample accessibility and loans.</p>
+					<h4 class="centered">Samples</h4>
+					<p>Please consult the <a href="https://biorepo.neonscience.org/portal/misc/samplepolicy.php">Sample Use Policy</a> and the <a href="https://biorepo.neonscience.org/portal/misc/samplerequest.php">Sample Request Form</a> to initiate inquiries about sample use.</p>
 				</div>
 				<div class="four columns">
 					<h4 class="centered">Contact</h4>
-					<p>Join the portal as a regular visitor or contributor, and send direct feedback or inquiries to <a href="mailto:biorepo@asu.edu">BioRepo@asu.edu</a>.</p>
+					<p><a href="https://biorepo.neonscience.org/portal/profile/newprofile.php">Join the portal</a> as a regular visitor or contributor, and send direct feedback or inquiries to <a href="mailto:biorepo@asu.edu">biorepo@asu.edu</a>.</p>
 				</div>
 			</div>
 		</section>
@@ -139,9 +139,9 @@ $taxaArr = $stats->getNeonTaxa();
 				</div>
 				<div class="six columns">
 					<h2 class="centered">Learn more</h2>
-					<p>This portal is offered through the <a href="https://bdj.pensoft.net/articles.php?id=1114" target="_blank">Symbiota</a> software platform and is informationally synchronized with the <a href="https://data.neonscience.org/" target="_blank">main NEON Data Portal</a>, which serves the full spectrum of NEON data products.</p>
-					<p>To learn more about the features and capabilities available through Symbiota, visit the <a href="https://symbiota.org/docs/" target="_blank">Symbiota Help Pages</a>.</p>
-					<p>Read more about NEON's history and experimental design in the <a href="https://www.neonscience.org/about" target="_blank">main portal</a>.</p>
+					<p>This portal is offered through the <a href="https://symbiota.org/" target="_blank">Symbiota</a> software platform and is informationally synchronized with the <a href="https://data.neonscience.org/" target="_blank">main NEON Data Portal</a>, which serves the full spectrum of NEON data products.</p>
+					<p>To learn more about the features and capabilities available through Symbiota, visit the <a href="https://symbiota.org/docs/" target="_blank">Symbiota Docs site</a>.</p>
+					<p>Read more about NEON's history and experimental design on the <a href="https://www.neonscience.org/" target="_blank">NEON homepage</a>.</p>
 					<p>To explore sample collection and processing methods, visit the <a href="https://www.neonscience.org/data-collection/protocols-standardized-methods">NEON Protocols & Standardized Methods page</a>.</p>
 				</div>
 			</div>
