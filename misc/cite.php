@@ -104,7 +104,6 @@ header("Content-Type: text/html; charset=" . $CHARSET);
 		<article>
 			<h3 class="anchor" id="h.3">3. Acknowledging and citing NEON data generally</h3>
 			<p>Research outputs using other NEON data and samples should also follow NEON <a href="https://www.neonscience.org/data-samples/guidelines-policies/citing" target="_blank" rel="noopener noreferrer">citation policies</a> and <a href="https://www.neonscience.org/data-samples/guidelines-policies/publishing-research-outputs" target="_blank" rel="noopener noreferrer">guidelines for publishing research output</a>.</p>
-			</button>
 		</article>
 		<article>
 			<h3 class="anchor" id="h.4">4. Occurrence Record Use Policy</h3>
