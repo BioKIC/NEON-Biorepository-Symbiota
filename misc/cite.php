@@ -50,7 +50,7 @@ header("Content-Type: text/html; charset=" . $CHARSET);
 
 		<ol>
 			<li>
-				<a href="#h.1">Acknowledging the NEON Biorepository as a used resource in scientific publications</a>
+				<a href="#h.1">Acknowledging the NEON Biorepository as a resource used in scientific publications</a>
 				<ol type="A">
 					<li><a href="#h.1.a">Generic <i>acknowledgment</i> of the NEON Biorepository as a resource</a></li>
 					<li><a href="#h.1.b">Generic <i>citation</i> of the NEON Biorepository as a resource</a></li>
@@ -76,9 +76,9 @@ header("Content-Type: text/html; charset=" . $CHARSET);
 			<p>You can promote use of NEON Biorepository resources with the following statement in the acknowledgement section of your relevant publications:</p>
 			<blockquote>"The National Ecological Observatory Network Biorepository at Arizona State University provided samples and data collected as part of the NEON Program."</blockquote>
 			<h4 class="anchor" id="h.1.b">1B. Generic <i>citation</i> of the NEON Biorepository as a resource</h4>
-			<p>If the sampling scheme and design of the NEON Biorepository has been integral to facilitating your research, we encourage you to also cite the following publication that outlines its conceptualization and implementation:</p>
-			<blockquote>Kelsey M Yule, Edward E Gilbert, Azhar P Husain, M Andrew Johnston, Laura Rocha Prado, Laura Steger, & Nico M Franz. (2020). Designing Biorepositories to Monitor Ecological and Evolutionary Responses to Change (Version 1). Zenodo. <a href="https://doi.org/10.5281/zenodo.3880411" target="_blank" rel="noopener noreferrer">https://doi.org/10.5281/zenodo.3880411</a></blockquote>
-			<button><a href="#dataset-publishing-toc">Go back to TOC</a></button>
+			<p>If the sampling scheme, design, or operations  of the NEON Biorepository has been integral to facilitating your research, we encourage you to also cite the following publications that outline its conceptualization and implementation:</p>
+            <blockquote>Thibault KM, Laney CM, Yule KM, Franz NM, Mabee PM. (2023). The US National Ecological Observatory Network and the Global Biodiversity Framework: National research infrastructure with a global reach. Journal of Ecology and Environment. 47:21. <a href="https://doi.org/10.5141/jee.23.076" target="_blank" rel="noopener noreferrer">https://doi.org/10.5141/jee.23.076</a></blockquote>
+			<blockquote>Yule KM, Gilbert EE, Husain AP, Johnston MA, Prado LR, Steger, Franz NM. (2020). Designing Biorepositories to Monitor Ecological and Evolutionary Responses to Change (Version 1). Zenodo. <a href="https://doi.org/10.5281/zenodo.3880411" target="_blank" rel="noopener noreferrer">https://doi.org/10.5281/zenodo.3880411</a></blockquote>
 		</article>
 		<article>
 			<h3 class="anchor" id="h.2">2. Citing the use of the NEON Biorepository <i>data</i> portal</h3>
@@ -100,13 +100,10 @@ header("Content-Type: text/html; charset=" . $CHARSET);
 			<h4 class="anchor" id="h.2.c">2C. Citing a NEON Biorepository <i>published research</i> or <i>special collections dataset</i></h4>
 			<p>To cite the use of occurrence records from an <a href="https://biorepo.neonscience.org/portal/collections/datasets/publiclist.php" target="_blank" rel="noopener noreferrer">existing published research or special collections dataset</a>, include the citations available from the relevant dataset page under "Cite This Dataset".</p>
 			<p>In many cases, you should also cite the original publication associated with the dataset, which is available at the top of the dataset description page.</p>
-			<button><a href="#dataset-publishing-toc">Go back to TOC</a></button>
 		</article>
 		<article>
 			<h3 class="anchor" id="h.3">3. Acknowledging and citing NEON data generally</h3>
 			<p>Research outputs using other NEON data and samples should also follow NEON <a href="https://www.neonscience.org/data-samples/guidelines-policies/citing" target="_blank" rel="noopener noreferrer">citation policies</a> and <a href="https://www.neonscience.org/data-samples/guidelines-policies/publishing-research-outputs" target="_blank" rel="noopener noreferrer">guidelines for publishing research output</a>.</p>
-			<button><a href="#dataset-publishing-toc">Go back to TOC</a>
-			</button>
 		</article>
 		<article>
 			<h3 class="anchor" id="h.4">4. Occurrence Record Use Policy</h3>
@@ -116,12 +113,10 @@ header("Content-Type: text/html; charset=" . $CHARSET);
 				<li>It is considered a matter of professional ethics to cite and acknowledge the work of other scientists that has resulted in data used in subsequent research. We encourage users to contact the original investigator responsible for the data that they are accessing.</li>
 				<li>The NEON Biorepository Data Portal asks that users not redistribute data obtained from this site without permission for data owners. However, links or references to this site may be freely posted.</li>
 			</ul>
-			<button><a href="#dataset-publishing-toc">Go back to TOC</a>
 		</article>
 		<article>
 			<h3 class="anchor" id="h.5">5. Images</h3>
 			<p>Images within this website have been generously contributed by their owners to promote education and research. These contributors retain the full copyright for their images. Unless stated otherwise, images are made available under the Creative Commons Attribution-ShareAlike (<a href="https://creativecommons.org/licenses/by-sa/3.0/" target="_blank" rel="noopener noreferrer">CCBY-SA</a>). Users are allowed to copy, transmit, reuse, and/or adapt content, as long as attribution regarding the source of the content is made. If the content is altered, transformed, or enhanced, it may be re-distributed only under the same or similar license by which it was acquired.</p>
-			<button><a href="#dataset-publishing-toc">Go back to TOC</a>
 		</article>
 	</div>
 	<?php
