@@ -486,7 +486,7 @@ class OccurrenceHarvester{
 								$identArr['taxon'] = $fArr['smsValue'];
 							}
 							elseif($fArr['smsKey'] == 'taxon_published' && $fArr['smsValue']) $identArr['taxonPublished'] = $fArr['smsValue'];
-							elseif($fArr['smsKey'] == 'identified_by' && $fArr['smsValue']) $identArr['identifiedBy'] = $this->translatePersonnelArr($fArr['smsValue']);
+							elseif($fArr['smsKey'] == 'identified_by' && $fArr['smsValue']) $identArr['identifiedBy'] = $this->translatePersonnel($fArr['smsValue']);
 							elseif($fArr['smsKey'] == 'identified_date' && $fArr['smsValue']) $identArr['dateIdentified'] = $fArr['smsValue'];
 							elseif($fArr['smsKey'] == 'identification_remarks' && $fArr['smsValue']) $identArr['identificationRemarks'] = $fArr['smsValue'];
 							elseif($fArr['smsKey'] == 'identification_references' && $fArr['smsValue']) $identArr['identificationReferences'] = $fArr['smsValue'];
@@ -593,7 +593,7 @@ class OccurrenceHarvester{
 				//if(isset($sampleArr['sample_condition'])) $dynProp[] = 'sample condition: '.$sampleArr['sample_condition'];
 				if($dynProp) $dwcArr['dynamicProperties'] = implode(', ',$dynProp);
 
-				if(isset($sampleArr['collected_by']) && $sampleArr['collected_by']) $dwcArr['recordedBy'] = $this->translatePersonnelArr($sampleArr['collected_by']);
+				if(isset($sampleArr['collected_by']) && $sampleArr['collected_by']) $dwcArr['recordedBy'] = $this->translatePersonnel($sampleArr['collected_by']);
 				if(isset($sampleArr['collect_end_date']) && $sampleArr['collect_end_date']){
 					if(isset($sampleArr['collect_start_date']) && $sampleArr['collect_start_date'] != $sampleArr['collect_end_date']){
 						$dwcArr['eventDate'] = $sampleArr['collect_start_date'];
@@ -1660,20 +1660,24 @@ class OccurrenceHarvester{
 		}
 	}
 
-	private function translatePersonnelArr($persStr){
+	private function translatePersonnel($persStr){
 		$retStr = $persStr;
+		if($persStr == '0000-0000-0000-0000') return '';
 		if(array_key_exists($persStr, $this->personnelArr)){
 			$retStr = $this->personnelArr[$persStr];
 		}
 		else{
 			//Look to see if string can be translated via NeonPersonnel table
-			$sql = 'SELECT full_info FROM NeonPersonnel WHERE neon_email = "'.$this->cleanInStr($persStr).'" OR orcid = "'.$this->cleanInStr($persStr).'"';
-			$rs = $this->conn->query($sql);
-			while($r = $rs->fetch_object()){
-				$this->personnelArr[$persStr] = $r->full_info;
-				$retStr = $r->full_info;
+			$sql = 'SELECT full_info FROM NeonPersonnel WHERE neon_email = ? OR orcid = ?';
+			if($stmt = $this->conn->prepare($sql)){
+				$stmt->bind_param('ss', $persStr, $persStr);
+				$stmt->execute();
+				$stmt->bind_result($retStr);
+				while($stmt->fetch()){
+					$this->personnelArr[$persStr] = $retStr;
+				}
+				$stmt->close();
 			}
-			$rs->free();
 		}
 		return $retStr;
 	}
