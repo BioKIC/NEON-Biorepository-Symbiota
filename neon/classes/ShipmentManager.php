@@ -15,7 +15,6 @@ class ShipmentManager{
 
  	public function __construct(){
  		$this->conn = MySQLiConnectionFactory::getCon("write");
- 		ini_set('auto_detect_line_endings', true);
  	}
 
  	public function __destruct(){
