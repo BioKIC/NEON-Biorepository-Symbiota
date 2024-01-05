@@ -120,7 +120,7 @@ class NpsReport{
 			$this->occurArr[$r->occid]['depth'] = '';
 			$this->occurArr[$r->occid]['Depos'] = '';
 			$this->occurArr[$r->occid]['habComm'] = '';
-			$habitatArr = explode(';',$r->habitat);
+			$habitatArr = explode(';',$r->habitat ?? '');
 			$habitatStr = '';
 			$slopeStr = '';
 			$aspectStr = '';
