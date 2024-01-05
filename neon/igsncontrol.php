@@ -13,9 +13,7 @@ $limit = array_key_exists('limit',$_POST)?$_POST['limit']:1000;
 $action = array_key_exists('action',$_REQUEST)?$_REQUEST['action']:'';
 
 //Sanitation
-$recTarget = filter_var($recTarget, FILTER_SANITIZE_STRING);
-$startIndex = filter_var($startIndex, FILTER_SANITIZE_STRING);
-if(!is_numeric($limit)) $limit = 1000;
+$limit = filter_var($limit, FILTER_SANITIZE_NUMBER_INT);
 
 $igsnManager = new IgsnManager();
 
@@ -170,10 +168,10 @@ include($SERVER_ROOT.'/includes/header.php');
 							<label>reset session</label>
 						</div>
 						<div style="clear:both;padding-top:10px;margin-left:35px;">
-							<label>Start at IGSN:</label> <input name="startIndex" type="text" value="<?php echo $startIndex; ?>" />
+							<label>Start at IGSN:</label> <input name="startIndex" type="text" value="<?php echo htmlspecialchars("$startIndex"); ?>" />
 						</div>
 						<div style="clear:both;padding-top:10px;margin-left:35px;">
-							<label>Transaction limit:</label> <input name="limit" type="text" value="<?php echo $limit; ?>" required />
+							<label>Transaction limit:</label> <input name="limit" type="number" value="<?php echo $limit; ?>" required />
 						</div>
 						<div style="clear:both;padding:20px 35px;">
 							<div style="float:left;"><button name="action" type="submit" value="syncIGSNs" onclick="return verifySync(this.form)">Synchronize Records</button></div>

@@ -73,6 +73,8 @@ class IgsnManager{
 		if($resetSession) $this->resetSession();
 		$apiUrlBase = 'https://data.neonscience.org/api/v0/samples/view?';
 		$neonApiKey = (isset($GLOBALS['NEON_API_KEY'])?$GLOBALS['NEON_API_KEY']:'');
+		
+		//Build SQL
 		$sql = 'SELECT o.occid, o.occurrenceID, s.sampleCode, s.sampleUuid, s.sampleID, s.sampleClass, s.igsnPushedToNEON
 			FROM omoccurrences o INNER JOIN NeonSample s ON o.occid = s.occid
 			WHERE (o.occurrenceID LIKE "NEON%") AND o.collid NOT IN(81,84,93) ';
@@ -83,11 +85,25 @@ class IgsnManager{
 			//$recTarget == unchecked
 			$sql .= 'AND (s.igsnPushedToNEON = 3) ';
 		}
-		if($startIndex) $sql .= 'AND (o.occurrenceID > "'.$this->cleanInStr($startIndex).'") ';
+		if($startIndex){
+			$sql .= 'AND (o.occurrenceID > ?) ';
+		}
 		$sql .= 'ORDER BY o.occurrenceID ';
-		if(!is_numeric($limit)) $limit = 1000;
-		$sql .= 'LIMIT '.$limit;
-		$rs = $this->conn->query($sql);
+		if(!is_numeric($limit)){
+			$limit = 1000;
+		}
+		$sql .= 'LIMIT ?';
+		
+		//Prepare statement, bind params, and execute
+		$stmt = $this->conn->prepare($sql);
+		if ($startIndex) {
+			$stmt->bind_param('si', $this->cleanInStr($startIndex), $limit);
+		} else {
+			$stmt->bind_param('i', $limit);
+		}
+		$stmt->execute();
+		
+		$rs = $stmt->get_result();
 		$totalCnt = 0;
 		$syncCnt = 0;
 		$mismatchCnt = 0;
@@ -175,6 +191,7 @@ class IgsnManager{
 
 	public function exportReport($recTarget, $startIndex, $limit, $markAsSubmitted){
 		header ('Cache-Control: must-revalidate, post-check=0, pre-check=0');
+		//Build SQL
 		$fieldMap = array('sampleID' => 's.sampleID', 'sampleCode' => 's.sampleCode', 'sampleFate' => '"archived" AS sampleFate',
 			'sampleClass' => 's.sampleClass', 'archiveGuid' => 'o.occurrenceID', 'catalogueNumber' => 'o.catalogNumber',
 			'externalURLs' => 'CONCAT("https://biorepo.neonscience.org/portal/collections/individual/index.php?occid=", o.occid) AS referenceUrl',
@@ -187,7 +204,9 @@ class IgsnManager{
 		$sql = 'SELECT o.occid, '.implode(', ',$fieldMap).'
 			FROM omoccurrences o INNER JOIN NeonSample s ON o.occid = s.occid INNER JOIN omcollections c ON c.collid = o.collid
 			WHERE (o.occurrenceID LIKE "NEON%") AND o.collid NOT IN(81,84,93) ';
-		if($startIndex) $sql .= 'AND (o.occurrenceID > "'.$this->cleanInStr($startIndex).'") ';
+		if($startIndex){
+			$sql .= 'AND (o.occurrenceID > ?) ';
+		}
 		if($recTarget == 'unsynchronized'){
 			$sql .= 'AND (s.igsnPushedToNEON = 0) ';
 		}
@@ -199,9 +218,21 @@ class IgsnManager{
 			$sql .= 'AND (s.igsnPushedToNEON IS NULL) ';
 		}
 		$sql .= 'ORDER BY o.occurrenceID ';
-		if(!is_numeric($limit)) $limit = 1000;
-		$sql .= 'LIMIT '.$limit;
-		$rs = $this->conn->query($sql);
+		if(!is_numeric($limit)){
+			$limit = 1000;
+		}
+		$sql .= 'LIMIT ?';
+		
+		//Prepare statement, bind params, and execute
+		$stmt = $this->conn->prepare($sql);
+		if ($startIndex) {
+			$stmt->bind_param('si', $this->cleanInStr($startIndex), $limit);
+		} else {
+			$stmt->bind_param('i', $limit);
+		}
+		$stmt->execute();
+		
+		$rs = $stmt->get_result();
 		if($rs->num_rows){
 			$occidArr = array();
 			$fileName = 'biorepoIGSNReport_'.date('Y-m-d').'.csv';
