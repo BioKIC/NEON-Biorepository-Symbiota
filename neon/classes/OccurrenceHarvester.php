@@ -118,7 +118,7 @@ class OccurrenceHarvester{
 				$sampleArr['samplePK'] = $r->samplePK;
 				$sampleArr['sampleID'] = strtoupper($r->sampleID);
 				$sampleArr['hashedSampleID'] = $r->hashedSampleID;
-				$sampleArr['alternativeSampleID'] = strtoupper($r->alternativeSampleID);
+				$sampleArr['alternativeSampleID'] = strtoupper($r->alternativeSampleID ?? '');
 				$sampleArr['sampleUuid'] = $r->sampleUuid;
 				$sampleArr['sampleCode'] = $r->sampleCode;
 				$sampleArr['sampleClass'] = $r->sampleClass;
