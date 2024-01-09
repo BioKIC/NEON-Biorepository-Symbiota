@@ -23,7 +23,7 @@ include_once($SERVER_ROOT . '/content/lang/header.' . $LANG_TAG . '.php');
 			<div class="block-content block-content">
 				<ul class="nav">
 					<li class="last leaf nav-item depth--1"><a href="https://www.neonscience.org/" class="nav-link" title="NEON Science Main Portal">Neon Science</a></li>
-					<li class="last leaf nav-item depth--1"><a href="https://data.neonscience.org/home" title="NEON Data Portal" class="nav-link">Data Portal</a></li>
+					<li class="last leaf nav-item depth--1"><a href="https://www.neonscience.org/data/" title="NEON Data Portal" class="nav-link">Data Portal</a></li>
 					<li class="first leaf nav-item depth--1"><a href="https://biorepo.neonscience.org/portal/" title="NEON Biorepository at Arizona State University" class="nav-link active">Biorepository</a></li>
 				</ul>
 			</div>
@@ -130,7 +130,7 @@ include_once($SERVER_ROOT . '/content/lang/header.' . $LANG_TAG . '.php');
 						<a href="https://www.neonscience.org" target="_blank">About NEON</a>
 					</li>
 					<li>
-						<a href="https://www.neonscience.org/data/neon-data-portal" target="_blank">NEON Data Portal</a>
+						<a href="https://www.neonscience.org/data/" target="_blank">NEON Data Portal</a>
 					</li>
 					<li>
 						<a href="https://biokic.asu.edu/collections" target="_blank">ASU Biocollections</a>
