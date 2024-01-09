@@ -122,7 +122,7 @@ elseif (array_key_exists('CollAdmin', $USER_RIGHTS) || array_key_exists('CollEdi
 						<a href="https://www.neonscience.org" target="_blank" alt="About NEON">About NEON</a>
 					</li>
 					<li>
-						<a href="https://data.neonscience.org/" target="_blank" alt="NEON Data Portal">NEON Data Portal</a>
+						<a href="https://neonscience.org/data/" target="_blank" alt="NEON Data Portal">NEON Data Portal</a>
 					</li>
 					<li>
 						<a href="https://biokic.asu.edu/collections" target="_blank" alt="ASU Biocollections">ASU Biocollections</a>
