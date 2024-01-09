@@ -139,7 +139,7 @@ $taxaArr = $stats->getNeonTaxa();
 				</div>
 				<div class="six columns">
 					<h2 class="centered">Learn more</h2>
-					<p>This portal is offered through the <a href="https://symbiota.org/" target="_blank">Symbiota</a> software platform and is informationally synchronized with the <a href="https://data.neonscience.org/" target="_blank">main NEON Data Portal</a>, which serves the full spectrum of NEON data products.</p>
+					<p>This portal is offered through the <a href="https://symbiota.org/" target="_blank">Symbiota</a> software platform and is informationally synchronized with the <a href="https://neonscience.org/data/" target="_blank">main NEON Data Portal</a>, which serves the full spectrum of NEON data products.</p>
 					<p>To learn more about the features and capabilities available through Symbiota, visit the <a href="https://symbiota.org/docs/" target="_blank">Symbiota Docs site</a>.</p>
 					<p>Read more about NEON's history and experimental design on the <a href="https://www.neonscience.org/" target="_blank">NEON homepage</a>.</p>
 					<p>To explore sample collection and processing methods, visit the <a href="https://www.neonscience.org/data-collection/protocols-standardized-methods">NEON Protocols & Standardized Methods page</a>.</p>

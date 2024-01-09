@@ -28,8 +28,7 @@ $dArr = $datasetManager->getPublicDatasets();
 			<ul>
 				<?php				
 				if ($IS_ADMIN) {
-					//echo '<p><a href="datasetmanager.php">Dataset Management</a></p>';
-					echo '<p><a id="pubtools" href="">Dataset publishing</a></p>';
+					echo '<p><a href="index.php">Dataset Management</a></p>';
 				}
 
 				if($dArr){
