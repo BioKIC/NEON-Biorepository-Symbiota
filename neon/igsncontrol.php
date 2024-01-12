@@ -168,7 +168,7 @@ include($SERVER_ROOT.'/includes/header.php');
 							<label>reset session</label>
 						</div>
 						<div style="clear:both;padding-top:10px;margin-left:35px;">
-							<label>Start at IGSN:</label> <input name="startIndex" type="text" value="<?php echo htmlspecialchars("$startIndex"); ?>" />
+							<label>Start at IGSN:</label> <input name="startIndex" type="text" value="<?php echo htmlspecialchars($startIndex); ?>" />
 						</div>
 						<div style="clear:both;padding-top:10px;margin-left:35px;">
 							<label>Transaction limit:</label> <input name="limit" type="number" value="<?php echo $limit; ?>" required />

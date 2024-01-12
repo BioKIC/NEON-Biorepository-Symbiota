@@ -176,7 +176,7 @@ class EDIFileCreator extends Manager
 					$this->collArr[$r->collid]['collectionguid'] = $r->collectionguid;
 					$this->collArr[$r->collid]['url'] = $r->url;
 					// if $r->contact is 'NEON Biorepository', then change from individualName to organizationName
-					// also changes 'NEON' contacts to organizationName 
+					// also changes 'NEON' contacts to organizationName
 					if ($r->email === 'biorepo@asu.edu') {
 						$this->collArr[$r->collid]['contact'][0]['organizationName'] = 'NEON Biorepository at Arizona State University';
 					} else {
@@ -1225,7 +1225,7 @@ class EDIFileCreator extends Manager
 					} else {
 						$emlArr['associatedParty'][0]['individualName']['surName'] = $r->lastname;
 					}
-					// $emlArr['associatedParty'][0]['individualName']['surName'] = $r->lastname;										
+					// $emlArr['associatedParty'][0]['individualName']['surName'] = $r->lastname;
 					if ($r->ispublic) {
 						if ($r->institution) $emlArr['associatedParty'][0]['organizationName'] = $r->institution;
 						if ($r->title) $emlArr['associatedParty'][0]['positionName'] = $r->title;
@@ -1683,7 +1683,7 @@ class EDIFileCreator extends Manager
 		}
 
 		// Project
-		// if (isset($this->collArr[$collId]['project'])) $emlArr['project'] = $this->collArr[$collId]['project'];		
+		// if (isset($this->collArr[$collId]['project'])) $emlArr['project'] = $this->collArr[$collId]['project'];
 		if (array_key_exists('project', $emlArr)) {
 			$projectArr = $emlArr['project'];
 			$projectNode = $newDoc->createElement('project');
@@ -2216,7 +2216,7 @@ class EDIFileCreator extends Manager
 		$sql .= $this->getTableJoins() . $this->conditionSql;
 		$sql .= ' GROUP BY o.locationID ORDER BY decimalLongitude, decimalLatitude';
 		if ($sql) {
-			$sql = 'SELECT 
+			$sql = 'SELECT
     locationID, continent, waterBody, parentLocationID, islandGroup, island, countryCode, country, stateProvince, county, municipality, locality, decimalLatitude, decimalLongitude, geodeticDatum, footprintWKT ' . $sql;
 			$rs = $this->conn->query($sql);
 			// pass results to retArr
@@ -2249,7 +2249,7 @@ class EDIFileCreator extends Manager
 		if ($sql) {
 			$sql = 'SELECT eventDate, eventDate2, eventID ' . $sql . ' AND o.eventDate IS NOT NULL AND o.eventDate != "0000-00-00"';
 			$rs = $this->conn->query($sql);
-			// pass results to retArr 
+			// pass results to retArr
 			while ($r = $rs->fetch_assoc()) {
 				$retArr[] = $r;
 				// remove any null values
@@ -2769,8 +2769,8 @@ class EDIFileCreator extends Manager
 				if (is_array($v)) {
 					$retArr[$k] = $this->utf8EncodeArr($v);
 				} elseif (is_string($v)) {
-					if (mb_detect_encoding($v, 'UTF-8,ISO-8859-1', true) == "ISO-8859-1") {
-						$retArr[$k] = utf8_encode($v);
+					if (mb_detect_encoding($v, 'UTF-8,ISO-8859-1', true) == 'ISO-8859-1') {
+						$retArr[$k] = mb_convert_encoding($v, 'UTF-8', 'ISO-8859-1');
 					}
 				} else {
 					$retArr[$k] = $v;
@@ -2792,18 +2792,8 @@ class EDIFileCreator extends Manager
 	private function encodeStr($inStr)
 	{
 		$retStr = $inStr;
-		if ($inStr && $this->charSetSource) {
-			if ($this->charSetOut == 'UTF-8' && $this->charSetSource == 'ISO-8859-1') {
-				if (mb_detect_encoding($inStr, 'UTF-8,ISO-8859-1', true) == "ISO-8859-1") {
-					$retStr = utf8_encode($inStr);
-					//$retStr = iconv("ISO-8859-1//TRANSLIT","UTF-8",$inStr);
-				}
-			} elseif ($this->charSetOut == "ISO-8859-1" && $this->charSetSource == 'UTF-8') {
-				if (mb_detect_encoding($inStr, 'UTF-8,ISO-8859-1') == "UTF-8") {
-					$retStr = utf8_decode($inStr);
-					//$retStr = iconv("UTF-8","ISO-8859-1//TRANSLIT",$inStr);
-				}
-			}
+		if ($inStr && $this->charSetOut && $this->charSetSource != $this->charSetOut) {
+			$retStr = mb_convert_encoding($inStr, $this->charSetOut, $this->charSetSource);
 		}
 		return $retStr;
 	}

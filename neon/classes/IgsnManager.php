@@ -73,7 +73,7 @@ class IgsnManager{
 		if($resetSession) $this->resetSession();
 		$apiUrlBase = 'https://data.neonscience.org/api/v0/samples/view?';
 		$neonApiKey = (isset($GLOBALS['NEON_API_KEY'])?$GLOBALS['NEON_API_KEY']:'');
-		
+
 		//Build SQL
 		$sql = 'SELECT o.occid, o.occurrenceID, s.sampleCode, s.sampleUuid, s.sampleID, s.sampleClass, s.igsnPushedToNEON
 			FROM omoccurrences o INNER JOIN NeonSample s ON o.occid = s.occid
@@ -93,7 +93,7 @@ class IgsnManager{
 			$limit = 1000;
 		}
 		$sql .= 'LIMIT ?';
-		
+
 		//Prepare statement, bind params, and execute
 		$stmt = $this->conn->prepare($sql);
 		if ($startIndex) {
@@ -102,7 +102,7 @@ class IgsnManager{
 			$stmt->bind_param('i', $limit);
 		}
 		$stmt->execute();
-		
+
 		$rs = $stmt->get_result();
 		$totalCnt = 0;
 		$syncCnt = 0;
@@ -222,7 +222,7 @@ class IgsnManager{
 			$limit = 1000;
 		}
 		$sql .= 'LIMIT ?';
-		
+
 		//Prepare statement, bind params, and execute
 		$stmt = $this->conn->prepare($sql);
 		if ($startIndex) {
@@ -231,7 +231,7 @@ class IgsnManager{
 			$stmt->bind_param('i', $limit);
 		}
 		$stmt->execute();
-		
+
 		$rs = $stmt->get_result();
 		if($rs->num_rows){
 			$occidArr = array();
@@ -269,7 +269,7 @@ class IgsnManager{
 	private function encodeStr($inStr){
 		$retStr = $inStr;
 		if($inStr){
-			if(mb_detect_encoding($inStr,'UTF-8,ISO-8859-1') == 'UTF-8') $retStr = utf8_decode($inStr);
+			$retStr = mb_convert_encoding($inStr, 'ISO-8859-1', mb_detect_encoding($inStr));
 		}
 		return $retStr;
 	}
