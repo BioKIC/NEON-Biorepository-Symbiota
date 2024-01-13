@@ -156,7 +156,7 @@ header("Content-Type: text/html; charset=" . $CHARSET);
 		} else if (info.PhotoDrive) {
 			let photoDrive = info.PhotoDrive.split('/');
 			console.log(photoDrive);
-			img.src = `https://drive.google.com/uc?export=view&id=${photoDrive[5]}`;
+			img.src = `https://drive.google.com/thumbnail?id=${photoDrive[5]}&sz=w1000`;
 		};
 		img.width = '280';
 		img.alt = info.Name;
