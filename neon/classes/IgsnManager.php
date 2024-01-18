@@ -97,7 +97,7 @@ class IgsnManager{
 		//Prepare statement, bind params, and execute
 		$stmt = $this->conn->prepare($sql);
 		if ($startIndex) {
-			$stmt->bind_param('si', $this->cleanInStr($startIndex), $limit);
+			$stmt->bind_param('si', $startIndex, $limit);
 		} else {
 			$stmt->bind_param('i', $limit);
 		}
@@ -226,7 +226,7 @@ class IgsnManager{
 		//Prepare statement, bind params, and execute
 		$stmt = $this->conn->prepare($sql);
 		if ($startIndex) {
-			$stmt->bind_param('si', $this->cleanInStr($startIndex), $limit);
+			$stmt->bind_param('si', $startIndex, $limit);
 		} else {
 			$stmt->bind_param('i', $limit);
 		}
@@ -272,13 +272,6 @@ class IgsnManager{
 			$retStr = mb_convert_encoding($inStr, 'ISO-8859-1', mb_detect_encoding($inStr));
 		}
 		return $retStr;
-	}
-
-	private function cleanInStr($str){
-		$newStr = trim($str);
-		$newStr = preg_replace('/\s\s+/', ' ',$newStr);
-		$newStr = $this->conn->real_escape_string($newStr);
-		return $newStr;
 	}
 }
 ?>
