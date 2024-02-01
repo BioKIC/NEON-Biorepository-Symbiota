@@ -116,7 +116,7 @@ class OccurrenceHarvester{
 				echo '<li style="margin-left:15px">'.$cnt.': '.($r->occid?($this->replaceFieldValues?'Rebuilding':'Appending'):'Harvesting').' '.($r->sampleID?$r->sampleID:$r->sampleCode).'... ';
 				$sampleArr = array();
 				$sampleArr['samplePK'] = $r->samplePK;
-				$sampleArr['sampleID'] = strtoupper($r->sampleID);
+				$sampleArr['sampleID'] = strtoupper($r->sampleID ?? '');
 				$sampleArr['hashedSampleID'] = $r->hashedSampleID;
 				$sampleArr['alternativeSampleID'] = strtoupper($r->alternativeSampleID ?? '');
 				$sampleArr['sampleUuid'] = $r->sampleUuid;
