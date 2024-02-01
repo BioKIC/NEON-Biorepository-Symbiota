@@ -17,7 +17,6 @@ $replaceFieldValues = array_key_exists('replaceFieldValues',$_POST)||!$action?1:
 //Sanitation
 if(!is_numeric($targetCollid)) $targetCollid = 0;
 if(!preg_match('/^[\d-]+$/',$harvestDate)) $harvestDate = '';
-$errorStr = filter_var($errorStr,FILTER_SANITIZE_STRING);
 if(!is_numeric($replaceFieldValues)) $replaceFieldValues = 1000;
 if(!is_numeric($limit)) $limit = 1000;
 
