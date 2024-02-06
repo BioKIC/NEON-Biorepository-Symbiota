@@ -116,7 +116,7 @@ class OccurrenceHarvester{
 				echo '<li style="margin-left:15px">'.$cnt.': '.($r->occid?($this->replaceFieldValues?'Rebuilding':'Appending'):'Harvesting').' '.($r->sampleID?$r->sampleID:$r->sampleCode).'... ';
 				$sampleArr = array();
 				$sampleArr['samplePK'] = $r->samplePK;
-				$sampleArr['sampleID'] = strtoupper($r->sampleID);
+				$sampleArr['sampleID'] = strtoupper($r->sampleID ?? '');
 				$sampleArr['hashedSampleID'] = $r->hashedSampleID;
 				$sampleArr['alternativeSampleID'] = strtoupper($r->alternativeSampleID ?? '');
 				$sampleArr['sampleUuid'] = $r->sampleUuid;
@@ -1048,7 +1048,7 @@ class OccurrenceHarvester{
 	}
 
 	private function versionEdit($occid, $fieldName, $oldValue, $newValue){
-		if(strtolower(trim($oldValue)) != strtolower(trim($newValue)) && $fieldName != 'coordinateUncertaintyInMeters'){
+		if(strtolower(trim($oldValue ?? '')) != strtolower(trim($newValue ?? '')) && $fieldName != 'coordinateUncertaintyInMeters'){
 			$sql = 'INSERT INTO omoccuredits(occid, fieldName, fieldValueOld, fieldValueNew, appliedStatus, uid)
 				VALUES('.$occid.',"'.$fieldName.'","'.$this->cleanInStr($oldValue).'","'.$this->cleanInStr($newValue).'", 1, 50)';
 			if(!$this->conn->query($sql)){
@@ -1825,7 +1825,7 @@ class OccurrenceHarvester{
 	}
 
 	private function cleanInStr($str){
-		$newStr = trim($str);
+		$newStr = trim($str ?? '');
 		$newStr = preg_replace('/\s\s+/', ' ',$newStr);
 		$newStr = $this->conn->real_escape_string($newStr);
 		return $newStr;
