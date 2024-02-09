@@ -944,9 +944,10 @@ class OccurrenceCollectionProfile extends OmCollections
 	{
 		$bool = false;
 		$sql = 'SELECT traitid FROM tmtraits LIMIT 1';
-		$rs = $this->conn->query($sql);
-		if ($rs->num_rows) $bool = true;
-		$rs->free();
+		if($rs = $this->conn->query($sql)){
+			if($rs->num_rows) $bool = true;
+			$rs->free();
+		}
 		return $bool;
 	}
 
