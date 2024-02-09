@@ -391,7 +391,13 @@ $traitArr = $indManager->getTraitArr();
 								$otherCatArr = json_decode($occArr['othercatalognumbers'],true);
 								foreach($otherCatArr as $catTag => $catValueArr){
 									if(!$catTag) $catTag = $LANG['OTHER_CATALOG_NUMBERS'];
-									echo '<div class="assoccatnum-div"><label>'.$catTag.':</label> '.implode('; ', $catValueArr).'</div>';
+									echo '<div class="assoccatnum-div"><label>'.$catTag.':</label> '.implode('; ', $catValueArr);
+									if($IS_ADMIN){
+										if($catTag == 'NEON sampleCode (barcode)' || $catTag == 'NEON sampleID'){
+											echo '<span style="margin-left: 10px"><a href="../../neon/shipment/manifestviewer.php?quicksearch=' . array_pop($catValueArr) . '" target="_blank">Go to Manifest</a></span>';
+										}
+									}
+									echo '</div>';
 								}
 							}
 							else{
