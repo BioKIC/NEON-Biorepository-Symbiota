@@ -306,7 +306,8 @@ $traitArr = $indManager->getTraitArr();
 				</ul>
 				<div id="occurtab">
 					<?php
-					$iconUrl = (substr($collMetadata["icon"],0,6)=='images'?'../../':'').$collMetadata['icon'];
+					$iconUrl = '';
+					if($collMetadata['icon']) $iconUrl = (substr($collMetadata['icon'], 0, 6) == 'images' ? '../../' : '') . $collMetadata['icon'];
 					if($iconUrl){
 						?>
 						<div id="collicon-div">
