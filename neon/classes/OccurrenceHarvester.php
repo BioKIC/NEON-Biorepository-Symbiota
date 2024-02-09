@@ -116,7 +116,7 @@ class OccurrenceHarvester{
 				echo '<li style="margin-left:15px">'.$cnt.': '.($r->occid?($this->replaceFieldValues?'Rebuilding':'Appending'):'Harvesting').' '.($r->sampleID?$r->sampleID:$r->sampleCode).'... ';
 				$sampleArr = array();
 				$sampleArr['samplePK'] = $r->samplePK;
-				$sampleArr['sampleID'] = strtoupper($r->sampleID ?? '');
+				$sampleArr['sampleID'] = strtoupper($r->sampleID);
 				$sampleArr['hashedSampleID'] = $r->hashedSampleID;
 				$sampleArr['alternativeSampleID'] = strtoupper($r->alternativeSampleID ?? '');
 				$sampleArr['sampleUuid'] = $r->sampleUuid;
@@ -495,17 +495,21 @@ class OccurrenceHarvester{
 					}
 				}
 				if($assocMedia && isset($assocMedia['url'])) $tableArr['assocMedia'][] = $assocMedia;
-
-				if(isset($tableArr['collection_location']) && $tableArr['collection_location'] && !strpos($tableArr['collection_location'], ' ')){
-					$score = 1;
-					$this->fateLocationArr[$score]['loc'] = $tableArr['collection_location'];
-					$this->fateLocationArr[$score]['date'] = $fateDate;
-				}
-				elseif($fateDate && $fateLocation && !strpos($fateLocation, ' ')){
-					$score = $sampleRank.':'.$fateDate;
-					if(strpos($tableName,'fielddata')) $score = 2;
-					$this->fateLocationArr[$score]['loc'] = $fateLocation;
-					$this->fateLocationArr[$score]['date'] = $fateDate;
+				if(empty($this->fateLocationArr[1]['loc'])){
+					//locationID has not yet been harvested from collection_location field, thus looking for value set within parent
+					if(!empty($tableArr['collection_location']) && !strpos($tableArr['collection_location'], ' ')){
+						//collection_location is first choice/ranking
+						$score = 1;
+						$this->fateLocationArr[$score]['loc'] = $tableArr['collection_location'];
+						$this->fateLocationArr[$score]['date'] = $fateDate;
+					}
+					elseif($fateDate && $fateLocation && !strpos($fateLocation, ' ')){
+						//If collection_location is not defined, use fate dates (old method of harvesting locationID and date)
+						$score = $sampleRank.':'.$fateDate;
+						if(strpos($tableName,'fielddata')) $score = 2;
+						$this->fateLocationArr[$score]['loc'] = $fateLocation;
+						$this->fateLocationArr[$score]['date'] = $fateDate;
+					}
 				}
 				$sampleArr = array_merge($tableArr, $sampleArr);
 				if($identArr && isset($identArr['sciname']) && $identArr['sciname']){
@@ -1409,7 +1413,7 @@ class OccurrenceHarvester{
 
 	private function setDatasetIndexing($datasetName, $occid){
 		if($datasetName && $occid){
-			$sql = 'INSERT INTO omoccurdatasetlink(datasetid, occid) SELECT datasetid, '.$occid.' FROM omoccurdatasets WHERE name = "'.$datasetName.'"';
+			$sql = 'INSERT IGNORE INTO omoccurdatasetlink(datasetid, occid) SELECT datasetid, '.$occid.' FROM omoccurdatasets WHERE name = "'.$datasetName.'"';
 			if(!$this->conn->query($sql)){
 				if($this->conn->errno != 1062) $this->errorStr = 'ERROR assigning occurrence to '.$datasetName.' dataset: '.$this->conn->errno.' - '.$this->conn->error;
 			}
