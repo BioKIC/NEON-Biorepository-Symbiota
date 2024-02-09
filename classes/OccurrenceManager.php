@@ -164,16 +164,15 @@ class OccurrenceManager extends OccurrenceTaxaManager {
 					$tempTermArr[] = 'Locality IS NULL';
 				}
 				else{
-					$fullTextSearch = true;
-					if(strlen($value) < 4) $fullTextSearch = false;
-					elseif(strpos($value,' ')){
-						$wordArr = explode(' ',$value);
-						$fullTextSearch = false;
-						foreach($wordArr as $w){
-							if(strlen($w) > 3){
-								$fullTextSearch = true;
-								break;
-							}
+					$wordArr = explode(' ',$value);
+					$fullTextSearch = false;
+					foreach($wordArr as $w){
+						if(strlen($w) > 3){
+							$fullTextSearch = true;
+						}
+						if(in_array(strtolower($w),array('took'))){
+							$fullTextSearch = false;
+							break;
 						}
 					}
 					if($fullTextSearch) $fullTextArr[] = $this->cleanInStr(str_replace('"', '', $value));
