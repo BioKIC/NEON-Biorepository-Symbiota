@@ -9,6 +9,7 @@ header("Content-Type: text/html; charset=".$CHARSET);
 		$activateJQuery = false;
 		include_once($SERVER_ROOT.'/includes/head.php');
 		?>
+		
 	</head>
 	<body>
 		<?php
