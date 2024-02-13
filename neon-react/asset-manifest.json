@@ -1,15 +1,15 @@
 {
   "files": {
-    "main.css": "./neon-react/static/css/main.css",
-    "main.js": "./neon-react/static/js/main.js",
-    "static/js/761.3c416ffe.chunk.js": "./neon-react/static/js/761.3c416ffe.chunk.js",
-    "static/media/NSF-NEON-logo.png": "./neon-react/static/media/NSF-NEON-logo.ffca459b7ab60f652795.png",
-    "index.html": "./neon-react/index.html",
-    "static/media/header-search-hover.svg": "./neon-react/static/media/header-search-hover.df4898c4550631a9c7041f2164076abd.svg",
-    "static/media/header-search.svg": "./neon-react/static/media/header-search.6e6360b2382fa1416fb1975a96dd5417.svg",
-    "main.css.map": "./neon-react/static/css/main.css.map",
-    "main.js.map": "./neon-react/static/js/main.js.map",
-    "761.3c416ffe.chunk.js.map": "./neon-react/static/js/761.3c416ffe.chunk.js.map"
+    "main.css": "/%3C/static/css/main.css",
+    "main.js": "/%3C/static/js/main.js",
+    "static/js/761.3c416ffe.chunk.js": "/%3C/static/js/761.3c416ffe.chunk.js",
+    "static/media/NSF-NEON-logo.png": "/%3C/static/media/NSF-NEON-logo.ffca459b7ab60f652795.png",
+    "index.html": "/%3C/index.html",
+    "static/media/header-search-hover.svg": "/%3C/static/media/header-search-hover.df4898c4550631a9c7041f2164076abd.svg",
+    "static/media/header-search.svg": "/%3C/static/media/header-search.6e6360b2382fa1416fb1975a96dd5417.svg",
+    "main.css.map": "/%3C/static/css/main.css.map",
+    "main.js.map": "/%3C/static/js/main.js.map",
+    "761.3c416ffe.chunk.js.map": "/%3C/static/js/761.3c416ffe.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.css",
