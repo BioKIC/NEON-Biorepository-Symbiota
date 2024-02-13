@@ -11,7 +11,7 @@
 $CUSTOM_CSS_PATH = '/css/symb/custom';
 ?>
 
-<!--neon-react inputs-->
+<!--neon react links-->
 
 <meta name="viewport" content="width=device-width,initial-scale=1,shrink-to-fit=no"/>
 <meta name="theme-color" content="#000000"/><link rel="manifest" href="./neon-react/manifest.json"/>
@@ -28,7 +28,7 @@ $CUSTOM_CSS_PATH = '/css/symb/custom';
 <script defer="defer" src="./neon-react/static/js/main.js"></script>
 <link href="./neon-react/static/css/main.css" rel="stylesheet">
 
-<!--end of neon react inputs-->
+<!--end of neon react links-->
 
 <link href="<?php echo $CLIENT_ROOT; ?>/css/v202209/jquery-ui.css" type="text/css" rel="stylesheet">
 <!-- UNIVERSAL CSS –––––––––––––––––––––––––––––––––––––––––––––––––– -->
