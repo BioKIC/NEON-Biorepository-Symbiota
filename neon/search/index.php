@@ -423,14 +423,20 @@ $siteData = new DatasetsMetadata();
 								<label for="eventdate1" class="input-text--outlined">
 									<input type="text" name="eventdate1" data-chip="Event Date Start">
 									<span data-label="Collection Start Date"></span></label>
-								<span class="assistive-text">Single date or start date of range (e.g. YYYY, YYYY-MM-DD, or similar format).</span>
+								<span class="assistive-text">Single date or start date of range (e.g. YYYY, YYYY-MM-DD, or similar).</span>
 							</div>
 							<div class="input-text-container">
 								<label for="eventdate2" class="input-text--outlined">
 									<input type="text" name="eventdate2" data-chip="Event Date End">
 									<span data-label="Collection End Date"></span></label>
-								<span class="assistive-text">End date of range (e.g. YYYY, YYYY-MM-DD, or similar format).</span>
+								<span class="assistive-text">End date of range (e.g. YYYY, YYYY-MM-DD, or similar).</span>
 							</div>
+							<div class="input-text-container">
+								<label for="collector" class="input-text--outlined">
+									<input type="text" name="collector" data-chip="Collector/ORCID">
+									<span data-label="Collector/ORCID"></span></label>
+								<span class="assistive-text">Any part of a collector's name or ORCID iD (XXXX-XXXX-XXXX-XXXX).</span>
+							</div>							
 						</div>
 					</div>
 				</section>
