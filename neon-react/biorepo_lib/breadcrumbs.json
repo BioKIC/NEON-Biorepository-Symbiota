@@ -1,0 +1,12 @@
+{
+  "/NEON-Biorepository/index.php": [],
+  "/NEON-Biorepository/neon/search/index.php": [
+    { "name": "Another Page", "href": "/another-page" },
+    { "name": "Sub Page", "href": "/another-page/sub-page" },
+    { "name": "Current Page" }
+  ],
+  "/NEON-Biorepository/misc/cite.php": [
+    { "name": "Yet Another Page", "href": "/yet-another-page" },
+    { "name": "Current Page" }
+  ]
+}
