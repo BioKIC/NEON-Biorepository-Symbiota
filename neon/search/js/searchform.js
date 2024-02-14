@@ -13,6 +13,7 @@ let paramNames = [
   'db',
   'datasetid',
   'catnum',
+  'collector',
   'includeothercatnum',
   'hasimages',
   'hasgenetic',
