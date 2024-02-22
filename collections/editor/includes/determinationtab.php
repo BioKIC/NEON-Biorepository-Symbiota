@@ -162,7 +162,10 @@ $specImgArr = $occManager->getImageMap();  // find out if there are images in or
 							<b><?php echo $LANG['SCI_NAME']; ?>:</b>
 							<input type="text" id="dafsciname" name="sciname" style="background-color:lightyellow;width:350px;" onfocus="initDetAutocomplete(this.form)" />
 							<input type="hidden" id="daftidtoadd" name="tidtoadd" value="" />
-							<input type="hidden" name="family" value="" />
+						</div>
+						<div style='margin:3px;'>
+							<b><?php echo $LANG['FAMILY']; ?>:</b>
+							<input type="text" name="family" style="width:200px;" />
 						</div>
 						<div style='margin:3px;'>
 							<b><?php echo $LANG['AUTHOR']; ?>:</b>
@@ -287,7 +290,10 @@ $specImgArr = $occManager->getImageMap();  // find out if there are images in or
 									<b><?php echo $LANG['SCI_NAME']; ?>:</b>
 									<input type="text" id="defsciname-<?php echo $detId;?>" name="sciname" value="<?php echo $detRec['sciname']; ?>" style="background-color:lightyellow;width:350px;" onfocus="initDetAutocomplete(this.form)" />
 									<input type="hidden" id="deftidtoadd" name="tidtoadd" value="" />
-									<input type="hidden" name="family" value="" />
+								</div>
+								<div style='margin:3px;'>
+									<b><?php echo $LANG['FAMILY']; ?>:</b>
+									<input type="text" name="family" value="<?php echo $detRec['family']; ?>" style="width:200px;" />
 								</div>
 								<div style='margin:3px;'>
 									<b><?php echo $LANG['AUTHOR']; ?>:</b>

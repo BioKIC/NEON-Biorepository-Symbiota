@@ -16,7 +16,7 @@ class OccurrenceEditorDeterminations extends OccurrenceEditorManager{
 	public function getDetMap($identBy, $dateIdent, $sciName){
 		$retArr = array();
 		$hasCurrent = 0;
-		$sql = 'SELECT detid, identifiedBy, dateIdentified, sciname, scientificNameAuthorship, identificationQualifier, '.
+		$sql = 'SELECT detid, identifiedBy, dateIdentified, sciname, family, scientificNameAuthorship, identificationQualifier, '.
 			'iscurrent, printqueue, appliedstatus, identificationReferences, identificationRemarks, sortsequence '.
 			'FROM omoccurdeterminations '.
 			'WHERE (occid = '.$this->occid.') ORDER BY iscurrent DESC, sortsequence';
@@ -27,6 +27,7 @@ class OccurrenceEditorDeterminations extends OccurrenceEditorManager{
 			$retArr[$detId]["identifiedby"] = $this->cleanOutStr($row->identifiedBy);
 			$retArr[$detId]["dateidentified"] = $this->cleanOutStr($row->dateIdentified);
 			$retArr[$detId]["sciname"] = $this->cleanOutStr($row->sciname);
+			$retArr[$detId]["family"] = $this->cleanOutStr($row->family);
 			$retArr[$detId]["scientificnameauthorship"] = $this->cleanOutStr($row->scientificNameAuthorship);
 			$retArr[$detId]["identificationqualifier"] = $this->cleanOutStr($row->identificationQualifier);
 			if($row->iscurrent == 1) $hasCurrent = 1;
@@ -82,10 +83,12 @@ class OccurrenceEditorDeterminations extends OccurrenceEditorManager{
 			$notes .= ($notes?'; ':'').'ConfidenceRanking: '.$detArr['confidenceranking'];
 		}
 		$guid = UuidFactory::getUuidV4();
-		$sql = 'INSERT IGNORE INTO omoccurdeterminations(occid, identifiedBy, dateIdentified, sciname, scientificNameAuthorship, '.
+		$sql = 'INSERT IGNORE INTO omoccurdeterminations(occid, identifiedBy, dateIdentified, sciname, family, scientificNameAuthorship, '.
 			'identificationQualifier, iscurrent, printqueue, appliedStatus, identificationReferences, identificationRemarks, recordID, sortsequence) '.
 			'VALUES ('.$this->occid.',"'.$this->cleanInStr($detArr['identifiedby']).'","'.$this->cleanInStr($detArr['dateidentified']).'","'.
-			$sciname.'",'.($detArr['scientificnameauthorship']?'"'.$this->cleanInStr($detArr['scientificnameauthorship']).'"':'NULL').','.
+			$sciname.'",'.
+			($detArr['family']?'"'.$this->cleanInStr($detArr['family']).'"':'NULL').','.
+			($detArr['scientificnameauthorship']?'"'.$this->cleanInStr($detArr['scientificnameauthorship']).'"':'NULL').','.
 			($detArr['identificationqualifier']?'"'.$this->cleanInStr($detArr['identificationqualifier']).'"':'NULL').','.
 			$detArr['makecurrent'].','.$detArr['printqueue'].','.($isEditor==3?0:1).','.
 			($detArr['identificationreferences']?'"'.$this->cleanInStr($detArr['identificationreferences']).'"':'NULL').','.
@@ -102,10 +105,10 @@ class OccurrenceEditorDeterminations extends OccurrenceEditorManager{
 			if($isCurrent){
 				//If determination is already in omoccurdeterminations, INSERT will fail
 				$guid = UuidFactory::getUuidV4();
-				$sqlInsert = 'INSERT IGNORE INTO omoccurdeterminations(occid, identifiedBy, dateIdentified, sciname, scientificNameAuthorship, '.
+				$sqlInsert = 'INSERT IGNORE INTO omoccurdeterminations(occid, identifiedBy, dateIdentified, sciname, family, scientificNameAuthorship, '.
 					'identificationQualifier, identificationReferences, identificationRemarks, recordID, sortsequence) '.
 					'SELECT occid, IFNULL(identifiedby,"unknown") AS idby, IFNULL(dateidentified,"s.d.") AS di, '.
-					'sciname, scientificnameauthorship, identificationqualifier, identificationreferences, identificationremarks, "'.$guid.'", 10 AS sortseq '.
+					'sciname, family, scientificnameauthorship, identificationqualifier, identificationreferences, identificationremarks, "'.$guid.'", 10 AS sortseq '.
 					'FROM omoccurrences WHERE (occid = '.$this->occid.') AND (identifiedBy IS NOT NULL OR dateIdentified IS NOT NULL OR sciname IS NOT NULL)';
 				$this->conn->query($sqlInsert);
 				try {
@@ -137,6 +140,7 @@ class OccurrenceEditorDeterminations extends OccurrenceEditorManager{
 				'SET identifiedBy = "'.$this->cleanInStr($detArr['identifiedby']).'", '.
 				'dateIdentified = "'.$this->cleanInStr($detArr['dateidentified']).'", '.
 				'sciname = "'.$this->cleanInStr($detArr['sciname']).'", '.
+				'family = '.($detArr['family']?'"'.$this->cleanInStr($detArr['family']).'"':'NULL').','.
 				'scientificNameAuthorship = '.($detArr['scientificnameauthorship']?'"'.$this->cleanInStr($detArr['scientificnameauthorship']).'"':'NULL').','.
 				'identificationQualifier = '.($detArr['identificationqualifier']?'"'.$this->cleanInStr($detArr['identificationqualifier']).'"':'NULL').','.
 				'identificationReferences = '.($detArr['identificationreferences']?'"'.$this->cleanInStr($detArr['identificationreferences']).'"':'NULL').','.
@@ -160,7 +164,7 @@ class OccurrenceEditorDeterminations extends OccurrenceEditorManager{
 		$isCurrent = 0;
 		$occid = 0;
 
-		$sql = 'SELECT occid, identifiedBy, dateIdentified, family, sciname, scientificNameAuthorship, tidInterpreted, identificationQualifier, isCurrent, printQueue,
+		$sql = 'SELECT occid, identifiedBy, dateIdentified, family, sciname, family, scientificNameAuthorship, tidInterpreted, identificationQualifier, isCurrent, printQueue,
 			appliedStatus, detType, identificationReferences, identificationRemarks, taxonRemarks, sortSequence
 			FROM omoccurdeterminations WHERE detid = '.$detId;
 		$rs = $this->conn->query($sql);
@@ -222,9 +226,9 @@ class OccurrenceEditorDeterminations extends OccurrenceEditorManager{
 		$status = $LANG['DET_NOW_CURRENT'];
 		//Make sure determination data within omoccurrences is in omoccurdeterminations. If already there, INSERT will fail and nothing lost
 		$guid = UuidFactory::getUuidV4();
-		$sqlInsert = 'INSERT IGNORE INTO omoccurdeterminations(occid, identifiedBy, dateIdentified, sciname, scientificNameAuthorship, '.
+		$sqlInsert = 'INSERT IGNORE INTO omoccurdeterminations(occid, identifiedBy, dateIdentified, sciname, family, scientificNameAuthorship, '.
 			'identificationQualifier, identificationReferences, identificationRemarks, recordID, sortsequence) '.
-			'SELECT occid, IFNULL(identifiedby,"unknown") AS idby, IFNULL(dateidentified,"s.d.") AS iddate, sciname, scientificnameauthorship, '.
+			'SELECT occid, IFNULL(identifiedby,"unknown") AS idby, IFNULL(dateidentified,"s.d.") AS iddate, sciname, family, scientificnameauthorship, '.
 			'identificationqualifier, identificationreferences, identificationremarks, "'.$guid.'", 10 AS sortseq '.
 			'FROM omoccurrences WHERE (occid = '.$this->occid.') AND (identifiedBy IS NOT NULL OR dateIdentified IS NOT NULL OR sciname IS NOT NULL)';
 		$this->conn->query($sqlInsert);
@@ -251,10 +255,9 @@ class OccurrenceEditorDeterminations extends OccurrenceEditorManager{
 		if(is_numeric($detId)){
 			$taxonArr = $this->getTaxonVariables($detId);
 			$sql = 'UPDATE omoccurrences o INNER JOIN omoccurdeterminations d ON o.occid = d.occid
-				SET o.identifiedBy = d.identifiedBy, o.dateIdentified = d.dateIdentified, o.sciname = d.sciname, o.scientificNameAuthorship = d.scientificnameauthorship,
+				SET o.identifiedBy = d.identifiedBy, o.dateIdentified = d.dateIdentified, o.sciname = d.sciname, o.family = d.family, o.scientificNameAuthorship = d.scientificnameauthorship,
 				o.identificationQualifier = d.identificationqualifier, o.identificationReferences = d.identificationReferences, o.identificationRemarks = d.identificationRemarks,
 				o.taxonRemarks = d.taxonRemarks, o.genus = NULL, o.specificEpithet = NULL, o.taxonRank = NULL, o.infraspecificepithet = NULL, o.scientificname = NULL ';
-			if(isset($taxonArr['family']) && $taxonArr['family']) $sql .= ', o.family = "'.$this->cleanInStr($taxonArr['family']).'"';
 			if(isset($taxonArr['tid']) && $taxonArr['tid']) $sql .= ', o.tidinterpreted = '.$taxonArr['tid'];
 			if(isset($taxonArr['security']) && $taxonArr['security']) $sql .= ', o.localitysecurity = '.$taxonArr['security'].', o.localitysecurityreason = "<Security Setting Locked>"';
 			$sql .= ' WHERE (d.iscurrent = 1) AND (d.detid = '.$detId.')';
