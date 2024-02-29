@@ -64,7 +64,7 @@ document.addEventListener('DOMContentLoaded', async function () {
       // Moves family div to header to take advantage of layout
       let familyDiv = label.querySelector('.label-header');
       familyDiv.innerText = '';
-      familyDiv.appendChild(label.querySelector('.family'));
+      //familyDiv.appendChild(label.querySelector('.family'));
       // Adds header
       let header = document.createElement('div');
       header.className = 'label-neon-header';
@@ -100,7 +100,7 @@ document.addEventListener('DOMContentLoaded', async function () {
         return;
         // header.innerText += ' of NEON';
       }
-      label.insertBefore(header, familyDiv);
+      //label.insertBefore(header, familyDiv);
       // Removes ORCID from collector
       let recordedBy = label.querySelector('.recordedby');
       if (recordedBy) {
