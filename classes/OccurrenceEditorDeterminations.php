@@ -85,7 +85,7 @@ class OccurrenceEditorDeterminations extends OccurrenceEditorManager{
 		}
 		$guid = UuidFactory::getUuidV4();
 		$sql = 'INSERT IGNORE INTO omoccurdeterminations(occid, identifiedBy, dateIdentified, sciname, family, scientificNameAuthorship, '.
-			'identificationQualifier, iscurrent, printqueue, appliedStatus, identificationReferences, identificationRemarks, taxonRemarks, recordID, sortsequence) '.
+			'identificationQualifier, iscurrent, printqueue, appliedStatus, identificationReferences, identificationRemarks, taxonRemarks, recordID, enteredByUid, sortsequence) '.
 			'VALUES ('.$this->occid.',"'.$this->cleanInStr($detArr['identifiedby']).'","'.$this->cleanInStr($detArr['dateidentified']).'","'.
 			$sciname.'",'.
 			($detArr['family']?'"'.$this->cleanInStr($detArr['family']).'"':'NULL').','.
@@ -95,7 +95,7 @@ class OccurrenceEditorDeterminations extends OccurrenceEditorManager{
 			($detArr['identificationreferences']?'"'.$this->cleanInStr($detArr['identificationreferences']).'"':'NULL').','.
 			($notes?'"'.$notes.'"':'NULL').','.
 			($detArr['taxonremarks']?'"'.$this->cleanInStr($detArr['taxonremarks']).'"':'NULL').',"'.
-			$guid.'",'.$sortSeq.')';
+			$guid.'",'.$GLOBALS["SYMB_UID"].','.$sortSeq.')';
 		$detId = 0;
 		try {
 			$this->conn->query($sql);
@@ -150,7 +150,8 @@ class OccurrenceEditorDeterminations extends OccurrenceEditorManager{
 				'identificationRemarks = '.($detArr['identificationremarks']?'"'.$this->cleanInStr($detArr['identificationremarks']).'"':'NULL').','.
 				'taxonRemarks = '.($detArr['taxonremarks']?'"'.$this->cleanInStr($detArr['taxonremarks']).'"':'NULL').','.
 				'sortsequence = '.($detArr['sortsequence']?$detArr['sortsequence']:'10').','.
-				'printqueue = '.($detArr['printqueue']?$detArr['printqueue']:'NULL').' '.
+				'printqueue = '.($detArr['printqueue']?$detArr['printqueue']:'NULL').','.
+				'enteredByUid = '.$GLOBALS["SYMB_UID"].' '.
 				'WHERE (detid = '.$detArr['detid'].')';
 			if($this->conn->query($sql)){
 				$this->updateBaseOccurrence($detArr['detid']);
