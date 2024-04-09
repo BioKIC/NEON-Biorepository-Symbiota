@@ -657,7 +657,11 @@ class OccurrenceHarvester{
 						//Identifications not supplied via API nor manifest, thus try to grab from sampleID
 						$taxonCode = '';
 						$taxonRemarks = '';
-						if($dwcArr['collid'] == 30) $taxonCode = 'Soil';
+						if($dwcArr['collid'] == 30){
+							$identArr[] = array('sciname' => $dwcArr['identifications'][0]['sciname'],
+											  'identifiedBy' => 'NEON Lab',
+											  'dateIdentified' => 's.d.');
+						}
 						elseif($dwcArr['collid'] == 56){
 							if(preg_match('/\.\d{4}\.\d{1,2}\.([A-Z]{2,15}\d{0,2})\./', $sampleArr['sampleID'], $m)){
 								$taxonCode = $m[1];
@@ -885,7 +889,7 @@ class OccurrenceHarvester{
 				}
 				elseif(!isset($habitatArr['soil']) && $propArr['locationPropertyName'] == 'Value for Soil type order'){
 					if($dwcArr['collid'] == 30 && !isset($dwcArr['identifications'])){
-						$dwcArr['identifications'][] = array('sciname' => $propArr['locationPropertyValue'], 'identifiedBy' => 'NEON Lab', 'dateIdentified' => 's.d.', 'isCurrent' => 1);
+						$dwcArr['identifications'][] = array('sciname' => $propArr['locationPropertyValue']);
 					}
 					$habitatArr['soil'] = 'soil type order: '.$propArr['locationPropertyValue'];
 				}
