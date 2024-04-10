@@ -52,6 +52,11 @@ $taxaArr = $stats->getNeonTaxa();
 	<div id="innertext" class="container" style="margin-top: 2rem">
 		<h1 class="centered">Discover and access sample-based data</h1>
 		<section>
+			<div style="border-bottom-width:2px;border-color:#F0AB00;border-left-width:20px;border-right-width:2px;border-style:solid;border-top-width:2px;padding:10px;">
+				<p>A new <a href="https://www.nsf.gov/pubs/2024/nsf24069/nsf24069.jsp?WT.mc_ev=click&amp;WT.mc_id=&amp;utm_medium=email&amp;utm_source=govdelivery">NSF DCL presents an opportunity to leverage the NEON Biorepository collections</a>. Please <a href="mailto:biorepo@asu.edu">contact us</a> with any questions or for information needed for potential innovative use! We are here to support you.</p>
+			</div>
+		</section>
+		<section>
 			<div class="row">
 				<img src="images/layout/Home-Map-2.jpg" alt="Map with samples collected within NEON sites" class="hide-on-small" style="width:100%;">
 				<img src="images/layout/map-mobile.jpg" alt="Map with samples collected within NEON sites" class="hide-on-large">
@@ -59,7 +64,6 @@ $taxaArr = $stats->getNeonTaxa();
 				<p class="hide-on-large"><span style="font-size: 70%; line-height: 1">Samples available in the portal (Aug 2019), collected in Continental US (top), Alaska (bottom left), and Puerto Rico (bottom right). Colors indicate different collection types. Circle sizes indicate quantity of samples per collection in a given locality.</span></p>
 			</div>
 		</section>
-
 		<section>
 			<div class="row centered">
 				<div class="four columns centered" style="background-color:#0071ce; color: white; margin-top:0.5em; padding: 0.4em 0">
