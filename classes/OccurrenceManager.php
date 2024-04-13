@@ -820,7 +820,7 @@ class OccurrenceManager extends OccurrenceTaxaManager {
 			}
 		}
 		if(array_key_exists('catnum',$_REQUEST)){
-			$catNum = $this->cleanInputStr(str_replace(array(',', "\n"), ';', $_REQUEST['catnum']));
+			$catNum = $this->cleanInputStr(str_replace(array(',', "\n", "\r\n", "r"), '; ', $_REQUEST['catnum']));
 			if($catNum){
 				$this->searchTermArr['catnum'] = $catNum;
 				if(array_key_exists('includeothercatnum',$_REQUEST)) $this->searchTermArr['includeothercatnum'] = '1';
