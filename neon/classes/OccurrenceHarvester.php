@@ -40,7 +40,7 @@ class OccurrenceHarvester{
 		$retArr = array();
 		$sql = 'SELECT s.errorMessage AS errMsg, COUNT(s.samplePK) as sampleCnt, COUNT(o.occid) as occurrenceCnt '.
 			'FROM NeonSample s LEFT JOIN omoccurrences o ON s.occid = o.occid '.
-			'WHERE s.checkinuid IS NOT NULL AND s.sampleReceived = 1 AND (o.collid NOT IN(81,84) OR o.collid IS NULL) ';
+			'WHERE s.checkinuid IS NOT NULL AND s.sampleReceived = 1';
 		if($shipmentPK) $sql .= 'AND s.shipmentPK = '.$shipmentPK;
 		$sql .= ' GROUP BY errMsg';
 		$rs= $this->conn->query($sql);
@@ -706,7 +706,7 @@ class OccurrenceHarvester{
 							}
 						}
 						if(!is_bool($isCurrentKey)) $identArr[$isCurrentKey]['isCurrent'] = 1;
-						//Check to see if any determination need to be projected
+						//Check to see if any determination needs to be protected
 						$appendIdentArr = array();
 						foreach($identArr as $idKey => &$idArr){
 							if(!empty($idArr['taxonPublished'])){
