@@ -322,7 +322,16 @@ $traitArr = $indManager->getTraitArr();
 						<?php echo $collMetadata['collectionname'].' ('.$instCode.')'; ?>
 					</div>
 					<div  id="occur-div">
-						<?php
+						<div id="availability-div">
+							<?php 
+							if ($occArr['availability'] == 1) {
+								echo "<strong><span style='color:green;'>This sample is available for loan</span></strong>";
+							} else {
+								echo "<strong><span style='color:red;'>This sample is NOT available for loan</span></strong>";
+							}
+							?>
+						</div>
+							<?php
 						if(array_key_exists('loan',$occArr)){
 							?>
 							<div id="loan-div" title="<?php echo 'Loan #'.$occArr['loan']['identifier']; ?>">
@@ -1368,7 +1377,7 @@ $traitArr = $indManager->getTraitArr();
 			</div>
 			<?php
 		}
-		else{
+		else {
 			?>
 			<h2><?php echo (isset($LANG['UNABLETOLOCATE'])?$LANG['UNABLETOLOCATE']:'Unable to locate occurrence record'); ?></h2>
 			<div style="margin:20px">
