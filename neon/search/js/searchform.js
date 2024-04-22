@@ -109,6 +109,7 @@ function openCoordAid(mapMode) {
  * @param {HTMLObjectElement} element Input for which chips are going to be created by default
  */
 function addChip(element) {
+  console.log(element);
   let inputChip = document.createElement('span');
   inputChip.classList.add('chip');
   let chipBtn = document.createElement('button');
@@ -139,7 +140,7 @@ function addChip(element) {
     };
   } else {
     inputChip.id = 'chip-' + element.id;
-    let isTextOrNum = (element.type == 'text') | (element.type == 'number');
+    let isTextOrNum = (element.type == 'text') | (element.type == 'number') | (element.type == 'textarea');
     isTextOrNum
       ? (inputChip.textContent = `${element.dataset.chip}: ${element.value}`)
       : (inputChip.textContent = element.dataset.chip);
@@ -217,6 +218,7 @@ function updateChip(e) {
       if (
         (item.type == 'checkbox' && item.checked) |
         (item.type == 'text' && item.value != '') |
+        (item.type == 'textarea' && item.value != '') |
         (item.type == 'number' && item.value != '')
       ) {
         // now add chips depending on type of item
@@ -463,7 +465,7 @@ function getParam(paramName) {
     switch (firstEl.tagName) {
       case 'INPUT':
         (firstEl.type === 'checkbox' && firstEl.checked) ||
-        ((firstEl.type === 'text' || firstEl.type === 'number') && firstEl != '')
+        ((firstEl.type === 'text' || firstEl.type === 'number' || firstEl.type === 'textarea') && firstEl != '')
           ? (elementValues = firstEl.value)
           : '';
         break;
@@ -715,7 +717,7 @@ document
     updateChip();
   });
 //////// Binds Update chip on event change
-const formInputs = document.querySelectorAll('.content input');
+const formInputs = document.querySelectorAll('.content input, .content textarea');
 formInputs.forEach((formInput) => {
   formInput.addEventListener('change', updateChip);
 });

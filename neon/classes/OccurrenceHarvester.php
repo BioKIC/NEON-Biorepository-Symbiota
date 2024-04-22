@@ -40,7 +40,7 @@ class OccurrenceHarvester{
 		$retArr = array();
 		$sql = 'SELECT s.errorMessage AS errMsg, COUNT(s.samplePK) as sampleCnt, COUNT(o.occid) as occurrenceCnt '.
 			'FROM NeonSample s LEFT JOIN omoccurrences o ON s.occid = o.occid '.
-			'WHERE s.checkinuid IS NOT NULL AND s.sampleReceived = 1 AND (o.collid NOT IN(81,84) OR o.collid IS NULL) ';
+			'WHERE s.checkinuid IS NOT NULL AND s.sampleReceived = 1 AND o.collid IS NULL';
 		if($shipmentPK) $sql .= 'AND s.shipmentPK = '.$shipmentPK;
 		$sql .= ' GROUP BY errMsg';
 		$rs= $this->conn->query($sql);
@@ -84,7 +84,7 @@ class OccurrenceHarvester{
 			else $sqlPrefix .= 'LIMIT 1000 ';
 		}
 		if($sqlWhere){
-			$sqlWhere = 'WHERE s.checkinuid IS NOT NULL AND s.sampleReceived = 1 AND (s.acceptedForAnalysis = 1 || o.occid IS NOT NULL) AND (o.collid NOT IN(81,84) OR o.collid IS NULL) '.$sqlWhere;
+			$sqlWhere = 'WHERE s.checkinuid IS NOT NULL AND s.sampleReceived = 1 AND (s.acceptedForAnalysis = 1 || o.occid IS NOT NULL) AND o.collid IS NULL '.$sqlWhere;
 			$status = $this->batchHarvestOccurrences($sqlWhere.$sqlPrefix);
 		}
 		return $status;
@@ -238,57 +238,27 @@ class OccurrenceHarvester{
 	}
 
 	private function harvestNeonApi(&$sampleArr){
-		//returning true/false changes the 'success' of the sample
 		$this->setSampleErrorMessage($sampleArr['samplePK'], '');
 		$url = '';
 		$sampleViewArr = array();
 
-		// Define an array of URL configurations based on sample identifiers
-		$urlConfigs = [
-			['key' => 	'sampleCode', 	'param' => 	'barcode'],
-			['key' => 	'sampleUuid', 	'param' => 	'sampleUuid'],
-			['key' => 	'occurrenceID', 'param' => 	'archiveGuid'],
-			['key' => 	'sampleID', 	'param' => 	'sampleTag',
-			 'key2' => 	'sampleClass', 	'param2' => 'sampleClass']
-		];
-		
-		$success = false;
-		
-		foreach ($urlConfigs as $config) {
-			if (isset($sampleArr[$config['key']]) && $sampleArr[$config['key']]) {
-				
-				//build url
-				$url = $this->neonApiBaseUrl . '/samples/view?' . $config['param'] . '=' . urlencode($sampleArr[$config['key']]);
-				if (isset($config['key2'])){
-					if (isset($sampleArr[$config['key2']]) && $sampleArr[$config['key2']]) {
-						$url .= '&' . $config['param2'] . '=' . urlencode($sampleArr['sampleClass']);
-						$success = true;
-					} else { continue; }					
-				} else {
-					$success = true;
-				}
-
-				$url .= '&apiToken=' . $this->neonApiKey;
-				$sampleViewArr = $this->checkApiforData($url, $sampleArr);
-				if (isset($sampleViewArr)) {
-					return $this->checkApiDataforErrors($sampleArr, $sampleViewArr);
-				}
-			}
+		if($sampleArr['sampleCode']){
+			$url = $this->neonApiBaseUrl.'/samples/view?barcode='.$sampleArr['sampleCode'].'&apiToken='.$this->neonApiKey;
 		}
-		
-		// If none of the keys exist
-		if (!$success) {
+		elseif($sampleArr['sampleUuid']){
+			$url = $this->neonApiBaseUrl.'/samples/view?sampleUuid='.$sampleArr['sampleUuid'].'&apiToken='.$this->neonApiKey;
+		}
+		elseif(isset($sampleArr['occurrenceID']) && $sampleArr['occurrenceID']){
+			$url = $this->neonApiBaseUrl.'/samples/view?archiveGuid='.$sampleArr['occurrenceID'].'&apiToken='.$this->neonApiKey;
+		}
+		elseif($sampleArr['sampleID'] && $sampleArr['sampleClass']){
+			$url = $this->neonApiBaseUrl.'/samples/view?sampleTag='.urlencode($sampleArr['sampleID']).'&sampleClass='.urlencode($sampleArr['sampleClass']).'&apiToken='.$this->neonApiKey;
+		}
+		else{
 			$this->errorStr = 'Sample identifiers incomplete';
 			$this->setSampleErrorMessage($sampleArr['samplePK'], $this->errorStr);
 			return false;
 		}
-		
-		return false;
-	}
-	
-	private function checkApiforData(&$url, $sampleArr){
-		$this->errorLogArr = [];
-		$this->errorStr = '';
 		$sampleViewArr = $this->getNeonApiArr($url);
 		//echo 'url: '.$url.'<br/>';
 
@@ -296,16 +266,8 @@ class OccurrenceHarvester{
 			$this->errorStr = 'NEON API failed to return sample data';
 			//$this->errorStr .= ': (<a href="'.$url.'" target="_blank">'.$url.'</a>)';
 			$this->updateSampleRecord(array('errorMessage'=>$this->errorStr),$sampleArr['samplePK']);
-			return;
+			return false;
 		}
-		return $sampleViewArr;
-	}
-		
-	private function checkApiDataforErrors($sampleArr, $sampleViewArr){
-		//true = successful, false = error
-		$this->errorLogArr = [];
-		$this->errorStr = '';
-
 		if(count($sampleViewArr['sampleViews']) > 1){
 			$this->errorStr = 'Harvest skipped: NEON API returned multiple sampleViews ';
 			$this->updateSampleRecord(array('errorMessage'=>$this->errorStr),$sampleArr['samplePK']);
@@ -507,9 +469,9 @@ class OccurrenceHarvester{
 						elseif($fArr['smsKey'] == 'life_stage' && $fArr['smsValue']) $tableArr['life_stage'] = $fArr['smsValue'];
 						elseif($fArr['smsKey'] == 'associated_taxa' && $fArr['smsValue']) $tableArr['associated_taxa'] = $fArr['smsValue'];
 						elseif($fArr['smsKey'] == 'remarks' && $fArr['smsValue']) $tableArr['remarks'] = $fArr['smsValue'];
-						elseif($fArr['smsKey'] == 'preservative_concentration' && $fArr['smsValue']) $tableArr['preservative_concentration'] = $fArr['smsValue'].', ';
-						elseif($fArr['smsKey'] == 'preservative_volume' && $fArr['smsValue']) $tableArr['preservative_volume'] = $fArr['smsValue'].', ';
-						elseif($fArr['smsKey'] == 'preservative_type' && $fArr['smsValue']) $tableArr['preservative_type'] = $fArr['smsValue'].', ';
+						elseif($fArr['smsKey'] == 'preservative_concentration' && $fArr['smsValue']) $tableArr['preservative_concentration'] = $fArr['smsValue'];
+						elseif($fArr['smsKey'] == 'preservative_volume' && $fArr['smsValue']) $tableArr['preservative_volume'] = $fArr['smsValue'];
+						elseif($fArr['smsKey'] == 'preservative_type' && $fArr['smsValue']) $tableArr['preservative_type'] = $fArr['smsValue'];
 						elseif($fArr['smsKey'] == 'sample_type' && $fArr['smsValue']) $tableArr['sample_type'] = $fArr['smsValue'];
 						//elseif($fArr['smsKey'] == 'sample_condition' && $fArr['smsValue']) $tableArr['sample_condition'] = $fArr['smsValue'];
 						elseif($fArr['smsKey'] == 'sample_mass' && $fArr['smsValue']) $tableArr['sample_mass'] = $fArr['smsValue'];
@@ -695,7 +657,11 @@ class OccurrenceHarvester{
 						//Identifications not supplied via API nor manifest, thus try to grab from sampleID
 						$taxonCode = '';
 						$taxonRemarks = '';
-						if($dwcArr['collid'] == 30) $taxonCode = 'Soil';
+						if($dwcArr['collid'] == 30){
+							$identArr[] = array('sciname' => $dwcArr['identifications'][0]['sciname'],
+											  'identifiedBy' => 'NEON Lab',
+											  'dateIdentified' => 's.d.');
+						}
 						elseif($dwcArr['collid'] == 56){
 							if(preg_match('/\.\d{4}\.\d{1,2}\.([A-Z]{2,15}\d{0,2})\./', $sampleArr['sampleID'], $m)){
 								$taxonCode = $m[1];
@@ -748,7 +714,7 @@ class OccurrenceHarvester{
 							}
 						}
 						if(!is_bool($isCurrentKey)) $identArr[$isCurrentKey]['isCurrent'] = 1;
-						//Check to see if any determination need to be projected
+						//Check to see if any determination needs to be protected
 						$appendIdentArr = array();
 						foreach($identArr as $idKey => &$idArr){
 							if(!empty($idArr['taxonPublished'])){
@@ -923,7 +889,7 @@ class OccurrenceHarvester{
 				}
 				elseif(!isset($habitatArr['soil']) && $propArr['locationPropertyName'] == 'Value for Soil type order'){
 					if($dwcArr['collid'] == 30 && !isset($dwcArr['identifications'])){
-						$dwcArr['identifications'][] = array('sciname' => $propArr['locationPropertyValue'], 'identifiedBy' => 'NEON Lab', 'dateIdentified' => 's.d.', 'isCurrent' => 1);
+						$dwcArr['identifications'][] = array('sciname' => $propArr['locationPropertyValue']);
 					}
 					$habitatArr['soil'] = 'soil type order: '.$propArr['locationPropertyValue'];
 				}
@@ -1556,29 +1522,28 @@ class OccurrenceHarvester{
 	}
 
 	private function getTaxonGroup($collid){
-		$taxonGroup = array( 45 => 'ALGAE', 46 => 'ALGAE', 47 => 'ALGAE', 49 => 'ALGAE', 50 => 'ALGAE', 55 => 'ALGAE', 60 => 'ALGAE', 62 => 'ALGAE', 73 => 'ALGAE',
-			11 => 'BEETLE', 13 => 'BEETLE', 14 => 'BEETLE', 16 => 'BEETLE', 39 => 'BEETLE', 44 => 'BEETLE', 63 => 'BEETLE',
+		$taxonGroup = array( 45 => 'ALGAE', 46 => 'ALGAE', 47 => 'ALGAE', 49 => 'ALGAE', 50 => 'ALGAE',  73 => 'ALGAE',
+			11 => 'BEETLE', 14 => 'BEETLE', 39 => 'BEETLE', 44 => 'BEETLE', 63 => 'BEETLE', 82 =>'BEETLE', 95 =>'BEETLE',
 			20 => 'FISH', 66 => 'FISH',
 			12 => 'HERPETOLOGY', 15 => 'HERPETOLOGY', 70 => 'HERPETOLOGY',
-			21 => 'MACROINVERTEBRATE', 22 => 'MACROINVERTEBRATE', 48 => 'MACROINVERTEBRATE', 52 => 'MACROINVERTEBRATE', 53 => 'MACROINVERTEBRATE', 57 => 'MACROINVERTEBRATE', 61 => 'MACROINVERTEBRATE',
+			21 => 'MACROINVERTEBRATE', 22 => 'MACROINVERTEBRATE', 45 => 'MACROINVERTEBRATE', 48 => 'MACROINVERTEBRATE', 52 => 'MACROINVERTEBRATE', 53 => 'MACROINVERTEBRATE', 55 => 'MACROINVERTEBRATE', 57 => 'MACROINVERTEBRATE', 60 => 'MACROINVERTEBRATE', 61 => 'MACROINVERTEBRATE', 62 => 'MACROINVERTEBRATE', 84 => 'MACROINVERTEBRATE',
 			29 => 'MOSQUITO', 56 => 'MOSQUITO', 58 => 'MOSQUITO', 59 => 'MOSQUITO', 65 => 'MOSQUITO',
-			7 => 'PLANT', 8 => 'PLANT', 9 => 'PLANT', 10 => 'PLANT', 18 => 'PLANT', 23 => 'PLANT', 40 => 'PLANT', 54 => 'PLANT', 76 => 'PLANT',
-			17 => 'SMALL_MAMMAL', 19 => 'SMALL_MAMMAL', 24 => 'SMALL_MAMMAL', 25 => 'SMALL_MAMMAL', 26 => 'SMALL_MAMMAL', 27 => 'SMALL_MAMMAL', 28 => 'SMALL_MAMMAL', 64 => 'SMALL_MAMMAL', 71 => 'SMALL_MAMMAL', 85 => 'SMALL_MAMMAL', 90 => 'SMALL_MAMMAL', 91 => 'SMALL_MAMMAL',
-			30 => 'SOIL', 79 => 'SOIL',
-			75 => 'TICK'
+			7 => 'PLANT', 8 => 'PLANT', 9 => 'PLANT', 18 => 'PLANT', 40 => 'PLANT', 54 => 'PLANT', 
+			17 => 'SMALL_MAMMAL', 19 => 'SMALL_MAMMAL', 24 => 'SMALL_MAMMAL', 25 => 'SMALL_MAMMAL', 26 => 'SMALL_MAMMAL', 27 => 'SMALL_MAMMAL', 28 => 'SMALL_MAMMAL', 64 => 'SMALL_MAMMAL', 71 => 'SMALL_MAMMAL', 74 => 'SMALL_MAMMAL', 90 => 'SMALL_MAMMAL', 91 => 'SMALL_MAMMAL',
+			30 => 'SOIL', 79 => 'SOIL', 80 =>'SOIL',
+			75 => 'TICK', 83 => 'TICK'
 		);
 		if(array_key_exists($collid, $taxonGroup)) return $taxonGroup[$collid];
 		return false;
 	}
 
 	private function getKingdomName(){
-		if(in_array($this->activeCollid, array( 11,12,13,14,15,16,17,19,20,21,22,24,25,26,27,28,29,39,48,52,53,56,57,58,59,61,63,64,65,66,70,71,75 ))) return 'Animalia';
-		elseif(in_array($this->activeCollid, array( 7,8,9,10,18,23,40,54,76 ))) return 'Plantae';
+		if(in_array($this->activeCollid, array( 4,11,12,13,14,15,16,17,19,20,21,22,24,25,26,27,28,29,39,44,45,48,52,53,55,56,57,58,59,60,61,62,63,64,65,66,70,71,74,75,82,83,84,85,90,91,95,97 ))) return 'Animalia';
+		elseif(in_array($this->activeCollid, array( 7,8,9,10,18,23,40,54,76,93 ))) return 'Plantae';
 		//Let's use Plantae for algae group, which works for now
-		elseif(in_array($this->activeCollid, array( 45,46,47,49,50,55,60,62,73 ))) return 'Plantae';
-		//soils: 30,79
-		//Microbes: 5,6,31,67,68,69
-		//environmental: 41,42
+		elseif(in_array($this->activeCollid, array( 46,47,49,50,73 ))) return 'Plantae';
+		elseif(in_array($this->activeCollid, array( 30,79,80 ))) return 'Soil';
+
 		return '';
 	}
 
@@ -1691,7 +1656,7 @@ class OccurrenceHarvester{
 			echo 'ERROR updating determination taxonomy codes: '.$sql;
 		}
 
-		//Run custon stored procedure that preforms some special assignment tasks
+		//Run custom stored procedure that performs some special assignment tasks
 		if(!$this->conn->query('call occurrence_harvesting_sql()')){
 			echo 'ERROR running stored procedure occurrence_harvesting_sql: '.$this->conn->error;
 		}
@@ -1828,7 +1793,7 @@ class OccurrenceHarvester{
 		$retArr = array();
 		$sql = 'SELECT DISTINCT c.collid, CONCAT(c.collectionName, " (",CONCAT_WS(":",c.institutionCode,c.collectionCode),")") as name
 			FROM omcollections c INNER JOIN omoccurrences o ON c.collid = o.collid INNER JOIN NeonSample s ON o.occid = s.occid
-			WHERE c.institutioncode = "NEON" AND c.collid NOT IN(81,84)';
+			WHERE c.institutioncode = "NEON"';
 		$rs = $this->conn->query($sql);
 		while($r = $rs->fetch_object()){
 			$retArr[$r->collid] = $r->name;
