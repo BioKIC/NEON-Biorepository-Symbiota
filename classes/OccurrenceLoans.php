@@ -772,17 +772,34 @@ public function editSpecimenDetails($loanId, $occid, $returnDate, $noteStr) {
     return $status;
 }
 
-
-	public function batchCheckinSpecimens($occidInput, $loanID){
+	public function batchCheckinSpecimens($occidInput, $loanID) {
 		$status = false;
 		$occidStr = '';
 		if(is_numeric($occidInput)) $occidStr = $occidInput;
 		else $occidStr = implode(',',$occidInput);
-		if(is_numeric($loanID) && preg_match('/^[\d,]+$/', $occidStr)){
-			$sql = 'UPDATE omoccurloanslink SET returndate = "'.date('Y-m-d H:i:s').'" WHERE loanid = '.$loanID.' AND (occid IN('.$occidStr.')) AND (returndate IS NULL) ';
-			if($this->conn->query($sql)) $status = $this->conn->affected_rows;
-			else $this->errorMessage = 'ERROR checking in specimens: '.$this->conn->error;
+		if (is_numeric($loanID) && preg_match('/^[\d,]+$/', $occidStr)) {
+			// Update returndate for specimens where loanid matches and returndate is null
+			$sql1 = 'UPDATE omoccurloanslink SET returndate = "'.date('Y-m-d H:i:s').'" WHERE loanid = '.$loanID.' AND (occid IN('.$occidStr.')) AND (returndate IS NULL) ';
+			
+			$this->conn->begin_transaction();
+			if ($this->conn->query($sql1)) {
+				$sql2 = 'UPDATE omoccurrences SET availability = 1 WHERE occid IN('.$occidStr.')';
+				if ($this->conn->query($sql2)) {
+					// Both sqls executed successfully, commit the transaction
+					$status = $this->conn->affected_rows;
+					$this->conn->commit();
+				} else {
+					// If the second sql fails, rollback
+					$this->conn->rollback();
+					$this->errorMessage = 'ERROR updating specimen availability: '.$this->conn->error;
+				}
+			} else {
+				// If the sql query fails, rollback
+				$this->conn->rollback();
+				$this->errorMessage = 'ERROR checking in specimens: '.$this->conn->error;
+			}
 		}
+	
 		return $status;
 	}
 
