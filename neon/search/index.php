@@ -459,5 +459,5 @@ $siteData = new DatasetsMetadata();
 	include($SERVER_ROOT . '/includes/footer.php');
 	?>
 </body>
-<script src="js/searchform.js" type="text/javascript"></script>
+<script src="js/searchform.js?ver=2" type="text/javascript"></script>
 </html>
