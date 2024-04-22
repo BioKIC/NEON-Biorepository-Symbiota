@@ -232,6 +232,10 @@ $siteData = new DatasetsMetadata();
 									<input type="checkbox" name="hasgenetic" value=1 data-chip="Only with genetic">
 									<label for="hasgenetic">Limit to specimens with genetic data</label>
 								</div>
+								<div>
+									<input type="checkbox" name="availableforloan" value=1 data-chip="Only available for loan" checked>
+									<label for="availableforloan">Limit to specimens available for loan</label>
+								</div>
 							</div>
 						</div>
 					</div>
@@ -455,5 +459,5 @@ $siteData = new DatasetsMetadata();
 	include($SERVER_ROOT . '/includes/footer.php');
 	?>
 </body>
-<script src="js/searchform.js?ver=02" type="text/javascript"></script>
+<script src="js/searchform.js?ver=03" type="text/javascript"></script>
 </html>

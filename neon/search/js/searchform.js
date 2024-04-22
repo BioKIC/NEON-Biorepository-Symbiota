@@ -30,6 +30,7 @@ let paramNames = [
   'taxa',
   'usethes',
   'taxontype',
+  'availableforloan',
 ];
 const uLat = document.getElementById('upperlat');
 const uLatNs = document.getElementById('upperlat_NS');

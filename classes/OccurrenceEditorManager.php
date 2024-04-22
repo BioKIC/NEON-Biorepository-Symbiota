@@ -40,7 +40,7 @@ class OccurrenceEditorManager {
 			'identificationreferences' => 's', 'identificationremarks' => 's', 'taxonremarks' => 's', 'identificationqualifier' => 's', 'typestatus' => 's',
 			'recordedby' => 's', 'recordnumber' => 's', 'associatedcollectors' => 's', 'eventdate' => 'd', 'eventdate2' => 'd', 'year' => 'n', 'month' => 'n', 'day' => 'n', 'startdayofyear' => 'n',
 			'enddayofyear' => 'n', 'verbatimeventdate' => 's', 'habitat' => 's', 'substrate' => 's', 'fieldnumber' => 's', 'occurrenceremarks' => 's', 'datageneralizations' => 's',
-			'associatedtaxa' => 's', 'verbatimattributes' => 's', 'dynamicproperties' => 's', 'reproductivecondition' => 's', 'cultivationstatus' => 's', 'establishmentmeans' => 's',
+			'associatedtaxa' => 's', 'verbatimattributes' => 's', 'dynamicproperties' => 's', 'reproductivecondition' => 's', 'cultivationstatus' => 's', 'establishmentmeans' => 's', 'availability' => 'n',
 			'lifestage' => 's', 'sex' => 's', 'individualcount' => 's', 'samplingprotocol' => 's', 'preparations' => 's',
 			'country' => 's', 'stateprovince' => 's', 'county' => 's', 'municipality' => 's', 'locationid' => 's', 'locality' => 's', 'localitysecurity' => 'n', 'localitysecurityreason' => 's',
 			'locationremarks' => 'n', 'decimallatitude' => 'n', 'decimallongitude' => 'n', 'geodeticdatum' => 's', 'coordinateuncertaintyinmeters' => 'n', 'verbatimcoordinates' => 's',
