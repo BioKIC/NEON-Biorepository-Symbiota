@@ -705,13 +705,23 @@ class OccurrenceLoans extends Manager{
 		return $occArr;
 	}
 
-	private function addLoanSpecimen($loanid,$occid){
-		$status = false;
-		$sql = 'INSERT INTO omoccurloanslink(loanid,occid) VALUES ('.$loanid.','.$occid.') ';
-		if($this->conn->query($sql)) $status = true;
-		else $this->errorMessage = $this->conn->error;
-		return $status;
-	}
+private function addLoanSpecimen($loanid, $occid) {
+    $status = false;
+    $sql1 = 'INSERT INTO omoccurloanslink(loanid, occid) VALUES ('. $loanid.','.$occid.')';
+    $sql2 = 'UPDATE omoccurrences SET availability = 0 WHERE occid ='.$occid;
+
+    $this->conn->begin_transaction();
+    if ($this->conn->query($sql1) && $this->conn->query($sql2)) {
+        // Both queries executed successfully, commit
+        $this->conn->commit();
+        $status = true;
+    } else {
+        // If any query fails, rollback
+        $this->conn->rollback();
+        $this->errorMessage = $this->conn->error;
+    }
+    return $status;
+}
 
 	public function getSpecimenDetails($loanId, $occid){
 		$retArr = array();
@@ -728,17 +738,40 @@ class OccurrenceLoans extends Manager{
 		return $retArr;
 	}
 
-	public function editSpecimenDetails($loanId, $occid, $returnDate, $noteStr){
-		$status = false;
-		if(is_numeric($loanId) && is_numeric($occid)){
-			$sql = 'UPDATE omoccurloanslink '.
-				'SET returnDate = '.($returnDate?'"'.$this->cleanInStr($returnDate).'"':'NULL').', notes = '.($noteStr?'"'.$this->cleanInStr($noteStr).'"':'NULL').' '.
-				'WHERE (loanid = '.$loanId.') AND (occid = '.$occid.')';
-			if($this->conn->query($sql)) $status = true;
-			else $this->errorMessage = 'ERROR updating specimen notes: '.$this->conn->error;
-		}
-		return $status;
-	}
+public function editSpecimenDetails($loanId, $occid, $returnDate, $noteStr) {
+    $status = false;
+    if (is_numeric($loanId) && is_numeric($occid)) {
+        $sql1 = 'UPDATE omoccurloanslink '.
+            'SET returnDate = '.($returnDate?'"'.$this->cleanInStr($returnDate).'"':'NULL').', notes = '.($noteStr ? '"'.$this->cleanInStr($noteStr).'"':'NULL').' '.
+            'WHERE (loanid = '.$loanId.') AND (occid = '.$occid.')';
+
+        $this->conn->begin_transaction();
+
+        if ($this->conn->query($sql1)) {
+            if ($returnDate) {
+                $sql2 = 'UPDATE omoccurrences SET availability = 1 WHERE occid =' . $occid;
+                if ($this->conn->query($sql2)) {
+                    // Both queries executed successfully, commit
+                    $this->conn->commit();
+                    $status = true;
+                } else {
+                    // If the second sql fails, rollback
+                    $this->conn->rollback();
+                    $this->errorMessage = 'ERROR updating specimen availability: ' . $this->conn->error;
+                }
+            } else {
+                $this->conn->commit();
+                $status = true;
+            }
+        } else {
+            // If the first sql fails, rollback
+            $this->conn->rollback();
+            $this->errorMessage = 'ERROR updating specimen details: ' . $this->conn->error;
+        }
+    }
+    return $status;
+}
+
 
 	public function batchCheckinSpecimens($occidInput, $loanID){
 		$status = false;
