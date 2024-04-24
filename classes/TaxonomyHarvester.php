@@ -228,15 +228,15 @@ class TaxonomyHarvester extends Manager{
 						if(isset($rankingArr[0]) && $rankingArr[$targetKey] == $rankingArr[0]) $targetKey = 0;
 					}
 					//If taxon has an accepted taxon that is the same taxon with a subgeneric linkage, use the taxon object to be submitted
-					if(isset($approvedNameUsageArr[$targetKey]['accepted']['name']['scientificName'])){
-						if(preg_match('/^([A-Z]{1}[a-z]+)\s{1}\(\D+\)\s{1}([a-z .]+)/', $approvedNameUsageArr[$targetKey]['accepted']['name']['scientificName'], $m)){
-							$acceptedBaseName = $m[1].' '.$m[2];
-							if($approvedNameUsageArr[$targetKey]['name']['scientificName'] == $acceptedBaseName){
-								$approvedNameUsageArr[0] = $approvedNameUsageArr[$targetKey]['name']['scientificName'];
-								$targetKey = 0;
-							}
-						}
-					}
+					//if(isset($approvedNameUsageArr[$targetKey]['accepted']['name']['scientificName'])){
+					//	if(preg_match('/^([A-Z]{1}[a-z]+)\s{1}\(\D+\)\s{1}([a-z .]+)/', $approvedNameUsageArr[$targetKey]['accepted']['name']['scientificName'], $m)){
+					//		$acceptedBaseName = $m[1].' '.$m[2];
+					//		if($approvedNameUsageArr[$targetKey]['name']['scientificName'] == $acceptedBaseName){
+					//			$approvedNameUsageArr[0] = $approvedNameUsageArr[$targetKey]['name']['scientificName'];
+					//			$targetKey = 0;
+					//		}
+					//	}
+					//}
 					//Process selected result
 					$this->logOrEcho('<i>'.$sciName.'</i> found within Catalog of Life',2);
 					if(!empty($approvedNameUsageArr[$targetKey])){
