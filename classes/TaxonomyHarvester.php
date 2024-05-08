@@ -153,7 +153,7 @@ class TaxonomyHarvester extends Manager{
 				if($resultArr['total']){
 					//Evaluate and rank each result to determine which is the best suited target
 					$inputTestArr = array($sciName);
-					if(mb_strpos($sciName, '×') !== false) $inputTestArr[] = trim(str_replace(array('× ','×'), '', $sciName));
+					//if(mb_strpos($sciName, '×') !== false) $inputTestArr[] = trim(str_replace(array('× ','×'), '', $sciName));
 					if(mb_strpos($sciName, '†') !== false) $inputTestArr[] = trim(str_replace(array('† ','†'), '', $sciName));
 					if(isset($taxonArr['rankid']) && $taxonArr['rankid'] > 220) $inputTestArr[] = trim($taxonArr['unitname1'].' '.$taxonArr['unitname2'].' '.$taxonArr['unitname3']);
 					$targetKey = 0;
@@ -164,9 +164,9 @@ class TaxonomyHarvester extends Manager{
 						$rankingArr[$k] = 0;
 						$isNotSimilar = true;
 						if(in_array($cbNameUsage['name']['scientificName'], $inputTestArr)) $isNotSimilar = false;
-						if(mb_strpos($cbNameUsage['name']['scientificName'], '×') !== false){
-							if(in_array(trim(str_replace(array('× ','×'), '', $cbNameUsage['name']['scientificName'])), $inputTestArr)) $isNotSimilar = false;
-						}
+						//if(mb_strpos($cbNameUsage['name']['scientificName'], '×') !== false){
+						//	if(in_array(trim(str_replace(array('× ','×'), '', $cbNameUsage['name']['scientificName'])), $inputTestArr)) $isNotSimilar = false;
+						//}
 						if (strpos($cbNameUsage['name']['scientificName'], '(') !== false) {
 							$cleanedName = preg_replace('/ \([^)]+\)/', '', $cbNameUsage['name']['scientificName']);
 							if (in_array(trim($cleanedName), $inputTestArr)) $isNotSimilar = false;
