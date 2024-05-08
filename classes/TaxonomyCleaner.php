@@ -154,7 +154,7 @@ class TaxonomyCleaner extends Manager{
 					$this->logOrEcho($manStr,2);
 				}
 				$taxaCnt++;
-				$endIndex = preg_replace("/[^A-Za-z\-. ]/", "", $r->sciname );
+				$endIndex = preg_replace("/[^A-Za-z\-. ×]/", "", $r->sciname );
 				flush();
 				ob_flush();
 			}
