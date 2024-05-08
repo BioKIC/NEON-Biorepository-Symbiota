@@ -459,7 +459,7 @@ else{
     }
     else{
 		?>
-		<link href="<?php echo $CSS_BASE_PATH; ?>/symbiota/collections/editor/occurrenceeditor.css?ver=6.css" type="text/css" rel="stylesheet" id="editorCssLink" >
+		<link href="<?php echo $CSS_BASE_PATH; ?>/symbiota/collections/editor/occurrenceeditor.css?ver=7.css" type="text/css" rel="stylesheet" id="editorCssLink" >
 		<?php
 		if(isset($CSSARR)){
 			foreach($CSSARR as $cssVal){
@@ -765,6 +765,21 @@ else{
 													<a href="#" onclick="return dwcDoc('catalogNumber')" tabindex="-1"><img class="docimg" src="../../images/qmark.png" /></a>
 													<br/>
 													<input type="text" id="catalognumber" name="catalognumber" value="<?php echo array_key_exists('catalognumber',$occArr)?$occArr['catalognumber']:''; ?>" onchange="fieldChanged('catalognumber');" <?php if($isEditor > 2) echo 'disabled'; ?> autocomplete="off" />
+													<?php
+													if(isset($occArr['identifiers'])){
+														$manifestID = '';
+														foreach($occArr['identifiers'] as $idKey => $idArr){
+															if($idArr['name'] == 'NEON sampleCode (barcode)'){
+																$manifestID = $idArr['value'];
+																break;
+															}
+															elseif($idArr['name'] == 'NEON sampleID'){
+																$manifestID = $idArr['value'];
+															}
+														}
+														if($manifestID) echo '<div><a href="../../neon/shipment/manifestviewer.php?quicksearch=' . $manifestID . '" target="_blank">Go to Manifest</a></div>';
+													}
+													?>
 												</div>
 												<div id="otherCatalogNumbersDiv">
 													<div id="identifierDiv" class="divTable">
@@ -1363,21 +1378,23 @@ else{
 													<a href="#" onclick="return dwcDoc('typeStatus')" tabindex="-1"><img class="docimg" src="../../images/qmark.png" /></a><br/>
 													<input type="text" name="typestatus" maxlength="255" value="<?php echo array_key_exists('typestatus',$occArr)?$occArr['typestatus']:''; ?>" onchange="fieldChanged('typestatus');" />
 												</div>
-												<div id="dispositionDiv">
-													<?php echo $LANG['DISPOSITION']; ?>
-													<a href="#" onclick="return dwcDoc('disposition')" tabindex="-1"><img class="docimg" src="../../images/qmark.png" /></a><br/>
-													<input type="text" name="disposition" value="<?php echo array_key_exists('disposition',$occArr)?$occArr['disposition']:''; ?>" onchange="fieldChanged('disposition');" />
-												</div>
-												<div id="occurrenceIdDiv" title="If different than institution code">
-													<?php echo $LANG['OCCURRENCE_ID']; ?>
-													<a href="#" onclick="return dwcDoc('occurrenceid')" tabindex="-1"><img class="docimg" src="../../images/qmark.png" /></a><br/>
-													<input type="text" name="occurrenceid" maxlength="255" value="<?php echo array_key_exists('occurrenceid',$occArr)?$occArr['occurrenceid']:''; ?>" onchange="fieldChanged('occurrenceid');" />
-												</div>
 												<div id="fieldNumberDiv" title="An identifier given to the collecting event in the field">
 													<?php echo $LANG['FIELD_NUMBER']; ?>
 													<a href="#" onclick="return dwcDoc('fieldnumber')" tabindex="-1"><img class="docimg" src="../../images/qmark.png" /></a><br/>
 													<input type="text" name="fieldnumber" maxlength="45" value="<?php echo array_key_exists('fieldnumber',$occArr)?$occArr['fieldnumber']:''; ?>" onchange="fieldChanged('fieldnumber');" />
 												</div>
+												<div id="dispositionDiv">
+													<?php echo $LANG['DISPOSITION']; ?>
+													<a href="#" onclick="return dwcDoc('disposition')" tabindex="-1"><img class="docimg" src="../../images/qmark.png" /></a><br/>
+													<input type="text" name="disposition" value="<?php echo array_key_exists('disposition',$occArr)?$occArr['disposition']:''; ?>" onchange="fieldChanged('disposition');" />
+												</div>
+												<div id="availabilityDiv">
+													<?php $hasValue = array_key_exists("availability",$occArr)&&$occArr["availability"]?1:0; ?>
+													<input type="checkbox" name="availability" value="1" <?php echo $hasValue?'CHECKED':''; ?> onchange="fieldChanged('availability');" />
+													<?php echo 'Available for Loan?' ?>
+												</div>
+											</div>
+											<div style="padding:3px;clear:both;">
 												<div id="basisOfRecordDiv">
 													<?php echo $LANG['BASIS_OF_RECORD']; ?>
 													<a href="#" onclick="return dwcDoc('basisOfRecord')" tabindex="-1"><img class="docimg" src="../../images/qmark.png" /></a><br/>
@@ -1458,6 +1475,11 @@ else{
                                                     <?php echo $LANG['DATA_GENERALIZATIONS']; ?><br/>
                                                     <input type="text" name="datageneralizations" value="<?php echo array_key_exists('datageneralizations',$occArr)?$occArr['datageneralizations']:''; ?>" onchange="fieldChanged('datageneralizations');" />
                                                 </div>
+												<div id="occurrenceIdDiv" title="If different than institution code">
+													<?php echo $LANG['OCCURRENCE_ID']; ?>
+													<a href="#" onclick="return dwcDoc('occurrenceid')" tabindex="-1"><img class="docimg" src="../../images/qmark.png" /></a><br/>
+													<input type="text" name="occurrenceid" maxlength="255" value="<?php echo array_key_exists('occurrenceid',$occArr)?$occArr['occurrenceid']:''; ?>" onchange="fieldChanged('occurrenceid');" />
+												</div>
 											</div>
 											<?php
 											if($occId){

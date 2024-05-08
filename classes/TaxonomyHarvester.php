@@ -167,6 +167,10 @@ class TaxonomyHarvester extends Manager{
 						if(mb_strpos($cbNameUsage['name']['scientificName'], '×') !== false){
 							if(in_array(trim(str_replace(array('× ','×'), '', $cbNameUsage['name']['scientificName'])), $inputTestArr)) $isNotSimilar = false;
 						}
+						if (strpos($cbNameUsage['name']['scientificName'], '(') !== false) {
+							$cleanedName = preg_replace('/ \([^)]+\)/', '', $cbNameUsage['name']['scientificName']);
+							if (in_array(trim($cleanedName), $inputTestArr)) $isNotSimilar = false;
+						}
 						if(mb_strpos($cbNameUsage['name']['scientificName'], '†') !== false){
 							if(in_array(trim(str_replace(array('† ','†'), '', $cbNameUsage['name']['scientificName'])), $inputTestArr)) $isNotSimilar = false;
 						}

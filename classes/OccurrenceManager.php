@@ -164,16 +164,15 @@ class OccurrenceManager extends OccurrenceTaxaManager {
 					$tempTermArr[] = 'Locality IS NULL';
 				}
 				else{
-					$fullTextSearch = true;
-					if(strlen($value) < 4) $fullTextSearch = false;
-					elseif(strpos($value,' ')){
-						$wordArr = explode(' ',$value);
-						$fullTextSearch = false;
-						foreach($wordArr as $w){
-							if(strlen($w) > 3){
-								$fullTextSearch = true;
-								break;
-							}
+					$wordArr = explode(' ',$value);
+					$fullTextSearch = false;
+					foreach($wordArr as $w){
+						if(strlen($w) > 3){
+							$fullTextSearch = true;
+						}
+						if(in_array(strtolower($w),array('took'))){
+							$fullTextSearch = false;
+							break;
 						}
 					}
 					if($fullTextSearch) $fullTextArr[] = $this->cleanInStr(str_replace('"', '', $value));
@@ -432,6 +431,10 @@ class OccurrenceManager extends OccurrenceTaxaManager {
 		if(array_key_exists("hasgenetic",$this->searchTermArr)){
 			$sqlWhere .= "AND (o.occid IN(SELECT occid FROM omoccurgenetic)) ";
 			$this->displaySearchArr[] = 'has genetic data';
+		}
+		if(array_key_exists("availableforloan",$this->searchTermArr)){
+			$sqlWhere .= "AND (o.availability = 1) ";
+			$this->displaySearchArr[] = 'available for loan';
 		}
 		if(array_key_exists("hascoords",$this->searchTermArr)){
 			$sqlWhere .= "AND (o.decimalLatitude IS NOT NULL) ";
@@ -821,7 +824,7 @@ class OccurrenceManager extends OccurrenceTaxaManager {
 			}
 		}
 		if(array_key_exists('catnum',$_REQUEST)){
-			$catNum = $this->cleanInputStr(str_replace(',', ';', $_REQUEST['catnum']));
+			$catNum = $this->cleanInputStr(str_replace(array(',', "\n", "\r\n", "r"), '; ', $_REQUEST['catnum']));
 			if($catNum){
 				$this->searchTermArr['catnum'] = $catNum;
 				if(array_key_exists('includeothercatnum',$_REQUEST)) $this->searchTermArr['includeothercatnum'] = '1';
@@ -841,6 +844,10 @@ class OccurrenceManager extends OccurrenceTaxaManager {
 		if(array_key_exists('hasgenetic',$_REQUEST)){
 			if($_REQUEST['hasgenetic']) $this->searchTermArr['hasgenetic'] = true;
 			else unset($this->searchTermArr['hasgenetic']);
+		}
+		if(array_key_exists('availableforloan',$_REQUEST)){
+			if($_REQUEST['availableforloan']) $this->searchTermArr['availableforloan'] = true;
+			else unset($this->searchTermArr['availableforloan']);
 		}
 		if(array_key_exists('hascoords',$_REQUEST)){
 			if($_REQUEST['hascoords']) $this->searchTermArr['hascoords'] = true;

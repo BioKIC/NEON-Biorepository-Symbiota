@@ -693,9 +693,9 @@ if($spprid) $specManager->setProjVariables($spprid);
 												<div title="Unable to match primary identifer with an existing database record">
 													<b>Missing record:</b>
 													<div style="margin:5px 15px">
-														<input type="radio" name="createnewrec" value="0" />
+														<input type="radio" name="createnewrec" value="0" CHECKED />
 														Skip image import and go to next<br/>
-														<input type="radio" name="createnewrec" value="1" CHECKED />
+														<input type="radio" name="createnewrec" value="1" />
 														Create empty record and link image
 													</div>
 												</div>
