@@ -228,15 +228,15 @@ class TaxonomyHarvester extends Manager{
 						if(isset($rankingArr[0]) && $rankingArr[$targetKey] == $rankingArr[0]) $targetKey = 0;
 					}
 					//If taxon has an accepted taxon that is the same taxon with a subgeneric linkage, use the taxon object to be submitted
-					//if(isset($approvedNameUsageArr[$targetKey]['accepted']['name']['scientificName'])){
-					//	if(preg_match('/^([A-Z]{1}[a-z]+)\s{1}\(\D+\)\s{1}([a-z .]+)/', $approvedNameUsageArr[$targetKey]['accepted']['name']['scientificName'], $m)){
-					//		$acceptedBaseName = $m[1].' '.$m[2];
-					//		if($approvedNameUsageArr[$targetKey]['name']['scientificName'] == $acceptedBaseName){
-					//			$approvedNameUsageArr[0] = $approvedNameUsageArr[$targetKey]['name']['scientificName'];
-					//			$targetKey = 0;
-					//		}
-					//	}
-					//}
+					if(isset($approvedNameUsageArr[$targetKey]['accepted']['name']['scientificName'])){
+						if(preg_match('/^([A-Z]{1}[a-z]+)\s{1}\(\D+\)\s{1}([a-z .]+)/', $approvedNameUsageArr[$targetKey]['accepted']['name']['scientificName'], $m)){
+							$acceptedBaseName = $m[1].' '.$m[2];
+							if($approvedNameUsageArr[$targetKey]['name']['scientificName'] == $acceptedBaseName){
+								$approvedNameUsageArr[0] = $approvedNameUsageArr[$targetKey];
+								$targetKey = 0;
+							}
+						}
+					}
 					//Process selected result
 					$this->logOrEcho('<i>'.$sciName.'</i> found within Catalog of Life',2);
 					if(!empty($approvedNameUsageArr[$targetKey])){
@@ -477,7 +477,8 @@ class TaxonomyHarvester extends Manager{
 			$this->logOrEcho('ABORT: target name is null',1);
 			return false;
 		}
-		$url = 'https://api.checklistbank.org/dataset/3/nameusage/search?content=SCIENTIFIC_NAME&q='.str_replace(' ','%20', $nodeSciname).'&offset=0&limit=100';
+		$datasetKey = 3;
+		$url = 'https://api.checklistbank.org/dataset/' . $datasetKey . '/nameusage/search?content=SCIENTIFIC_NAME&q=' . urlencode($nodeSciname) . '&offset=0&limit=100';
 		//echo '<div>API link: <a href="'.$url.'" target="_blank">'.$url.'</a></div>';
 		$contentArr = $this->getContentString($url);
 		$content = $contentArr['str'];
@@ -488,35 +489,30 @@ class TaxonomyHarvester extends Manager{
 				$cbNameUsage = $result['usage'];
 				$nameUsageID = $cbNameUsage['id'];
 				if(!isset($cbNameUsage['name']['scientificName'])){
-					$retArr[$nameUsageID]['error'] = 'CoL ID-'.$nameUsageID.' skipped, unable to return name...';
+					//$retArr[$nameUsageID]['error'] = 'CoL ID-'.$nameUsageID.' skipped, unable to return name...';
 					continue;
 				}
 				$name = $cbNameUsage['name']['scientificName'];
-				if($nodeSciname != $name){
-					$retArr[$nameUsageID]['error'] = $name.' skipped, not an exact match...';
+				if(strtolower($nodeSciname) != strtolower($name)){
+					//$retArr[$nameUsageID]['error'] = $name.' skipped, not an exact match...';
 					continue;
 				}
-				$taxonArr = array('sciname' => $nodeSciname);
+				$taxonArr = array('sciname' => $name);
 				$this->buildTaxonArr($taxonArr);
 				$classArr = $this->getFormattedClassification($cbNameUsage, $taxonArr, $result['classification']);
 				if($classArr) $cbNameUsage['formattedClassification'] = $classArr;
 				$taxonKingdom = $this->getChecklistBankParent($cbNameUsage, 'Kingdom');
 				if($this->kingdomName && $this->kingdomName != $taxonKingdom){
-					$retArr[$nameUsageID]['error'] = '<a href="https://api.checklistbank.org/dataset/3/nameusage/'.$nameUsageID.'" target="_blank">'.$name.'</a> skipped, wrong kingdom: '.$this->kingdomName.' (!= '.$taxonKingdom.')';
+					$retArr[$nameUsageID]['error'] = '<a href="https://api.checklistbank.org/dataset/' . $datasetKey . '/nameusage/' . $nameUsageID . '" target="_blank">' . $name . '</a> skipped, wrong kingdom: ' . $this->kingdomName . ' (!= ' . $taxonKingdom . ')';
 					continue;
 				}
 				$retArr[$nameUsageID]['label'] = $cbNameUsage['labelHtml'];
 				$retArr[$nameUsageID]['datasetKey'] = $cbNameUsage['datasetKey'];
-				$retArr[$nameUsageID]['status'] = $cbNameUsage['status'];
 				if(isset($cbNameUsage['link'])) $retArr[$nameUsageID]['link'] = $cbNameUsage['link'];
-
-				$testUrl = 'https://api.checklistbank.org/dataset/3/tree/'.$nameUsageID.'/children?extinct=false';
-				$testContentArr = $this->getContentString($testUrl);
-				$testContent = $testContentArr['str'];
-				$testArr = json_decode($testContent,true);
-				if(isset($testArr['result'][0]['name_status']) && $testArr['result'][0]['name_status'] == 'accepted name'){
+				$retArr[$nameUsageID]['status'] = $cbNameUsage['status'];
+				if($cbNameUsage['status'] == 'accepted'){
 					$retArr[$nameUsageID]['isPreferred'] = true;
-					$retArr[$nameUsageID]['apiUrl'] = $testUrl;
+					$retArr[$nameUsageID]['apiUrl'] = 'https://api.checklistbank.org/dataset/' . $datasetKey . '/tree/' . $nameUsageID . '/children?&extinct=false';
 				}
 				else $retArr[$nameUsageID]['isPreferred'] = false;
 			}
@@ -555,8 +551,8 @@ class TaxonomyHarvester extends Manager{
 		$contentArr = $this->getContentString($url);
 		if(isset($contentArr['str'])){
 			$content = $contentArr['str'];
-			$resultArr = json_decode($content,true);
-			if(!$resultArr['empty']){
+			$resultArr = json_decode($content, true);
+			if($resultArr['total']){
 				$this->logOrEcho('Will evaluate '.$resultArr['total'].' children of '.$nodeSciname.': '.$this->getChildrenStr($resultArr['result']),2);
 				foreach($resultArr['result'] as $nodeArr){
 					$this->transactionCount++;
@@ -578,10 +574,6 @@ class TaxonomyHarvester extends Manager{
 					}
 				}
 			}
-			else{
-				$this->logOrEcho('ABORT: unable to get CoL node data: '.$url,1);
-				return false;
-			}
 		}
 		else{
 			if($contentArr['code'] == 401) $this->logOrEcho('ABORT: CoL API authorization required:'.$url,1);
@@ -594,7 +586,7 @@ class TaxonomyHarvester extends Manager{
 	private function getChildrenStr($resultArr){
 		$childArr = array();
 		foreach($resultArr as $itemArr){
-			$childArr[] = $itemArr['name']['scientificName'];
+			$childArr[] = $itemArr['name'];
 		}
 		return implode(', ',$childArr);
 	}
