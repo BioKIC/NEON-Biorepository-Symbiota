@@ -95,7 +95,6 @@ class OccurrenceHarvester{
 		if($sqlWhere){
 			$this->setStateArr();
 			$this->setDomainSiteArr();
-			$this->protectCuratorAnnotations();
 			//if(!$this->setSampleClassArr()) echo '<li>'.$this->errorStr.'</li>';
 			echo '<li>Target record count: '.number_format($this->getTargetCount($sqlWhere)).'</li>';
 			$collArr = array();
@@ -187,13 +186,6 @@ class OccurrenceHarvester{
 			}
 		}
 		return false;
-	}
-
-	private function protectCuratorAnnotations(){
-		//Temporary code needed until until db patch 1.3 is officialize and annoator edits saved
-		$this->conn->query('UPDATE omoccurdeterminations SET enteredByUid = 16 WHERE identifiedBy LIKE "%Laura% Steger%" AND enteredByUid IS NULL');
-		$this->conn->query('UPDATE omoccurdeterminations SET enteredByUid = 3 WHERE identifiedBy LIKE "%Andrew Johnston%" AND enteredByUid IS NULL');
-		$this->conn->query('UPDATE omoccurdeterminations SET enteredByUid = 56 WHERE identifiedBy LIKE "R% Liao" AND enteredByUid IS NULL');
 	}
 
 	private function getTargetCount($sqlWhere){
@@ -483,7 +475,16 @@ class OccurrenceHarvester{
 								$identArr['sciname'] = $fArr['smsValue'];
 								$identArr['taxon'] = $fArr['smsValue'];
 							}
-							elseif($fArr['smsKey'] == 'taxon_published' && $fArr['smsValue']) $identArr['taxonPublished'] = $fArr['smsValue'];
+							elseif($fArr['smsKey'] == 'taxon_published' && $fArr['smsValue']){
+								//Temporarly keep to support possibility of this field still being used for certain sampleClasses
+								$identArr['taxonPublished'] = $fArr['smsValue'];
+							}
+							elseif($fArr['smsKey'] == 'taxon_published_processed_scientific_name' && $fArr['smsValue']){
+								$identArr['taxonPublished'] = $fArr['smsValue'];
+							}
+							elseif($fArr['smsKey'] == 'taxon_published_processed_code' && $fArr['smsValue']){
+								$identArr['taxonPublishedCode'] = $fArr['smsValue'];
+							}
 							elseif($fArr['smsKey'] == 'identified_by' && $fArr['smsValue']) $identArr['identifiedBy'] = $this->translatePersonnel($fArr['smsValue']);
 							elseif($fArr['smsKey'] == 'identified_date' && $fArr['smsValue']) $identArr['dateIdentified'] = $fArr['smsValue'];
 							elseif($fArr['smsKey'] == 'identification_remarks' && $fArr['smsValue']) $identArr['identificationRemarks'] = $fArr['smsValue'];
