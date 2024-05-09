@@ -453,6 +453,7 @@ class TaxonProfile extends Manager {
 	//Taxon Link functions
 	private function setLinkArr(){
 		if($this->linkArr === false && $this->tid){
+			$this->linkArr = array();
 			$sql = 'SELECT DISTINCT l.tlid, l.url, l.icon, l.title, l.notes
 				FROM taxalinks l LEFT JOIN taxaenumtree e ON l.tid = e.parenttid
 				WHERE (e.tid IN('.$this->tid.') OR l.tid IN('.$this->tid.')) ORDER BY l.sortsequence, l.title';
@@ -607,7 +608,7 @@ class TaxonProfile extends Manager {
 	//Misc functions
 	private function getChildrenClid($clid){
 		$clidArr = array($clid);
-		$sqlBase = 'SELECT clidchild FROM fmchklstchildren WHERE clid IN(';
+		$sqlBase = 'SELECT clidchild FROM fmchklstchildren WHERE clid != clidchild AND clid IN(';
 		$sql = $sqlBase.$clid.')';
 		do{
 			$childStr = '';
@@ -824,7 +825,7 @@ class TaxonProfile extends Manager {
 			//Direct parent checklist
 			$sql = 'SELECT c.clid, c.name '.
 				'FROM fmchecklists c INNER JOIN fmchklstchildren cp ON c.clid = cp.clid '.
-				'WHERE (cp.clidchild = '.$clid.')';
+				'WHERE cp.clid != cp.clidchild AND (cp.clidchild = '.$clid.')';
 			$rs = $this->conn->query($sql);
 			if($r = $rs->fetch_object()){
 				$retArr[$r->clid] = $r->name;

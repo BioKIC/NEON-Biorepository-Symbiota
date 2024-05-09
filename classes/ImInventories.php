@@ -23,13 +23,13 @@ class ImInventories extends Manager{
 				FROM fmchecklists WHERE (clid = '.$this->clid.')';
 			$result = $this->conn->query($sql);
 			if($row = $result->fetch_object()){
-				$retArr['name'] = $this->cleanOutStr($row->name);
-				$retArr['locality'] = $this->cleanOutStr($row->locality);
-				$retArr['notes'] = $this->cleanOutStr($row->notes);
+				$retArr['name'] = $row->name;
+				$retArr['locality'] = $row->locality;
+				$retArr['notes'] = $row->notes;
 				$retArr['type'] = $row->type;
-				$retArr['publication'] = $this->cleanOutStr($row->publication);
-				$retArr['abstract'] = $this->cleanOutStr($row->abstract);
-				$retArr['authors'] = $this->cleanOutStr($row->authors);
+				$retArr['publication'] = $row->publication;
+				$retArr['abstract'] = $row->abstract;
+				$retArr['authors'] = $row->authors;
 				$retArr['parentclid'] = $row->parentclid;
 				$retArr['uid'] = $row->uid;
 				$retArr['latcentroid'] = $row->latcentroid;
@@ -45,7 +45,7 @@ class ImInventories extends Manager{
 			$result->free();
 			if($retArr){
 				if($retArr['type'] == 'excludespp'){
-					$sql = 'SELECT clid FROM fmchklstchildren WHERE clidchild = '.$this->clid;
+					$sql = 'SELECT clid FROM fmchklstchildren WHERE clid != clidchild AND clidchild = ' . $this->clid;
 					$rs = $this->conn->query($sql);
 					while($r = $rs->fetch_object()){
 						$retArr['excludeparent'] = $r->clid;
@@ -57,7 +57,7 @@ class ImInventories extends Manager{
 					$rs = $this->conn->query($sql);
 					if($rs){
 						if($r = $rs->fetch_object()){
-							$retArr['clNameOverride'] = $this->cleanOutStr($r->clNameOverride);
+							$retArr['clNameOverride'] = $r->clNameOverride;
 							$retArr['mapchecklist'] = $r->mapChecklist;
 							$retArr['sortOverride'] = $r->sortSequence;
 						}
@@ -77,7 +77,7 @@ class ImInventories extends Manager{
 			$type = (!empty($fieldArr['type']) ? $fieldArr['type'] : 'static');
 			$locality = (!empty($fieldArr['locality']) ? $fieldArr['locality'] : NULL);
 			$publication = (!empty($fieldArr['publication']) ? $fieldArr['publication'] : NULL);
-			$abstract = (!empty($fieldArr['abstract']) ? strip_tags($fieldArr['abstract'], '<i><u><b><a>') : NULL);
+			$abstract = (!empty($fieldArr['abstract']) ? strip_tags($fieldArr['abstract'], '<p><sub><sup><span><br><em><i><u><b><a>') : NULL);
 			$notes = (!empty($fieldArr['notes']) ? $fieldArr['notes'] : NULL);
 			$latCentroid = (!empty($fieldArr['latcentroid']) && is_numeric($fieldArr['latcentroid']) ? $fieldArr['latcentroid'] : NULL);
 			$longCentroid = (!empty($fieldArr['longcentroid']) && is_numeric($fieldArr['longcentroid']) ? $fieldArr['longcentroid'] : NULL);
@@ -155,13 +155,15 @@ class ImInventories extends Manager{
 					}
 				}
 				elseif($inputArr['type'] == 'excludespp' && is_numeric($inputArr['excludeparent'])){
-					$sql = 'INSERT IGNORE INTO fmchklstchildren(clid, clidchild) VALUES(?, ?)';
-					if($stmt = $this->conn->prepare($sql)){
-						$stmt->bind_param('ii', $inputArr['excludeparent'], $this->clid);
-						if(!$stmt->execute()){
-							$this->errorMessage = 'Error updating parent checklist for exclusion species list: '.$this->conn->error;
+					if($inputArr['excludeparent'] != $this->clid){
+						$sql = 'INSERT IGNORE INTO fmchklstchildren(clid, clidchild) VALUES(?, ?)';
+						if($stmt = $this->conn->prepare($sql)){
+							$stmt->bind_param('ii', $inputArr['excludeparent'], $this->clid);
+							if(!$stmt->execute()){
+								$this->errorMessage = 'Error updating parent checklist for exclusion species list: ' . $this->conn->error;
+							}
+							$stmt->close();
 						}
-						$stmt->close();
 					}
 				}
 			}
@@ -229,17 +231,19 @@ class ImInventories extends Manager{
 	//Child-Parent checklist functions
 	public function insertChildChecklist($clidChild, $modifiedUid){
 		$status = false;
-		$sql = 'INSERT INTO fmchklstchildren(clid, clidchild, modifiedUid) VALUES(?,?,?) ';
-		if($stmt = $this->conn->prepare($sql)){
-			$stmt->bind_param('iii', $this->clid, $clidChild, $modifiedUid);
-			if($stmt->execute()){
-				if($stmt->affected_rows && !$stmt->error){
-					$status = true;
+		if($this->clid != $clidChild){
+			$sql = 'INSERT INTO fmchklstchildren(clid, clidchild, modifiedUid) VALUES(?,?,?) ';
+			if($stmt = $this->conn->prepare($sql)){
+				$stmt->bind_param('iii', $this->clid, $clidChild, $modifiedUid);
+				if($stmt->execute()){
+					if($stmt->affected_rows && !$stmt->error){
+						$status = true;
+					}
+					else $this->errorMessage = 'ERROR inserting child checklist record (2): ' . $stmt->error;
 				}
-				else $this->errorMessage = 'ERROR inserting child checklist record (2): '.$stmt->error;
+				else $this->errorMessage = 'ERROR inserting child checklist record (1): ' . $stmt->error;
+				$stmt->close();
 			}
-			else $this->errorMessage = 'ERROR inserting child checklist record (1): '.$stmt->error;
-			$stmt->close();
 		}
 		return $status;
 	}
@@ -295,7 +299,7 @@ class ImInventories extends Manager{
 		$fullDescription = (isset($inputArr['fulldescription'])?$inputArr['fulldescription']:NULL);
 		$notes = (isset($inputArr['notes'])?$inputArr['notes']:NULL);
 		$isPublic = (isset($inputArr['ispublic'])?$inputArr['ispublic']:0);
-		$sql = 'INSERT INTO fmprojects(projname, managers, fulldescription, notes, ispublic) VALUES(?, ?, ?, ?, ?)';
+		$sql = 'INSERT IGNORE INTO fmprojects(projname, managers, fulldescription, notes, ispublic) VALUES(?, ?, ?, ?, ?)';
 		if($stmt = $this->conn->prepare($sql)){
 			$stmt->bind_param('ssssi', $projName, $managers, $fullDescription, $notes, $isPublic);
 			if($stmt->execute()){
@@ -319,7 +323,7 @@ class ImInventories extends Manager{
 		$notes = $inputArr['notes'];
 		$isPublic = $inputArr['ispublic'];
 
-		$sql = 'UPDATE fmprojects SET projname = ?, managers = ?, fulldescription = ?, notes = ?, ispublic = ? WHERE (pid = ?)';
+		$sql = 'UPDATE IGNORE fmprojects SET projname = ?, managers = ?, fulldescription = ?, notes = ?, ispublic = ? WHERE (pid = ?)';
 		if($stmt = $this->conn->prepare($sql)){
 			$stmt->bind_param('ssssii', $projName, $managers, $fullDescription, $notes, $isPublic, $this->pid);
 			if($stmt->execute()){
