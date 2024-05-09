@@ -167,7 +167,7 @@ class TaxonomyCleaner extends Manager{
 	}
 
 	private function getSqlFragment(){
-		$sql = 'FROM omoccurrences WHERE (collid IN('.$this->collid.')) AND (tidinterpreted IS NULL) AND (sciname IS NOT NULL) AND (sciname NOT LIKE "% x %") AND (sciname NOT LIKE "% × %") ';
+		$sql = 'FROM omoccurrences WHERE (collid IN('.$this->collid.')) AND (tidinterpreted IS NULL) AND (sciname IS NOT NULL)';
 		return $sql;
 	}
 
