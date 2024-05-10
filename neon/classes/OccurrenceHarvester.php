@@ -132,7 +132,7 @@ class OccurrenceHarvester{
 				if(isset($this->currentOccurArr['occurrenceID'])) $sampleArr['occurrenceID'] = $this->currentOccurArr['occurrenceID'];
 				if($this->harvestNeonApi($sampleArr)){
 					if($dwcArr = $this->getDarwinCoreArr($sampleArr)){
-						$this->subSampleIdentifications($dwcArr, $r->occid);
+						//$this->subSampleIdentifications($dwcArr, $r->occid);
 						if($occid = $this->loadOccurrenceRecord($dwcArr, $r->occid, $r->samplePK)){
 							if(!in_array($dwcArr['collid'],$collArr)) $collArr[] = $dwcArr['collid'];
 							echo '<li style="margin-left:30px">New record created: <a href="'.$GLOBALS['CLIENT_ROOT'].'/collections/individual/index.php?occid='.$occid.'" target="_blank">'.$occid.'</a></li>';
@@ -947,6 +947,8 @@ class OccurrenceHarvester{
 						unset($dwcArrClone['associations']);
 						$idArr['isCurrent'] = 1;
 						$dwcArrClone['identifications'][$idKey] = $idArr;
+						//Remove all parent identifier, at least for now
+						unset($dwcArrClone['identifiers']);
 						$existingOccid = 0;
 						foreach($subSampleArr as $subOccid => $subUnitArr){
 							if($idArr['sciname'] == $subUnitArr['sciname']){
