@@ -646,7 +646,7 @@ class OccurrenceHarvester{
 					if(isset($sampleArr['identifications'])){
 						$identArr = $sampleArr['identifications'];
 					}
-					if($sampleArr['taxonID']){
+					if(!$identArr && $sampleArr['taxonID']){
 						$hash = hash('md5', str_replace(' ','',$sampleArr['taxonID'].'manifests.d.'));
 						$identArr[$hash] = array('sciname' => $sampleArr['taxonID'], 'identifiedBy' => 'manifest', 'dateIdentified' => 's.d.', 'taxonRemarks' => 'Identification source: inferred from shipment manifest');
 					}
@@ -937,9 +937,10 @@ class OccurrenceHarvester{
 				unset($dwcArr['identifications']);
 				$baseDataIdentified = '';
 				$subSampleArr = $this->getSubSamples($parentOccid);
-				echo '<li style="margin-left:30px">Establishing '.count($identificationArr).' subSample records ... </li>';
+				echo '<li style="margin-left:30px">Evaluating '.count($identificationArr).' subSample records ... </li>';
 				$associationArr = array();
 				foreach($identificationArr as $idKey => $idArr){
+					if(!empty($idArr['securityStatus'])) continue;
 					if(!empty($idArr['dateIdentified'])) $baseDataIdentified = $idArr['dateIdentified'];
 					if(!empty($idArr['sciname'])){
 						$dwcArrClone = $dwcArr;
@@ -1250,7 +1251,7 @@ class OccurrenceHarvester{
 				$this->setSampleErrorMessage('occid:'.$occid, 'Curatorial Check: possible ID conflict');
 			}
 			foreach($identArr as $idArr){
-				if(($idArr['identifiedBy'] != 'manifest' && $idArr['identifiedBy'] != 'sampleID') || (isset($idArr['isCurrent']) && $idArr['isCurrent'])){
+				if(($idArr['identifiedBy'] != 'manifest' && $idArr['identifiedBy'] != 'sampleID') || !empty($idArr['isCurrent'])){
 					if(empty($idArr['updateDetID'])) $this->insertDetermination($occid, $idArr);
 					else $this->updateDetermination($idArr);
 					//Following code needed until omoccurdeterminations is activated as central determination source
