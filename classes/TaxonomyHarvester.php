@@ -1189,7 +1189,7 @@ class TaxonomyHarvester extends Manager{
 		}
 		if(!$this->validateTaxonArr($taxonArr)) return false;
 		if(mb_strpos($taxonArr['sciname'], '×') !== false || mb_strpos($taxonArr['sciname'], '†') !== false){
-			if(mb_strpos($taxonArr['sciname'], '× ') !== false) $taxonArr['sciname'] = str_replace('× ', '×', $taxonArr['sciname']);
+			//if(mb_strpos($taxonArr['sciname'], '× ') !== false) $taxonArr['sciname'] = str_replace('× ', '×', $taxonArr['sciname']);
 			if(mb_strpos($taxonArr['sciname'], '† ') !== false) $taxonArr['sciname'] = str_replace('† ', '†', $taxonArr['sciname']);
 			if(empty($taxonArr['unitind1'])){
 				if(mb_strpos($taxonArr['sciname'], '×') === 0) $taxonArr['unitind1'] = '×';
