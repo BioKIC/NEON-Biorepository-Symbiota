@@ -242,7 +242,7 @@ class OccurrenceHarvester{
 		];
 		
 		$anyKeyExists = array_reduce($urlConfigs, function ($carry, $config) use ($sampleArr) {
-			return $carry || isset($sampleArr[$config['key']]) || (isset($config['key2']) && isset($sampleArr[$config['key2']]));
+			return $carry || isset($sampleArr[$config['key']]);
 		}, false);
 		
 		if (!$anyKeyExists) {
@@ -263,6 +263,7 @@ class OccurrenceHarvester{
 			}
 		}
 		//echo 'url: ' . $url . '(' . date('Y-m-d H:i:s') . ')<br/>';
+		return false;
 	}
 
 	private function buildApiurl($config, $sampleArr){
@@ -283,7 +284,7 @@ class OccurrenceHarvester{
 	}
 
 	
-	private function checkApiforData(&$url, $sampleArr){
+	private function checkApiforData($url, $sampleArr){
 		$this->errorLogArr = [];
 		$this->errorStr = '';
 		$sampleViewArr = $this->getNeonApiArr($url);
@@ -297,7 +298,7 @@ class OccurrenceHarvester{
 		return $sampleViewArr;
 	}
 		
-	private function checkApiDataforErrors(&$sampleArr, $sampleViewArr){
+	private function checkApiDataforErrors(&$sampleArr, &$sampleViewArr){
 		//true = successful, false = error
 		$this->errorLogArr = [];
 		$this->errorStr = '';
