@@ -97,12 +97,10 @@ $taxaArr = $stats->getNeonTaxa();
 			<div class="row" style="vertical-align: bottom">
 				<div class="six columns centered">
 					<h4 class="centered">> <?php echo number_format($totalSamples); ?> samples</h4>
-					<p><span style="font-size: 70%">Distribution of samples by collection type:</span></p>
 					<div id="graph"></div>
 				</div>
 				<div class="six columns centered">
 					<h4 class="centered">> <?php echo number_format($totalTaxa); ?> taxa</h4>
-					<p><span style="font-size: 70%">Distribution of samples by top 5 determined taxa:</span></p>
 					<div id="graph2"></div>
 				</div>
 
