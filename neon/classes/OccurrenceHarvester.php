@@ -228,36 +228,81 @@ class OccurrenceHarvester{
 	}
 
 	private function harvestNeonApi(&$sampleArr){
+		//returning true/false changes the 'success' of the sample
 		$this->setSampleErrorMessage($sampleArr['samplePK'], '');
-		$url = '';
 		$sampleViewArr = array();
 
-		if($sampleArr['sampleCode']){
-			$url = $this->neonApiBaseUrl.'/samples/view?barcode='.$sampleArr['sampleCode'].'&apiToken='.$this->neonApiKey;
-		}
-		elseif($sampleArr['sampleUuid']){
-			$url = $this->neonApiBaseUrl.'/samples/view?sampleUuid='.$sampleArr['sampleUuid'].'&apiToken='.$this->neonApiKey;
-		}
-		elseif(isset($sampleArr['occurrenceID']) && $sampleArr['occurrenceID']){
-			$url = $this->neonApiBaseUrl.'/samples/view?archiveGuid='.$sampleArr['occurrenceID'].'&apiToken='.$this->neonApiKey;
-		}
-		elseif($sampleArr['sampleID'] && $sampleArr['sampleClass']){
-			$url = $this->neonApiBaseUrl.'/samples/view?sampleTag='.urlencode($sampleArr['sampleID']).'&sampleClass='.urlencode($sampleArr['sampleClass']).'&apiToken='.$this->neonApiKey;
-		}
-		else{
+		// Define an array of URL configurations based on sample identifiers
+		$urlConfigs = [
+			['key' => 	'sampleCode', 	'param' => 	'barcode'],
+			['key' => 	'sampleUuid', 	'param' => 	'sampleUuid'],
+			['key' => 	'occurrenceID', 'param' => 	'archiveGuid'],
+			['key' => 	'sampleID', 	'param' => 	'sampleTag',
+			 'key2' => 	'sampleClass', 	'param2' => 'sampleClass']
+		];
+		
+		$anyKeyExists = array_reduce($urlConfigs, function ($carry, $config) use ($sampleArr) {
+			return $carry || isset($sampleArr[$config['key']]);
+		}, false);
+		
+		if (!$anyKeyExists) {
 			$this->errorStr = 'Sample identifiers incomplete';
 			$this->setSampleErrorMessage($sampleArr['samplePK'], $this->errorStr);
 			return false;
 		}
+		
+		foreach ($urlConfigs as $config) {
+			$url = '';
+			if (!empty($sampleArr[$config['key']])) $url = $this->buildApiurl($config, $sampleArr);
+			
+			if (!empty($url)){
+				$sampleViewArr = $this->checkApiforData($url, $sampleArr);
+				if ($sampleViewArr) {
+					return $this->checkApiDataforErrors($sampleArr, $sampleViewArr);
+				}
+			}
+		}
 		//echo 'url: ' . $url . '(' . date('Y-m-d H:i:s') . ')<br/>';
+		return false;
+	}
+
+	private function buildApiurl($config, $sampleArr){
+		$url = $this->neonApiBaseUrl . '/samples/view?' . $config['param'] . '=' . urlencode($sampleArr[$config['key']]);
+		
+		if ($config['key'] == 'sampleID'){
+			if (!empty($sampleArr[$config['key2']])){
+				$url .= '&' . $config['param2'] . '=' . urlencode($sampleArr['sampleClass']);
+			} else {
+				$this->errorStr = 'Searching by sampleID, but no sampleClass given';
+				$this->setSampleErrorMessage($sampleArr['samplePK'], $this->errorStr);
+				return;
+			}
+		}
+
+		$url .= '&apiToken=' . $this->neonApiKey;
+		return $url;
+	}
+
+	
+	private function checkApiforData($url, $sampleArr){
+		$this->errorLogArr = [];
+		$this->errorStr = '';
 		$sampleViewArr = $this->getNeonApiArr($url);
 
 		if(!isset($sampleViewArr['sampleViews'])){
 			$this->errorStr = 'NEON API failed to return sample data';
 			//$this->errorStr .= ': (<a href="'.$url.'" target="_blank">'.$url.'</a>)';
 			$this->updateSampleRecord(array('errorMessage'=>$this->errorStr),$sampleArr['samplePK']);
-			return false;
+			return;
 		}
+		return $sampleViewArr;
+	}
+		
+	private function checkApiDataforErrors(&$sampleArr, &$sampleViewArr){
+		//true = successful, false = error
+		$this->errorLogArr = [];
+		$this->errorStr = '';
+
 		if(count($sampleViewArr['sampleViews']) > 1){
 			$this->errorStr = 'Harvest skipped: NEON API returned multiple sampleViews ';
 			$this->updateSampleRecord(array('errorMessage'=>$this->errorStr),$sampleArr['samplePK']);
