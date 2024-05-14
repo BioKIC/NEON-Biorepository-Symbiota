@@ -338,7 +338,17 @@ class OccurrenceHarvester{
 				$status = false;
 			}
 		}
-		if($sampleArr['sampleCode'] && isset($viewArr['barcode']) && $sampleArr['sampleCode'] != $viewArr['barcode']){
+		
+		//missing a barcode, just record within NeonSample error field and then skip harvest of this record
+		if(empty($sampleArr['sampleCode']) && isset($viewArr['barcode'])){
+			$this->errorStr .= '; <span style="color:red">DATA ISSUE</span>: Barcode missing in database records, but available in API ('.$viewArr['barcode'].')';
+			$status = false;
+		} elseif (!empty($sampleArr['sampleCode']) && !isset($viewArr['barcode']){
+			$this->errorStr .= '; <span style="color:red">DATA ISSUE</span>: Barcode missing in API, but available in database records ('.$sampleArr['sampleCode'].')';
+			$status = false;	
+		}
+		
+		if(!empty($sampleArr['sampleCode']) && isset($viewArr['barcode']) && $sampleArr['sampleCode'] != $viewArr['barcode']){
 			//sampleCode/barcode are not equal; don't update, just record within NeonSample error field and then skip harvest of this record
 			$this->errorStr .= '; <span style="color:red">DATA ISSUE</span>: Barcode failing to match (old: '.$sampleArr['sampleCode'].', new: '.$viewArr['barcode'].')';
 			$status = false;
