@@ -338,6 +338,12 @@ class OccurrenceHarvester{
 				$status = false;
 			}
 		}
+		if($sampleArr['sampleCode'] && isset($viewArr['barcode']) && $sampleArr['sampleCode'] != $viewArr['barcode']){
+			//sampleCode/barcode are not equal; don't update, just record within NeonSample error field and then skip harvest of this record
+			$this->errorStr .= '; <span style="color:red">DATA ISSUE</span>: Barcode failing to match (old: '.$sampleArr['sampleCode'].', new: '.$viewArr['barcode'].')';
+			$status = false;
+		}
+		
 		if($sampleArr['sampleClass'] && isset($viewArr['sampleClass']) && $sampleArr['sampleClass'] != $viewArr['sampleClass']){
 			//sampleClass are not equal; don't update, just record within NeonSample error field and then skip harvest of this record
 			$this->errorStr .= '; <span style="color:red">DATA ISSUE</span>: sampleClass failing to match (old: '.$sampleArr['sampleClass'].', new: '.$viewArr['sampleClass'].')';
