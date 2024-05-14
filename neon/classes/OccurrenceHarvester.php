@@ -343,7 +343,7 @@ class OccurrenceHarvester{
 		if(empty($sampleArr['sampleCode']) && isset($viewArr['barcode'])){
 			$this->errorStr .= '; <span style="color:red">DATA ISSUE</span>: Barcode missing in database records, but available in API ('.$viewArr['barcode'].')';
 			$status = false;
-		} elseif (!empty($sampleArr['sampleCode']) && !isset($viewArr['barcode']){
+		} elseif (!empty($sampleArr['sampleCode']) && !isset($viewArr['barcode'])){
 			$this->errorStr .= '; <span style="color:red">DATA ISSUE</span>: Barcode missing in API, but available in database records ('.$sampleArr['sampleCode'].')';
 			$status = false;	
 		}
