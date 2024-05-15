@@ -135,7 +135,7 @@ class OccurrenceHarvester{
 						//$this->subSampleIdentifications($dwcArr, $r->occid);
 						if($occid = $this->loadOccurrenceRecord($dwcArr, $r->occid, $r->samplePK)){
 							if(!in_array($dwcArr['collid'],$collArr)) $collArr[] = $dwcArr['collid'];
-							echo '<li style="margin-left:30px">New record created: <a href="'.$GLOBALS['CLIENT_ROOT'].'/collections/individual/index.php?occid='.$occid.'" target="_blank">'.$occid.'</a></li>';
+							echo '<li style="margin-left:30px">Record successfully harvested: <a href="'.$GLOBALS['CLIENT_ROOT'].'/collections/individual/index.php?occid='.$occid.'" target="_blank">'.$occid.'</a></li>';
 						}
 						if($this->errorStr) echo '<li style="margin-left:30px">WARNING: '.$this->errorStr.'</li>';
 					}
