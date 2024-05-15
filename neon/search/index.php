@@ -66,7 +66,7 @@ $siteData = new DatasetsMetadata();
 						<div><input type="checkbox" name="usethes" id="usethes" data-chip="Include Synonyms" value="1" checked><span class="ml-1">Include Synonyms</span></div>
 					</div>
 				</section>
-				<!-- Colections -->
+				<!-- Collections -->
 				<section>
 					<!-- Accordion selector -->
 					<input type="checkbox" id="collections" class="accordion-selector" checked=true />
@@ -441,6 +441,25 @@ $siteData = new DatasetsMetadata();
 									<span data-label="Collector/ORCID"></span></label>
 								<span class="assistive-text">Any part of a collector's name or ORCID iD (XXXX-XXXX-XXXX-XXXX).</span>
 							</div>							
+						</div>
+					</div>
+				</section>
+				<!-- Advanced Search -->
+				<section>
+					<!-- Accordion selector -->
+					<input type="checkbox" id="advanced-search" class="accordion-selector" />
+					<!-- Accordion header -->
+					<label for="advanced-search" class="accordion-header">Advanced Search</label>
+					<!-- Accordion content -->
+					<div class="content">
+						<div id="search-form-advanced-search">
+
+						<?php
+						include($SERVER_ROOT . '/neon/search/includes/queryform.php');
+						?>
+
+
+					
 						</div>
 					</div>
 				</section>
