@@ -99,7 +99,7 @@ for($x=1; $x<9; $x++){
 		<?php
 		if($x > 1){
 			?>
-			<div class="select-container" style="width: 10%; display: inline-block;">
+			<div class="select-container" style="width: 7%; display: inline-block;">
 				<select name="q_customandor<?php echo $x; ?>" onchange="customSelectChanged(<?php echo $x; ?>)" style="height:30px;">
 					<option value="AND"><?php echo $LANG['AND']; ?></option>
 					<option <?php echo ($cAndOr == 'OR' ? 'SELECTED' : ''); ?> value="OR"><?php echo $LANG['OR']; ?></option>
@@ -120,7 +120,7 @@ for($x=1; $x<9; $x++){
 			<!--<span class="assistive-text">Parentheses for advanced searches</span>-->
 		</div>
 		
-		<div class="select-container" style="width: 30%; display: inline-block;">
+		<div class="select-container" style="width: 25%; display: inline-block;">
 			<select name="q_customfield<?php echo $x; ?>" onchange="customSelectChanged(<?php echo $x; ?>)" style="height:30px;">
 				<option value=""><?php echo $LANG['SELECT_FIELD_NAME']; ?></option>
 				<option value="">---------------------------------</option>
@@ -131,7 +131,7 @@ for($x=1; $x<9; $x++){
 				?>
 			</select>
 		</div>
-		<div class="select-container" style="width: 20%; display: inline-block;">
+		<div class="select-container" style="width: 21%; display: inline-block;">
 			<select name="q_customtype<?php echo $x; ?>" style="height:30px;">
 				<?php
 				foreach($customTermArr as $term){
@@ -160,13 +160,14 @@ for($x=1; $x<9; $x++){
 				<img class="editimg" src="../../images/editplus.png" />
 			</a>
 		</div>
-	<span class="assistive-text"><?php echo $LANG['CUSTOM_FIELD'].' '.$x; ?></span>
+	<div>
+		<span class="assistive-text"><?php echo $LANG['CUSTOM_FIELD'].' '.$x; ?></span>
+	</div>
+	
 	</div>
 	<?php
 }
 ?>
-
-<script src="../../js/symb/collections.editor.query.js?ver=6" type="text/javascript"></script>
 <!--add to reset button in index-->
 <script>
 	function resetQueryForm(f){
@@ -176,5 +177,27 @@ for($x=1; $x<9; $x++){
 			if(x > 1) document.getElementById("customdiv"+x).style.display = "none";
 		}
 
+	}
+	
+	function toggleCustomDiv(x){
+		resetCustomElements(x);
+		$('#customdiv'+x).toggle();
+		if(x < 8){
+			y = x + 1;
+			resetCustomElements(y);
+			document.getElementById('customdiv'+y).style.display = "none";
+		}
+	}
+
+	function resetCustomElements(x){
+		var f = document.getElementById("search-form-advanced-search");
+		if(x < 9 && f.querySelector["q_customvalue" + x] && f.querySelector["q_customvalue" + x] != undefined){
+			if(x > 1) f.querySelector["q_customandor" + x].options[0].selected = true;
+			f.querySelector["q_customopenparen" + x].options[0].selected = true;
+			f.querySelector["q_customfield" + x].options[0].selected = true;
+			f.querySelector["q_customtype" + x].options[0].selected = true;
+			f.querySelector["q_customvalue" + x].value = "";
+			f.querySelector["q_customcloseparen" + x].options[0].selected = true;	
+		}
 	}
 </script>
