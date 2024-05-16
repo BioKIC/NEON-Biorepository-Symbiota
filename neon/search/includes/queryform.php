@@ -82,6 +82,12 @@ $customTermArr = array('EQUALS', 'NOT_EQUALS', 'STARTS', 'LIKE', 'NOT_LIKE', 'GR
 $customArr = array();
 
 // sort($customFieldArr);
+
+?>
+
+<input type="checkbox" id="AdvancedHasBeenChanged" style=display:none>
+
+<?php 
 for($x=1; $x<9; $x++){
 	$cAndOr = ''; $cOpenParen = ''; $cCloseParen = ''; $cField = ''; $cTerm = ''; $cValue = '';
 	if(isset($customArr[$x]['andor'])) $cAndOr = $customArr[$x]['andor'];
@@ -100,7 +106,8 @@ for($x=1; $x<9; $x++){
 		if($x > 1){
 			?>
 			<div class="select-container" style="width: 7%; display: inline-block;">
-				<select name="q_customandor<?php echo $x; ?>" onchange="customSelectChanged(<?php echo $x; ?>)" style="height:30px;">
+				<select name="q_customandor<?php echo $x; ?>" style="height:30px;">
+					<option value="">---</option>
 					<option value="AND"><?php echo $LANG['AND']; ?></option>
 					<option <?php echo ($cAndOr == 'OR' ? 'SELECTED' : ''); ?> value="OR"><?php echo $LANG['OR']; ?></option>
 				</select>
@@ -109,7 +116,7 @@ for($x=1; $x<9; $x++){
 		}
 		?>
 		<div class="select-container" style="width: 5%; display: inline-block;">
-			<select name="q_customopenparen<?php echo $x; ?>" onchange="customSelectChanged(<?php echo $x; ?>)" style="height:30px;">
+			<select name="q_customopenparen<?php echo $x; ?>" style="height:30px;">
 				<option value="">---</option>
 				<?php
 				echo '<option '.($cOpenParen == '(' ? 'SELECTED' : '').' value="(">(</option>';
@@ -121,7 +128,7 @@ for($x=1; $x<9; $x++){
 		</div>
 		
 		<div class="select-container" style="width: 25%; display: inline-block;">
-			<select name="q_customfield<?php echo $x; ?>" onchange="customSelectChanged(<?php echo $x; ?>)" style="height:30px;">
+			<select name="q_customfield<?php echo $x; ?>" style="height:30px;">
 				<option value=""><?php echo $LANG['SELECT_FIELD_NAME']; ?></option>
 				<option value="">---------------------------------</option>
 				<?php
@@ -133,6 +140,8 @@ for($x=1; $x<9; $x++){
 		</div>
 		<div class="select-container" style="width: 21%; display: inline-block;">
 			<select name="q_customtype<?php echo $x; ?>" style="height:30px;">
+				<option value="">Select Statement</option>
+				<option value="">---------------------------------</option>
 				<?php
 				foreach($customTermArr as $term){
 					echo '<option '.($cTerm == $term ? 'SELECTED' : '').' value="'.$term.'">'.$LANG[$term].'</option>';
@@ -146,7 +155,7 @@ for($x=1; $x<9; $x++){
 				<!--<span data-label="State"></span></label>-->
 		</div>
 		<div class="select-container" style="width: 5%; display: inline-block;">
-			<select name="q_customcloseparen<?php echo $x; ?>" onchange="customSelectChanged(<?php echo $x; ?>)" style="height:30px;">
+			<select name="q_customcloseparen<?php echo $x; ?>" style="height:30px;">
 				<option value="">---</option>
 				<?php
 				echo '<option '.($cCloseParen == ')' ? 'SELECTED' : '').' value=")">)</option>';
@@ -168,16 +177,8 @@ for($x=1; $x<9; $x++){
 	<?php
 }
 ?>
-<!--add to reset button in index-->
+
 <script>
-	function resetQueryForm(f){
-
-		for(let x = 1; x < 9; x++){
-			resetCustomElements(x);
-			if(x > 1) document.getElementById("customdiv"+x).style.display = "none";
-		}
-
-	}
 	
 	function toggleCustomDiv(x){
 		resetCustomElements(x);
@@ -200,4 +201,14 @@ for($x=1; $x<9; $x++){
 			f.querySelector["q_customcloseparen" + x].options[0].selected = true;	
 		}
 	}
+	
+	
+	const advancedInputs = document.querySelectorAll('#search-form-advanced-search select, #search-form-advanced-search input[type=text]');
+	advancedInputs.forEach((advancedInput) => {
+		advancedInput.addEventListener('change', function(){
+			document.getElementById('AdvancedHasBeenChanged').checked = true;
+		});
+	});
+	
+	
 </script>

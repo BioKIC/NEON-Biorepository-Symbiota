@@ -109,7 +109,7 @@ function openCoordAid(mapMode) {
  * @param {HTMLObjectElement} element Input for which chips are going to be created by default
  */
 function addChip(element) {
-  console.log(element);
+  //console.log(element);
   let inputChip = document.createElement('span');
   inputChip.classList.add('chip');
   let chipBtn = document.createElement('button');
@@ -138,6 +138,27 @@ function addChip(element) {
       uncheckAll(document.getElementById(element.name));
       removeChip(inputChip);
     };
+  } else if (element.name == 'advancedsearchstr') {
+    if (element.text != '') {
+      inputChip.id = 'chip-advancedsearchstr';
+      inputChip.textContent = element.text;
+      chipBtn.onclick = function () {
+        const formElements = document.querySelectorAll('#search-form-advanced-search input, #search-form-advanced-search select');
+        formElements.forEach(element => {
+            if (element.type === 'checkbox') {
+                element.checked = false;
+            } else if (element.type === 'select'){
+                element.selectedIndex = 0;
+            } else {
+                element.value = '';
+            }
+        for(let x = 1; x < 9; x++){
+          if(x > 1) document.getElementById("customdiv"+x).style.display = "none";
+        }
+        removeChip(inputChip);
+        });
+      }
+    }
   } else {
     inputChip.id = 'chip-' + element.id;
     let isTextOrNum = (element.type == 'text') | (element.type == 'number') | (element.type == 'textarea');
@@ -165,7 +186,7 @@ function removeChip(chip) {
 }
 
 /**
- * Updateds chips based on selected options
+ * Updates chips based on selected options
  * @param {Event} e
  */
 function updateChip(e) {
@@ -211,6 +232,13 @@ function updateChip(e) {
   if (extColsChecked.length > 0 && extColsChecked.length < extCols.length) {
     addChip(getCollsChips('ext-collections-list', 'Some Ext NEON Colls'));
   }
+  // if there are advanced query changes
+  let advCheckbox = document.getElementById('AdvancedHasBeenChanged');
+  if (advCheckbox.checked == true) {
+    addChip(getAdvancedSearchChip());
+    //getAdvancedSearchChip();
+  }
+  
   // then go through remaining inputs (exclude db and datasetid)
   // go through entire form and find selected items
   formInputs.forEach((item) => {
@@ -295,6 +323,55 @@ function getDomainsSitesChips() {
   return chipEl;
 }
 /////////
+
+/**
+ * Creates advanced search string to generate chip
+ * @returns {Object} chipEl chip element with text and name props
+ */
+function getAdvancedSearchChip() {
+  const advancedInputs = document.querySelectorAll('#search-form-advanced-search select, #search-form-advanced-search input[type=text]');
+  let sqlString = "";
+  let openParen = "";
+  let closeParen = "";
+	advancedInputs.forEach((advancedInput) => {
+    const name = advancedInput.name;
+    const value = advancedInput.value;
+    
+    if (name.startsWith("q_customopenparen")) {
+      openParen = value;
+    } else if (name.startsWith("q_customfield")) {
+      if (value) {
+        sqlString += `${openParen} ${value}`;
+      }
+    } else if (name.startsWith("q_customtype")) {
+      if (value) {
+        sqlString += ` ${value}`;
+      }
+    } else if (name.startsWith("q_customvalue")) {
+      if (value) {
+        sqlString += ` '${value}'`;
+      }
+    } else if (name.startsWith("q_customcloseparen")) {
+      closeParen = value;
+    } else if (name.startsWith("q_customandor")) {
+      sqlString += ` ${value}`;
+    }
+    
+    if (closeParen) {
+      sqlString += ` ${closeParen}`;
+      openParen = "";
+      closeParen = "";
+    }
+	});
+  
+  let chipEl = {
+    text: "Advanced Search: " + sqlString.trim(),
+    name: 'advancedsearchstr',
+  };
+  return chipEl;
+}
+/////////
+
 
 /**
  * Toggles state of checkboxes in nested lists when clicking an "all-selector" element
@@ -681,6 +758,9 @@ document
   .getElementById('reset-btn')
   .addEventListener('click', function (event) {
     document.getElementById('params-form').reset();
+    for(let x = 1; x < 9; x++){
+			if(x > 1) document.getElementById("customdiv"+x).style.display = "none";
+		}
     updateChip();
   });
 // Listen for open modal click
@@ -717,7 +797,7 @@ document
     updateChip();
   });
 //////// Binds Update chip on event change
-const formInputs = document.querySelectorAll('.content input, .content textarea');
+const formInputs = document.querySelectorAll('.content input, .content textarea, #search-form-advanced-search select');
 formInputs.forEach((formInput) => {
   formInput.addEventListener('change', updateChip);
 });
