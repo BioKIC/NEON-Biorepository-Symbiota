@@ -31,16 +31,14 @@ class ChecklistAdmin extends Manager{
 		$newClid = 0;
 		if($GLOBALS['SYMB_UID'] && isset($postArr['name'])){
 			$postArr['defaultsettings'] = $this->getDefaultJson($postArr);
-
 			$inventoryManager = new ImInventories();
 			$newClid = $inventoryManager->insertChecklist($postArr);
-
 			if($newClid){
 				//Add permissions to allow creater to be an editor and then reset user permissions stored in browser cache
 				$inventoryManager->insertUserRole($GLOBALS['SYMB_UID'], 'ClAdmin', 'fmchecklists', $newClid, $GLOBALS['SYMB_UID']);
 				$newPManager = new ProfileManager();
-				$newPManager->setUserName($GLOBALS['USERNAME']);
-				$newPManager->authenticate();
+				$newPManager->setUid($GLOBALS['SYMB_UID']);
+				$newPManager->setUserRights();
 				if($postArr['type'] == 'excludespp' && $postArr['excludeparent']){
 					//If is an exclusion checklists, link to parent checklist
 					if(!$inventoryManager->insertChildChecklist($postArr['excludeparent'], $newClid, $GLOBALS['SYMB_UID'])){
