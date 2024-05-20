@@ -146,12 +146,24 @@ $searchVar = $collManager->getQueryTermStr();
 				echo $navStr;
 				?>
 			</div>
-			<div class="navpath">
-				<a href="../index.php"><?php echo (isset($LANG['NAV_HOME'])?$LANG['NAV_HOME']:'Home'); ?></a> &gt;&gt;
-				<a href="index.php"><?php echo (isset($LANG['NAV_COLLECTIONS'])?$LANG['NAV_COLLECTIONS']:'Collections'); ?></a> &gt;&gt;
-				<a href="harvestparams.php"><?php echo (isset($LANG['NAV_SEARCH'])?$LANG['NAV_SEARCH']:'Search Criteria'); ?></a> &gt;&gt;
-				<b><?php echo (isset($LANG['SPEC_REC_TAB'])?$LANG['SPEC_REC_TAB']:'Specimen Records Table'); ?></b>
-			</div>
+			<?php
+			if (isset($collections_listCrumbs)) {
+				if ($collections_listCrumbs) {
+					echo '<div class="navpath">';
+					echo '<a href="../index.php">' . $LANG['NAV_HOME'] . '</a> &gt;&gt; ';
+					echo $collections_listCrumbs . ' &gt;&gt; ';
+					echo '<b>' . $LANG['SPEC_REC_TAB'] . '</b>';
+					echo '</div>';
+				}
+			} else {
+				echo '<div class="navpath">';
+				echo '<a href="../index.php">' . $LANG['NAV_HOME'] . '</a> &gt;&gt; ';
+				echo '<a href="index.php">' . $LANG['NAV_COLLECTIONS'] . '</a> &gt;&gt; ';
+				echo '<a href="harvestparams.php">' . $LANG['NAV_SEARCH'] . '</a> &gt;&gt; ';
+				echo '<b>' . $LANG['SPEC_REC_TAB'] . '</b>';
+				echo '</div>';
+			}
+			?>
 		</div>
 		<form name="occurListForm" method="post" action="datasets/index.php" onsubmit="return validateOccurListForm(this)" target="_blank">
 			<?php include('datasetinclude.php'); ?>
