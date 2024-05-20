@@ -817,7 +817,7 @@ formInputs.forEach((formInput) => {
   formInput.addEventListener('change', updateChip);
 });
 // on default (on document load): All Neon Collections, All Domains & Sites, Include other IDs, All Domains & Sites
-document.addEventListener('DOMContentLoaded', updateChip);
+window.addEventListener('load', updateChip);
 // Binds expansion function to plus and minus icons in selectors, uses jQuery
 $('.expansion-icon').click(function () {
   if ($(this).siblings('ul').hasClass('collapsed')) {
