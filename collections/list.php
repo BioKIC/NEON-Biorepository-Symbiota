@@ -119,7 +119,7 @@ $_SESSION['citationvar'] = $searchVar;
 	else {
 		echo '<div class="navpath">';
 		echo '<a href="../index.php">' . $LANG['NAV_HOME'] . '</a> &gt;&gt; ';
-		echo '<a href="' . $SERVER_ROOT .'/neon/search/index.php" id="search_form">' . $LANG['NAV_SEARCH'] . '</a> &gt;&gt; ';
+		echo '<a href="' . $CLIENT_ROOT .'/neon/search/index.php" id="search_form">' . $LANG['NAV_SEARCH'] . '</a> &gt;&gt; ';
 		echo '<b>' . $LANG['NAV_SPECIMEN_LIST'] . '</b>';
 		echo '</div>';
 	}
