@@ -467,6 +467,14 @@ class OccurrenceManager extends OccurrenceTaxaManager {
 			$sqlWhere .= 'AND (o.occid IN(SELECT occid FROM tmattributes WHERE stateid IN(' . $this->searchTermArr['attr'] . '))) ';
 		}
 
+		$customKeys = array_filter(array_keys($this->searchTermArr), function($key) {
+			return strpos($key, 'custom') !== false;
+		});
+		$filteredArray = array_intersect_key($this->searchTermArr, array_flip($customKeys));
+		if (!empty($filteredArray)) {
+			$this->setAdvancedsqlWhere($filteredArray, $sqlWhere);
+		}
+		
 		if($sqlWhere) $this->sqlWhere = 'WHERE '.substr($sqlWhere,4);
 		else{
 			//Make the sql valid, but return nothing
@@ -475,6 +483,68 @@ class OccurrenceManager extends OccurrenceTaxaManager {
 		//echo $this->sqlWhere;
 	}
 
+	protected function setAdvancedsqlWhere($filteredArray, &$sqlWhere) {
+		$currentGroup = 1;
+		$conditionGroup = '';
+		
+		while (isset($filteredArray["q_customfield$currentGroup"])) {
+			$openParen = isset($filteredArray["q_customopenparen$currentGroup"]) ? $filteredArray["q_customopenparen$currentGroup"] : '';
+			$field = $filteredArray["q_customfield$currentGroup"];
+			$type = $filteredArray["q_customtype$currentGroup"];
+			$value = $filteredArray["q_customvalue$currentGroup"] ?? null;
+			$closeParen = isset($filteredArray["q_customcloseparen$currentGroup"]) ? $filteredArray["q_customcloseparen$currentGroup"] : '';
+			$andOr = isset($filteredArray["q_customandor" . ($currentGroup + 1)]) ? $filteredArray["q_customandor" . ($currentGroup + 1)] : '';
+	
+			// Build the condition based on the type
+			switch ($type) {
+				case 'EQUALS':
+					$condition = "o.$field = '$value'";
+					break;
+				case 'NOT_EQUALS':
+					$condition = "o.$field != '$value'";
+					break;
+				case 'STARTS':
+					$condition = "o.$field LIKE '$value%'";
+					break;
+				case 'LIKE':
+					$condition = "o.$field LIKE '%$value%'";
+					break;
+				case 'NOT_LIKE':
+					$condition = "o.$field NOT LIKE '%$value%'";
+					break;
+				case 'GREATER':
+					$condition = "o.$field > '$value'";
+					break;
+				case 'LESS':
+					$condition = "o.$field < '$value'";
+					break;
+				case 'NULL':
+					$condition = "o.$field IS NULL";
+					break;
+				case 'NOTNULL':
+					$condition = "o.$field IS NOT NULL";
+					break;
+				default:
+					$condition = '';
+					break;
+			}
+	
+			// Add the condition to the group
+			if ($condition) {
+				$conditionGroup .= "$openParen$condition$closeParen";
+				if ($andOr) {
+					$conditionGroup .= " $andOr ";
+				}
+			}
+	
+			$currentGroup++;
+		}	
+		
+		$sqlWhere .= 'AND (' . trim($conditionGroup) . ') ';
+		$this->displaySearchArr[] = 'advanced search: '.trim($conditionGroup);
+	}
+	
+	
 	private function getAdditionIdentifiers($identFrag){
 		$retArr = array();
 		if($identFrag){
@@ -936,6 +1006,18 @@ class OccurrenceManager extends OccurrenceTaxaManager {
 		}
 		if(array_key_exists('footprintwkt',$_REQUEST) && $_REQUEST['footprintwkt']){
 			$this->searchTermArr['footprintwkt'] = $this->cleanInputStr($_REQUEST['footprintwkt']);
+		}
+
+		$customKeys = array_filter(array_keys($_REQUEST), function($key) {
+			return strpos($key, 'custom') !== false;
+		});
+		foreach ($customKeys as $customKey) {
+			$customValue = $this->cleanInputStr($_REQUEST[$customKey]);
+			if ($customValue) {
+				$this->searchTermArr[$customKey] = $customValue;
+			} else {
+				unset($this->searchTermArr[$customKey]);
+			}
 		}
 	}
 
