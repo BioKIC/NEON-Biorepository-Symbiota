@@ -57,6 +57,10 @@ $_SESSION['citationvar'] = $searchVar;
 					$(ui.panel).html("<p>Loading...</p>");
 				}
 			});
+			document.getElementById('search_form').addEventListener('click', function(event) {
+				event.preventDefault();
+				window.history.back(); // Go back to the previous page in the history
+			});
 		});
 
 		function validateOccurListForm(f) {
