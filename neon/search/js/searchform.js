@@ -32,6 +32,21 @@ let paramNames = [
   'taxontype',
   'availableforloan',
 ];
+
+for (let i = 1; i <= 8; i++) {
+  paramNames.push(
+    `q_customopenparen${i}`,
+    `q_customfield${i}`,
+    `q_customtype${i}`,
+    `q_customvalue${i}`,
+    `q_customcloseparen${i}`
+  );
+  if (i < 8) {
+    paramNames.push(`q_customandor${i + 1}`);
+  }
+}
+
+
 const uLat = document.getElementById('upperlat');
 const uLatNs = document.getElementById('upperlat_NS');
 const bLat = document.getElementById('bottomlat');
