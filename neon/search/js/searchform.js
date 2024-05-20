@@ -356,11 +356,11 @@ function getAdvancedSearchChip() {
       openParen = value;
     } else if (name.startsWith("q_customfield")) {
       if (value) {
-        sqlString += `${openParen} ${value}`;
+        sqlString += `${openParen}${advancedInput.options[advancedInput.selectedIndex].text}`;
       }
     } else if (name.startsWith("q_customtype")) {
       if (value) {
-        sqlString += ` ${value}`;
+        sqlString += ` ${advancedInput.options[advancedInput.selectedIndex].text}`;
       }
     } else if (name.startsWith("q_customvalue")) {
       if (value) {
@@ -369,11 +369,11 @@ function getAdvancedSearchChip() {
     } else if (name.startsWith("q_customcloseparen")) {
       closeParen = value;
     } else if (name.startsWith("q_customandor")) {
-      sqlString += ` ${value}`;
+      sqlString += ` ${value} `;
     }
     
     if (closeParen) {
-      sqlString += ` ${closeParen}`;
+      sqlString += `${closeParen}`;
       openParen = "";
       closeParen = "";
     }
