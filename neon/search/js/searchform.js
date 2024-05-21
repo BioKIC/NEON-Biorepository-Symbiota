@@ -578,7 +578,7 @@ function getParam(paramName) {
  * Define parameters to be looked for in `paramNames` array
  */
 function getSearchUrl() {
-  const harvestUrl = location.href.slice(0, location.href.indexOf('/neon'));
+  const harvestUrl = location.href.slice(0, location.href.indexOf('/neon/search'));
   const baseUrl = new URL(harvestUrl + '/collections/list.php');
 
   // Clears array temporarily to avoid redundancy
