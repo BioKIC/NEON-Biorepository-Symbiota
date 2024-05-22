@@ -40,7 +40,7 @@ class OccurrenceHarvester{
 		$retArr = array();
 		$sql = 'SELECT s.errorMessage AS errMsg, COUNT(s.samplePK) as sampleCnt, COUNT(o.occid) as occurrenceCnt '.
 			'FROM NeonSample s LEFT JOIN omoccurrences o ON s.occid = o.occid '.
-			'WHERE s.checkinuid IS NOT NULL AND s.sampleReceived = 1 AND o.collid IS NULL';
+			'WHERE s.checkinuid IS NOT NULL AND s.acceptedForAnalysis = 1';
 		if($shipmentPK) $sql .= 'AND s.shipmentPK = '.$shipmentPK;
 		$sql .= ' GROUP BY errMsg';
 		$rs= $this->conn->query($sql);

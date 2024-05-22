@@ -160,7 +160,7 @@ include($SERVER_ROOT.'/includes/header.php');
 					</div>
 				</div>
 				<fieldset id="extendedVariables" style="display:<?php echo ($targetNewSample?'none':'block'); ?>">
-					<legend>Reharvesting Parameters</legend>
+					<legend>Harvesting Parameters</legend>
 					<div class="fieldGroupDiv">
 						<div class="fieldDiv">
 							Harvest date prior to: <input name="harvestDate" type="date" value="<?php echo $harvestDate; ?>" />
