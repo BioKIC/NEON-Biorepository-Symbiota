@@ -701,7 +701,7 @@ class OccurrenceHarvester{
 				}
 
 				//Taxonomic fields
-				$skipTaxonomy = array(5,6,10,13,16,21,23,31,41,42,45,58,60,61,62,67,68,69,76,92);
+				$skipTaxonomy = array(5,6,10,13,16,21,23,31,41,42,58,60,61,62,67,68,69,76,92);
 				if(!in_array($dwcArr['collid'],$skipTaxonomy)){
 					$identArr = array();
 					if(isset($sampleArr['identifications'])){
@@ -726,12 +726,12 @@ class OccurrenceHarvester{
 								$taxonRemarks = 'Identification source: parsed from NEON sampleID';
 							}
 						}
-						elseif(!in_array($dwcArr['collid'], array(22,50,57))){
-							if(preg_match('/\.\d{8}\.([A-Z]{2,15}\d{0,2})\./',$sampleArr['sampleID'], $m)){
-								$taxonCode = $m[1];
-								$taxonRemarks = 'Identification source: parsed from NEON sampleID';
-							}
-						}
+						// elseif(!in_array($dwcArr['collid'], array(22,50,57))){
+						// 	if(preg_match('/\.\d{8}\.([A-Z]{2,15}\d{0,2})\./',$sampleArr['sampleID'], $m)){
+						// 		$taxonCode = $m[1];
+						// 		$taxonRemarks = 'Identification source: parsed from NEON sampleID';
+						// 	}
+						// }
 						if($taxonCode){
 							$hash = hash('md5', str_replace(' ','',$taxonCode.'sampleIDs.d.'));
 							$identArr[$hash] = array('sciname' => $taxonCode, 'identifiedBy' => 'sampleID', 'dateIdentified' => 's.d.', 'taxonRemarks' => $taxonRemarks);
@@ -1668,7 +1668,7 @@ class OccurrenceHarvester{
 	}
 
 	private function getTaxonGroup($collid){
-		$taxonGroup = array( 45 => 'ALGAE', 46 => 'ALGAE', 47 => 'ALGAE', 49 => 'ALGAE', 50 => 'ALGAE',  73 => 'ALGAE',
+		$taxonGroup = array( 46 => 'ALGAE', 47 => 'ALGAE', 49 => 'ALGAE', 50 => 'ALGAE',  73 => 'ALGAE',
 			11 => 'BEETLE', 14 => 'BEETLE', 39 => 'BEETLE', 44 => 'BEETLE', 63 => 'BEETLE', 82 =>'BEETLE', 95 =>'BEETLE',
 			20 => 'FISH', 66 => 'FISH',
 			12 => 'HERPETOLOGY', 15 => 'HERPETOLOGY', 70 => 'HERPETOLOGY',
