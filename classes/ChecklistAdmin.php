@@ -31,16 +31,14 @@ class ChecklistAdmin extends Manager{
 		$newClid = 0;
 		if($GLOBALS['SYMB_UID'] && isset($postArr['name'])){
 			$postArr['defaultsettings'] = $this->getDefaultJson($postArr);
-
 			$inventoryManager = new ImInventories();
 			$newClid = $inventoryManager->insertChecklist($postArr);
-
 			if($newClid){
 				//Add permissions to allow creater to be an editor and then reset user permissions stored in browser cache
 				$inventoryManager->insertUserRole($GLOBALS['SYMB_UID'], 'ClAdmin', 'fmchecklists', $newClid, $GLOBALS['SYMB_UID']);
 				$newPManager = new ProfileManager();
-				$newPManager->setUserName($GLOBALS['USERNAME']);
-				$newPManager->authenticate();
+				$newPManager->setUid($GLOBALS['SYMB_UID']);
+				$newPManager->setUserRights();
 				if($postArr['type'] == 'excludespp' && $postArr['excludeparent']){
 					//If is an exclusion checklists, link to parent checklist
 					if(!$inventoryManager->insertChildChecklist($postArr['excludeparent'], $newClid, $GLOBALS['SYMB_UID'])){
@@ -119,16 +117,16 @@ class ChecklistAdmin extends Manager{
 		$retArr = Array();
 		$targetStr = $this->clid;
 		do{
-			$sql = 'SELECT c.clid, c.name, child.clid as pclid '.
-				'FROM fmchklstchildren child INNER JOIN fmchecklists c ON child.clidchild = c.clid '.
-				'WHERE child.clid IN('.trim($targetStr,',').') '.
-				'ORDER BY c.name ';
+			$sql = 'SELECT c.clid, c.name, child.clid as pclid
+				FROM fmchklstchildren child INNER JOIN fmchecklists c ON child.clidchild = c.clid
+				WHERE child.clid IN(' . trim($targetStr, ',') . ') AND child.clid != child.clidchild
+				ORDER BY c.name ';
 			$rs = $this->conn->query($sql);
 			$targetStr = '';
 			while($r = $rs->fetch_object()){
 				$retArr[$r->clid]['name'] = $r->name;
 				$retArr[$r->clid]['pclid'] = $r->pclid;
-				$targetStr .= ','.$r->clid;
+				$targetStr .= ',' . $r->clid;
 			}
 			$rs->free();
 		}while($targetStr);
@@ -140,16 +138,16 @@ class ChecklistAdmin extends Manager{
 		$retArr = Array();
 		$targetStr = $this->clid;
 		do{
-			$sql = 'SELECT c.clid, c.name, child.clid as pclid '.
-				'FROM fmchklstchildren child INNER JOIN fmchecklists c ON child.clid = c.clid '.
-				'WHERE child.clidchild IN('.trim($targetStr,',').') ';
+			$sql = 'SELECT c.clid, c.name
+				FROM fmchklstchildren child INNER JOIN fmchecklists c ON child.clid = c.clid
+				WHERE child.clidchild IN(' . trim($targetStr, ',') . ') AND child.clid != child.clidchild';
 			$rs = $this->conn->query($sql);
 			$targetStr = '';
 			while($r = $rs->fetch_object()){
 				$retArr[$r->clid] = $r->name;
 				$targetStr .= ','.$r->clid;
 			}
-			if($targetStr) $targetStr = substr($targetStr,1);
+			if($targetStr) $targetStr = substr($targetStr, 1);
 			$rs->free();
 		}while($targetStr);
 		asort($retArr);
@@ -454,7 +452,7 @@ class ChecklistAdmin extends Manager{
 			if($copyAttributes) $clManagerArr = $inventoryManager->getManagers('ClAdmin', 'fmchecklists', $this->clid);
 			if(!array_key_exists($GLOBALS['SYMB_UID'], $clManagerArr)) $clManagerArr[$GLOBALS['SYMB_UID']] = '';
 			if(!$targetClid){
-				$fieldArr['name'] = $clMeta['name'].' new sub-checklist - '.$taxa;
+				$fieldArr['name'] = 'Copy ' . $clMeta['name'] . ' - ' . $taxa;
 				$targetClid = $inventoryManager->insertChecklist($fieldArr);
 				if($targetClid && $copyAttributes){
 					foreach($clManagerArr as $managerUid => $managerArr){
@@ -467,7 +465,7 @@ class ChecklistAdmin extends Manager{
 					$statusArr['targetClid'] = $targetClid;
 					if($targetPid === '0'){
 						$projectFieldArr = array(
-							'projname' => $clMeta['name'].' project',
+							'projname' => $clMeta['name'] . ' project',
 							'managers' => $clMeta['authors'],
 							'ispublic' => ($clMeta['access'] == 'private'?0:1));
 						$targetPid = $inventoryManager->insertProject($projectFieldArr);
@@ -483,7 +481,7 @@ class ChecklistAdmin extends Manager{
 						$statusArr['targetPid'] = $targetPid;
 					}
 					if($parentClid === '0'){
-						$fieldArr['name'] = $clMeta['name'].' parent checklist';
+						$fieldArr['name'] = 'Parent: ' . $clMeta['name'];
 						$parentClid = $inventoryManager->insertChecklist($fieldArr);
 						if($parentClid && $copyAttributes){
 							foreach($clManagerArr as $managerUid => $managerArr){
@@ -540,6 +538,24 @@ class ChecklistAdmin extends Manager{
 
 	public function getClName(){
 		return $this->clName;
+	}
+
+	//Misc support functions
+	public function cleanOutArray($inputArray){
+		$skip = array('defaultsettings', 'dynamicsql', 'footprintWkt');
+		if(is_array($inputArray)){
+			foreach($inputArray as $key => $value){
+				if(is_array($value)){
+					$inputArray[$key] = $this->cleanOutArray($value);
+				}
+				else{
+					if(!in_array($key, $skip)){
+						$inputArray[$key] = $this->cleanOutStr($value);
+					}
+				}
+			}
+		}
+		return $inputArray;
 	}
 }
 ?>

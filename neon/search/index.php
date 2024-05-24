@@ -216,11 +216,11 @@ $siteData = new DatasetsMetadata();
 									<input type="checkbox" name="includeothercatnum" id="includeothercatnum" value="1" data-chip="Include other IDs" checked>
 									<label for="includeothercatnum">Include other sample identifiers (e.g. NEON sampleID, barcode, UUID)</label>
 								</div>
-								<div class="input-text-container">
-									<label for="" class="input-text--outlined">
-										<input type="text" name="catnum" data-chip="Catalog Number">
+								<div class="text-area-container">
+									<label for="" class="text-area--outlined">
+										<textarea name="catnum" data-chip="Catalog Number" style="width: 100%"></textarea>
 										<span data-label="Catalog Number"></span></label>
-									<span class="assistive-text">Separate multiple with commas.</span>
+									<span class="assistive-text">Separate multiple with commas or new lines.</span>
 								</div>
 							</div>
 							<div>
@@ -231,6 +231,10 @@ $siteData = new DatasetsMetadata();
 								<div>
 									<input type="checkbox" name="hasgenetic" value=1 data-chip="Only with genetic">
 									<label for="hasgenetic">Limit to specimens with genetic data</label>
+								</div>
+								<div>
+									<input type="checkbox" name="availableforloan" value=1 data-chip="Only available for loan" checked>
+									<label for="availableforloan">Limit to specimens available for loan</label>
 								</div>
 							</div>
 						</div>
@@ -423,14 +427,20 @@ $siteData = new DatasetsMetadata();
 								<label for="eventdate1" class="input-text--outlined">
 									<input type="text" name="eventdate1" data-chip="Event Date Start">
 									<span data-label="Collection Start Date"></span></label>
-								<span class="assistive-text">Single date or start date of range (e.g. YYYY, YYYY-MM-DD, or similar format).</span>
+								<span class="assistive-text">Single date or start date of range (e.g. YYYY, YYYY-MM-DD, or similar).</span>
 							</div>
 							<div class="input-text-container">
 								<label for="eventdate2" class="input-text--outlined">
 									<input type="text" name="eventdate2" data-chip="Event Date End">
 									<span data-label="Collection End Date"></span></label>
-								<span class="assistive-text">End date of range (e.g. YYYY, YYYY-MM-DD, or similar format).</span>
+								<span class="assistive-text">End date of range (e.g. YYYY, YYYY-MM-DD, or similar).</span>
 							</div>
+							<div class="input-text-container">
+								<label for="collector" class="input-text--outlined">
+									<input type="text" name="collector" data-chip="Collector/ORCID">
+									<span data-label="Collector/ORCID"></span></label>
+								<span class="assistive-text">Any part of a collector's name or ORCID iD (XXXX-XXXX-XXXX-XXXX).</span>
+							</div>							
 						</div>
 					</div>
 				</section>
@@ -449,5 +459,5 @@ $siteData = new DatasetsMetadata();
 	include($SERVER_ROOT . '/includes/footer.php');
 	?>
 </body>
-<script src="js/searchform.js?ver=1" type="text/javascript"></script>
+<script src="js/searchform.js?ver=03" type="text/javascript"></script>
 </html>

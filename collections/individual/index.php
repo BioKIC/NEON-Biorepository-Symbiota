@@ -163,7 +163,7 @@ $traitArr = $indManager->getTraitArr();
 	include_once($SERVER_ROOT.'/includes/head.php');
 	include_once($SERVER_ROOT.'/includes/googleanalytics.php');
 	?>
-	<link href="<?php echo $CSS_BASE_PATH; ?>/symbiota/collections/individual/index.css?ver=1" type="text/css" rel="stylesheet" >
+	<link href="<?php echo $CSS_BASE_PATH; ?>/symbiota/collections/individual/index.css?ver=2" type="text/css" rel="stylesheet" >
 	<link href="<?php echo $CSS_BASE_PATH; ?>/symbiota/collections/individual/popup.css" type="text/css" rel="stylesheet" >
 	<script src="../../js/jquery.js" type="text/javascript"></script>
 	<script src="../../js/jquery-ui.js" type="text/javascript"></script>
@@ -322,11 +322,20 @@ $traitArr = $indManager->getTraitArr();
 						<?php echo $collMetadata['collectionname'].' ('.$instCode.')'; ?>
 					</div>
 					<div  id="occur-div">
-						<?php
+						<div id="availability-div">
+							<?php 
+							if ($occArr['availability'] == 1) {
+								echo "<strong><span style='color:green;'>This sample is available for loan</span></strong>";
+							} else {
+								echo "<strong><span style='color:red;'>This sample is NOT available for loan</span></strong>";
+							}
+							?>
+						</div>
+							<?php
 						if(array_key_exists('loan',$occArr)){
 							?>
 							<div id="loan-div" title="<?php echo 'Loan #'.$occArr['loan']['identifier']; ?>">
-								<?php echo $LANG['ON_LOAN']; ?>
+								<?php echo "Currently on loan to"; ?>
 								<?php echo $occArr['loan']['code']; ?>
 							</div>
 							<?php
@@ -381,6 +390,9 @@ $traitArr = $indManager->getTraitArr();
 								if($resolvableGuid) echo '<a href="'.$occArr['occurrenceid'].'" target="_blank">';
 								echo $occArr['occurrenceid'];
 								if($resolvableGuid) echo '</a>';
+								echo '<span style="margin-left: 10px"><a href="https://doi.org/10.58052/' . $occArr['occurrenceid'] . '" target="_blank">SESAR Record</a></span>';
+								
+								
 								?>
 							</div>
 							<?php
@@ -934,6 +946,10 @@ $traitArr = $indManager->getTraitArr();
 										if($imgArr['url'] && substr($thumbUrl,0,7)!='process' && $imgArr['url'] != $imgArr['lgurl']) echo '<div><a href="'.$imgArr['url'].'" target="_blank">'.$LANG['OPEN_MEDIUM'].'</a></div>';
 										if($imgArr['lgurl']) echo '<div><a href="'.$imgArr['lgurl'].'" target="_blank">'.$LANG['OPEN_LARGE'].'</a></div>';
 										if($imgArr['sourceurl']) echo '<div><a href="'.$imgArr['sourceurl'].'" target="_blank">'.$LANG['OPEN_SOURCE'].'</a></div>';
+										//Use image rights settings as the default for current record
+										if($imgArr['rights']) $collMetadata['rights'] = $imgArr['rights'];
+										if($imgArr['copyright']) $collMetadata['rightsholder'] = $imgArr['copyright'];
+										if($imgArr['accessrights']) $collMetadata['accessrights'] = $imgArr['accessrights'];
 										?>
 									</div>
 									<?php
@@ -944,11 +960,9 @@ $traitArr = $indManager->getTraitArr();
 						}
 						//Rights
 						$rightsStr = $collMetadata['rights'];
-						if($collMetadata['rights']){
-							$rightsHeading = '';
-							if(isset($RIGHTS_TERMS)) $rightsHeading = array_search($rightsStr,$RIGHTS_TERMS);
+						if($rightsStr){
 							if(substr($collMetadata['rights'],0,4) == 'http'){
-								$rightsStr = '<a href="'.$rightsStr.'" target="_blank">'.($rightsHeading?$rightsHeading:$rightsStr).'</a>';
+								$rightsStr = '<a href="'.$rightsStr.'" target="_blank">' . $rightsStr . '</a>';
 							}
 							$rightsStr = '<div style="margin-top:2px;"><label>'.$LANG['USAGE_RIGHTS'].':</label> '.$rightsStr.'</div>';
 						}
@@ -1365,7 +1379,7 @@ $traitArr = $indManager->getTraitArr();
 			</div>
 			<?php
 		}
-		else{
+		else {
 			?>
 			<h2><?php echo (isset($LANG['UNABLETOLOCATE'])?$LANG['UNABLETOLOCATE']:'Unable to locate occurrence record'); ?></h2>
 			<div style="margin:20px">

@@ -40,7 +40,7 @@ class OccurrenceEditorManager {
 			'identificationreferences' => 's', 'identificationremarks' => 's', 'taxonremarks' => 's', 'identificationqualifier' => 's', 'typestatus' => 's',
 			'recordedby' => 's', 'recordnumber' => 's', 'associatedcollectors' => 's', 'eventdate' => 'd', 'eventdate2' => 'd', 'year' => 'n', 'month' => 'n', 'day' => 'n', 'startdayofyear' => 'n',
 			'enddayofyear' => 'n', 'verbatimeventdate' => 's', 'habitat' => 's', 'substrate' => 's', 'fieldnumber' => 's', 'occurrenceremarks' => 's', 'datageneralizations' => 's',
-			'associatedtaxa' => 's', 'verbatimattributes' => 's', 'dynamicproperties' => 's', 'reproductivecondition' => 's', 'cultivationstatus' => 's', 'establishmentmeans' => 's',
+			'associatedtaxa' => 's', 'verbatimattributes' => 's', 'dynamicproperties' => 's', 'reproductivecondition' => 's', 'cultivationstatus' => 's', 'establishmentmeans' => 's', 'availability' => 'n',
 			'lifestage' => 's', 'sex' => 's', 'individualcount' => 's', 'samplingprotocol' => 's', 'preparations' => 's',
 			'country' => 's', 'stateprovince' => 's', 'county' => 's', 'municipality' => 's', 'locationid' => 's', 'locality' => 's', 'localitysecurity' => 'n', 'localitysecurityreason' => 's',
 			'locationremarks' => 'n', 'decimallatitude' => 'n', 'decimallongitude' => 'n', 'geodeticdatum' => 's', 'coordinateuncertaintyinmeters' => 'n', 'verbatimcoordinates' => 's',
@@ -549,7 +549,7 @@ class OccurrenceEditorManager {
 			$sqlFrag .= $cao.($cop?' '.$cop:'').' ('.$customField.' < '.$customValue.') '.($ccp?$ccp.' ':'');
 		}
 		elseif($customTerm == 'LIKE' && $customValue){
-			$sqlFrag .= $cao.($cop?' '.$cop:'').' ('.$customField.' LIKE "%'.trim($customValue,'%').'%") '.($ccp?$ccp.' ':'');
+			$sqlFrag .= $cao . ($cop ? ' ' . $cop : '') . ' (' . $customField . ' LIKE "%' . $customValue . '%") ' . ($ccp ? $ccp . ' ' : '');
 		}
 		elseif($customTerm == 'NOT_LIKE' && $customValue){
 			$sqlFrag .= $cao.($cop?' '.$cop:'').' (('.$customField.' NOT LIKE "%'.trim($customValue,'%').'%") OR ('.$customField.' IS NULL)) '.($ccp?$ccp.' ':'');
@@ -557,7 +557,7 @@ class OccurrenceEditorManager {
 		elseif($customTerm == 'STARTS' && $customValue){
 			$sqlFrag .= $cao.($cop?' '.$cop:'').' ('.$customField.' LIKE "'.trim($customValue,'%').'%") '.($ccp?$ccp.' ':'');
 		}
-		elseif($customValue){
+		elseif($customValue !== ''){
 			$sqlFrag .= $cao.($cop?' '.$cop:'').' ('.$customField.' = "'.$customValue.'") '.($ccp?$ccp.' ':'');
 		}
 		return $sqlFrag;
@@ -792,9 +792,11 @@ class OccurrenceEditorManager {
 					foreach($occurArr['identifiers'] as $idKey => $idArr){
 						$idName = $idArr['name'];
 						$idValue = $idArr['value'];
-						if(array_key_exists($idValue, $otherCatNumArr)){
-							if(!$idName && $otherCatNumArr[$idValue]) $occurrenceArr[$occid]['identifiers'][$idKey]['name'] = $otherCatNumArr[$idValue];
-							unset($otherCatNumArr[$idValue]);
+						foreach($otherCatNumArr as $ocnValue => $ocnTag){
+							if($ocnValue == $idValue || $ocnValue == $idName . ' ' . $idValue){
+								if(!$idName && $otherCatNumArr[$idValue]) $occurrenceArr[$occid]['identifiers'][$idKey]['name'] = $otherCatNumArr[$idValue];
+								unset($otherCatNumArr[$ocnValue]);
+							}
 						}
 					}
 				}
@@ -2090,18 +2092,19 @@ class OccurrenceEditorManager {
 				$imageMap[$row->imgid]['url'] = $row->url;
 				$imageMap[$row->imgid]['tnurl'] = $row->thumbnailurl;
 				$imageMap[$row->imgid]['origurl'] = $row->originalurl;
-				$imageMap[$row->imgid]['caption'] = $this->cleanOutStr($row->caption);
-				$imageMap[$row->imgid]['photographer'] = $this->cleanOutStr($row->photographer);
+				$imageMap[$row->imgid]['caption'] = $row->caption;
+				$imageMap[$row->imgid]['photographer'] = $row->photographer;
 				$imageMap[$row->imgid]['photographeruid'] = $row->photographeruid;
 				$imageMap[$row->imgid]['sourceurl'] = $row->sourceurl;
-				$imageMap[$row->imgid]['copyright'] = $this->cleanOutStr($row->copyright);
-				$imageMap[$row->imgid]['notes'] = $this->cleanOutStr($row->notes);
+				$imageMap[$row->imgid]['copyright'] = $row->copyright;
+				$imageMap[$row->imgid]['notes'] = $row->notes;
 				$imageMap[$row->imgid]['occid'] = $row->occid;
-				$imageMap[$row->imgid]['username'] = $this->cleanOutStr($row->username);
+				$imageMap[$row->imgid]['username'] = $row->username;
 				$imageMap[$row->imgid]['sort'] = $row->sortoccurrence;
 			}
 			$result->free();
 		}
+		$this->cleanOutArr($imageMap);
 		return $imageMap;
 	}
 
@@ -2511,12 +2514,9 @@ class OccurrenceEditorManager {
 	}
 
 	protected function cleanOutStr($str){
-		$newStr = $str;
-		if($newStr){
-			$newStr = str_replace('"',"&quot;",$str);
-			$newStr = str_replace("'","&apos;",$newStr);
-		}
-		return $newStr;
+		if(!is_string($str) && !is_numeric($str) && !is_bool($str)) $str = '';
+		$str = htmlspecialchars($str, HTML_SPECIAL_CHARS_FLAGS);
+		return $str;
 	}
 
 	protected function cleanInStr($str){

@@ -1053,7 +1053,7 @@ class ShipmentManager{
 		if($this->shipmentPK) $fileName .= $this->shipmentPK.'_';
 		$fileName .= date('Y-m-d').'.csv';
 		$sql = 'SELECT s.shipmentID, m.samplePK, m.sampleID, m.alternativeSampleID, m.sampleCode, m.sampleClass, m.taxonID, m.individualCount, m.filterVolume, m.namedlocation, '.
-			'm.domainremarks, m.collectdate, m.quarantineStatus, m.sampleReceived, m.acceptedForAnalysis, m.sampleCondition, m.dynamicProperties, m.symbiotaTarget, m.notes, m.occid, '.
+			'm.domainremarks, m.collectdate, m.quarantineStatus, m.sampleReceived, m.acceptedForAnalysis, m.sampleCondition, m.dynamicProperties, m.symbiotaTarget, m.errorMessage, m.notes, m.occid, '.
 			'CONCAT_WS(", ",u.lastname, u.firstname) AS checkinUser, m.checkinTimestamp, m.initialtimestamp '.
 			'FROM NeonShipment s INNER JOIN NeonSample m ON s.shipmentpk = m.shipmentpk '.
 			'LEFT JOIN users u ON m.checkinUid = u.uid ';
@@ -1067,7 +1067,7 @@ class ShipmentManager{
 		$fileName .= date('Y-m-d').'.csv';
 		$sql = 'SELECT m.samplePK, m.sampleID, m.alternativeSampleID, m.sampleCode, m.sampleClass, m.taxonID, m.individualCount, m.filterVolume, m.namedlocation, '.
 			'm.domainremarks, m.collectdate, m.quarantineStatus, m.sampleReceived, m.acceptedForAnalysis, m.sampleCondition, m.dynamicProperties, m.symbiotaTarget, '.
-			'm.notes, m.occid, CONCAT_WS(", ",u.lastname, u.firstname) AS checkinUser, m.checkinTimestamp, m.initialtimestamp, '.
+			'm.errorMessage, m.notes, m.occid, CONCAT_WS(", ",u.lastname, u.firstname) AS checkinUser, m.checkinTimestamp, m.initialtimestamp, '.
 			'o.catalogNumber, o.sciname, o.scientificNameAuthorship, o.identifiedBy, o.dateIdentified, o.recordedBy, o.recordNumber, o.eventDate, '.
 			'o.country, o.stateProvince, o.county, o.locality, o.decimalLatitude, o.decimalLongitude, o.coordinateUncertaintyInMeters, o.minimumElevationInMeters, '.
 			'o.habitat, o.dateEntered, o.dateLastModified '.
