@@ -154,13 +154,13 @@ $taxaArr = $stats->getNeonTaxa();
 <script>
 	const collsdb = <?php echo json_encode($sampleArr); ?>;
 	const collstx = <?php echo json_encode($taxaArr); ?>;
-	//console.dir(collstx);
+	console.dir(collstx);
 
 	function barChart(dataObj, div, tabIndex, selector) {
-		//console.log(selector);
+		console.log(selector);
 		let min = d3.min(dataObj, (d) => parseInt(d[`${selector}`]));
 		let max = d3.max(dataObj, (d) => parseInt(d[`${selector}`]));
-		//console.log(max);
+		console.log(max);
 		let w = 300;
 		let h = 200;
 		let pd = 0;
