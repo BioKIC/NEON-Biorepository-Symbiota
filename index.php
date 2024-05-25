@@ -148,7 +148,6 @@ $taxaArr = $stats->getNeonTaxa();
 				</div>
 			</div>
 		</section>
-
 	</div>
 </body>
 <script>
