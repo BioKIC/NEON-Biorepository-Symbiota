@@ -47,7 +47,7 @@ $taxaArr = $stats->getNeonTaxa();
 			text-decoration: underline;
 		}
 	</style>
-	<?php include($SERVER_ROOT . '/includes/header.php'); ?>
+	<div id="neon-page"></div>
 	<!-- This is inner text! -->
 	<div id="innertext" class="container" style="margin-top: 2rem">
 		<h1 class="centered">Discover and access sample-based data</h1>
@@ -150,7 +150,6 @@ $taxaArr = $stats->getNeonTaxa();
 		</section>
 
 	</div>
-	<?php include($SERVER_ROOT . '/includes/footer.php'); ?>
 </body>
 <script>
 	const collsdb = <?php echo json_encode($sampleArr); ?>;
