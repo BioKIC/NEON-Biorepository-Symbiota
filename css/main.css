@@ -576,8 +576,8 @@ hr:first-of-type {
 
 /******* 9. FOOTER ********/
 
-#footer {
-  /* padding: 3rem !important; */
+/*#footer {
+  /* padding: 3rem !important; 
   border-top: 2px solid #e7e7e7 !important;
 }
 
@@ -607,4 +607,4 @@ footer {
     width: auto;
     float: right;
   }
-}
+}*/
