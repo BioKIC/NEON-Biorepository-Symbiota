@@ -40,7 +40,7 @@ class OccurrenceHarvester{
 		$retArr = array();
 		$sql = 'SELECT s.errorMessage AS errMsg, COUNT(s.samplePK) as sampleCnt, COUNT(o.occid) as occurrenceCnt '.
 			'FROM NeonSample s LEFT JOIN omoccurrences o ON s.occid = o.occid '.
-			'WHERE s.checkinuid IS NOT NULL AND s.sampleReceived = 1 AND o.collid IS NULL';
+			'WHERE s.checkinuid IS NOT NULL AND s.sampleReceived = 1';
 		if($shipmentPK) $sql .= 'AND s.shipmentPK = '.$shipmentPK;
 		$sql .= ' GROUP BY errMsg';
 		$rs= $this->conn->query($sql);
@@ -84,7 +84,7 @@ class OccurrenceHarvester{
 			else $sqlPrefix .= 'LIMIT 1000 ';
 		}
 		if($sqlWhere){
-			$sqlWhere = 'WHERE s.checkinuid IS NOT NULL AND s.sampleReceived = 1 AND (s.acceptedForAnalysis = 1 || o.occid IS NOT NULL)'.$sqlWhere;
+			$sqlWhere = 'WHERE s.checkinuid IS NOT NULL AND s.acceptedForAnalysis = 1 '.$sqlWhere;
 			$status = $this->batchHarvestOccurrences($sqlWhere.$sqlPrefix);
 		}
 		return $status;
@@ -334,29 +334,29 @@ class OccurrenceHarvester{
 			}
 			elseif($sampleArr['sampleUuid'] != $viewArr['sampleUuid']){
 				$this->errorLogArr[] = 'NOTICE: sampleUuid updated from '.$sampleArr['sampleUuid'].' to '.$viewArr['sampleUuid'];
-				$this->errorStr .= '; <span style="color:red">DATA ISSUE</span>: sampleUuid failing to match (old: '.$sampleArr['sampleUuid'].', new: '.$viewArr['sampleUuid'].')';
+				$this->errorStr .= '; DATA ISSUE: sampleUuid failing to match (old: '.$sampleArr['sampleUuid'].', new: '.$viewArr['sampleUuid'].')';
 				$status = false;
 			}
 		}
 		
 		//missing a barcode, just record within NeonSample error field and then skip harvest of this record
 		if(empty($sampleArr['sampleCode']) && isset($viewArr['barcode'])){
-			$this->errorStr .= '; <span style="color:red">DATA ISSUE</span>: Barcode missing in database records, but available in API ('.$viewArr['barcode'].')';
+			$this->errorStr .= '; DATA ISSUE: Barcode missing in database records, but available in API ('.$viewArr['barcode'].')';
 			$status = false;
 		} elseif (!empty($sampleArr['sampleCode']) && !isset($viewArr['barcode'])){
-			$this->errorStr .= '; <span style="color:red">DATA ISSUE</span>: Barcode missing in API, but available in database records ('.$sampleArr['sampleCode'].')';
+			$this->errorStr .= '; DATA ISSUE: Barcode missing in API, but available in database records ('.$sampleArr['sampleCode'].')';
 			$status = false;	
 		}
 		
 		if(!empty($sampleArr['sampleCode']) && isset($viewArr['barcode']) && $sampleArr['sampleCode'] != $viewArr['barcode']){
 			//sampleCode/barcode are not equal; don't update, just record within NeonSample error field and then skip harvest of this record
-			$this->errorStr .= '; <span style="color:red">DATA ISSUE</span>: Barcode failing to match (old: '.$sampleArr['sampleCode'].', new: '.$viewArr['barcode'].')';
+			$this->errorStr .= '; DATA ISSUE: Barcode failing to match (old: '.$sampleArr['sampleCode'].', new: '.$viewArr['barcode'].')';
 			$status = false;
 		}
 		
 		if($sampleArr['sampleClass'] && isset($viewArr['sampleClass']) && $sampleArr['sampleClass'] != $viewArr['sampleClass']){
 			//sampleClass are not equal; don't update, just record within NeonSample error field and then skip harvest of this record
-			$this->errorStr .= '; <span style="color:red">DATA ISSUE</span>: sampleClass failing to match (old: '.$sampleArr['sampleClass'].', new: '.$viewArr['sampleClass'].')';
+			$this->errorStr .= '; DATA ISSUE: sampleClass failing to match (old: '.$sampleArr['sampleClass'].', new: '.$viewArr['sampleClass'].')';
 			$status = false;
 		}
 		if(isset($viewArr['archiveGuid']) && $viewArr['archiveGuid']){
@@ -369,7 +369,7 @@ class OccurrenceHarvester{
 							$neonSampleUpdate['igsnPushedToNEON'] = 1;
 						}
 						else{
-							$this->setSampleErrorMessage($sampleArr['samplePK'], '<span style="color:red">DATA ISSUE</span>: IGSN failing to match with API value');
+							$this->setSampleErrorMessage($sampleArr['samplePK'], 'DATA ISSUE: IGSN failing to match with API value');
 							$neonSampleUpdate['igsnPushedToNEON'] = 2;
 						}
 					}
@@ -395,7 +395,7 @@ class OccurrenceHarvester{
 				$sampleArr['hashedSampleID'] = $viewArr['sampleTag'];
 			}
 			else{
-				$this->errorStr .= '; <span style="color:red">DATA ISSUE</span>: sampleID failing to match';
+				$this->errorStr .= '; DATA ISSUE: sampleID failing to match';
 				$status = false;
 				/*
 				 if($this->updateSampleID($viewArr['sampleTag'], $sampleArr['sampleID'], $sampleArr['samplePK'], $sampleArr['occid'])){
