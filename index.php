@@ -49,7 +49,7 @@ $taxaArr = $stats->getNeonTaxa();
 	</style>
 	<div id="biorepo-page"></div>
 	<!-- This is inner text! -->
-	<div id="innertext" class="container" style="margin-top: 2rem">
+	<div id="innertext">
 		<section style="margin-bottom: 3em;">
 			<div style="border-bottom-width:2px;border-color:#F0AB00;border-left-width:20px;border-right-width:2px;border-style:solid;border-top-width:2px;padding:10px;">
 				<p>A new <a href="https://www.nsf.gov/pubs/2024/nsf24069/nsf24069.jsp?WT.mc_ev=click&amp;WT.mc_id=&amp;utm_medium=email&amp;utm_source=govdelivery">NSF DCL presents an opportunity to leverage the NEON Biorepository collections</a>. Please <a href="mailto:biorepo@asu.edu">contact us</a> with any questions or for information needed for potential innovative use! We are here to support you.</p>
