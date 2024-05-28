@@ -1,5 +1,8 @@
 {
-  "/NEON-Biorepository/index.php": [],
+  "/NEON-Biorepository/index.php": [
+    { "name": "Data & Samples", "href": "https://www.neonscience.org/data-samples" },
+    { "name": "Sample Portal" }
+    ],
   "/NEON-Biorepository/neon/search/index.php": [
     { "name": "Another Page", "href": "/another-page" },
     { "name": "Sub Page", "href": "/another-page/sub-page" },
