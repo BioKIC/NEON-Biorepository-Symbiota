@@ -477,10 +477,10 @@ class OccurrenceHarvester{
 				if(strpos($tableName,'metagenomeSequencing')) continue;
 				if(strpos($tableName,'metabarcodeTaxonomy')) continue;
 				if(strpos($tableName,'pcrAmplification')) continue;
-				if(strpos($tableName,'perarchivesample')) continue;
-				if(strpos($tableName,'persample')) continue;
-				if(strpos($tableName,'pertaxon')) continue;
-				if(strpos($tableName,'pervial')) continue;
+				//if(strpos($tableName,'perarchivesample')) continue;
+				//if(strpos($tableName,'persample')) continue;
+				//if(strpos($tableName,'pertaxon')) continue;
+				//if(strpos($tableName,'pervial')) continue;
 				if($tableName == 'mpr_perpitprofile_in') continue;
 				$fieldArr = $eArr['smsFieldEntries'];
 				$fateLocation = ''; $fateDate = '';
