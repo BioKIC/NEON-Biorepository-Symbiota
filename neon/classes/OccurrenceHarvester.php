@@ -479,7 +479,7 @@ class OccurrenceHarvester{
 				if(strpos($tableName,'pcrAmplification')) continue;
 				if(strpos($tableName,'perarchivesample')) continue;
 				if(strpos($tableName,'persample')) continue;
-				if(strpos($tableName,'pertaxon')) continue;
+				//if(strpos($tableName,'pertaxon')) continue;  need to read inv_pertaxon_in
 				if(strpos($tableName,'pervial')) continue;
 				if($tableName == 'mpr_perpitprofile_in') continue;
 				$fieldArr = $eArr['smsFieldEntries'];
@@ -576,6 +576,10 @@ class OccurrenceHarvester{
 					$identArr['taxonRemarks'] = 'Identification source: harvested from NEON API';
 					if(empty($identArr['dateIdentified'])){
 						if($fateDate) $identArr['dateIdentified'] = $fateDate;
+						else $identArr['dateIdentified'] = 's.d.';
+					}
+					if(empty($identArr['identifiedBy'])){
+						$identArr['identifiedBy'] = 'undefined';
 					}
 					$hash = hash('md5', str_replace(' ', '', $identArr['sciname'].$identArr['identifiedBy'].$identArr['dateIdentified']));
 					$sampleArr['identifications'][$hash] = $identArr;
@@ -776,9 +780,19 @@ class OccurrenceHarvester{
 						$appendIdentArr = array();
 						foreach($identArr as $idKey => &$idArr){
 							if(!empty($idArr['taxonPublished'])){
-								if($idArr['taxonPublished'] != $idArr['taxon']){
+								$protectTaxon = false;
+								if(!empty($idArr['taxon']) && !empty($idArr['taxonPublished']) && $idArr['taxon'] != $idArr['taxonPublished']){
+									//Taxon published not match base taxon, thus protect
+									$protectTaxon = true;
+									if(!empty($idArr['taxonPublishedCode']) && $idArr['taxon'] == $idArr['taxonPublishedCode']){
+										//But taxon does match the taxonCode, thus abort taxon protections
+										$protectTaxon = false;
+									}
+								}
+								if($protectTaxon){
 									$idArrClone = $idArr;
-									$idArrClone['sciname'] = $idArr['taxonPublished'];
+									if($idArr['taxonPublished']) $idArrClone['sciname'] = $idArr['taxonPublished'];
+									else $idArrClone['sciname'] = $idArr['taxonPublishedCode'];
 									unset($idArrClone['scientificNameAuthorship']);
 									unset($idArrClone['family']);
 									if(preg_match('/^[A-Z0-9]+$/', $idArrClone['sciname'])){
@@ -987,8 +1001,7 @@ class OccurrenceHarvester{
 
 	private function subSampleIdentifications(&$dwcArr, $parentOccid){
 		$collArr = array();
-		$collArr[49]['targetCollid'] = 98;
-		$collArr[49]['lotId'] = 'Epilithon';
+		//$collArr[7] = array('targetCollid' => 98, 'lotId' => 'dynamic', 'defaultId' => 'Epilithon');
 		//Process identifications
 		$sourceCollid = $dwcArr['collid'];
 		if(array_key_exists($sourceCollid, $collArr)){
@@ -1000,10 +1013,12 @@ class OccurrenceHarvester{
 				$subSampleArr = $this->getSubSamples($parentOccid);
 				echo '<li style="margin-left:30px">Evaluating '.count($identificationArr).' subSample records ... </li>';
 				$associationArr = array();
+				$tidArr = array();
 				foreach($identificationArr as $idKey => $idArr){
 					if(!empty($idArr['securityStatus'])) continue;
 					if(!empty($idArr['dateIdentified'])) $baseDataIdentified = $idArr['dateIdentified'];
 					if(!empty($idArr['sciname'])){
+						if(!empty($idArr['tidInterpreted'])) $tidArr[$idArr['tidInterpreted']] = $idArr['tidInterpreted'];
 						$dwcArrClone = $dwcArr;
 						$dwcArrClone['collid'] = $targetCollid;
 						unset($dwcArrClone['associations']);
@@ -1029,7 +1044,18 @@ class OccurrenceHarvester{
 				}
 				$this->deleteSubSamples($subSampleArr);
 				//Reset base sample (parent) with new identification unit containing lot ID
-				$baseIdentification = array('sciname' => $lotId);
+				$baseIdentification = array();
+				if($lotId == 'dynamic'){
+					if($idArr){
+						if($commonIdArr = $this->getCommonID($tidArr)){
+							$baseIdentification['tidInterpreted'] = key($commonIdArr);
+							$baseIdentification['sciname'] = current($commonIdArr);
+						}
+					}
+				}
+				else{
+					$baseIdentification['sciname'] = $lotId;
+				}
 				$baseIdentification['isCurrent'] = 1;
 				if($baseDataIdentified) $baseIdentification['dateIdentified'] = $baseDataIdentified;
 				$baseIdentification['taxonRemarks'] = 'Identification source: harvested from NEON API';
@@ -1052,6 +1078,7 @@ class OccurrenceHarvester{
 			while($r = $rs->fetch_object()){
 				$retArr[$r->occid]['sciname'] = $r->sciname;
 			}
+			$rs->free();
 		}
 		return $retArr;
 	}
@@ -1061,6 +1088,32 @@ class OccurrenceHarvester{
 			$sql = 'DELETE FROM omoccurrences WHERE occid IN(' . implode(',', array_keys($subSampleArr)) . ')';
 			//$this->conn->query($sql);
 		}
+	}
+
+	private function getCommonID($idArr){
+		$retArr = array();
+		if($idArr){
+			$tid = 0;
+			$sciname = '';
+			$tidCnt = count($idArr);
+			$sql = 'SELECT t.tid, t.sciname, t.rankid, e.parenttid, count(e.tid) as cnt
+				FROM taxaenumtree e INNER JOIN taxa t ON e.parenttid = t.tid
+				WHERE e.taxauthid = 1 AND e.tid IN(' . implode(',', $idArr) . ') AND t.rankid > 5
+				GROUP BY e.parenttid
+				ORDER BY t.rankid, cnt DESC';
+			$rs = $this->conn->query($sql);
+			while($r = $rs->fetch_object()){
+				if($r->cnt >= $tidCnt){
+					$tid = $r->tid;
+					$sciname = $r->sciname;
+				}
+				else{
+					$retArr[$tid] = $sciname;
+				}
+			}
+			$rs->free();
+		}
+		return $retArr;
 	}
 
 	private function loadOccurrenceRecord($dwcArr, $occid = null, $samplePK = null){
