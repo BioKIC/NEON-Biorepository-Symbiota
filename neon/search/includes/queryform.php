@@ -3,12 +3,12 @@
 include_once($SERVER_ROOT.'/content/lang/collections/editor/includes/queryform.en.php');
 
 $customFieldArr = array('associatedCollectors'=>$LANG['ASSOC_COLLECTORS'],
-						'associatedOccurrences'=>$LANG['ASSOC_OCCS'],
+						//'associatedOccurrences'=>$LANG['ASSOC_OCCS'],
 						'associatedTaxa'=>$LANG['ASSOC_TAXA'],
-						'attributes'=>$LANG['ATTRIBUTES'],
+						//'attributes'=>$LANG['ATTRIBUTES'],
 						'scientificNameAuthorship'=>$LANG['AUTHOR'],
 						'basisOfRecord'=>$LANG['BASIS_OF_RECORD'],
-						'behavior'=>$LANG['BEHAVIOR'],
+						//'behavior'=>$LANG['BEHAVIOR'],
 						'catalogNumber'=>$LANG['CAT_NUM'],
 						'collectionCode'=>$LANG['COL_CODE'],
 						'recordNumber'=>$LANG['COL_NUMBER'],
@@ -16,30 +16,30 @@ $customFieldArr = array('associatedCollectors'=>$LANG['ASSOC_COLLECTORS'],
 						'coordinateUncertaintyInMeters'=>$LANG['COORD_UNCERT_M'],
 						'country'=>$LANG['COUNTRY'],
 						'county'=>$LANG['COUNTY'],
-						'cultivationStatus'=>$LANG['CULT_STATUS'],
-						'dataGeneralizations'=>$LANG['DATA_GEN'],
+						//'cultivationStatus'=>$LANG['CULT_STATUS'],
+						//'dataGeneralizations'=>$LANG['DATA_GEN'],
 						'eventDate'=>$LANG['DATE'],
 						'dateEntered'=>$LANG['DATE_ENTERED'],
 						'dateLastModified'=>$LANG['DATE_LAST_MODIFIED'],
-						'dbpk'=>$LANG['DBPK'],
+						//'dbpk'=>$LANG['DBPK'],
 						'decimalLatitude'=>$LANG['DEC_LAT'],
 						'decimalLongitude'=>$LANG['DEC_LONG'],
-						'maximumDepthInMeters'=>$LANG['DEPTH_MAX'],
-						'minimumDepthInMeters'=>$LANG['DEPTH_MIN'],
+						//'maximumDepthInMeters'=>$LANG['DEPTH_MAX'],
+						//'minimumDepthInMeters'=>$LANG['DEPTH_MIN'],
 						'verbatimAttributes'=>$LANG['DESCRIPTION'],
 						'disposition'=>$LANG['DISPOSITION'],
 						'dynamicProperties'=>$LANG['DYNAMIC_PROPS'],
 						'maximumElevationInMeters'=>$LANG['ELEV_MAX_M'],
 						'minimumElevationInMeters'=>$LANG['ELEV_MIN_M'],
-						'establishmentMeans'=>$LANG['ESTAB_MEANS'],
+						//'establishmentMeans'=>$LANG['ESTAB_MEANS'],
 						'family'=>$LANG['FAMILY'],
-						'fieldNotes'=>$LANG['FIELD_NOTES'],
+						//'fieldNotes'=>$LANG['FIELD_NOTES'],
 						'fieldnumber'=>$LANG['FIELD_NUMBER'],
 						'geodeticDatum'=>$LANG['GEO_DATUM'],
-						'georeferenceProtocol'=>$LANG['GEO_PROTOCOL'],
-						'georeferenceRemarks'=>$LANG['GEO_REMARKS'],
+						//'georeferenceProtocol'=>$LANG['GEO_PROTOCOL'],
+						//'georeferenceRemarks'=>$LANG['GEO_REMARKS'],
 						'georeferenceSources'=>$LANG['GEO_SOURCES'],
-						'georeferenceVerificationStatus'=>$LANG['GEO_VERIF_STATUS'],
+						//'georeferenceVerificationStatus'=>$LANG['GEO_VERIF_STATUS'],
 						'georeferencedBy'=>$LANG['GEO_BY'],
 						'habitat'=>$LANG['HABITAT'],
 						'identificationQualifier'=>$LANG['ID_QUALIFIER'],
@@ -47,27 +47,27 @@ $customFieldArr = array('associatedCollectors'=>$LANG['ASSOC_COLLECTORS'],
 						'identificationRemarks'=>$LANG['ID_REMARKS'],
 						'identifiedBy'=>$LANG['IDED_BY'],
 						'individualCount'=>$LANG['IND_COUNT'],
-						'informationWithheld'=>$LANG['INFO_WITHHELD'],
+						//'informationWithheld'=>$LANG['INFO_WITHHELD'],
 						'institutionCode'=>$LANG['INST_CODE'],
-						'labelProject'=>$LANG['LAB_PROJECT'],
-						'language'=>$LANG['LANGUAGE'],
+						//'labelProject'=>$LANG['LAB_PROJECT'],
+						//'language'=>$LANG['LANGUAGE'],
 						'lifeStage'=>$LANG['LIFE_STAGE'],
 						'locationid'=>$LANG['LOCATION_ID'],
 						'locality'=>$LANG['LOCALITY'],
 						'localitySecurity'=>$LANG['LOC_SEC'],
 						'localitySecurityReason'=>$LANG['LOC_SEC_REASON'],
 						'locationRemarks'=>$LANG['LOC_REMARKS'],
-						'username'=>$LANG['MODIFIED_BY'],
-						'municipality'=>$LANG['MUNICIPALITY'],
+						//'username'=>$LANG['MODIFIED_BY'],
+						//'municipality'=>$LANG['MUNICIPALITY'],
 						'occurrenceRemarks'=>$LANG['NOTES_REMARKS'],
-						'ocrFragment'=>$LANG['OCR_FRAGMENT'],
+						//'ocrFragment'=>$LANG['OCR_FRAGMENT'],
 						'otherCatalogNumbers'=>$LANG['OTHER_CAT_NUMS'],
 						'ownerInstitutionCode'=>$LANG['OWNER_CODE'],
 						'preparations'=>$LANG['PREPARATIONS'],
 						'reproductiveCondition'=>$LANG['REP_COND'],
-						'samplingEffort'=>$LANG['SAMP_EFFORT'],
+						//'samplingEffort'=>$LANG['SAMP_EFFORT'],
 						'samplingProtocol'=>$LANG['SAMP_PROTOCOL'],
-						'sciname'=>$LANG['SCI_NAME'],
+						//'sciname'=>$LANG['SCI_NAME'],
 						'sex'=>$LANG['SEX'],
 						'stateProvince'=>$LANG['STATE_PROVINCE'],
 						'substrate'=>$LANG['SUBSTRATE'],
@@ -75,7 +75,7 @@ $customFieldArr = array('associatedCollectors'=>$LANG['ASSOC_COLLECTORS'],
 						'typeStatus'=>$LANG['TYPE_STATUS'],
 						'verbatimCoordinates'=>$LANG['VERBAT_COORDS'],
 						'verbatimEventDate'=>$LANG['VERBATIM_DATE'],
-						'verbatimDepth'=>$LANG['VERBATIM_DEPTH'],
+						//'verbatimDepth'=>$LANG['VERBATIM_DEPTH'],
 						'verbatimElevation'=>$LANG['VERBATIM_ELE']);
 
 $customTermArr = array('EQUALS', 'NOT_EQUALS', 'STARTS', 'LIKE', 'NOT_LIKE', 'GREATER', 'LESS', 'NULL', 'NOTNULL');
@@ -204,11 +204,28 @@ for($x=1; $x<9; $x++){
 	
 	
 	const advancedInputs = document.querySelectorAll('#search-form-advanced-search select, #search-form-advanced-search input[type=text]');
+	const advancedHasBeenChangedCheckbox = document.getElementById('AdvancedHasBeenChanged');
+	
 	advancedInputs.forEach((advancedInput) => {
 		advancedInput.addEventListener('change', function(){
-			document.getElementById('AdvancedHasBeenChanged').checked = true;
+			let allDefault = true;
+			
+			advancedInputs.forEach((input) => {
+				if (input.tagName === 'SELECT') {
+					if (input.selectedIndex !== 0) {
+						allDefault = false;
+					}
+				} else if (input.type === 'text') {
+					if (input.value.trim() !== "") {
+						allDefault = false;
+					}
+				}
+			});
+	
+			advancedHasBeenChangedCheckbox.checked = !allDefault;
 		});
 	});
+
 	
 	
 </script>

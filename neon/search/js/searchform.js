@@ -696,6 +696,109 @@ function validateForm() {
     }
   }
 
+  
+  const advancedHasBeenChangedCheckbox = document.getElementById('AdvancedHasBeenChanged');
+
+  if (advancedHasBeenChangedCheckbox.checked == true) {
+    const advancedInputs = document.querySelectorAll('#search-form-advanced-search select, #search-form-advanced-search input[type=text]');
+    let openParensCount = 0;
+    let closeParensCount = 0;
+    
+    const nonDefaultInputs = Array.from(advancedInputs).filter(input => {
+      // For select elements, check if the value is not the first option (default)
+      if (input.tagName === 'SELECT') {
+        return input.selectedIndex !== 0;
+      }
+      // For text inputs, check if the value is not empty
+      if (input.type === 'text') {
+        return input.value.trim() !== '';
+      }
+      return false;
+    });
+    
+    // To keep track of whether we've seen a field without a complete statement
+    let awaitingCondition = false;
+    let awaitingValue = false;
+    let lastInputType = "";
+  
+    nonDefaultInputs.forEach((advancedInput) => {
+      const name = advancedInput.name;
+      const value = advancedInput.value.trim();
+  
+      if (name.startsWith("q_customopenparen")) {
+        openParensCount += value.length;
+        lastInputType = "openparen";
+      } else if (name.startsWith("q_customfield")) {
+        if (awaitingCondition || awaitingValue) {
+          errors.push({
+            elId: 'search-form-advanced-search',
+            errorMsg:
+              'Each field must have a corresponding condition and value if required.',
+          });
+        }
+        awaitingCondition = true;
+        lastInputType = "field";
+      } else if (name.startsWith("q_customtype")) {
+        if (lastInputType !== "field") {
+          errors.push({
+            elId: 'search-form-advanced-search',
+            errorMsg:
+              'Missing field name.',
+          });
+        }
+        awaitingCondition = false;
+        if (value !== "NULL" && value !== "NOTNULL") {
+          awaitingValue = true;
+        }
+        lastInputType = "type";
+      } else if (name.startsWith("q_customvalue")) {
+        if (lastInputType !== "type") {
+          errors.push({
+             elId: 'search-form-advanced-search',
+             errorMsg:
+               'Missing condition statement.',
+           });
+        }
+        awaitingValue = false;
+        lastInputType = "value";
+      } else if (name.startsWith("q_customcloseparen")) {
+          closeParensCount += value.length;
+          lastInputType = "closeparen";
+      } else if (name.startsWith("q_customandor")) {
+        if (lastInputType !== "value" && lastInputType !== "closeparen" && lastInputType !== "type") {
+          errors.push({
+             elId: 'search-form-advanced-search',
+             errorMsg:
+               'AND/OR must follow a value, condition type, or closing parenthesis.',
+           });
+        }
+        lastInputType = "andor";
+      }
+    });
+  
+    if (openParensCount !== closeParensCount) {
+      errors.push({
+        elId: 'search-form-advanced-search',
+        errorMsg:
+          'Mismatched parentheses.',
+      });
+    }
+    
+    if (awaitingCondition) {
+      errors.push({
+         elId: 'search-form-advanced-search',
+         errorMsg:
+           'Missing condition statement.',
+       });
+    }
+    if (awaitingValue) {
+      errors.push({
+         elId: 'search-form-advanced-search',
+         errorMsg:
+           'Missing input value.',
+       });
+    }
+  }
   return errors;
 }
 
