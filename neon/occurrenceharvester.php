@@ -131,14 +131,14 @@ include($SERVER_ROOT.'/includes/header.php');
 				echo '<div><b>Occurrences not yet harvested:</b> '.number_format($occurCnt).'</div>';
 				unset($reportArr['null']);
 				echo '<hr style="margin:10px 0px"/>';
-				foreach($reportArr as $msg => $repCntArr){
-					$cnt = $repCntArr['s-cnt']-$repCntArr['o-cnt'];
-					echo '<div><b>'.$msg.'</b>: ';
-					if($cnt) echo $cnt.' failed harvest';
-					if($cnt && $repCntArr['o-cnt']) echo '; ';
-					if($repCntArr['o-cnt']) echo $repCntArr['o-cnt'].' partial harvest ';
-					echo '</div>';
-				}
+				//foreach($reportArr as $msg => $repCntArr){
+				//	$cnt = $repCntArr['s-cnt']-$repCntArr['o-cnt'];
+				//	echo '<div><b>'.$msg.'</b>: ';
+				//	if($cnt) echo $cnt.' failed harvest';
+				//	if($cnt && $repCntArr['o-cnt']) echo '; ';
+				//	if($repCntArr['o-cnt']) echo $repCntArr['o-cnt'].' partial harvest ';
+				//	echo '</div>';
+				//}
 				?>
 			</div>
 			<div style="margin-bottom:25px; margin-left:15px">

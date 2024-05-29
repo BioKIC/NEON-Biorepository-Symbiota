@@ -135,7 +135,7 @@ class OccurrenceHarvester{
 						//$this->subSampleIdentifications($dwcArr, $r->occid);
 						if($occid = $this->loadOccurrenceRecord($dwcArr, $r->occid, $r->samplePK)){
 							if(!in_array($dwcArr['collid'],$collArr)) $collArr[] = $dwcArr['collid'];
-							echo '<li style="margin-left:30px">New record created: <a href="'.$GLOBALS['CLIENT_ROOT'].'/collections/individual/index.php?occid='.$occid.'" target="_blank">'.$occid.'</a></li>';
+							echo '<li style="margin-left:30px">Record successfully harvested: <a href="'.$GLOBALS['CLIENT_ROOT'].'/collections/individual/index.php?occid='.$occid.'" target="_blank">'.$occid.'</a></li>';
 						}
 						if($this->errorStr) echo '<li style="margin-left:30px">WARNING: '.$this->errorStr.'</li>';
 					}
@@ -228,36 +228,81 @@ class OccurrenceHarvester{
 	}
 
 	private function harvestNeonApi(&$sampleArr){
+		//returning true/false changes the 'success' of the sample
 		$this->setSampleErrorMessage($sampleArr['samplePK'], '');
-		$url = '';
 		$sampleViewArr = array();
 
-		if($sampleArr['sampleCode']){
-			$url = $this->neonApiBaseUrl.'/samples/view?barcode='.$sampleArr['sampleCode'].'&apiToken='.$this->neonApiKey;
-		}
-		elseif($sampleArr['sampleUuid']){
-			$url = $this->neonApiBaseUrl.'/samples/view?sampleUuid='.$sampleArr['sampleUuid'].'&apiToken='.$this->neonApiKey;
-		}
-		elseif(isset($sampleArr['occurrenceID']) && $sampleArr['occurrenceID']){
-			$url = $this->neonApiBaseUrl.'/samples/view?archiveGuid='.$sampleArr['occurrenceID'].'&apiToken='.$this->neonApiKey;
-		}
-		elseif($sampleArr['sampleID'] && $sampleArr['sampleClass']){
-			$url = $this->neonApiBaseUrl.'/samples/view?sampleTag='.urlencode($sampleArr['sampleID']).'&sampleClass='.urlencode($sampleArr['sampleClass']).'&apiToken='.$this->neonApiKey;
-		}
-		else{
+		// Define an array of URL configurations based on sample identifiers
+		$urlConfigs = [
+			['key' => 	'sampleCode', 	'param' => 	'barcode'],
+			['key' => 	'sampleUuid', 	'param' => 	'sampleUuid'],
+			['key' => 	'occurrenceID', 'param' => 	'archiveGuid'],
+			['key' => 	'sampleID', 	'param' => 	'sampleTag',
+			 'key2' => 	'sampleClass', 	'param2' => 'sampleClass']
+		];
+		
+		$anyKeyExists = array_reduce($urlConfigs, function ($carry, $config) use ($sampleArr) {
+			return $carry || isset($sampleArr[$config['key']]);
+		}, false);
+		
+		if (!$anyKeyExists) {
 			$this->errorStr = 'Sample identifiers incomplete';
 			$this->setSampleErrorMessage($sampleArr['samplePK'], $this->errorStr);
 			return false;
 		}
-		//echo 'url: ' . $url . '<br/>';
+		
+		foreach ($urlConfigs as $config) {
+			$url = '';
+			if (!empty($sampleArr[$config['key']])) $url = $this->buildApiurl($config, $sampleArr);
+			
+			if (!empty($url)){
+				$sampleViewArr = $this->checkApiforData($url, $sampleArr);
+				if ($sampleViewArr) {
+					return $this->checkApiDataforErrors($sampleArr, $sampleViewArr);
+				}
+			}
+		}
+		//echo 'url: ' . $url . '(' . date('Y-m-d H:i:s') . ')<br/>';
+		return false;
+	}
+
+	private function buildApiurl($config, $sampleArr){
+		$url = $this->neonApiBaseUrl . '/samples/view?' . $config['param'] . '=' . urlencode($sampleArr[$config['key']]);
+		
+		if ($config['key'] == 'sampleID'){
+			if (!empty($sampleArr[$config['key2']])){
+				$url .= '&' . $config['param2'] . '=' . urlencode($sampleArr['sampleClass']);
+			} else {
+				$this->errorStr = 'Searching by sampleID, but no sampleClass given';
+				$this->setSampleErrorMessage($sampleArr['samplePK'], $this->errorStr);
+				return;
+			}
+		}
+
+		$url .= '&apiToken=' . $this->neonApiKey;
+		return $url;
+	}
+
+	
+	private function checkApiforData($url, $sampleArr){
+		$this->errorLogArr = [];
+		$this->errorStr = '';
 		$sampleViewArr = $this->getNeonApiArr($url);
 
 		if(!isset($sampleViewArr['sampleViews'])){
 			$this->errorStr = 'NEON API failed to return sample data';
 			//$this->errorStr .= ': (<a href="'.$url.'" target="_blank">'.$url.'</a>)';
 			$this->updateSampleRecord(array('errorMessage'=>$this->errorStr),$sampleArr['samplePK']);
-			return false;
+			return;
 		}
+		return $sampleViewArr;
+	}
+		
+	private function checkApiDataforErrors(&$sampleArr, &$sampleViewArr){
+		//true = successful, false = error
+		$this->errorLogArr = [];
+		$this->errorStr = '';
+
 		if(count($sampleViewArr['sampleViews']) > 1){
 			$this->errorStr = 'Harvest skipped: NEON API returned multiple sampleViews ';
 			$this->updateSampleRecord(array('errorMessage'=>$this->errorStr),$sampleArr['samplePK']);
@@ -293,6 +338,22 @@ class OccurrenceHarvester{
 				$status = false;
 			}
 		}
+		
+		//missing a barcode, just record within NeonSample error field and then skip harvest of this record
+		if(empty($sampleArr['sampleCode']) && isset($viewArr['barcode'])){
+			$this->errorStr .= '; <span style="color:red">DATA ISSUE</span>: Barcode missing in database records, but available in API ('.$viewArr['barcode'].')';
+			$status = false;
+		} elseif (!empty($sampleArr['sampleCode']) && !isset($viewArr['barcode'])){
+			$this->errorStr .= '; <span style="color:red">DATA ISSUE</span>: Barcode missing in API, but available in database records ('.$sampleArr['sampleCode'].')';
+			$status = false;	
+		}
+		
+		if(!empty($sampleArr['sampleCode']) && isset($viewArr['barcode']) && $sampleArr['sampleCode'] != $viewArr['barcode']){
+			//sampleCode/barcode are not equal; don't update, just record within NeonSample error field and then skip harvest of this record
+			$this->errorStr .= '; <span style="color:red">DATA ISSUE</span>: Barcode failing to match (old: '.$sampleArr['sampleCode'].', new: '.$viewArr['barcode'].')';
+			$status = false;
+		}
+		
 		if($sampleArr['sampleClass'] && isset($viewArr['sampleClass']) && $sampleArr['sampleClass'] != $viewArr['sampleClass']){
 			//sampleClass are not equal; don't update, just record within NeonSample error field and then skip harvest of this record
 			$this->errorStr .= '; <span style="color:red">DATA ISSUE</span>: sampleClass failing to match (old: '.$sampleArr['sampleClass'].', new: '.$viewArr['sampleClass'].')';
@@ -644,7 +705,7 @@ class OccurrenceHarvester{
 				}
 
 				//Taxonomic fields
-				$skipTaxonomy = array(5,6,10,13,16,21,23,31,41,42,45,58,60,61,62,67,68,69,76,92);
+				$skipTaxonomy = array(5,6,10,13,16,21,23,31,41,42,58,60,61,62,67,68,69,76,92);
 				if(!in_array($dwcArr['collid'],$skipTaxonomy)){
 					$identArr = array();
 					if(isset($sampleArr['identifications'])){
@@ -669,12 +730,12 @@ class OccurrenceHarvester{
 								$taxonRemarks = 'Identification source: parsed from NEON sampleID';
 							}
 						}
-						elseif(!in_array($dwcArr['collid'], array(22,50,57))){
-							if(preg_match('/\.\d{8}\.([A-Z]{2,15}\d{0,2})\./',$sampleArr['sampleID'], $m)){
-								$taxonCode = $m[1];
-								$taxonRemarks = 'Identification source: parsed from NEON sampleID';
-							}
-						}
+						// elseif(!in_array($dwcArr['collid'], array(22,50,57))){
+						// 	if(preg_match('/\.\d{8}\.([A-Z]{2,15}\d{0,2})\./',$sampleArr['sampleID'], $m)){
+						// 		$taxonCode = $m[1];
+						// 		$taxonRemarks = 'Identification source: parsed from NEON sampleID';
+						// 	}
+						// }
 						if($taxonCode){
 							$hash = hash('md5', str_replace(' ','',$taxonCode.'sampleIDs.d.'));
 							$identArr[$hash] = array('sciname' => $taxonCode, 'identifiedBy' => 'sampleID', 'dateIdentified' => 's.d.', 'taxonRemarks' => $taxonRemarks);
@@ -1660,7 +1721,7 @@ class OccurrenceHarvester{
 	}
 
 	private function getTaxonGroup($collid){
-		$taxonGroup = array( 45 => 'ALGAE', 46 => 'ALGAE', 47 => 'ALGAE', 49 => 'ALGAE', 50 => 'ALGAE',  73 => 'ALGAE',
+		$taxonGroup = array( 46 => 'ALGAE', 47 => 'ALGAE', 49 => 'ALGAE', 50 => 'ALGAE',  73 => 'ALGAE',
 			11 => 'BEETLE', 14 => 'BEETLE', 39 => 'BEETLE', 44 => 'BEETLE', 63 => 'BEETLE', 82 =>'BEETLE', 95 =>'BEETLE',
 			20 => 'FISH', 66 => 'FISH',
 			12 => 'HERPETOLOGY', 15 => 'HERPETOLOGY', 70 => 'HERPETOLOGY',
