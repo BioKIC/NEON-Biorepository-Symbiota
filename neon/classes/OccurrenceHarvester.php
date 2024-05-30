@@ -40,7 +40,7 @@ class OccurrenceHarvester{
 		$retArr = array();
 		$sql = 'SELECT s.errorMessage AS errMsg, COUNT(s.samplePK) as sampleCnt, COUNT(o.occid) as occurrenceCnt '.
 			'FROM NeonSample s LEFT JOIN omoccurrences o ON s.occid = o.occid '.
-			'WHERE s.checkinuid IS NOT NULL AND s.sampleReceived = 1 AND o.collid IS NULL';
+			'WHERE s.checkinuid IS NOT NULL AND s.sampleReceived = 1';
 		if($shipmentPK) $sql .= 'AND s.shipmentPK = '.$shipmentPK;
 		$sql .= ' GROUP BY errMsg';
 		$rs= $this->conn->query($sql);
@@ -84,7 +84,7 @@ class OccurrenceHarvester{
 			else $sqlPrefix .= 'LIMIT 1000 ';
 		}
 		if($sqlWhere){
-			$sqlWhere = 'WHERE s.checkinuid IS NOT NULL AND s.sampleReceived = 1 AND (s.acceptedForAnalysis = 1 || o.occid IS NOT NULL)'.$sqlWhere;
+			$sqlWhere = 'WHERE s.checkinuid IS NOT NULL AND s.acceptedForAnalysis = 1 '.$sqlWhere;
 			$status = $this->batchHarvestOccurrences($sqlWhere.$sqlPrefix);
 		}
 		return $status;
@@ -334,29 +334,29 @@ class OccurrenceHarvester{
 			}
 			elseif($sampleArr['sampleUuid'] != $viewArr['sampleUuid']){
 				$this->errorLogArr[] = 'NOTICE: sampleUuid updated from '.$sampleArr['sampleUuid'].' to '.$viewArr['sampleUuid'];
-				$this->errorStr .= '; <span style="color:red">DATA ISSUE</span>: sampleUuid failing to match (old: '.$sampleArr['sampleUuid'].', new: '.$viewArr['sampleUuid'].')';
+				$this->errorStr .= '; DATA ISSUE: sampleUuid failing to match (old: '.$sampleArr['sampleUuid'].', new: '.$viewArr['sampleUuid'].')';
 				$status = false;
 			}
 		}
 		
 		//missing a barcode, just record within NeonSample error field and then skip harvest of this record
 		if(empty($sampleArr['sampleCode']) && isset($viewArr['barcode'])){
-			$this->errorStr .= '; <span style="color:red">DATA ISSUE</span>: Barcode missing in database records, but available in API ('.$viewArr['barcode'].')';
+			$this->errorStr .= '; DATA ISSUE: Barcode missing in database records, but available in API ('.$viewArr['barcode'].')';
 			$status = false;
 		} elseif (!empty($sampleArr['sampleCode']) && !isset($viewArr['barcode'])){
-			$this->errorStr .= '; <span style="color:red">DATA ISSUE</span>: Barcode missing in API, but available in database records ('.$sampleArr['sampleCode'].')';
+			$this->errorStr .= '; DATA ISSUE: Barcode missing in API, but available in database records ('.$sampleArr['sampleCode'].')';
 			$status = false;	
 		}
 		
 		if(!empty($sampleArr['sampleCode']) && isset($viewArr['barcode']) && $sampleArr['sampleCode'] != $viewArr['barcode']){
 			//sampleCode/barcode are not equal; don't update, just record within NeonSample error field and then skip harvest of this record
-			$this->errorStr .= '; <span style="color:red">DATA ISSUE</span>: Barcode failing to match (old: '.$sampleArr['sampleCode'].', new: '.$viewArr['barcode'].')';
+			$this->errorStr .= '; DATA ISSUE: Barcode failing to match (old: '.$sampleArr['sampleCode'].', new: '.$viewArr['barcode'].')';
 			$status = false;
 		}
 		
 		if($sampleArr['sampleClass'] && isset($viewArr['sampleClass']) && $sampleArr['sampleClass'] != $viewArr['sampleClass']){
 			//sampleClass are not equal; don't update, just record within NeonSample error field and then skip harvest of this record
-			$this->errorStr .= '; <span style="color:red">DATA ISSUE</span>: sampleClass failing to match (old: '.$sampleArr['sampleClass'].', new: '.$viewArr['sampleClass'].')';
+			$this->errorStr .= '; DATA ISSUE: sampleClass failing to match (old: '.$sampleArr['sampleClass'].', new: '.$viewArr['sampleClass'].')';
 			$status = false;
 		}
 		if(isset($viewArr['archiveGuid']) && $viewArr['archiveGuid']){
@@ -369,7 +369,7 @@ class OccurrenceHarvester{
 							$neonSampleUpdate['igsnPushedToNEON'] = 1;
 						}
 						else{
-							$this->setSampleErrorMessage($sampleArr['samplePK'], '<span style="color:red">DATA ISSUE</span>: IGSN failing to match with API value');
+							$this->setSampleErrorMessage($sampleArr['samplePK'], 'DATA ISSUE: IGSN failing to match with API value');
 							$neonSampleUpdate['igsnPushedToNEON'] = 2;
 						}
 					}
@@ -395,7 +395,7 @@ class OccurrenceHarvester{
 				$sampleArr['hashedSampleID'] = $viewArr['sampleTag'];
 			}
 			else{
-				$this->errorStr .= '; <span style="color:red">DATA ISSUE</span>: sampleID failing to match';
+				$this->errorStr .= '; DATA ISSUE: sampleID failing to match';
 				$status = false;
 				/*
 				 if($this->updateSampleID($viewArr['sampleTag'], $sampleArr['sampleID'], $sampleArr['samplePK'], $sampleArr['occid'])){
@@ -477,10 +477,10 @@ class OccurrenceHarvester{
 				if(strpos($tableName,'metagenomeSequencing')) continue;
 				if(strpos($tableName,'metabarcodeTaxonomy')) continue;
 				if(strpos($tableName,'pcrAmplification')) continue;
-				if(strpos($tableName,'perarchivesample')) continue;
-				if(strpos($tableName,'persample')) continue;
-				if(strpos($tableName,'pertaxon')) continue;
-				if(strpos($tableName,'pervial')) continue;
+				//if(strpos($tableName,'perarchivesample')) continue;
+				//if(strpos($tableName,'persample')) continue;
+				//if(strpos($tableName,'pertaxon')) continue;
+				//if(strpos($tableName,'pervial')) continue;
 				if($tableName == 'mpr_perpitprofile_in') continue;
 				$fieldArr = $eArr['smsFieldEntries'];
 				$fateLocation = ''; $fateDate = '';
@@ -701,7 +701,7 @@ class OccurrenceHarvester{
 				}
 
 				//Taxonomic fields
-				$skipTaxonomy = array(5,6,10,13,16,21,23,31,41,42,45,58,60,61,62,67,68,69,76,92);
+				$skipTaxonomy = array(5,6,10,13,16,21,23,31,41,42,58,60,61,62,67,68,69,76,92);
 				if(!in_array($dwcArr['collid'],$skipTaxonomy)){
 					$identArr = array();
 					if(isset($sampleArr['identifications'])){
@@ -726,12 +726,12 @@ class OccurrenceHarvester{
 								$taxonRemarks = 'Identification source: parsed from NEON sampleID';
 							}
 						}
-						elseif(!in_array($dwcArr['collid'], array(22,50,57))){
-							if(preg_match('/\.\d{8}\.([A-Z]{2,15}\d{0,2})\./',$sampleArr['sampleID'], $m)){
-								$taxonCode = $m[1];
-								$taxonRemarks = 'Identification source: parsed from NEON sampleID';
-							}
-						}
+						// elseif(!in_array($dwcArr['collid'], array(22,50,57))){
+						// 	if(preg_match('/\.\d{8}\.([A-Z]{2,15}\d{0,2})\./',$sampleArr['sampleID'], $m)){
+						// 		$taxonCode = $m[1];
+						// 		$taxonRemarks = 'Identification source: parsed from NEON sampleID';
+						// 	}
+						// }
 						if($taxonCode){
 							$hash = hash('md5', str_replace(' ','',$taxonCode.'sampleIDs.d.'));
 							$identArr[$hash] = array('sciname' => $taxonCode, 'identifiedBy' => 'sampleID', 'dateIdentified' => 's.d.', 'taxonRemarks' => $taxonRemarks);
@@ -1668,7 +1668,7 @@ class OccurrenceHarvester{
 	}
 
 	private function getTaxonGroup($collid){
-		$taxonGroup = array( 45 => 'ALGAE', 46 => 'ALGAE', 47 => 'ALGAE', 49 => 'ALGAE', 50 => 'ALGAE',  73 => 'ALGAE',
+		$taxonGroup = array( 46 => 'ALGAE', 47 => 'ALGAE', 49 => 'ALGAE', 50 => 'ALGAE',  73 => 'ALGAE',
 			11 => 'BEETLE', 14 => 'BEETLE', 39 => 'BEETLE', 44 => 'BEETLE', 63 => 'BEETLE', 82 =>'BEETLE', 95 =>'BEETLE',
 			20 => 'FISH', 66 => 'FISH',
 			12 => 'HERPETOLOGY', 15 => 'HERPETOLOGY', 70 => 'HERPETOLOGY',

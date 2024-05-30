@@ -37,7 +37,7 @@
   public function getHarvestReport(){
     $dataArr = array();
 
-    $sql = 'SELECT sampleClass, errorMessage, COUNT(samplepk) AS cnt, GROUP_CONCAT(DISTINCT s.shipmentPK SEPARATOR ";") AS shipmentPK, GROUP_CONCAT(DISTINCT sh.shipmentID SEPARATOR ";") AS shipmentID FROM NeonSample s LEFT JOIN omoccurrences o ON o.occid = s.occid AND o.collid != "81" JOIN NeonShipment sh  ON s.shipmentPK = sh.shipmentPK WHERE errorMessage IS NOT NULL AND acceptedforanalysis = 1 AND s.checkinTimestamp IS NOT NULL GROUP BY sampleClass, errorMessage;';
+    $sql = 'SELECT sampleClass, errorMessage, COUNT(samplepk) AS cnt, GROUP_CONCAT(DISTINCT s.shipmentPK SEPARATOR ";") AS shipmentPK, GROUP_CONCAT(DISTINCT sh.shipmentID SEPARATOR ";") AS shipmentID FROM NeonSample s LEFT JOIN omoccurrences o ON o.occid = s.occid AND o.collid NOT IN (81,84,93) JOIN NeonShipment sh  ON s.shipmentPK = sh.shipmentPK WHERE errorMessage IS NOT NULL AND acceptedforanalysis = 1 AND s.checkinTimestamp IS NOT NULL GROUP BY sampleClass, errorMessage;';
 
     $result = $this->conn->query($sql);
 
@@ -66,7 +66,7 @@
   public function getTotalSamples(){
       $totalSamples = '';
 
-      $sql = 'SELECT count(s.samplePK) AS totalSamples FROM NeonSample s LEFT JOIN omoccurrences o ON s.occid = o.occid AND o.collid != "81"
+      $sql = 'SELECT count(s.samplePK) AS totalSamples FROM NeonSample s LEFT JOIN omoccurrences o ON s.occid = o.occid AND o.collid NOT IN (81,84,93)
 WHERE errorMessage IS NOT NULL AND s.checkinTimestamp IS NOT NULL AND acceptedforanalysis = 1;';
 
     $result = $this->conn->query($sql);

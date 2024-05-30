@@ -66,7 +66,7 @@ $siteData = new DatasetsMetadata();
 						<div><input type="checkbox" name="usethes" id="usethes" data-chip="Include Synonyms" value="1" checked><span class="ml-1">Include Synonyms</span></div>
 					</div>
 				</section>
-				<!-- Colections -->
+				<!-- Collections -->
 				<section>
 					<!-- Accordion selector -->
 					<input type="checkbox" id="collections" class="accordion-selector" checked=true />
@@ -444,6 +444,25 @@ $siteData = new DatasetsMetadata();
 						</div>
 					</div>
 				</section>
+				<!-- Advanced Search -->
+				<section>
+					<!-- Accordion selector -->
+					<input type="checkbox" id="advanced-search" class="accordion-selector" />
+					<!-- Accordion header -->
+					<label for="advanced-search" class="accordion-header">Advanced Search</label>
+					<!-- Accordion content -->
+					<div class="content">
+						<div id="search-form-advanced-search">
+
+						<?php
+						include($SERVER_ROOT . '/neon/search/includes/queryform.php');
+						?>
+
+
+					
+						</div>
+					</div>
+				</section>
 			</div>
 			<!-- Criteria panel -->
 			<div id="criteria-panel" style="position: sticky; top: 0; height: 100vh">
@@ -459,5 +478,5 @@ $siteData = new DatasetsMetadata();
 	include($SERVER_ROOT . '/includes/footer.php');
 	?>
 </body>
-<script src="js/searchform.js?ver=03" type="text/javascript"></script>
+<script src="js/searchform.js?ver=05" type="text/javascript"></script>
 </html>
