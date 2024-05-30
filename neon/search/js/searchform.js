@@ -32,6 +32,21 @@ let paramNames = [
   'taxontype',
   'availableforloan',
 ];
+
+for (let i = 1; i <= 8; i++) {
+  paramNames.push(
+    `q_customopenparen${i}`,
+    `q_customfield${i}`,
+    `q_customtype${i}`,
+    `q_customvalue${i}`,
+    `q_customcloseparen${i}`
+  );
+  if (i < 8) {
+    paramNames.push(`q_customandor${i + 1}`);
+  }
+}
+
+
 const uLat = document.getElementById('upperlat');
 const uLatNs = document.getElementById('upperlat_NS');
 const bLat = document.getElementById('bottomlat');
@@ -109,7 +124,7 @@ function openCoordAid(mapMode) {
  * @param {HTMLObjectElement} element Input for which chips are going to be created by default
  */
 function addChip(element) {
-  console.log(element);
+  //console.log(element);
   let inputChip = document.createElement('span');
   inputChip.classList.add('chip');
   let chipBtn = document.createElement('button');
@@ -138,6 +153,27 @@ function addChip(element) {
       uncheckAll(document.getElementById(element.name));
       removeChip(inputChip);
     };
+  } else if (element.name == 'advancedsearchstr') {
+    if (element.text != '') {
+      inputChip.id = 'chip-advancedsearchstr';
+      inputChip.textContent = element.text;
+      chipBtn.onclick = function () {
+        const formElements = document.querySelectorAll('#search-form-advanced-search input, #search-form-advanced-search select');
+        formElements.forEach(element => {
+            if (element.type === 'checkbox') {
+                element.checked = false;
+            } else if (element.type === 'select'){
+                element.selectedIndex = 0;
+            } else {
+                element.value = '';
+            }
+        for(let x = 1; x < 9; x++){
+          if(x > 1) document.getElementById("customdiv"+x).style.display = "none";
+        }
+        removeChip(inputChip);
+        });
+      }
+    }
   } else {
     inputChip.id = 'chip-' + element.id;
     let isTextOrNum = (element.type == 'text') | (element.type == 'number') | (element.type == 'textarea');
@@ -165,7 +201,7 @@ function removeChip(chip) {
 }
 
 /**
- * Updateds chips based on selected options
+ * Updates chips based on selected options
  * @param {Event} e
  */
 function updateChip(e) {
@@ -211,6 +247,13 @@ function updateChip(e) {
   if (extColsChecked.length > 0 && extColsChecked.length < extCols.length) {
     addChip(getCollsChips('ext-collections-list', 'Some Ext NEON Colls'));
   }
+  // if there are advanced query changes
+  let advCheckbox = document.getElementById('AdvancedHasBeenChanged');
+  if (advCheckbox.checked == true) {
+    addChip(getAdvancedSearchChip());
+    //getAdvancedSearchChip();
+  }
+  
   // then go through remaining inputs (exclude db and datasetid)
   // go through entire form and find selected items
   formInputs.forEach((item) => {
@@ -295,6 +338,55 @@ function getDomainsSitesChips() {
   return chipEl;
 }
 /////////
+
+/**
+ * Creates advanced search string to generate chip
+ * @returns {Object} chipEl chip element with text and name props
+ */
+function getAdvancedSearchChip() {
+  const advancedInputs = document.querySelectorAll('#search-form-advanced-search select, #search-form-advanced-search input[type=text]');
+  let sqlString = "";
+  let openParen = "";
+  let closeParen = "";
+	advancedInputs.forEach((advancedInput) => {
+    const name = advancedInput.name;
+    const value = advancedInput.value;
+    
+    if (name.startsWith("q_customopenparen")) {
+      openParen = value;
+    } else if (name.startsWith("q_customfield")) {
+      if (value) {
+        sqlString += `${openParen}${advancedInput.options[advancedInput.selectedIndex].text}`;
+      }
+    } else if (name.startsWith("q_customtype")) {
+      if (value) {
+        sqlString += ` ${advancedInput.options[advancedInput.selectedIndex].text}`;
+      }
+    } else if (name.startsWith("q_customvalue")) {
+      if (value) {
+        sqlString += ` '${value}'`;
+      }
+    } else if (name.startsWith("q_customcloseparen")) {
+      closeParen = value;
+    } else if (name.startsWith("q_customandor")) {
+      sqlString += ` ${value} `;
+    }
+    
+    if (closeParen) {
+      sqlString += `${closeParen}`;
+      openParen = "";
+      closeParen = "";
+    }
+	});
+  
+  let chipEl = {
+    text: "Advanced Search: " + sqlString.trim(),
+    name: 'advancedsearchstr',
+  };
+  return chipEl;
+}
+/////////
+
 
 /**
  * Toggles state of checkboxes in nested lists when clicking an "all-selector" element
@@ -486,7 +578,7 @@ function getParam(paramName) {
  * Define parameters to be looked for in `paramNames` array
  */
 function getSearchUrl() {
-  const harvestUrl = location.href.slice(0, location.href.indexOf('/neon'));
+  const harvestUrl = location.href.slice(0, location.href.indexOf('/neon/search'));
   const baseUrl = new URL(harvestUrl + '/collections/list.php');
 
   // Clears array temporarily to avoid redundancy
@@ -604,6 +696,109 @@ function validateForm() {
     }
   }
 
+  
+  const advancedHasBeenChangedCheckbox = document.getElementById('AdvancedHasBeenChanged');
+
+  if (advancedHasBeenChangedCheckbox.checked == true) {
+    const advancedInputs = document.querySelectorAll('#search-form-advanced-search select, #search-form-advanced-search input[type=text]');
+    let openParensCount = 0;
+    let closeParensCount = 0;
+    
+    const nonDefaultInputs = Array.from(advancedInputs).filter(input => {
+      // For select elements, check if the value is not the first option (default)
+      if (input.tagName === 'SELECT') {
+        return input.selectedIndex !== 0;
+      }
+      // For text inputs, check if the value is not empty
+      if (input.type === 'text') {
+        return input.value.trim() !== '';
+      }
+      return false;
+    });
+    
+    // To keep track of whether we've seen a field without a complete statement
+    let awaitingCondition = false;
+    let awaitingValue = false;
+    let lastInputType = "";
+  
+    nonDefaultInputs.forEach((advancedInput) => {
+      const name = advancedInput.name;
+      const value = advancedInput.value.trim();
+  
+      if (name.startsWith("q_customopenparen")) {
+        openParensCount += value.length;
+        lastInputType = "openparen";
+      } else if (name.startsWith("q_customfield")) {
+        if (awaitingCondition || awaitingValue) {
+          errors.push({
+            elId: 'search-form-advanced-search',
+            errorMsg:
+              'Each field must have a corresponding condition and value if required.',
+          });
+        }
+        awaitingCondition = true;
+        lastInputType = "field";
+      } else if (name.startsWith("q_customtype")) {
+        if (lastInputType !== "field") {
+          errors.push({
+            elId: 'search-form-advanced-search',
+            errorMsg:
+              'Missing field name.',
+          });
+        }
+        awaitingCondition = false;
+        if (value !== "NULL" && value !== "NOTNULL") {
+          awaitingValue = true;
+        }
+        lastInputType = "type";
+      } else if (name.startsWith("q_customvalue")) {
+        if (lastInputType !== "type") {
+          errors.push({
+             elId: 'search-form-advanced-search',
+             errorMsg:
+               'Missing condition statement.',
+           });
+        }
+        awaitingValue = false;
+        lastInputType = "value";
+      } else if (name.startsWith("q_customcloseparen")) {
+          closeParensCount += value.length;
+          lastInputType = "closeparen";
+      } else if (name.startsWith("q_customandor")) {
+        if (lastInputType !== "value" && lastInputType !== "closeparen" && lastInputType !== "type") {
+          errors.push({
+             elId: 'search-form-advanced-search',
+             errorMsg:
+               'AND/OR must follow a value, condition type, or closing parenthesis.',
+           });
+        }
+        lastInputType = "andor";
+      }
+    });
+  
+    if (openParensCount !== closeParensCount) {
+      errors.push({
+        elId: 'search-form-advanced-search',
+        errorMsg:
+          'Mismatched parentheses.',
+      });
+    }
+    
+    if (awaitingCondition) {
+      errors.push({
+         elId: 'search-form-advanced-search',
+         errorMsg:
+           'Missing condition statement.',
+       });
+    }
+    if (awaitingValue) {
+      errors.push({
+         elId: 'search-form-advanced-search',
+         errorMsg:
+           'Missing input value.',
+       });
+    }
+  }
   return errors;
 }
 
@@ -681,6 +876,9 @@ document
   .getElementById('reset-btn')
   .addEventListener('click', function (event) {
     document.getElementById('params-form').reset();
+    for(let x = 1; x < 9; x++){
+			if(x > 1) document.getElementById("customdiv"+x).style.display = "none";
+		}
     updateChip();
   });
 // Listen for open modal click
@@ -717,12 +915,12 @@ document
     updateChip();
   });
 //////// Binds Update chip on event change
-const formInputs = document.querySelectorAll('.content input, .content textarea');
+const formInputs = document.querySelectorAll('.content input, .content textarea, #search-form-advanced-search select');
 formInputs.forEach((formInput) => {
   formInput.addEventListener('change', updateChip);
 });
 // on default (on document load): All Neon Collections, All Domains & Sites, Include other IDs, All Domains & Sites
-document.addEventListener('DOMContentLoaded', updateChip);
+window.addEventListener('load', updateChip);
 // Binds expansion function to plus and minus icons in selectors, uses jQuery
 $('.expansion-icon').click(function () {
   if ($(this).siblings('ul').hasClass('collapsed')) {
