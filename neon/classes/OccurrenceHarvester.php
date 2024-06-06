@@ -1036,7 +1036,9 @@ class OccurrenceHarvester{
 
 	private function subSampleIdentifications(&$dwcArr, $parentOccid){
 		$collArr = array();
+		//$collArr[49] = array('targetCollid' => 98, 'lotId' => 'Epilithon');
 		//$collArr[7] = array('targetCollid' => 98, 'lotId' => 'dynamic', 'defaultId' => 'Epilithon');
+		//Add option to parse ID from sampleID
 		//Process identifications
 		$sourceCollid = $dwcArr['collid'];
 		if(array_key_exists($sourceCollid, $collArr)){
