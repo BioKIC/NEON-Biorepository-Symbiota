@@ -801,29 +801,27 @@ class OccurrenceHarvester{
 						//Check to see if any determination needs to be protected
 						$appendIdentArr = array();
 						foreach($identArr as $idKey => &$idArr){
-							if(!empty($idArr['taxonPublished'])){
-								$protectTaxon = $this->protectTaxonomyTest($idArr);
-								if($protectTaxon){
-									$idArrClone = $idArr;
-									if($idArr['taxonPublished']) $idArrClone['sciname'] = $idArr['taxonPublished'];
-									else $idArrClone['sciname'] = $idArr['taxonPublishedCode'];
-									unset($idArrClone['scientificNameAuthorship']);
-									unset($idArrClone['family']);
-									if(preg_match('/^[A-Z0-9]+$/', $idArrClone['sciname'])){
-										//Taxon is a NEON code that needs to be translated
-										if($taxaArr = $this->translateTaxonCode($idArrClone['sciname'])){
-											$idArrClone = array_merge($idArrClone, $taxaArr);
-										}
+							$protectTaxon = $this->protectTaxonomyTest($idArr);
+							if($protectTaxon){
+								$idArrClone = $idArr;
+								if($idArr['taxonPublished']) $idArrClone['sciname'] = $idArr['taxonPublished'];
+								else $idArrClone['sciname'] = $idArr['taxonPublishedCode'];
+								unset($idArrClone['scientificNameAuthorship']);
+								unset($idArrClone['family']);
+								if(preg_match('/^[A-Z0-9]+$/', $idArrClone['sciname'])){
+									//Taxon is a NEON code that needs to be translated
+									if($taxaArr = $this->translateTaxonCode($idArrClone['sciname'])){
+										$idArrClone = array_merge($idArrClone, $taxaArr);
 									}
-									else{
-										if($taxaArr = $this->getTaxonArr($idArrClone['sciname'])){
-											$idArrClone = array_merge($idArrClone, $taxaArr);
-										}
-									}
-									$appendIdentArr[] = $idArrClone;
-									$idArr['securityStatus'] = 1;
-									$idArr['securityStatusReason'] = 'Locked - NEON redaction list';
 								}
+								else{
+									if($taxaArr = $this->getTaxonArr($idArrClone['sciname'])){
+										$idArrClone = array_merge($idArrClone, $taxaArr);
+									}
+								}
+								$appendIdentArr[] = $idArrClone;
+								$idArr['securityStatus'] = 1;
+								$idArr['securityStatusReason'] = 'Locked - NEON redaction list';
 							}
 						}
 						if($appendIdentArr) $identArr = array_merge($identArr, $appendIdentArr);
@@ -1006,9 +1004,13 @@ class OccurrenceHarvester{
 			}
 		}
 		if(!empty($idArr['sciname'])){
-			if(!empty($idArr['taxonPublished']) && $idArr['sciname'] != $idArr['taxonPublished']){
-				//Taxon published not match base taxon, thus protect taxonomy
-				$protectTaxon = true;
+			$taxaPublishedArr = array();
+			if(!empty($idArr['taxonPublished'])){
+				//Run taxonPublished by taxonomic thesaurus to ensure that taxonomic author is not embedded in name
+				$taxaPublishedArr = $this->getTaxonArr($idArr['taxonPublished']);
+				$idArr['taxonPublished'] = $taxaPublishedArr['sciname'];
+				//Taxon published does not match base taxon, thus protect taxonomy
+				if( $idArr['sciname'] != $idArr['taxonPublished']) $protectTaxon = true;
 			}
 			if($protectTaxon){
 				if(!empty($idArr['taxonPublishedCode']) && $idArr['sciname'] == $idArr['taxonPublishedCode']){
@@ -1019,7 +1021,6 @@ class OccurrenceHarvester{
 				if(!empty($idArr['taxonPublished'])){
 					//run secondary test to ensure that names are not synonyms
 					$taxaArr = $this->getTaxonArr($idArr['sciname']);
-					$taxaPublishedArr = $this->getTaxonArr($idArr['taxonPublished']);
 					if($taxaArr['sciname'] == $taxaPublishedArr['accepted'] || $taxaArr['accepted'] == $taxaPublishedArr['sciname'] || $taxaArr['accepted'] == $taxaPublishedArr['accepted']){
 						//both taxa are synonyms, thus abort protections
 						return false;
