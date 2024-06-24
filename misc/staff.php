@@ -121,7 +121,7 @@ header("Content-Type: text/html; charset=" . $CHARSET);
 </body>
 <script>
 	// Fetch data from Google Spreadsheet via Google Sheets API + opensheet
-	const sheetId = '1OzXLkkLe6SpXeLdjih1GihSoHnwe6EzE3d4Lee96Kko';
+	const sheetId = '175Bp42Lyls7iciFBbZkc9LQGt7s0LQI9qovwCnhFGxk';
 	const url = `https://opensheet.elk.sh/${sheetId}/Sheet1`;
 	const gallery = document.getElementById('staff-gallery');
 
@@ -155,7 +155,7 @@ header("Content-Type: text/html; charset=" . $CHARSET);
 			img.src = info.PhotoPublic;
 		} else if (info.PhotoDrive) {
 			let photoDrive = info.PhotoDrive.split('/');
-			console.log(photoDrive);
+			//console.log(photoDrive);
 			img.src = `https://drive.google.com/thumbnail?id=${photoDrive[5]}&sz=w1000`;
 		};
 		img.width = '280';
