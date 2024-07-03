@@ -31,6 +31,26 @@ $taxaArr = $stats->getNeonTaxa();
 	<script type="text/javascript" src="<?php echo $CLIENT_ROOT . '/neon/js/d3.min.js'; ?>"></script>
 </head>
 
+<script>
+	document.addEventListener('DOMContentLoaded', function() {
+		function updateElementWidth() {
+			var higherParentWidth = document.querySelector('div[data-selenium="neon-page.content"]').offsetWidth;
+			var muiContainer = document.querySelector('div.MuiContainer-root');
+			var muiContainerStyle = window.getComputedStyle(muiContainer);
+			var muiContainerRightMargin = parseFloat(muiContainerStyle.marginRight);
+			
+			console.log(muiContainerRightMargin);
+			document.getElementById('statistics').style.width = (higherParentWidth + muiContainerRightMargin) + 'px'; 
+		}
+	
+		// Update the width on initial load
+		updateElementWidth();
+	
+		// Update the width on window resize
+		window.addEventListener('resize', updateElementWidth);
+	});
+</script>
+
 <body class="home-page">
 	<style>
 		.bar:hover {
