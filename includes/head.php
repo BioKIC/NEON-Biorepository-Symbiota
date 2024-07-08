@@ -12,23 +12,92 @@ $CUSTOM_CSS_PATH = '/css/symb/custom';
 ?>
 
 <!--neon react links-->
-<!--React last updated: 7/8/2024, 3:38:56 PM-->
-<meta name="viewport" content="width=device-width,initial-scale=1,shrink-to-fit=no"/><meta name="theme-color" content="#000000"/><link rel="manifest" href="<?php echo $CLIENT_ROOT; ?>/neon-react/manifest.json"/><link rel="shortcut icon" href="<?php echo $CLIENT_ROOT; ?>/neon-react/favicon.ico?v=201912"/><link rel="preconnect" href="https://www.neonscience.org" crossorigin="anonymous"/><link rel="stylesheet" data-meta="drupal-fonts" href="<?php echo $CLIENT_ROOT; ?>/neon-react/assets/css/drupal-fonts.css"/><link rel="stylesheet" data-meta="drupal-theme" href="<?php echo $CLIENT_ROOT; ?>/neon-react/assets/css/drupal-theme.9632c20320a55418c76ed2e12456b01c.min.css"/><link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons"/><script src="https://code.jquery.com/jquery-3.5.0.min.js" integrity="sha256-xNzN2a4ltkB44Mc/Jz3pT4iU1cmeR0FkXs4pru/JxaQ=" crossorigin="anonymous"></script><script>window.gtmDataLayer=[{page_category:"Core Components"}]</script><script>!function(e,t,a,n,g){e[n]=e[n]||[],e[n].push({"gtm.start":(new Date).getTime(),event:"gtm.js"});var m=t.getElementsByTagName(a)[0],r=t.createElement(a),s="&l="+n;r.async=!0,r.src="https://www.googletagmanager.com/gtm.js?id=GTM-K4S83R2"+s,m.parentNode.insertBefore(r,m)}(window,document,"script","gtmDataLayer")</script><script>window.NEON_SERVER_DATA="__NEON_SERVER_DATA__"</script><script defer="defer" src="<?php echo $CLIENT_ROOT; ?>/neon-react/static/js/main.7cf3632f.js"></script><link href="<?php echo $CLIENT_ROOT; ?>/neon-react/static/css/main.8d445573.css" rel="stylesheet">
+<!--React last updated: 7/8/2024, 4:07:47 PM-->
+<meta name="viewport" content="width=device-width,initial-scale=1,shrink-to-fit=no"/><meta name="theme-color" content="#000000"/><link rel="manifest" href="<?php echo $CLIENT_ROOT; ?>/neon-react/manifest.json"/><link rel="shortcut icon" href="<?php echo $CLIENT_ROOT; ?>/neon-react/favicon.ico?v=201912"/><link rel="preconnect" href="https://www.neonscience.org" crossorigin="anonymous"/><link rel="stylesheet" data-meta="drupal-fonts" href="<?php echo $CLIENT_ROOT; ?>/neon-react/assets/css/drupal-fonts.css"/><link rel="stylesheet" data-meta="drupal-theme" href="<?php echo $CLIENT_ROOT; ?>/neon-react/assets/css/drupal-theme.9632c20320a55418c76ed2e12456b01c.min.css"/><link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons"/><script src="https://code.jquery.com/jquery-3.5.0.min.js" integrity="sha256-xNzN2a4ltkB44Mc/Jz3pT4iU1cmeR0FkXs4pru/JxaQ=" crossorigin="anonymous"></script><script>window.gtmDataLayer=[{page_category:"Core Components"}]</script><script>!function(e,t,a,n,g){e[n]=e[n]||[],e[n].push({"gtm.start":(new Date).getTime(),event:"gtm.js"});var m=t.getElementsByTagName(a)[0],r=t.createElement(a),s="&l="+n;r.async=!0,r.src="https://www.googletagmanager.com/gtm.js?id=GTM-K4S83R2"+s,m.parentNode.insertBefore(r,m)}(window,document,"script","gtmDataLayer")</script><script>window.NEON_SERVER_DATA="__NEON_SERVER_DATA__"</script><script defer="defer" src="<?php echo $CLIENT_ROOT; ?>/neon-react/static/js/main.bef83942.js"></script><link href="<?php echo $CLIENT_ROOT; ?>/neon-react/static/css/main.8d445573.css" rel="stylesheet">
 <!--end of neon react links-->
 
-<!--To move innertext into neon-page.content-->
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-         // Get the div with id 'innertext'
+        // To move innertext into neon-page.content
         var innerTextDiv = document.getElementById('innertext');
-        
-        // Get the div with data-selenium attribute 'neon-page.content'
         var targetDiv = document.querySelector('div[data-selenium="neon-page.content"]');
-        
-        // Append the innerTextDiv as the last child of the targetDiv
         if (innerTextDiv && targetDiv) {
           targetDiv.appendChild(innerTextDiv);
-        }      
+        }
+        
+        // Edit footer
+        const footerMessageDiv = document.querySelector('.footer-bottom__message');
+      
+        const wrapperDiv = document.createElement('div');
+        wrapperDiv.style.display = 'flex';
+        wrapperDiv.style.justifyContent = 'space-between';
+        wrapperDiv.style.width = '100%';
+      
+        const newParagraph1 = document.createElement('p');
+      
+        const textBeforeLink = document.createTextNode('Site powered by ');
+        const symbiotaLink = document.createElement('a');
+        symbiotaLink.href = 'https://symbiota.org/';
+        symbiotaLink.textContent = 'Symbiota';
+        const textAfterLink = document.createTextNode(' | ');
+      
+        const googleAnalytics = document.createElement('i');
+        googleAnalytics.textContent = 'This site uses Google Analytics';
+      
+        newParagraph1.appendChild(textBeforeLink);
+        newParagraph1.appendChild(symbiotaLink);
+        newParagraph1.appendChild(textAfterLink);
+        newParagraph1.appendChild(googleAnalytics);
+
+        const reportDiv = document.createElement('div');
+        reportDiv.style.display = 'flex';
+        reportDiv.style.justifyContent = 'flex-end'; // Align to the right
+        reportDiv.style.alignItems = 'center';
+        reportDiv.style.flex = '1';
+
+        const githubLink = document.createElement('a');
+        githubLink.href = 'https://github.com/BioKIC/NEON-Biorepository/issues';
+        githubLink.style.textDecoration = 'none';
+        githubLink.style.color = 'inherit';
+        githubLink.style.display = 'flex';
+        githubLink.style.alignItems = 'center';
+      
+        const githubLogo = document.createElement('img');
+        githubLogo.src = 'images/icons/github-mark-white.svg'; // Inverted GitHub logo URL
+        githubLogo.alt = 'GitHub Logo';
+        githubLogo.style.width = '16px';
+        githubLogo.style.height = '16px';
+        githubLogo.style.marginRight = '5px';
+      
+        const reportText = document.createTextNode('Report a problem');
+      
+        githubLink.appendChild(githubLogo);
+        githubLink.appendChild(reportText);
+      
+        reportDiv.appendChild(githubLink);
+      
+        wrapperDiv.appendChild(newParagraph1);
+        wrapperDiv.appendChild(reportDiv);
+
+        footerMessageDiv.appendChild(wrapperDiv);
+        
+        //footer logos
+        const footerLogoDiv = document.querySelector('.footer-top__logo');
+        
+        function createImage(src, height, width) {
+            const img = document.createElement('img');
+            img.src = src;
+            img.height = height;
+            img.width = width;
+            return img;
+        }
+       
+        const newImage1 = createImage('images/layout/logo_symbiota.png', 60, 167);
+        const newImage2 = createImage('images/layout/logo-asu-biokic.jpg', 60, 167);
+        
+        footerLogoDiv.appendChild(newImage1);
+        footerLogoDiv.appendChild(newImage2);
+        
     });
  
 </script>
