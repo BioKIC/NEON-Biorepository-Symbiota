@@ -80,6 +80,44 @@
     $result->free(); 
     return $dataArr;
   }
+  
+    // Gets NEON stats for navy blue div
+  public function getBlueNeonStats(){
+    $dataArr = array();
+
+    // species count
+    $sql = 'SELECT COUNT(DISTINCT(sciname)) FROM omoccurrences;';
+    $result = $this->conn->query($sql);
+    while ($row = $result->fetch_array()){
+      $dataArr['noSpecies'] = $row[0];
+    }
+
+    // record count
+    $sql = 'SELECT COUNT(*) FROM omoccurrences;';
+    $result = $this->conn->query($sql);
+    while ($row = $result->fetch_array()){
+      $dataArr['noRecords'] = $row[0];
+    }
+    
+    // image count
+    $sql = 'SELECT COUNT(*) FROM images;';
+    $result = $this->conn->query($sql);
+    while ($row = $result->fetch_array()){
+      $dataArr['noImages'] = $row[0];
+    }
+    
+    // image count
+    $dataArr['noYears'] = date("Y")-2020;
+    
+    // image count
+    $dataArr['noSampleTypes'] = 20;
+    
+    // image count
+    $dataArr['noSites'] = 81;
+    
+    $result->free(); 
+    return $dataArr;
+  }
 
  };
 

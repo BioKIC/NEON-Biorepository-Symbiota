@@ -9,10 +9,8 @@ header('Pragma: no-cache');
 header("Content-Type: text/html; charset=" . $CHARSET);
 
 $stats = new PortalStatistics();
-$totalSamples = $stats->getTotalNeonSamples();
-$totalTaxa = $stats->getTotalNeonTaxa();
-$sampleArr = $stats->getNeonSamplesByTax();
-$taxaArr = $stats->getNeonTaxa();
+
+$statsArr = json_encode($stats->getBlueNeonStats());
 ?>
 <html>
 
@@ -34,13 +32,18 @@ $taxaArr = $stats->getNeonTaxa();
 <script>
 	document.addEventListener('DOMContentLoaded', function() {
 		function updateElementWidth() {
-			var higherParentWidth = document.querySelector('div[data-selenium="neon-page.content"]').offsetWidth;
+			var neonPageContent = document.querySelector('div[data-selenium="neon-page.content"]');
+			var neonPageContentWidth = neonPageContent.offsetWidth;
+
 			var muiContainer = document.querySelector('div.MuiContainer-root');
 			var muiContainerStyle = window.getComputedStyle(muiContainer);
 			var muiContainerRightMargin = parseFloat(muiContainerStyle.marginRight);
+
+			var neonPageContentStyle = window.getComputedStyle(neonPageContent);
+			var neonPageContentpaddingLeft = parseFloat(neonPageContentStyle.paddingLeft);
 			
-			console.log(muiContainerRightMargin);
-			document.getElementById('statistics').style.width = (higherParentWidth + muiContainerRightMargin) + 'px'; 
+			document.getElementById('blue-div').style.width = (neonPageContentWidth + muiContainerRightMargin) + 'px';
+			document.getElementById('statistics-container').style.width = (neonPageContentWidth - (2* neonPageContentpaddingLeft)) + 'px'; 
 		}
 	
 		// Update the width on initial load
@@ -49,6 +52,31 @@ $taxaArr = $stats->getNeonTaxa();
 		// Update the width on window resize
 		window.addEventListener('resize', updateElementWidth);
 	});
+</script>
+
+<script type="module">
+	// countup animation
+	import { CountUp } from './neon/js/countUp.min.js';
+	
+	window.onload = function() {
+		var data = <?php echo $statsArr; ?>;
+	
+		// Array of target elements
+		var targets = [
+		  { id: 'speciesCount', value: data.noSpecies, suffix: ' species' },
+		  { id: 'recordCount', value: data.noRecords, suffix: ' records' },
+		  { id: 'imageCount', value: data.noImages, suffix: ' images' },
+		  { id: 'yearCount', value: data.noYears, suffix: ' years' },
+		  { id: 'sampleTypeCount', value: data.noSampleTypes, suffix: ' sample types' },
+		  { id: 'siteCount', value: data.noSites, suffix: ' sites' },
+		];
+	
+		// Iterate over the targets array and initialize CountUp for each element
+		targets.forEach(function(target) {
+		  var countUp = new CountUp(target.id, target.value, { enableScrollSpy: true, suffix: target.suffix, duration: 3 });
+		  countUp.start();
+		});
+	};
 </script>
 
 <body class="home-page">
