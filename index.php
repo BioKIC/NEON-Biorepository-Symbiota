@@ -66,7 +66,7 @@ $statsArr = json_encode($stats->getBlueNeonStats());
 		// Array of target elements
 		var targets = [
 		  { id: 'speciesCount', value: data.noSpecies, suffix: ' species' },
-		  { id: 'recordCount', value: data.noRecords, suffix: ' records' },
+		  { id: 'recordCount', value: data.noRecords, suffix: ' samples' },
 		  { id: 'imageCount', value: data.noImages, suffix: ' images' },
 		  { id: 'yearCount', value: data.noYears, suffix: ' years' },
 		  { id: 'sampleTypeCount', value: data.noSampleTypes, suffix: ' sample types' },
