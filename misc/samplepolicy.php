@@ -11,16 +11,9 @@ header("Content-Type: text/html; charset=".$CHARSET);
 		?>
 	</head>
 	<body>
-		<?php
-		$displayLeftMenu = true;
-		include($SERVER_ROOT.'/includes/header.php');
-		?>
-		<div class="navpath">
-			<a href="<?php echo $CLIENT_ROOT; ?>/index.php">Home</a> &gt;&gt;
-			<b>Sample Use Policy</b>
-		</div>
-		<!-- This is inner text! -->
-		<div id="innertext" style="margin-bottom: 3rem;">
+	<div id="biorepo-page"></div>
+	<!-- This is inner text! -->
+	<div id="innertext" style="margin-bottom: 3rem;">
       <h1 style="text-align: center;">Sample Use Policy</h1>
       <p>NEON, the National Ecological Observatory Network, aims to provide "open data to understand how our aquatic and terrestrial ecosystems are changing". Therefore, the <a href="https://docs.google.com/document/d/1C1vSiysUJXSwgg5q2w0y7AP6i2wmCnUQ/edit?usp=sharing&ouid=111202796006164717361&rtpof=true&sd=true" target=_blank rel="noopener noreferrer">General NEON Biorepository Sample Use Conditions</a> and <a href="https://drive.google.com/file/d/1UwUH5LcfdN7n-CLzFvxuaAQzRxo5lZp8/view?usp=sharing" target="_blank" rel="noopener noreferrer">NEON Sample Use Policy</a> reflect the need to provide researchers with access to NEON samples for a wide-variety of purposes while preserving the future research potential of those samples. </p>
         <p>Below are additional criteria related to sample use approval:</p>
@@ -61,8 +54,5 @@ header("Content-Type: text/html; charset=".$CHARSET);
           </li>
       <p>Please read our <a href="https://docs.google.com/document/d/1C1vSiysUJXSwgg5q2w0y7AP6i2wmCnUQ/edit?usp=sharing&ouid=111202796006164717361&rtpof=true&sd=true" target="_blank" rel="noopener noreferrer">General Guidelines for Sample Use</a> and the <a href="https://drive.google.com/file/d/1UwUH5LcfdN7n-CLzFvxuaAQzRxo5lZp8/view?usp=sharing" target="_blank" rel="noopener noreferrer">NEON Sample Use Policy</a> for more details and <a href="mailto:biorepo@asu.edu">contact us</a> for more information.</p>
 		</div>
-		<?php
-			include($SERVER_ROOT.'/includes/footer.php');
-		?>
 	</body>
 </html>

@@ -67,10 +67,8 @@ if ($SYMB_UID) {
 </head>
 
 <body>
-	<?php
-	$displayLeftMenu = (isset($collections_misc_collprofilesMenu) ? $collections_misc_collprofilesMenu : true);
-	include($SERVER_ROOT . '/includes/header.php');
-	?>
+	<div id="biorepo-page"></div>
+
 	<div class="navpath">
 		<a href="../../index.php"><?php echo (isset($LANG['HOME']) ? $LANG['HOME'] : 'Home'); ?></a> &gt;&gt;
 		<a href="../index.php"><?php echo (isset($LANG['COLLECTION_SEARCH']) ? $LANG['COLLECTION_SEARCH'] : 'Collection Search Page'); ?></a> &gt;&gt;
@@ -603,9 +601,6 @@ if ($SYMB_UID) {
 		}
 		?>
 	</div>
-	<?php
-	include($SERVER_ROOT . '/includes/footer.php');
-	?>
 </body>
 
 </html>

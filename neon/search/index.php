@@ -30,6 +30,7 @@ $siteData = new DatasetsMetadata();
 	<?php
 	include($SERVER_ROOT . '/includes/header.php');
 	?>
+	<div id="biorepo-page"></div>
 	<!-- This is inner text! -->
 	<div id="innertext">
 		<h1>Sample Search</h1>

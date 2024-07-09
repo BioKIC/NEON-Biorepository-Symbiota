@@ -1,14 +1,14 @@
 {
-  "/NEON-Biorepository/index.php": [
+  "/neon/portal/index.php": [
     { "name": "Data & Samples", "href": "https://www.neonscience.org/data-samples" },
     { "name": "Sample Portal" }
     ],
-  "/NEON-Biorepository/neon/search/index.php": [
+  "/neon/portal/neon/search/index.php": [
     { "name": "Another Page", "href": "/another-page" },
     { "name": "Sub Page", "href": "/another-page/sub-page" },
     { "name": "Current Page" }
   ],
-  "/NEON-Biorepository/misc/cite.php": [
+  "/neon/portal/misc/cite.php": [
     { "name": "Yet Another Page", "href": "/yet-another-page" },
     { "name": "Current Page" }
   ]
