@@ -43,8 +43,18 @@ elseif(array_key_exists('CollAdmin',$USER_RIGHTS) || array_key_exists('CollEdito
 				scrollY: 900,
 				scrollCollapse: true,
 				fixedHeader: true,
-				columnDefs: [{ orderable: false, targets: [-1]}],
+				columnDefs: [{ orderable: false, targets: [0, -1]}],
 				});
+			$("#manifestTable").DataTable().rows().every( function () {
+				var tr = $(this.node());
+				var childValue = tr.data('child-value');
+			
+				if (childValue !== undefined) {
+					this.child(childValue).show();
+					tr.addClass('shown');
+				}
+			});
+			
 		});
 
 		function batchCheckinFormVerify(f){
@@ -575,7 +585,33 @@ include($SERVER_ROOT.'/includes/header.php');
 															$propStr .= $category.': '.$propValue.'; ';
 														}
 													}
-													echo '<tr class="sample-row">';
+													
+													$str = '';
+													if(isset($sampleArr['alternativeSampleID'])) $str .= '<div>Alternative Sample ID: '.$sampleArr['alternativeSampleID'].'</div>';
+													if(isset($sampleArr['hashedSampleID'])) $str .= '<div>Hashed Sample ID: '.$sampleArr['hashedSampleID'].'</div>';
+													if(isset($sampleArr['individualCount'])) $str .= '<div>Individual Count: '.$sampleArr['individualCount'].'</div>';
+													if(isset($sampleArr['filterVolume'])) $str .= '<div>Filter Volume: '.$sampleArr['filterVolume'].'</div>';
+													if(isset($sampleArr['domainRemarks'])) $str .= '<div>Domain Remarks: '.$sampleArr['domainRemarks'].'</div>';
+													if(isset($sampleArr['sampleNotes'])) $str .= '<div>Sample Notes: '.$sampleArr['sampleNotes'].'</div>';
+													if(isset($sampleArr['checkinRemarks'])) $str .= '<div>Check-in Remarks: '.$sampleArr['checkinRemarks'].'</div>';
+													if(isset($sampleArr['dynamicProperties']) && $sampleArr['dynamicProperties']){
+														$str .= '<div>'.trim($propStr,'; ').'</div>';
+													}
+													if(isset($sampleArr['symbiotaTarget']) && $sampleArr['symbiotaTarget']){
+														$symbTargetArr = json_decode($sampleArr['symbiotaTarget'],true);
+														$symbStr = '';
+														foreach($symbTargetArr as $symbLabel => $symbValue){
+															$symbStr .= $symbLabel.': '.$symbValue.'; ';
+														}
+														$str .= '<div>Symbiota targeted data ['.trim($symbStr,'; ').']</div>';
+													}
+													if(isset($sampleArr['occurErr'])) $str .= '<div>Occurrence Harvesting Error: '.$sampleArr['occurErr'].'</div>';
+													if($str) {
+														echo '<tr class="sample-row" data-child-value="'.trim($str,'; ').'">';
+													} else {
+														echo '<tr class="sample-row">';
+													}
+													
 													echo '<td>';
 													echo '<input id="scbox-'.$samplePK.'" class="'.trim($classStr).'" name="scbox[]" type="checkbox" value="'.$samplePK.'" />';
 													echo ' <a href="#" onclick="return openSampleEditor('.$samplePK.')"><img src="../../images/edit.png" style="width:12px" /></a>';
@@ -625,27 +661,7 @@ include($SERVER_ROOT.'/includes/header.php');
 													}
 													echo '</td>';
 													echo '</tr>';
-													$str = '';
-													if(isset($sampleArr['alternativeSampleID'])) $str .= '<div>Alternative Sample ID: '.$sampleArr['alternativeSampleID'].'</div>';
-													if(isset($sampleArr['hashedSampleID'])) $str .= '<div>Hashed Sample ID: '.$sampleArr['hashedSampleID'].'</div>';
-													if(isset($sampleArr['individualCount'])) $str .= '<div>Individual Count: '.$sampleArr['individualCount'].'</div>';
-													if(isset($sampleArr['filterVolume'])) $str .= '<div>Filter Volume: '.$sampleArr['filterVolume'].'</div>';
-													if(isset($sampleArr['domainRemarks'])) $str .= '<div>Domain Remarks: '.$sampleArr['domainRemarks'].'</div>';
-													if(isset($sampleArr['sampleNotes'])) $str .= '<div>Sample Notes: '.$sampleArr['sampleNotes'].'</div>';
-													if(isset($sampleArr['checkinRemarks'])) $str .= '<div>Check-in Remarks: '.$sampleArr['checkinRemarks'].'</div>';
-													if(isset($sampleArr['dynamicProperties']) && $sampleArr['dynamicProperties']){
-														$str .= '<div>'.trim($propStr,'; ').'</div>';
-													}
-													if(isset($sampleArr['symbiotaTarget']) && $sampleArr['symbiotaTarget']){
-														$symbTargetArr = json_decode($sampleArr['symbiotaTarget'],true);
-														$symbStr = '';
-														foreach($symbTargetArr as $symbLabel => $symbValue){
-															$symbStr .= $symbLabel.': '.$symbValue.'; ';
-														}
-														$str .= '<div>Symbiota targeted data ['.trim($symbStr,'; ').']</div>';
-													}
-													if(isset($sampleArr['occurErr'])) $str .= '<div>Occurrence Harvesting Error: '.$sampleArr['occurErr'].'</div>';
-													//if($str) echo '<tr><td colspan="'.$rowCnt.'"><div style="margin-left:30px;">'.trim($str,'; ').'</div></td></tr>';
+
 												}
 												?>
 											</tbody>
