@@ -136,25 +136,7 @@ $taxaArray = $clManager->getTaxaList($pageNumber,($printMode?0:500));
 	</style>
 </head>
 <body>
-	<?php
-	$HEADER_URL = '';
-	if(isset($clArray['headerurl']) && $clArray['headerurl']) $HEADER_URL = $CLIENT_ROOT.$clArray['headerurl'];
-	$displayLeftMenu = (isset($checklists_checklistMenu)?$checklists_checklistMenu:false);
-	if(!$printMode) include($SERVER_ROOT.'/includes/header.php');
-	echo '<div class="navpath printoff">';
-	if($pid){
-		echo '<a href="../index.php">' . $LANG['NAV_HOME'] . '</a> &gt; ';
-		echo '<a href="' . $CLIENT_ROOT . '/projects/index.php?pid=' . $pid . '">';
-		echo $clManager->getProjName();
-		echo '</a> &gt; ';
-		echo '<b>' . $clManager->getClName() . '</b>';
-	}
-	else{
-		echo '<a href="../index.php">' . $LANG['NAV_HOME'] . '</a> &gt;&gt; ';
-		echo '<a href="checklist.php?clid='. $clid . '&pid=' . $pid . ($dynClid ? '&dynclid=' . $dynClid : $dynClid) . '"><b>' . $clManager->getClName() . '</b></a>';
-	}
-	echo '</div>';
-	?>
+	<div id="biorepo-page"></div>
 	<!-- This is inner text! -->
 	<div id='innertext'>
 		<?php
@@ -761,9 +743,6 @@ $taxaArray = $clManager->getTaxaList($pageNumber,($printMode?0:500));
 		}
 		?>
 	</div>
-	<?php
-	if(!$printMode) include($SERVER_ROOT.'/includes/footer.php');
-	?>
 </body>
 <script type="text/javascript" src="../neon/js/checklists.checklist.neon.taxa.js"></script>
 </html>
