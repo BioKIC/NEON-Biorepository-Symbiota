@@ -1,7 +1,7 @@
 {
   "files": {
     "main.css": "./neon-react/static/css/main.dfee6011.css",
-    "main.js": "./neon-react/static/js/main.8d8701e3.js",
+    "main.js": "./neon-react/static/js/main.b4202c35.js",
     "static/js/761.65dc9298.chunk.js": "./neon-react/static/js/761.65dc9298.chunk.js",
     "static/js/498.45f2d54e.chunk.js": "./neon-react/static/js/498.45f2d54e.chunk.js",
     "static/js/703.5008fd4c.chunk.js": "./neon-react/static/js/703.5008fd4c.chunk.js",
@@ -57,7 +57,7 @@
     "static/media/header-search-hover.svg": "./neon-react/static/media/header-search-hover.df4898c4550631a9c7041f2164076abd.svg",
     "static/media/header-search.svg": "./neon-react/static/media/header-search.6e6360b2382fa1416fb1975a96dd5417.svg",
     "main.dfee6011.css.map": "./neon-react/static/css/main.dfee6011.css.map",
-    "main.8d8701e3.js.map": "./neon-react/static/js/main.8d8701e3.js.map",
+    "main.b4202c35.js.map": "./neon-react/static/js/main.b4202c35.js.map",
     "761.65dc9298.chunk.js.map": "./neon-react/static/js/761.65dc9298.chunk.js.map",
     "498.45f2d54e.chunk.js.map": "./neon-react/static/js/498.45f2d54e.chunk.js.map",
     "703.5008fd4c.chunk.js.map": "./neon-react/static/js/703.5008fd4c.chunk.js.map",
@@ -65,6 +65,6 @@
   },
   "entrypoints": [
     "static/css/main.dfee6011.css",
-    "static/js/main.8d8701e3.js"
+    "static/js/main.b4202c35.js"
   ]
 }
