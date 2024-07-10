@@ -43,8 +43,7 @@ header("Content-Type: text/html; charset=" . $CHARSET);
 	<!-- This is inner text! -->
 	<div id="innertext">
 		<h1 style="text-align: center;">How to Cite</h1>
-		<h2 style="text-align: center;">Ways to Acknowledge and Cite the Use of the NEON Biorepository</h2>
-		<p>The following provides guidelines for acknowledging and citing the use of NEON Biorepository resources, including samples and data, in your research publications.</p>
+		<h2 style="text-align: center;">Ways to Acknowledge and Cite Use of the NEON Biorepository</h2>
 		<!-- Table of Contents -->
 		<h2 class="anchor" id="dataset-publishing-toc">Table of Contents</h2>
 
@@ -71,7 +70,7 @@ header("Content-Type: text/html; charset=" . $CHARSET);
 		<hr>
 		<!-- End of Table of Contents -->
 		<article>
-			<h3 class="anchor" id="h.1">1. Acknowledging the NEON Biorepository as a used resource in scientific publications</h3>
+			<h3 class="anchor" id="h.1">1. Acknowledging the NEON Biorepository as a resource used in scientific publications</h3>
 			<h4 class="anchor" id="h.1.a">1A. Generic <i>acknowledgment</i> of the NEON Biorepository as a resource</h4>
 			<p>You can promote use of NEON Biorepository resources with the following statement in the acknowledgement section of your relevant publications:</p>
 			<blockquote>"The National Ecological Observatory Network Biorepository at Arizona State University provided samples and data collected as part of the NEON Program."</blockquote>
@@ -99,7 +98,7 @@ header("Content-Type: text/html; charset=" . $CHARSET);
 			<p>When your work relies on occurrence data from particular NEON Biorepository collections, use the preferred citation format published on the relevant collection details page under "Cite This Collection".</p>
 			<h4 class="anchor" id="h.2.c">2C. Citing a NEON Biorepository <i>published research</i> or <i>special collections dataset</i></h4>
 			<p>To cite the use of occurrence records from an <a href="https://biorepo.neonscience.org/portal/collections/datasets/publiclist.php" target="_blank" rel="noopener noreferrer">existing published research or special collections dataset</a>, include the citations available from the relevant dataset page under "Cite This Dataset".</p>
-			<p>In many cases, you should also cite the original publication associated with the dataset, which is available at the top of the dataset description page.</p>
+			<p>In many cases, you should also cite the original publication associated with the dataset. Citations to the publication are available within the dataset description page.</p>
 		</article>
 		<article>
 			<h3 class="anchor" id="h.3">3. Acknowledging and citing NEON data generally</h3>
@@ -111,7 +110,7 @@ header("Content-Type: text/html; charset=" . $CHARSET);
 				<li>While the NEON Biorepository Data Portal will make every effort possible to control and document the quality of the data it publishes, the data are made available "as is". Any report of errors in the data should be directed to the appropriate curators and/or collections managers.</li>
 				<li>The NEON Biorepository Data Portal cannot assume responsibility for damages resulting from mis-use or mis-interpretation of datasets or from errors or omissions that may exist in the data.</li>
 				<li>It is considered a matter of professional ethics to cite and acknowledge the work of other scientists that has resulted in data used in subsequent research. We encourage users to contact the original investigator responsible for the data that they are accessing.</li>
-				<li>The NEON Biorepository Data Portal asks that users not redistribute data obtained from this site without permission for data owners. However, links or references to this site may be freely posted.</li>
+				<li>The NEON Biorepository Data Portal asks that users not redistribute data obtained from this site without permission from data owners. However, links or references to this site may be freely posted.</li>
 			</ul>
 		</article>
 		<article>
