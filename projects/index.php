@@ -199,22 +199,7 @@ if(!$researchList && !$editMode){
 	</style>
 </head>
 <body>
-	<?php
-	$HEADER_URL = '';
-	if(isset($projArr['headerurl']) && $projArr['headerurl']) $HEADER_URL = $CLIENT_ROOT.$projArr['headerurl'];
-	$displayLeftMenu = (isset($projects_indexMenu)?$projects_indexMenu:"true");
-	include($SERVER_ROOT.'/includes/header.php');
-	echo "<div class='navpath'>";
-	if(isset($projects_indexCrumbs) && $projArr){
-		if($projects_indexCrumbs) echo $projects_indexCrumbs.' &gt;&gt; ';
-	}
-	else{
-		echo "<a href='../index.php'>Home</a> &gt;&gt; ";
-	}
-	echo '<b><a href="index.php?pid='.$pid.'">'.($projArr?$projArr['projname']:'Inventory Project List').'</a></b>';
-	echo "</div>";
-	?>
-
+	<div id="biorepo-page"></div>
 	<!-- This is inner text! -->
 	<div id="innertext">
 		<?php
@@ -475,8 +460,5 @@ if(!$researchList && !$editMode){
 		}
 		?>
 	</div>
-	<?php
-	include($SERVER_ROOT.'/includes/footer.php');
-	?>
 </body>
 </html>
