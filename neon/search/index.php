@@ -27,9 +27,6 @@ $siteData = new DatasetsMetadata();
 </head>
 
 <body>
-	<?php
-	include($SERVER_ROOT . '/includes/header.php');
-	?>
 	<div id="biorepo-page"></div>
 	<!-- This is inner text! -->
 	<div id="innertext">
@@ -475,9 +472,6 @@ $siteData = new DatasetsMetadata();
 		</form>
 
 	</div>
-	<?php
-	include($SERVER_ROOT . '/includes/footer.php');
-	?>
 </body>
 <script src="js/searchform.js?ver=05" type="text/javascript"></script>
 </html>
