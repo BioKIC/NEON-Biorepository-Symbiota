@@ -228,6 +228,8 @@ class TaxonomyController extends Controller{
 		$parStatusResult = $parStatus->get();
 		$taxonObj->classification = $parStatusResult;
 
+		$taxonObj->taxonCodes;
+
 		if(!$taxonObj->count()) $taxonObj = ['status' =>false, 'error' => 'Unable to locate inventory based on identifier'];
 		return response()->json($taxonObj);
 	}
