@@ -828,6 +828,10 @@ class OccurrenceHarvester{
 								$idArr['securityStatus'] = 1;
 								$idArr['securityStatusReason'] = 'Locked - NEON redaction list';
 							}
+							else{
+								$idArr['securityStatus'] = 0;
+								$idArr['securityStatusReason'] = '';
+							}
 						}
 						if($appendIdentArr) $identArr = array_merge($identArr, $appendIdentArr);
 						$dwcArr['identifications'] = $identArr;
