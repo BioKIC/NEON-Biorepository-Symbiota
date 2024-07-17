@@ -996,7 +996,7 @@ class OccurrenceHarvester{
 			$dwcArr['lifeStage'] = 'Nymph';
 			$dwcArr['sex'] = '';
 		}
-		elseif($dwcArr['collid'] == 29 || $dwcArr['collid'] == 39){
+		elseif($dwcArr['collid'] == 29 || $dwcArr['collid'] == 39 || $dwcArr['collid'] == 44 || $dwcArr['collid'] == 82 || $dwcArr['collid'] == 95){
 			$dwcArr['individualCount'] = 1;
 		}
 	}
