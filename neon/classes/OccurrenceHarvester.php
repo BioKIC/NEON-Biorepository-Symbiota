@@ -667,9 +667,14 @@ class OccurrenceHarvester{
 				if(!empty($sampleArr['preservative_type'])) $prepArr[] = 'preservative type: '.$sampleArr['preservative_type'];
 				if(!empty($sampleArr['preservative_volume'])) $prepArr[] = 'preservative volume: '.$sampleArr['preservative_volume'];
 				if(!empty($sampleArr['preservative_concentration'])) $prepArr[] = 'preservative concentration: '.$sampleArr['preservative_concentration'];
-				if(!in_array($dwcArr['collid'], array(19,28,42))){
+				if(!in_array($dwcArr['collid'], array(19,28,42,17,64))){
 					if(!empty($sampleArr['sample_mass']) && strpos($sampleArr['symbiotaTarget'],'sample mass') === false) $prepArr[] = 'sample mass: '.$sampleArr['sample_mass'];
 					if(!empty($sampleArr['sample_volume']) && strpos($sampleArr['symbiotaTarget'],'sample volume') === false) $prepArr[] = 'sample volume: '.$sampleArr['sample_volume'];
+					if(!empty($sampleArr['sex'])){
+						if($sampleArr['sex'] == 'M') $dwcArr['sex'] = 'Male';
+						elseif($sampleArr['sex'] == 'F') $dwcArr['sex'] = 'Female';
+						elseif($$sampleArr['sex'] == 'U') $dwcArr['sex'] = 'Unknown';
+					}
 				}
 				if($prepArr) $dwcArr['preparations'] = implode(', ',$prepArr);
 				$dynProp = array();
@@ -991,7 +996,7 @@ class OccurrenceHarvester{
 			$dwcArr['lifeStage'] = 'Nymph';
 			$dwcArr['sex'] = '';
 		}
-		elseif($dwcArr['collid'] == 29 || $dwcArr['collid'] == 39){
+		elseif($dwcArr['collid'] == 29 || $dwcArr['collid'] == 39 || $dwcArr['collid'] == 44 || $dwcArr['collid'] == 82 || $dwcArr['collid'] == 95){
 			$dwcArr['individualCount'] = 1;
 		}
 	}
