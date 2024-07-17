@@ -30,6 +30,9 @@ $dArr = $datasetManager->getPublicDatasets();
 				if ($IS_ADMIN) {
 					echo '<p><a href="index.php">Dataset Management</a></p>';
 				}
+				
+					echo '<p>The datasets below link to samples and specimens associated with published research and special collections. Visit the <b><a href="https://scholar.google.com/citations?user=MGg_jIcAAAAJ&hl=en&oi=ao">NEON Biorepository Google Scholar Profile</a></b> for an up-to-date list of publications related to NEON samples and specimens.</p>';
+				
 
 				if($dArr){
 					$catArr = array();
