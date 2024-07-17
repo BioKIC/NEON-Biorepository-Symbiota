@@ -647,11 +647,6 @@ class OccurrenceHarvester{
 					elseif($sampleType == 'O') $sampleType = 'organic';
 					$occurRemarks[] = 'sample type: '.$sampleType;
 				}
-				if(isset($sampleArr['sex'])){
-					if($sampleArr['sex'] == 'M') $$dwcArr['sex'] = 'Male';
-					elseif($sampleArr['sex'] == 'F') $dwcArr['sex'] = 'Female';
-					elseif($sampleArr['sex'] == 'U') $dwcArr['sex'] = 'Unknown';
-				}
 				if($occurRemarks) $dwcArr['occurrenceRemarks'] = implode('; ',$occurRemarks);
 				if(isset($sampleArr['assocMedia'])) $dwcArr['assocMedia'] = $sampleArr['assocMedia'];
 				if(isset($sampleArr['coordinate_uncertainty']) && $sampleArr['coordinate_uncertainty']) $dwcArr['coordinateUncertaintyInMeters'] = $sampleArr['coordinate_uncertainty'];
@@ -672,9 +667,14 @@ class OccurrenceHarvester{
 				if(!empty($sampleArr['preservative_type'])) $prepArr[] = 'preservative type: '.$sampleArr['preservative_type'];
 				if(!empty($sampleArr['preservative_volume'])) $prepArr[] = 'preservative volume: '.$sampleArr['preservative_volume'];
 				if(!empty($sampleArr['preservative_concentration'])) $prepArr[] = 'preservative concentration: '.$sampleArr['preservative_concentration'];
-				if(!in_array($dwcArr['collid'], array(19,28,42))){
+				if(!in_array($dwcArr['collid'], array(19,28,42,17,64))){
 					if(!empty($sampleArr['sample_mass']) && strpos($sampleArr['symbiotaTarget'],'sample mass') === false) $prepArr[] = 'sample mass: '.$sampleArr['sample_mass'];
 					if(!empty($sampleArr['sample_volume']) && strpos($sampleArr['symbiotaTarget'],'sample volume') === false) $prepArr[] = 'sample volume: '.$sampleArr['sample_volume'];
+					if(!empty($sampleArr['sex'])){
+						if($sampleArr['sex'] == 'M') $dwcArr['sex'] = 'Male';
+						elseif($sampleArr['sex'] == 'F') $dwcArr['sex'] = 'Female';
+						elseif($$sampleArr['sex'] == 'U') $dwcArr['sex'] = 'Unknown';
+					}
 				}
 				if($prepArr) $dwcArr['preparations'] = implode(', ',$prepArr);
 				$dynProp = array();
