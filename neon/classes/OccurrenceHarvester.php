@@ -647,6 +647,11 @@ class OccurrenceHarvester{
 					elseif($sampleType == 'O') $sampleType = 'organic';
 					$occurRemarks[] = 'sample type: '.$sampleType;
 				}
+				if(isset($sampleArr['sex'])){
+					if($sampleArr['sex'] == 'M') $$dwcArr['sex'] = 'Male';
+					elseif($sampleArr['sex'] == 'F') $dwcArr['sex'] = 'Female';
+					elseif($sampleArr['sex'] == 'U') $dwcArr['sex'] = 'Unknown';
+				}
 				if($occurRemarks) $dwcArr['occurrenceRemarks'] = implode('; ',$occurRemarks);
 				if(isset($sampleArr['assocMedia'])) $dwcArr['assocMedia'] = $sampleArr['assocMedia'];
 				if(isset($sampleArr['coordinate_uncertainty']) && $sampleArr['coordinate_uncertainty']) $dwcArr['coordinateUncertaintyInMeters'] = $sampleArr['coordinate_uncertainty'];
