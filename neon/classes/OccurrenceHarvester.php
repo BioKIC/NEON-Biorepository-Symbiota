@@ -1027,7 +1027,7 @@ class OccurrenceHarvester{
 			if(!empty($idArr['taxonPublished'])){
 				//Run taxonPublished by taxonomic thesaurus to ensure that taxonomic author is not embedded in name
 				$taxaPublishedArr = $this->getTaxonArr($idArr['taxonPublished']);
-				$idArr['taxonPublished'] = $taxaPublishedArr['sciname'];
+				if(!empty($taxaPublishedArr['sciname'])) $idArr['taxonPublished'] = $taxaPublishedArr['sciname'];
 				//Taxon published does not match base taxon, thus protect taxonomy
 				if( $idArr['sciname'] != $idArr['taxonPublished']) $protectTaxon = true;
 			}
@@ -1037,7 +1037,7 @@ class OccurrenceHarvester{
 					//We should need this, but codes are not always translated successfully
 					return false;
 				}
-				if(!empty($idArr['taxonPublished'])){
+				if($taxaPublishedArr && !empty($idArr['taxonPublished'])){
 					//run secondary test to ensure that names are not synonyms
 					$taxaArr = $this->getTaxonArr($idArr['sciname']);
 					if($taxaArr['sciname'] == $taxaPublishedArr['accepted'] || $taxaArr['accepted'] == $taxaPublishedArr['sciname'] || $taxaArr['accepted'] == $taxaPublishedArr['accepted']){
