@@ -803,9 +803,9 @@ class OccurrenceHarvester{
 							}
 						}
 						if(!is_bool($isCurrentKey)) $identArr[$isCurrentKey]['isCurrent'] = 1;
-						//Check to see if any determination needs to be protected
 						$appendIdentArr = array();
 						foreach($identArr as $idKey => &$idArr){
+							//Check to see if any determination needs to be protected
 							$protectTaxon = $this->protectTaxonomyTest($idArr);
 							if($protectTaxon){
 								$idArrClone = $idArr;
@@ -831,6 +831,16 @@ class OccurrenceHarvester{
 							else{
 								$idArr['securityStatus'] = 0;
 								$idArr['securityStatusReason'] = '';
+							}
+							//Check to see if current taxon is the most current taxon
+							if(!empty($idArr['isCurrent'])){
+								if(isset($this->taxonArr[$idArr['sciname']]['accepted'])){
+									if($idArr['sciname'] != $this->taxonArr[$idArr['sciname']]['accepted']){
+										$idArr['scientificNameAuthorship'] = $this->taxonArr[$idArr['sciname']]['acceptedAuthor'];
+										$idArr['tidInterpreted'] = $this->taxonArr[$idArr['sciname']]['acceptedTid'];
+										$idArr['sciname'] = $this->taxonArr[$idArr['sciname']]['accepted'];
+									}
+								}
 							}
 						}
 						if($appendIdentArr) $identArr = array_merge($identArr, $appendIdentArr);
@@ -1017,7 +1027,7 @@ class OccurrenceHarvester{
 			if(!empty($idArr['taxonPublished'])){
 				//Run taxonPublished by taxonomic thesaurus to ensure that taxonomic author is not embedded in name
 				$taxaPublishedArr = $this->getTaxonArr($idArr['taxonPublished']);
-				$idArr['taxonPublished'] = $taxaPublishedArr['sciname'];
+				if(!empty($taxaPublishedArr['sciname'])) $idArr['taxonPublished'] = $taxaPublishedArr['sciname'];
 				//Taxon published does not match base taxon, thus protect taxonomy
 				if( $idArr['sciname'] != $idArr['taxonPublished']) $protectTaxon = true;
 			}
@@ -1027,7 +1037,7 @@ class OccurrenceHarvester{
 					//We should need this, but codes are not always translated successfully
 					return false;
 				}
-				if(!empty($idArr['taxonPublished'])){
+				if($taxaPublishedArr && !empty($idArr['taxonPublished'])){
 					//run secondary test to ensure that names are not synonyms
 					$taxaArr = $this->getTaxonArr($idArr['sciname']);
 					if($taxaArr['sciname'] == $taxaPublishedArr['accepted'] || $taxaArr['accepted'] == $taxaPublishedArr['sciname'] || $taxaArr['accepted'] == $taxaPublishedArr['accepted']){
@@ -1834,7 +1844,7 @@ class OccurrenceHarvester{
 			}
 		}
 		if(!$targetTaxon){
-			$sql = 'SELECT t.tid, t.sciname, t.author, t.rankid, ts.family, a.sciname as accepted
+			$sql = 'SELECT t.tid, t.sciname, t.author, t.rankid, ts.family, a.tid as acceptedTid, a.sciname as accepted, a.author as acceptedAuthor
 				FROM taxa t INNER JOIN taxstatus ts ON t.tid = ts.tid
 				INNER JOIN taxa a ON ts.tidAccepted = a.tid
 				WHERE ts.taxauthid = 1 AND t.sciname IN("'.$this->cleanInStr($sciname).'"'.($this->cleanInStr($sciname2)?',"'.$this->cleanInStr($sciname2).'"':'').')';
@@ -1845,6 +1855,8 @@ class OccurrenceHarvester{
 					$this->taxonArr[$r->sciname]['rankid'] = $r->rankid;
 					$this->taxonArr[$r->sciname]['family'] = $r->family;
 					$this->taxonArr[$r->sciname]['accepted'] = $r->accepted;
+					$this->taxonArr[$r->sciname]['acceptedAuthor'] = $r->acceptedAuthor;
+					$this->taxonArr[$r->sciname]['acceptedTid'] = $r->acceptedTid;
 					$targetTaxon = $r->sciname;
 				}
 			}
