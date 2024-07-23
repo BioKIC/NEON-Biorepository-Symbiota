@@ -803,9 +803,9 @@ class OccurrenceHarvester{
 							}
 						}
 						if(!is_bool($isCurrentKey)) $identArr[$isCurrentKey]['isCurrent'] = 1;
-						//Check to see if any determination needs to be protected
 						$appendIdentArr = array();
 						foreach($identArr as $idKey => &$idArr){
+							//Check to see if any determination needs to be protected
 							$protectTaxon = $this->protectTaxonomyTest($idArr);
 							if($protectTaxon){
 								$idArrClone = $idArr;
@@ -831,6 +831,16 @@ class OccurrenceHarvester{
 							else{
 								$idArr['securityStatus'] = 0;
 								$idArr['securityStatusReason'] = '';
+							}
+							//Check to see if current taxon is the most current taxon
+							if(!empty($idArr['isCurrent'])){
+								if(isset($this->taxonArr[$idArr['sciname']]['accepted'])){
+									if($idArr['sciname'] != $this->taxonArr[$idArr['sciname']]['accepted']){
+										$idArr['scientificNameAuthorship'] = $this->taxonArr[$idArr['sciname']]['acceptedAuthor'];
+										$idArr['tidInterpreted'] = $this->taxonArr[$idArr['sciname']]['acceptedTid'];
+										$idArr['sciname'] = $this->taxonArr[$idArr['sciname']]['accepted'];
+									}
+								}
 							}
 						}
 						if($appendIdentArr) $identArr = array_merge($identArr, $appendIdentArr);
@@ -1834,7 +1844,7 @@ class OccurrenceHarvester{
 			}
 		}
 		if(!$targetTaxon){
-			$sql = 'SELECT t.tid, t.sciname, t.author, t.rankid, ts.family, a.sciname as accepted
+			$sql = 'SELECT t.tid, t.sciname, t.author, t.rankid, ts.family, a.tid as acceptedTid, a.sciname as accepted, a.author as acceptedAuthor
 				FROM taxa t INNER JOIN taxstatus ts ON t.tid = ts.tid
 				INNER JOIN taxa a ON ts.tidAccepted = a.tid
 				WHERE ts.taxauthid = 1 AND t.sciname IN("'.$this->cleanInStr($sciname).'"'.($this->cleanInStr($sciname2)?',"'.$this->cleanInStr($sciname2).'"':'').')';
@@ -1845,6 +1855,8 @@ class OccurrenceHarvester{
 					$this->taxonArr[$r->sciname]['rankid'] = $r->rankid;
 					$this->taxonArr[$r->sciname]['family'] = $r->family;
 					$this->taxonArr[$r->sciname]['accepted'] = $r->accepted;
+					$this->taxonArr[$r->sciname]['acceptedAuthor'] = $r->acceptedAuthor;
+					$this->taxonArr[$r->sciname]['acceptedTid'] = $r->acceptedTid;
 					$targetTaxon = $r->sciname;
 				}
 			}
