@@ -558,7 +558,7 @@ class OccurrenceHarvester{
 							elseif($fArr['smsKey'] == 'taxon_published_processed_scientific_name' && $fArr['smsValue']){
 								$identArr['taxonPublished'] = $fArr['smsValue'];
 							}
-							elseif($fArr['smsKey'] == 'taxon_published_raw_scientificName' && $fArr['smsValue']){
+							elseif($fArr['smsKey'] == 'taxon_published_raw_scientific_name' && $fArr['smsValue']){
 								//We only want "raw" value if "processed" does not exists, thus we don't want to replace a set "processed" value with a "raw"
 								if(empty($identArr['taxonPublished'])) $identArr['taxonPublished'] = $fArr['smsValue'];
 							}
