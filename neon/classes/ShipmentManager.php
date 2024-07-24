@@ -134,7 +134,9 @@ class ShipmentManager{
 		while($r = $rs->fetch_assoc()){
 			foreach($targetArr as $fieldName){
 				$value = $r[$fieldName];
-				if($fieldName != 'dynamicProperties') $value = $this->cleanOutStr($value);
+				if($fieldName != 'dynamicProperties' && $fieldName != 'symbiotaTarget'){
+					$value = $this->cleanOutStr($value);
+				}
 				$retArr[$r['samplePK']][$fieldName] = $value;
 			}
 			if(isset($retArr[$r['samplePK']]['namedLocation'])){
