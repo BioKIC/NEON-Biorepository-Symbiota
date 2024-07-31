@@ -5,13 +5,10 @@ if ($SYMB_UID) {
     if (!empty($_SESSION['refurl'])) {
         header("Location: " . $_SESSION['refurl']);
         unset($_SESSION['refurl']);
-        exit; // Adding exit to prevent further execution after the redirect
+        exit; 
     } elseif (isset($_REQUEST['refurl']) && !empty($_REQUEST['refurl'])) {
         header("Location: " . $_REQUEST['refurl']);
-        exit; // Adding exit to prevent further execution after the redirect
-    } else {
-        header("Location: " . $CLIENT_ROOT . '/profile/viewprofile.php');
-        exit; // Adding exit to prevent further execution after the redirect
+        exit;
     }
 }
 
