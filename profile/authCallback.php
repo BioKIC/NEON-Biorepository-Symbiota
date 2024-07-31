@@ -76,7 +76,9 @@ if (array_key_exists('code', $_REQUEST) && $_REQUEST['code']) {
         header('Location:' . $CLIENT_ROOT . '/profile/index.php');
       }
     }
+  } else {
+    $_SESSION['last_message'] = $LANG['AUTHENTICATION_FAILED'] . " <ERR/>";
+    header('Location:' . $CLIENT_ROOT . '/profile/index.php');    
   }
-  $_SESSION['last_message'] = $LANG['AUTHENTICATION_FAILED'] . " <ERR/>";
-  header('Location:' . $CLIENT_ROOT . '/profile/index.php');
+
 }
