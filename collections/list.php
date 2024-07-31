@@ -100,7 +100,27 @@ $_SESSION['citationvar'] = $searchVar;
 	</style>
 </head>
 <body>
-	<div id="biorepo-page"></div>
+	<?php
+	$displayLeftMenu = (isset($collections_listMenu) ? $collections_listMenu : false);
+	include($SERVER_ROOT . '/includes/header.php');
+	if (isset($collections_listCrumbs)) {
+		if ($collections_listCrumbs) {
+			echo '<div class="navpath">';
+			echo '<a href="../index.php">' . $LANG['NAV_HOME'] . '</a> &gt;&gt; ';
+			echo $collections_listCrumbs . ' &gt;&gt; ';
+			echo '<b>' . $LANG['NAV_SPECIMEN_LIST'] . '</b>';
+			echo '</div>';
+		}
+	}
+	else {
+		echo '<div class="navpath">';
+		echo '<a href="../index.php">' . $LANG['NAV_HOME'] . '</a> &gt;&gt; ';
+		echo '<a href="index.php">' . $LANG['NAV_COLLECTIONS'] . '</a> &gt;&gt; ';
+		echo '<a href="harvestparams.php">' . $LANG['NAV_SEARCH'] . '</a> &gt;&gt; ';
+		echo '<b>' . $LANG['NAV_SPECIMEN_LIST'] . '</b>';
+		echo '</div>';
+	}
+	?>
 	<!-- This is inner text! -->
 	<div id="innertext">
 		<div id="tabs" style="width:95%;">
@@ -391,6 +411,9 @@ $_SESSION['citationvar'] = $searchVar;
 			</div>
 		</div>
 	</div>
+	<?php
+	include($SERVER_ROOT . '/includes/footer.php');
+	?>
 </body>
 
 </html>
