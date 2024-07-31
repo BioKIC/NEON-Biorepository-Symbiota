@@ -12,7 +12,7 @@ $CUSTOM_CSS_PATH = '/css/symb/custom';
 ?>
 
 <!--neon react links-->
-<!--React last updated: 7/10/2024, 10:01:40 AM-->
+<!--React last updated: 7/31/2024, 7:29:10 PM-->
 <meta name="viewport" content="width=device-width,initial-scale=1,shrink-to-fit=no"/><meta name="theme-color" content="#000000"/><link rel="manifest" href="<?php echo $CLIENT_ROOT; ?>/neon-react/manifest.json"/><link rel="shortcut icon" href="<?php echo $CLIENT_ROOT; ?>/neon-react/favicon.ico?v=201912"/><link rel="preconnect" href="https://www.neonscience.org" crossorigin="anonymous"/><link rel="stylesheet" data-meta="drupal-fonts" href="<?php echo $CLIENT_ROOT; ?>/neon-react/assets/css/drupal-fonts.css"/><link rel="stylesheet" data-meta="drupal-theme" href="<?php echo $CLIENT_ROOT; ?>/neon-react/assets/css/drupal-theme.9632c20320a55418c76ed2e12456b01c.min.css"/><link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons"/><script src="https://code.jquery.com/jquery-3.5.0.min.js" integrity="sha256-xNzN2a4ltkB44Mc/Jz3pT4iU1cmeR0FkXs4pru/JxaQ=" crossorigin="anonymous"></script><script>window.gtmDataLayer=[{page_category:"Core Components"}]</script><script>!function(e,t,a,n,g){e[n]=e[n]||[],e[n].push({"gtm.start":(new Date).getTime(),event:"gtm.js"});var m=t.getElementsByTagName(a)[0],r=t.createElement(a),s="&l="+n;r.async=!0,r.src="https://www.googletagmanager.com/gtm.js?id=GTM-K4S83R2"+s,m.parentNode.insertBefore(r,m)}(window,document,"script","gtmDataLayer")</script><script>window.NEON_SERVER_DATA="__NEON_SERVER_DATA__"</script><link href="<?php echo $CLIENT_ROOT; ?>/neon-react/static/css/main.dfee6011.css" rel="stylesheet">
 <!--end of neon react links-->
 
@@ -30,7 +30,7 @@ $CUSTOM_CSS_PATH = '/css/symb/custom';
         
         //javascript code created by React
         var reactScript = document.createElement('script');
-        reactScript.src = '<?php echo $CLIENT_ROOT; ?>/neon-react/static/js/main.2b6f8ef1.js';
+        reactScript.src = '<?php echo $CLIENT_ROOT; ?>/neon-react/static/js/main.c8d95a65.js';
         reactScript.defer = true;
         
         reactScript.onload = function() {
@@ -61,7 +61,7 @@ $CUSTOM_CSS_PATH = '/css/symb/custom';
                 mainFooter.parentNode.removeChild(mainFooter);
             }
             
-            document.querySelector('.navpath').remove();
+            //document.querySelector('.navpath').remove();
 
             // Edit footer
             const footerMessageDiv = document.querySelector('.footer-bottom__message');
@@ -158,3 +158,10 @@ $CUSTOM_CSS_PATH = '/css/symb/custom';
 	//Uncomment following line to support toggling of database content containing DIVs with lang classes in form of: <div class="lang en">Content in English</div><div class="lang es">Content in Spanish</div>
 	//setLanguageDiv();
 </script>
+<?php
+if ($USERNAME != 0) {
+    echo "logged in as " . $USERNAME . ' <a href="http://localhost/neon/profile/index.php?submit=logout">Log out</a>';
+} else {
+    echo 'logged out <a href="http://localhost/neon/profile/index.php">Log in</a>';
+}
+?>
