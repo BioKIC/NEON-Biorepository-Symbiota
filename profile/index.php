@@ -1,17 +1,18 @@
 <?php
 include_once('../config/symbini.php');
 
-if($SYMB_UID){
-	if($_SESSION['refurl']){
-		header("Location:" . $_SESSION['refurl']);
-		unset($_SESSION['refurl']);
-	}
-	if ($_REQUEST['refurl']){
-		header("Location:" . $_REQUEST['refurl']);	
-	}
-	else{
-		header("Location:" . $CLIENT_ROOT . '/profile/viewprofile.php');
-	}
+if ($SYMB_UID) {
+    if (!empty($_SESSION['refurl'])) {
+        header("Location: " . $_SESSION['refurl']);
+        unset($_SESSION['refurl']);
+        exit; // Adding exit to prevent further execution after the redirect
+    } elseif (isset($_REQUEST['refurl']) && !empty($_REQUEST['refurl'])) {
+        header("Location: " . $_REQUEST['refurl']);
+        exit; // Adding exit to prevent further execution after the redirect
+    } else {
+        header("Location: " . $CLIENT_ROOT . '/profile/viewprofile.php');
+        exit; // Adding exit to prevent further execution after the redirect
+    }
 }
 
 include_once($SERVER_ROOT.'/classes/ProfileManager.php');
@@ -198,6 +199,7 @@ $displayLeftMenu = (isset($profile_indexMenu)?$profile_indexMenu:'true');
 include($SERVER_ROOT.'/includes/header.php');
 ?>
 <div class="navpath"></div>
+<div id="biorepo-page"></div>
 <!-- inner text -->
 <div role="main" id="innertext" style="padding-left:0px;margin-left:0px;">
 	<h1 class="page-heading screen-reader-only">Login</h1>
