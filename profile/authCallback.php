@@ -38,6 +38,9 @@ if (array_key_exists('code', $_REQUEST) && $_REQUEST['code']) {
       if($_SESSION['refurl']){
         header("Location:" . $_SESSION['refurl']);
         unset($_SESSION['refurl']);
+      } else {
+        header("Location: " . $CLIENT_ROOT . '/profile/viewprofile.php');
+        unset($_SESSION['refurl']);
       }
     }
     else {
