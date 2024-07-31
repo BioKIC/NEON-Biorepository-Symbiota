@@ -74,7 +74,7 @@ if($SYMB_UID){
 $displayLeftMenu = false;
 include($SERVER_ROOT.'/includes/header.php');
 ?>
-<div id="popup-innertext">
+<div id="innertext">
 	<?php
 	if($taxonManager->getTaxonName()){
 		if(count($taxonManager->getAcceptedArr()) == 1){
