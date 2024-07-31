@@ -30,12 +30,31 @@ elseif(array_key_exists('CollAdmin',$USER_RIGHTS) || array_key_exists('CollEdito
 	?>
 	<script src="../../js/jquery-3.2.1.min.js" type="text/javascript"></script>
 	<script src="../../js/jquery-ui-1.12.1/jquery-ui.min.js" type="text/javascript"></script>
+	<link rel="stylesheet" href="../../js/datatables/datatables.css" />
+	<script src="../../js/datatables/datatables.js"></script>
 	<script type="text/javascript">
 		$(document).ready(function() {
 			$("#shipCheckinComment").keydown(function(evt){
 				var evt  = (evt) ? evt : ((event) ? event : null);
 				if ((evt.keyCode == 13)) { return false; }
 			});
+			$('#manifestTable').DataTable({
+				paging: false,
+				scrollY: 900,
+				scrollCollapse: true,
+				fixedHeader: true,
+				columnDefs: [{ orderable: false, targets: [0, -1]}],
+				});
+			$("#manifestTable").DataTable().rows().every( function () {
+				var tr = $(this.node());
+				var childValue = tr.data('child-value');
+			
+				if (childValue !== undefined) {
+					this.child(childValue).show();
+					tr.addClass('shown');
+				}
+			});
+			
 		});
 
 		function batchCheckinFormVerify(f){
@@ -301,6 +320,9 @@ elseif(array_key_exists('CollAdmin',$USER_RIGHTS) || array_key_exists('CollEdito
 		.displayFieldDiv { margin-bottom: 3px }
 		fieldset legend { font-weight: bold; }
 		.sample-row td { white-space: break-spaces; }
+		.sorting_1 { 
+		  background-color: #c0c0c0a6 !important; 
+		}		
 	</style>
 </head>
 <body>
@@ -519,120 +541,130 @@ include($SERVER_ROOT.'/includes/header.php');
 								if($sampleList){
 									?>
 									<form name="sampleListingForm" action="manifestviewer.php" method="post" onsubmit="return batchCheckinFormVerify(this)">
-										<table class="styledtable">
-											<tr>
-												<?php
-												$headerOutArr = current($sampleList);
-												echo '<th><input name="selectall" type="checkbox" onclick="selectAll(this)" /></th>';
-												$headerArr = array('sampleID'=>'Sample ID', 'sampleCode'=>'Sample<br/>Code', 'sampleClass'=>'Sample<br/>Class', 'taxonID'=>'Taxon ID',
-													'namedLocation'=>'Named<br/>Location', 'collectDate'=>'Collection<br/>Date', 'quarantineStatus'=>'Quarantine<br/>Status','sampleReceived'=>'Sample<br/>Received',
-													'acceptedForAnalysis'=>'Accepted<br/>for<br/>Analysis','sampleCondition'=>'Sample<br/>Condition','checkinUser'=>'Check-in','occid'=>'occid');
-													//'individualCount'=>'Individual Count', 'filterVolume'=>'Filter Volume', 'domainRemarks'=>'Domain Remarks', 'sampleNotes'=>'Sample Notes',
-												$rowCnt = 1;
-												foreach($headerArr as $fieldName => $headerTitle){
-													if(array_key_exists($fieldName, $headerOutArr) || $fieldName == 'checkinUser' || $fieldName == 'occid'){
-														echo '<th>'.$headerTitle.'</th>';
-														$rowCnt++;
+										<table id="manifestTable" class="styledtable">
+											<thead>
+												<tr>
+													<?php
+													$headerOutArr = current($sampleList);
+													echo '<th><input name="selectall" type="checkbox" onclick="selectAll(this)" /></th>';
+													$headerArr = array('sampleID'=>'Sample ID', 'sampleCode'=>'Sample<br/>Code', 'sampleClass'=>'Sample<br/>Class', 'taxonID'=>'Taxon ID',
+														'namedLocation'=>'Named<br/>Location', 'collectDate'=>'Collection<br/>Date', 'quarantineStatus'=>'Quarantine<br/>Status','sampleReceived'=>'Sample<br/>Received',
+														'acceptedForAnalysis'=>'Accepted<br/>for<br/>Analysis','sampleCondition'=>'Sample<br/>Condition','checkinUser'=>'Check-in','occid'=>'occid');
+														//'individualCount'=>'Individual Count', 'filterVolume'=>'Filter Volume', 'domainRemarks'=>'Domain Remarks', 'sampleNotes'=>'Sample Notes',
+													$rowCnt = 1;
+													foreach($headerArr as $fieldName => $headerTitle){
+														if(array_key_exists($fieldName, $headerOutArr) || $fieldName == 'checkinUser' || $fieldName == 'occid'){
+															echo '<th>'.$headerTitle.'</th>';
+															$rowCnt++;
+														}
 													}
+													?>
+												</tr>
+											</thead>
+											<tbody>
+												<?php
+												$tagArr = array();
+												foreach($sampleList as $samplePK => $sampleArr){
+													$classStr = '';
+													$propStr = '';
+													if(isset($sampleArr['dynamicProperties'])){
+														$dynPropArr = json_decode($sampleArr['dynamicProperties'],true);
+														foreach($dynPropArr as $category => $propValue){
+															if(strtolower($category) == 'containerid'){
+																$tagArr['containerid'][$propValue] = (isset($tagArr['containerid'][$propValue])?++$tagArr['containerid'][$propValue]:1);
+																$classStr .= str_replace(' ','_',$propValue).' ';
+															}
+															elseif(strtolower($category) == 'plateid'){
+																$tagArr['plateid'][$propValue] = (isset($tagArr['plateid'][$propValue])?++$tagArr['plateid'][$propValue]:1);
+																$classStr .= str_replace(' ','_',$propValue).' ';
+															}
+															elseif(strtolower($category) == 'platebarcode'){
+																$tagArr['platebarcode'][$propValue] = (isset($tagArr['platebarcode'][$propValue])?++$tagArr['platebarcode'][$propValue]:1);
+																$classStr .= str_replace(' ','_',$propValue).' ';
+															}
+															$propStr .= $category.': '.$propValue.'; ';
+														}
+													}
+													
+													$str = '';
+													if(isset($sampleArr['alternativeSampleID'])) $str .= '<div>Alternative Sample ID: '.$sampleArr['alternativeSampleID'].'</div>';
+													if(isset($sampleArr['hashedSampleID'])) $str .= '<div>Hashed Sample ID: '.$sampleArr['hashedSampleID'].'</div>';
+													if(isset($sampleArr['individualCount'])) $str .= '<div>Individual Count: '.$sampleArr['individualCount'].'</div>';
+													if(isset($sampleArr['filterVolume'])) $str .= '<div>Filter Volume: '.$sampleArr['filterVolume'].'</div>';
+													if(isset($sampleArr['domainRemarks'])) $str .= '<div>Domain Remarks: '.$sampleArr['domainRemarks'].'</div>';
+													if(isset($sampleArr['sampleNotes'])) $str .= '<div>Sample Notes: '.$sampleArr['sampleNotes'].'</div>';
+													if(isset($sampleArr['checkinRemarks'])) $str .= '<div>Check-in Remarks: '.$sampleArr['checkinRemarks'].'</div>';
+													if(isset($sampleArr['dynamicProperties']) && $sampleArr['dynamicProperties']){
+														$str .= '<div>'.trim($propStr,'; ').'</div>';
+													}
+													if(isset($sampleArr['symbiotaTarget']) && $sampleArr['symbiotaTarget']){
+														$symbTargetArr = json_decode($sampleArr['symbiotaTarget'],true);
+														$symbStr = '';
+														foreach($symbTargetArr as $symbLabel => $symbValue){
+															$symbStr .= $symbLabel.': '.$symbValue.'; ';
+														}
+														$str .= '<div>Symbiota targeted data ['.trim($symbStr,'; ').']</div>';
+													}
+													if(isset($sampleArr['occurErr'])) $str .= '<div>Occurrence Harvesting Error: '.$sampleArr['occurErr'].'</div>';
+													if($str) {
+														echo '<tr class="sample-row" data-child-value="'.trim($str,'; ').'">';
+													} else {
+														echo '<tr class="sample-row">';
+													}
+													
+													echo '<td>';
+													echo '<input id="scbox-'.$samplePK.'" class="'.trim($classStr).'" name="scbox[]" type="checkbox" value="'.$samplePK.'" />';
+													echo ' <a href="#" onclick="return openSampleEditor('.$samplePK.')"><img src="../../images/edit.png" style="width:12px" /></a>';
+													echo '</td>';
+													$sampleID = (array_key_exists('sampleID',$sampleArr)?$sampleArr['sampleID']:'');
+													if(array_key_exists('sampleID', $headerOutArr)){
+														if($quickSearchTerm == $sampleID) $sampleID = '<b>'.$sampleID.'</b>';
+														echo '<td>'.$sampleID.'</td>';
+													}
+													$sampleCode = (array_key_exists('sampleCode',$sampleArr)?$sampleArr['sampleCode']:'');
+													if(array_key_exists('sampleCode', $headerOutArr)){
+														if($quickSearchTerm == $sampleCode) $sampleCode = '<b>'.$sampleCode.'</b>';
+														echo '<td>'.$sampleCode.'</td>';
+													}
+													echo '<td>'.$sampleArr['sampleClass'].'</td>';
+													if(array_key_exists('taxonID',$sampleArr)) echo '<td>'.$sampleArr['taxonID'].'</td>';
+													if(array_key_exists('namedLocation', $sampleArr)){
+														$namedLocation = $sampleArr['namedLocation'];
+														if(isset($sampleArr['siteTitle']) && $sampleArr['siteTitle']) $namedLocation = '<span title="'.$sampleArr['siteTitle'].'">'.$namedLocation.'</span>';
+														echo '<td>'.$namedLocation.'</td>';
+													}
+													if(array_key_exists('collectDate', $sampleArr)) echo '<td>'.$sampleArr['collectDate'].'</td>';
+													echo '<td>'.$sampleArr['quarantineStatus'].'</td>';
+													if(array_key_exists('sampleReceived', $sampleArr)){
+														$sampleReceived = $sampleArr['sampleReceived'];
+														if($sampleArr['sampleReceived']==1) $sampleReceived = 'Y';
+														if($sampleArr['sampleReceived']==='0') $sampleReceived = 'N';
+														echo '<td>'.$sampleReceived.'</td>';
+													}
+													if(array_key_exists('acceptedForAnalysis', $sampleArr)){
+														$acceptedForAnalysis = $sampleArr['acceptedForAnalysis'];
+														if($sampleArr['acceptedForAnalysis']==1) $acceptedForAnalysis = 'Y';
+														if($sampleArr['acceptedForAnalysis']==='0') $acceptedForAnalysis = 'N';
+														echo '<td>'.$acceptedForAnalysis.'</td>';
+													}
+													if(array_key_exists('sampleCondition', $sampleArr)) echo '<td>'.$sampleArr['sampleCondition'].'</td>';
+													echo '<td title="'.$sampleArr['checkinUser'].'">';
+													echo '<span id="scSpan-'.$samplePK.'">'.$sampleArr['checkinTimestamp'].'</span> ';
+													if($sampleArr['checkinTimestamp']) echo '<a href="#" onclick="return openSampleCheckinEditor('.$samplePK.')"><img src="../../images/edit.png" style="width:13px" /></a>';
+													echo '</td>';
+													echo '<td style="text-align:center">';
+													if(array_key_exists('occid',$sampleArr) && $sampleArr['occid']){
+														echo '<span title="harvested '.(isset($sampleArr['harvestTimestamp'])?$sampleArr['harvestTimestamp']:'').'">';
+														echo '<a href="../../collections/individual/index.php?occid='.$sampleArr['occid'].'" target="_blank"><img src="../../images/list.png" style="width:13px" /></a>&nbsp;&nbsp;&nbsp;';
+														echo '<a href="../../collections/editor/occurrenceeditor.php?occid='.$sampleArr['occid'].'" target="_blank"><img src="../../images/edit.png" style="width:13px" /></a>';
+														echo '</span>';
+													}
+													echo '</td>';
+													echo '</tr>';
+
 												}
 												?>
-											</tr>
-											<?php
-											$tagArr = array();
-											foreach($sampleList as $samplePK => $sampleArr){
-												$classStr = '';
-												$propStr = '';
-												if(isset($sampleArr['dynamicProperties'])){
-													$dynPropArr = json_decode($sampleArr['dynamicProperties'],true);
-													foreach($dynPropArr as $category => $propValue){
-														if(strtolower($category) == 'containerid'){
-															$tagArr['containerid'][$propValue] = (isset($tagArr['containerid'][$propValue])?++$tagArr['containerid'][$propValue]:1);
-															$classStr .= str_replace(' ','_',$propValue).' ';
-														}
-														elseif(strtolower($category) == 'plateid'){
-															$tagArr['plateid'][$propValue] = (isset($tagArr['plateid'][$propValue])?++$tagArr['plateid'][$propValue]:1);
-															$classStr .= str_replace(' ','_',$propValue).' ';
-														}
-														elseif(strtolower($category) == 'platebarcode'){
-															$tagArr['platebarcode'][$propValue] = (isset($tagArr['platebarcode'][$propValue])?++$tagArr['platebarcode'][$propValue]:1);
-															$classStr .= str_replace(' ','_',$propValue).' ';
-														}
-														$propStr .= $category.': '.$propValue.'; ';
-													}
-												}
-												echo '<tr class="sample-row">';
-												echo '<td>';
-												echo '<input id="scbox-'.$samplePK.'" class="'.trim($classStr).'" name="scbox[]" type="checkbox" value="'.$samplePK.'" />';
-												echo ' <a href="#" onclick="return openSampleEditor('.$samplePK.')"><img src="../../images/edit.png" style="width:12px" /></a>';
-												echo '</td>';
-												$sampleID = (array_key_exists('sampleID',$sampleArr)?$sampleArr['sampleID']:'');
-												if(array_key_exists('sampleID', $headerOutArr)){
-													if($quickSearchTerm == $sampleID) $sampleID = '<b>'.$sampleID.'</b>';
-													echo '<td>'.$sampleID.'</td>';
-												}
-												$sampleCode = (array_key_exists('sampleCode',$sampleArr)?$sampleArr['sampleCode']:'');
-												if(array_key_exists('sampleCode', $headerOutArr)){
-													if($quickSearchTerm == $sampleCode) $sampleCode = '<b>'.$sampleCode.'</b>';
-													echo '<td>'.$sampleCode.'</td>';
-												}
-												echo '<td>'.$sampleArr['sampleClass'].'</td>';
-												if(array_key_exists('taxonID',$sampleArr)) echo '<td>'.$sampleArr['taxonID'].'</td>';
-												if(array_key_exists('namedLocation', $sampleArr)){
-													$namedLocation = $sampleArr['namedLocation'];
-													if(isset($sampleArr['siteTitle']) && $sampleArr['siteTitle']) $namedLocation = '<span title="'.$sampleArr['siteTitle'].'">'.$namedLocation.'</span>';
-													echo '<td>'.$namedLocation.'</td>';
-												}
-												if(array_key_exists('collectDate', $sampleArr)) echo '<td>'.$sampleArr['collectDate'].'</td>';
-												echo '<td>'.$sampleArr['quarantineStatus'].'</td>';
-												if(array_key_exists('sampleReceived', $sampleArr)){
-													$sampleReceived = $sampleArr['sampleReceived'];
-													if($sampleArr['sampleReceived']==1) $sampleReceived = 'Y';
-													if($sampleArr['sampleReceived']==='0') $sampleReceived = 'N';
-													echo '<td>'.$sampleReceived.'</td>';
-												}
-												if(array_key_exists('acceptedForAnalysis', $sampleArr)){
-													$acceptedForAnalysis = $sampleArr['acceptedForAnalysis'];
-													if($sampleArr['acceptedForAnalysis']==1) $acceptedForAnalysis = 'Y';
-													if($sampleArr['acceptedForAnalysis']==='0') $acceptedForAnalysis = 'N';
-													echo '<td>'.$acceptedForAnalysis.'</td>';
-												}
-												if(array_key_exists('sampleCondition', $sampleArr)) echo '<td>'.$sampleArr['sampleCondition'].'</td>';
-												echo '<td title="'.$sampleArr['checkinUser'].'">';
-												echo '<span id="scSpan-'.$samplePK.'">'.$sampleArr['checkinTimestamp'].'</span> ';
-												if($sampleArr['checkinTimestamp']) echo '<a href="#" onclick="return openSampleCheckinEditor('.$samplePK.')"><img src="../../images/edit.png" style="width:13px" /></a>';
-												echo '</td>';
-												echo '<td style="text-align:center">';
-												if(array_key_exists('occid',$sampleArr) && $sampleArr['occid']){
-													echo '<span title="harvested '.(isset($sampleArr['harvestTimestamp'])?$sampleArr['harvestTimestamp']:'').'">';
-													echo '<a href="../../collections/individual/index.php?occid='.$sampleArr['occid'].'" target="_blank"><img src="../../images/list.png" style="width:13px" /></a>&nbsp;&nbsp;&nbsp;';
-													echo '<a href="../../collections/editor/occurrenceeditor.php?occid='.$sampleArr['occid'].'" target="_blank"><img src="../../images/edit.png" style="width:13px" /></a>';
-													echo '</span>';
-												}
-												echo '</td>';
-												echo '</tr>';
-												$str = '';
-												if(isset($sampleArr['alternativeSampleID'])) $str .= '<div>Alternative Sample ID: '.$sampleArr['alternativeSampleID'].'</div>';
-												if(isset($sampleArr['hashedSampleID'])) $str .= '<div>Hashed Sample ID: '.$sampleArr['hashedSampleID'].'</div>';
-												if(isset($sampleArr['individualCount'])) $str .= '<div>Individual Count: '.$sampleArr['individualCount'].'</div>';
-												if(isset($sampleArr['filterVolume'])) $str .= '<div>Filter Volume: '.$sampleArr['filterVolume'].'</div>';
-												if(isset($sampleArr['domainRemarks'])) $str .= '<div>Domain Remarks: '.$sampleArr['domainRemarks'].'</div>';
-												if(isset($sampleArr['sampleNotes'])) $str .= '<div>Sample Notes: '.$sampleArr['sampleNotes'].'</div>';
-												if(isset($sampleArr['checkinRemarks'])) $str .= '<div>Check-in Remarks: '.$sampleArr['checkinRemarks'].'</div>';
-												if(isset($sampleArr['dynamicProperties']) && $sampleArr['dynamicProperties']){
-													$str .= '<div>'.trim($propStr,'; ').'</div>';
-												}
-												if(isset($sampleArr['symbiotaTarget']) && $sampleArr['symbiotaTarget']){
-													$symbTargetArr = json_decode($sampleArr['symbiotaTarget'],true);
-													$symbStr = '';
-													foreach($symbTargetArr as $symbLabel => $symbValue){
-														$symbStr .= $symbLabel.': '.$symbValue.'; ';
-													}
-													$str .= '<div>Symbiota targeted data ['.trim($symbStr,'; ').']</div>';
-												}
-												if(isset($sampleArr['occurErr'])) $str .= '<div>Occurrence Harvesting Error: '.$sampleArr['occurErr'].'</div>';
-												if($str) echo '<tr><td colspan="'.$rowCnt.'"><div style="margin-left:30px;">'.trim($str,'; ').'</div></td></tr>';
-											}
-											?>
+											</tbody>
 										</table>
 										<div style="margin:15px;float:left">
 											<input name="shipmentPK" type="hidden" value="<?php echo $shipmentPK; ?>" />
