@@ -133,7 +133,11 @@ class ShipmentManager{
 		//Grab data for only columns that have data
 		while($r = $rs->fetch_assoc()){
 			foreach($targetArr as $fieldName){
-				$retArr[$r['samplePK']][$fieldName] = $r[$fieldName];
+				$value = $r[$fieldName];
+				if($fieldName != 'dynamicProperties' && $fieldName != 'symbiotaTarget'){
+					$value = $this->cleanOutStr($value);
+				}
+				$retArr[$r['samplePK']][$fieldName] = $value;
 			}
 			if(isset($retArr[$r['samplePK']]['namedLocation'])){
 				$namedLocation = $retArr[$r['samplePK']]['namedLocation'];
@@ -1148,21 +1152,24 @@ class ShipmentManager{
 
 	public function getTrackingStr(){
 		$retStr = '';
-		$trackingArr = explode(';',$this->shipmentArr['trackingNumber']);
-		$trackingArr = array_unique($trackingArr);
-		foreach($trackingArr as $trackingStr){
-			$trackingId = preg_replace('/[^a-zA-Z0-9;]+/', '', $trackingStr);
-			$shipService = strtolower($this->shipmentArr['shipmentService']);
-			if($shipService == 'fedex' && strlen($trackingId) == 12){
-				$retStr .= '<a href="https://www.fedex.com/apps/fedextrack/?action=track&tracknumbers='.$trackingId.'&locale=en_US&cntry_code=us" target="_blank">';
+		if($this->shipmentArr['trackingNumber']){
+			$trackingArr = explode(';',$this->shipmentArr['trackingNumber']);
+			$trackingArr = array_unique($trackingArr);
+			foreach($trackingArr as $trackingStr){
+				$trackingId = preg_replace('/[^a-zA-Z0-9;]+/', '', $trackingStr);
+				$shipService = $this->shipmentArr['shipmentService'];
+				if($shipService) $shipService = strtolower($shipService);
+				if($shipService == 'fedex' && strlen($trackingId) == 12){
+					$retStr .= '<a href="https://www.fedex.com/apps/fedextrack/?action=track&tracknumbers='.$trackingId.'&locale=en_US&cntry_code=us" target="_blank">';
+				}
+				elseif($shipService == 'ups' && strlen($trackingId) == 18){
+					$retStr .= '<a href="https://www.ups.com/track?loc=en_US&tracknum='.$trackingId.'&requester=WT/trackdetails" target="_blank">';
+				}
+				elseif($shipService == 'usps' && strlen($trackingId) == 22){
+					$retStr .= '<a href="https://tools.usps.com/go/TrackConfirmAction?tLabels='.$trackingId.'" target="_blank">';
+				}
+				$retStr .= $trackingId.'</a>; ';
 			}
-			elseif($shipService == 'ups' && strlen($trackingId) == 18){
-				$retStr .= '<a href="https://www.ups.com/track?loc=en_US&tracknum='.$trackingId.'&requester=WT/trackdetails" target="_blank">';
-			}
-			elseif($shipService == 'usps' && strlen($trackingId) == 22){
-				$retStr .= '<a href="https://tools.usps.com/go/TrackConfirmAction?tLabels='.$trackingId.'" target="_blank">';
-			}
-			$retStr .= $trackingId.'</a>; ';
 		}
 		return trim($retStr,' ;');
 	}
@@ -1361,6 +1368,12 @@ class ShipmentManager{
 
 	public function array_key_iexists($key, $array) {
 		return array_key_exists(strtolower($key), array_map('strtolower', $array));
+	}
+
+	private function cleanOutStr($str){
+		if($str) $str = htmlspecialchars($str);
+		elseif($str === null) $str = '';
+		return $str;
 	}
 
 	private function cleanInStr($str){
