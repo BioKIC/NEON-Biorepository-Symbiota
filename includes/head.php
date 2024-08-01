@@ -9,6 +9,10 @@
  */
 
 $CUSTOM_CSS_PATH = '/css/symb/custom';
+
+$isNeonEditor = false;
+if ($IS_ADMIN) $isNeonEditor = true;
+elseif (array_key_exists('CollAdmin', $USER_RIGHTS) || array_key_exists('CollEditor', $USER_RIGHTS)) $isNeonEditor = true;
 ?>
 
 <!--neon react links-->
@@ -59,7 +63,11 @@ $CUSTOM_CSS_PATH = '/css/symb/custom';
                 mainFooter.parentNode.removeChild(mainFooter);
             }
             
-            document.querySelector('.navpath').remove();
+            // Breadcrumbs
+            const navpath = document.querySelector('.navpath');
+            if (navpath) {
+                navpath.remove();
+            }
 
             // Edit footer
             const footerMessageDiv = document.querySelector('.footer-bottom__message');
@@ -133,6 +141,64 @@ $CUSTOM_CSS_PATH = '/css/symb/custom';
             
             footerLogoDiv.appendChild(newImage1);
             footerLogoDiv.appendChild(newImage2);
+            
+            //utilities and management menus
+            <?php
+            if ($isNeonEditor) {
+                //data management button
+                echo <<<EOL
+                    const dataManagementButton = document.createElement('button');
+                    dataManagementButton.className = "MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-outlinedSizeSmall MuiButton-sizeSmall";
+                    dataManagementButton.setAttribute('type', 'button');
+                    dataManagementButton.setAttribute('tabindex', '0');
+                    dataManagementButton.setAttribute('data-selenium', 'neon-menu.data-management-button');
+                    dataManagementButton.style.color = '#0073cf';
+                    dataManagementButton.style.fontSize = '0.55rem';
+                    dataManagementButton.style.fontFamily = '"Inter", Helvetica, Arial, sans-serif';
+                    dataManagementButton.style.fontWeight = '600';
+                    dataManagementButton.style.lineHeight = '1.75';
+                    dataManagementButton.style.whiteSpace = 'nowrap';
+                    dataManagementButton.style.textTransform = 'uppercase';
+                    dataManagementButton.innerHTML = '<span class="MuiButton-label">Data Management</span>';
+                    dataManagementButton.addEventListener('click', () => {
+                EOL;
+                    
+                echo "window.location.href = '".$CLIENT_ROOT."/neon/index.php';";
+                echo <<<EOL
+                    });
+                    const signInDiv = document.getElementById("header__authentication-ui");
+                    if (signInDiv) {
+                        signInDiv.insertBefore(dataManagementButton, signInDiv.firstChild);
+                    }
+                EOL;
+                //utilities button
+                echo <<<EOL
+                    const utilitiesButton = document.createElement('button');
+                    utilitiesButton.className = "MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-outlinedSizeSmall MuiButton-sizeSmall";
+                    utilitiesButton.setAttribute('type', 'button');
+                    utilitiesButton.setAttribute('tabindex', '0');
+                    utilitiesButton.setAttribute('data-selenium', 'neon-menu.data-management-button');
+                    utilitiesButton.style.color = '#0073cf';
+                    utilitiesButton.style.fontSize = '0.55rem';
+                    utilitiesButton.style.fontFamily = '"Inter", Helvetica, Arial, sans-serif';
+                    utilitiesButton.style.fontWeight = '600';
+                    utilitiesButton.style.lineHeight = '1.75';
+                    utilitiesButton.style.whiteSpace = 'nowrap';
+                    utilitiesButton.style.textTransform = 'uppercase';
+                    utilitiesButton.innerHTML = '<span class="MuiButton-label">Sitemap</span>';
+                    utilitiesButton.addEventListener('click', () => {
+                EOL;
+                    
+                echo "window.location.href = '".$CLIENT_ROOT."/sitemap.php';";
+                echo <<<EOL
+                    });
+                    if (signInDiv) {
+                        signInDiv.insertBefore(utilitiesButton, signInDiv.firstChild);
+                    }
+                EOL;                
+            }
+            ?>
+            
         };
     
     document.body.appendChild(reactScript);
@@ -156,9 +222,9 @@ $CUSTOM_CSS_PATH = '/css/symb/custom';
 	//setLanguageDiv();
 </script>
 <?php
-if ($USERNAME != 0) {
-    echo "logged in as " . $USERNAME . ' <a href="http://localhost/neon/profile/index.php?submit=logout">Log out</a>';
-} else {
-    echo 'logged out <a href="http://localhost/neon/profile/index.php">Log in</a>';
-}
+//if ($USERNAME != 0) {
+//    echo "logged in as " . $USERNAME . ' <a href="http://localhost/neon/profile/index.php?submit=logout">Log out</a>';
+//} else {
+//    echo 'logged out <a href="http://localhost/neon/profile/index.php">Log in</a>';
+//}
 ?>
