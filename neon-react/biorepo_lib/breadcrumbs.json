@@ -134,5 +134,15 @@
     { "name": "Sample Portal", "href": "http://localhost/neon/index.php" },
     { "name": "Sample Handling", "href": "http://localhost/neon/misc/samplehandling.php" },
     { "name": "Sample Collection Profiles" }
+    ],
+  "/neon/neon/index.php": [
+    { "name": "Data & Samples", "href": "https://www.neonscience.org/data-samples" },
+    { "name": "Sample Portal", "href": "http://localhost/neon/index.php" },
+    { "name": "Data Management" }
+    ],
+  "/neon/sitemap.php": [
+    { "name": "Data & Samples", "href": "https://www.neonscience.org/data-samples" },
+    { "name": "Sample Portal", "href": "http://localhost/neon/index.php" },
+    { "name": "Sitemap" }
     ]
 }
