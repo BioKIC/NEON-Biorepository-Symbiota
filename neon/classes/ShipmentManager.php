@@ -58,29 +58,31 @@ class ShipmentManager{
 
 	public function getSampleCount(){
 		$retArr = array();
-		//Get total sample count
-		$sql = 'SELECT COUNT(samplepk) AS cnt FROM NeonSample WHERE (shipmentPK = '.$this->shipmentPK.')';
-		$rs = $this->conn->query($sql);
-		while($r = $rs->fetch_object()){
-			$retArr['all'] = $r->cnt;
+		if($this->shipmentPK){
+			//Get total sample count
+			$sql = 'SELECT COUNT(samplepk) AS cnt FROM NeonSample WHERE (shipmentPK = '.$this->shipmentPK.')';
+			$rs = $this->conn->query($sql);
+			while($r = $rs->fetch_object()){
+				$retArr['all'] = $r->cnt;
+			}
+			$rs->free();
+			//Get sample count not yet checked-in
+			$sql = 'SELECT COUNT(samplepk) AS cnt FROM NeonSample WHERE (shipmentPK = '.$this->shipmentPK.') AND (checkinUid IS NULL)';
+			$rs = $this->conn->query($sql);
+			while($r = $rs->fetch_object()){
+				$retArr[0] = $r->cnt;
+			}
+			$rs->free();
+			//Get count of samples not yet imported
+			$sql = 'SELECT COUNT(s.samplepk) AS cnt '.
+				'FROM NeonSample s LEFT JOIN omoccurrences o ON s.occid = o.occid '.
+				'WHERE (s.shipmentPK = '.$this->shipmentPK.') AND (o.occid IS NULL) ';
+			$rs = $this->conn->query($sql);
+			while($r = $rs->fetch_object()){
+				$retArr[1] = $r->cnt;
+			}
+			$rs->free();
 		}
-		$rs->free();
-		//Get sample count not yet checked-in
-		$sql = 'SELECT COUNT(samplepk) AS cnt FROM NeonSample WHERE (shipmentPK = '.$this->shipmentPK.') AND (checkinUid IS NULL)';
-		$rs = $this->conn->query($sql);
-		while($r = $rs->fetch_object()){
-			$retArr[0] = $r->cnt;
-		}
-		$rs->free();
-		//Get count of samples not yet imported
-		$sql = 'SELECT COUNT(s.samplepk) AS cnt '.
-			'FROM NeonSample s LEFT JOIN omoccurrences o ON s.occid = o.occid '.
-			'WHERE (s.shipmentPK = '.$this->shipmentPK.') AND (o.occid IS NULL) ';
-		$rs = $this->conn->query($sql);
-		while($r = $rs->fetch_object()){
-			$retArr[1] = $r->cnt;
-		}
-		$rs->free();
 		return $retArr;
 	}
 
