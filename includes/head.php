@@ -16,7 +16,7 @@ elseif (array_key_exists('CollAdmin', $USER_RIGHTS) || array_key_exists('CollEdi
 ?>
 
 <!--neon react links-->
-<!--React last updated: 8/1/2024, 4:01:37 PM-->
+<!--React last updated: 8/2/2024, 1:37:05 PM-->
 <meta name="viewport" content="width=device-width,initial-scale=1,shrink-to-fit=no"/><meta name="theme-color" content="#000000"/><link rel="manifest" href="<?php echo $CLIENT_ROOT; ?>/neon-react/manifest.json"/><link rel="shortcut icon" href="<?php echo $CLIENT_ROOT; ?>/neon-react/favicon.ico?v=201912"/><link rel="preconnect" href="https://www.neonscience.org" crossorigin="anonymous"/><link rel="stylesheet" data-meta="drupal-fonts" href="<?php echo $CLIENT_ROOT; ?>/neon-react/assets/css/drupal-fonts.css"/><link rel="stylesheet" data-meta="drupal-theme" href="<?php echo $CLIENT_ROOT; ?>/neon-react/assets/css/drupal-theme.9632c20320a55418c76ed2e12456b01c.min.css"/><link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons"/><script src="https://code.jquery.com/jquery-3.5.0.min.js" integrity="sha256-xNzN2a4ltkB44Mc/Jz3pT4iU1cmeR0FkXs4pru/JxaQ=" crossorigin="anonymous"></script><script>window.gtmDataLayer=[{page_category:"Core Components"}]</script><script>!function(e,t,a,n,g){e[n]=e[n]||[],e[n].push({"gtm.start":(new Date).getTime(),event:"gtm.js"});var m=t.getElementsByTagName(a)[0],r=t.createElement(a),s="&l="+n;r.async=!0,r.src="https://www.googletagmanager.com/gtm.js?id=GTM-K4S83R2"+s,m.parentNode.insertBefore(r,m)}(window,document,"script","gtmDataLayer")</script><script>window.NEON_SERVER_DATA="__NEON_SERVER_DATA__"</script><link href="<?php echo $CLIENT_ROOT; ?>/neon-react/static/css/main.dfee6011.css" rel="stylesheet">
 <!--end of neon react links-->
 
@@ -34,7 +34,7 @@ elseif (array_key_exists('CollAdmin', $USER_RIGHTS) || array_key_exists('CollEdi
         
         //javascript code created by React
         var reactScript = document.createElement('script');
-        reactScript.src = '<?php echo $CLIENT_ROOT; ?>/neon-react/static/js/main.a95e059c.js';
+        reactScript.src = '<?php echo $CLIENT_ROOT; ?>/neon-react/static/js/main.4efca318.js';
         reactScript.defer = true;
         
         reactScript.onload = function() {
@@ -141,6 +141,107 @@ elseif (array_key_exists('CollAdmin', $USER_RIGHTS) || array_key_exists('CollEdi
             
             footerLogoDiv.appendChild(newImage1);
             footerLogoDiv.appendChild(newImage2);
+
+            //sign in and sign out
+            <?php
+            if ($USER_DISPLAY_NAME) {
+                //add my account
+                echo <<<EOL
+                    const myAccountButton = document.createElement('button');
+                    myAccountButton.className = "MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-outlinedSizeSmall MuiButton-sizeSmall";
+                    myAccountButton.setAttribute('type', 'button');
+                    myAccountButton.setAttribute('tabindex', '0');
+                    myAccountButton.setAttribute('data-selenium', 'neon-menu.data-management-button');
+                    myAccountButton.style.color = '#0073cf';
+                    myAccountButton.style.fontSize = '0.55rem';
+                    myAccountButton.style.fontFamily = '"Inter", Helvetica, Arial, sans-serif';
+                    myAccountButton.style.fontWeight = '600';
+                    myAccountButton.style.lineHeight = '1.75';
+                    myAccountButton.style.whiteSpace = 'nowrap';
+                    myAccountButton.style.textTransform = 'uppercase';
+                    myAccountButton.style.backgroundColor = 'white';
+                    myAccountButton.style.borderWidth = '1px';
+                    myAccountButton.style.borderRadius = '0';
+                    myAccountButton.style.borderColor = '#0073cf';
+                    myAccountButton.style.padding = '5px 10px';
+                    myAccountButton.innerHTML = '<span class="MuiButton-label">My Account</span>';
+                    myAccountButton.addEventListener('click', () => {
+                EOL;
+                    
+                echo "window.location.href = 'https://data.neonscience.org/myaccount';";
+                echo <<<EOL
+                    });
+                    const signInDiv = document.getElementById("header__authentication-ui");
+                    if (signInDiv) {
+                        signInDiv.insertBefore(myAccountButton, signInDiv.firstChild);
+                    }
+                EOL;
+
+                //add sign out
+                echo <<<EOL
+                    const signoutButton = document.createElement('button');
+                    signoutButton.className = "MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-outlinedSizeSmall MuiButton-sizeSmall";
+                    signoutButton.setAttribute('type', 'button');
+                    signoutButton.setAttribute('tabindex', '0');
+                    signoutButton.setAttribute('data-selenium', 'neon-menu.data-management-button');
+                    signoutButton.style.color = '#0073cf';
+                    signoutButton.style.fontSize = '0.55rem';
+                    signoutButton.style.fontFamily = '"Inter", Helvetica, Arial, sans-serif';
+                    signoutButton.style.fontWeight = '600';
+                    signoutButton.style.lineHeight = '1.75';
+                    signoutButton.style.whiteSpace = 'nowrap';
+                    signoutButton.style.textTransform = 'uppercase';
+                    signoutButton.style.backgroundColor = 'white';
+                    signoutButton.style.borderWidth = '1px';
+                    signoutButton.style.borderRadius = '0';
+                    signoutButton.style.borderColor = '#0073cf';
+                    signoutButton.style.padding = '5px 10px';
+                    signoutButton.innerHTML = '<span class="MuiButton-label">Sign Out</span>';
+                    signoutButton.addEventListener('click', () => {
+                EOL;
+                    
+                echo "window.location.href = '".$CLIENT_ROOT."/profile/index.php?submit=logout';";
+                echo <<<EOL
+                    });
+                    if (signInDiv) {
+                        signInDiv.insertBefore(signoutButton, signInDiv.firstChild);
+                    }
+                EOL;
+
+            } else {
+                //add sign in
+                echo <<<EOL
+                    const signinButton = document.createElement('button');
+                    signinButton.className = "MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-outlinedSizeSmall MuiButton-sizeSmall";
+                    signinButton.setAttribute('type', 'button');
+                    signinButton.setAttribute('tabindex', '0');
+                    signinButton.setAttribute('data-selenium', 'neon-menu.data-management-button');
+                    signinButton.style.color = '#0073cf';
+                    signinButton.style.fontSize = '0.55rem';
+                    signinButton.style.fontFamily = '"Inter", Helvetica, Arial, sans-serif';
+                    signinButton.style.fontWeight = '600';
+                    signinButton.style.lineHeight = '1.75';
+                    signinButton.style.whiteSpace = 'nowrap';
+                    signinButton.style.textTransform = 'uppercase';
+                    signinButton.style.backgroundColor = 'white';
+                    signinButton.style.borderWidth = '1px';
+                    signinButton.style.borderRadius = '0';
+                    signinButton.style.borderColor = '#0073cf';
+                    signinButton.style.padding = '5px 10px';
+                    signinButton.innerHTML = '<span class="MuiButton-label">Sign In</span>';
+                    signinButton.addEventListener('click', () => {
+                EOL;
+                    
+                echo "window.location.href = '".$CLIENT_ROOT."/profile/index.php';";
+                echo <<<EOL
+                    });
+                    const signInDiv = document.getElementById("header__authentication-ui");
+                    if (signInDiv) {
+                        signInDiv.insertBefore(signinButton, signInDiv.firstChild);
+                    }
+                EOL;
+            }
+            ?>
             
             //utilities and management menus
             <?php
@@ -159,6 +260,11 @@ elseif (array_key_exists('CollAdmin', $USER_RIGHTS) || array_key_exists('CollEdi
                     dataManagementButton.style.lineHeight = '1.75';
                     dataManagementButton.style.whiteSpace = 'nowrap';
                     dataManagementButton.style.textTransform = 'uppercase';
+                    dataManagementButton.style.backgroundColor = 'white';
+                    dataManagementButton.style.borderWidth = '1px';
+                    dataManagementButton.style.borderRadius = '0';
+                    dataManagementButton.style.borderColor = '#0073cf';
+                    dataManagementButton.style.padding = '5px 10px';
                     dataManagementButton.innerHTML = '<span class="MuiButton-label">Data Management</span>';
                     dataManagementButton.addEventListener('click', () => {
                 EOL;
@@ -166,7 +272,6 @@ elseif (array_key_exists('CollAdmin', $USER_RIGHTS) || array_key_exists('CollEdi
                 echo "window.location.href = '".$CLIENT_ROOT."/neon/index.php';";
                 echo <<<EOL
                     });
-                    const signInDiv = document.getElementById("header__authentication-ui");
                     if (signInDiv) {
                         signInDiv.insertBefore(dataManagementButton, signInDiv.firstChild);
                     }
@@ -185,6 +290,11 @@ elseif (array_key_exists('CollAdmin', $USER_RIGHTS) || array_key_exists('CollEdi
                     utilitiesButton.style.lineHeight = '1.75';
                     utilitiesButton.style.whiteSpace = 'nowrap';
                     utilitiesButton.style.textTransform = 'uppercase';
+                    utilitiesButton.style.backgroundColor = 'white';
+                    utilitiesButton.style.borderWidth = '1px';
+                    utilitiesButton.style.borderRadius = '0';
+                    utilitiesButton.style.borderColor = '#0073cf';
+                    utilitiesButton.style.padding = '5px 10px';
                     utilitiesButton.innerHTML = '<span class="MuiButton-label">Sitemap</span>';
                     utilitiesButton.addEventListener('click', () => {
                 EOL;
@@ -194,11 +304,10 @@ elseif (array_key_exists('CollAdmin', $USER_RIGHTS) || array_key_exists('CollEdi
                     });
                     if (signInDiv) {
                         signInDiv.insertBefore(utilitiesButton, signInDiv.firstChild);
-                    }
+                    };
                 EOL;                
             }
-            ?>
-            
+            ?>           
         };
     
     document.body.appendChild(reactScript);
