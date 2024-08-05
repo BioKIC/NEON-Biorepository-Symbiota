@@ -54,6 +54,18 @@ if ($SYMB_UID) {
 			return false;
 		}
 	</script>
+	<script>
+	function toggleDropdown(id, button) {
+		var content = document.getElementById(id);
+		if (content.style.display === "none" || content.style.display === "") {
+			content.style.display = "block";
+			button.innerHTML = "▲"; // Change to up arrow
+		} else {
+			content.style.display = "none";
+			button.innerHTML = "▼"; // Change to down arrow
+		}
+	}
+	</script>
 	<style type="text/css">
 		.field-div {
 			margin: 10px 0px;
@@ -560,7 +572,7 @@ if ($SYMB_UID) {
 				foreach ($collData as $cid => $collArr) {
 				?>
 					<tr>
-						<td style='text-align:center;vertical-align:top;'>
+						<td style="text-align:center; vertical-align:top;">
 							<?php
 							$iconStr = $collArr['icon'];
 							if ($iconStr) {
@@ -578,15 +590,19 @@ if ($SYMB_UID) {
 								<a href='collprofiles.php?collid=<?php echo $cid; ?>'>
 									<?php echo $collArr['collectionname']; ?>
 								</a>
+								<button onclick="toggleDropdown('dropdown-content-<?php echo $cid; ?>', this)" style="margin-bottom: 10px; border: none; background: none; cursor: pointer;">
+									▼
+								</button>
 							</h3>
-							<div style='margin:10px;'>
+							<!-- Dropdown content -->
+							<div id="dropdown-content-<?php echo $cid; ?>" style="display: none; margin: 10px;">
 								<?php
 								$collManager->setCollid($cid);
 								echo $collManager->getMetadataHtml($LANG, $LANG_TAG);
 								?>
-							</div>
-							<div style='margin:5px 0px 15px 10px;'>
-								<a href='collprofiles.php?collid=<?php echo $cid; ?>'><?php echo (isset($LANG['MORE_INFO']) ? $LANG['MORE_INFO'] : 'More Information'); ?></a>
+								<a href='collprofiles.php?collid=<?php echo $cid; ?>'>
+									<?php echo (isset($LANG['MORE_INFO']) ? $LANG['MORE_INFO'] : 'More Information'); ?>
+								</a>
 							</div>
 						</td>
 					</tr>
