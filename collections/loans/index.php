@@ -1,10 +1,12 @@
 <?php
 include_once('../../config/symbini.php');
 include_once($SERVER_ROOT.'/classes/OccurrenceLoans.php');
+include_once($SERVER_ROOT.'/classes/SiteMapManager.php');
 header("Content-Type: text/html; charset=".$CHARSET);
 if(!$SYMB_UID) header('Location: '.$CLIENT_ROOT.'/profile/index.php?refurl=../collections/loans/index.php?'.htmlspecialchars($_SERVER['QUERY_STRING'], ENT_QUOTES));
+$smManager = new SiteMapManager();
 
-$collid = $_REQUEST['collid'];
+$collid = array_key_exists('collid',$_REQUEST)?$_REQUEST['collid']:0;
 $searchTerm = array_key_exists('searchterm',$_POST)?$_POST['searchterm']:'';
 $displayAll = array_key_exists('displayall',$_POST)?$_POST['displayall']:0;
 $tabIndex = array_key_exists('tabindex',$_REQUEST)?$_REQUEST['tabindex']:0;
@@ -189,6 +191,9 @@ if($isEditor){
 	</div>
 	<!-- This is inner text! -->
 	<div id="innertext">
+		<h1>
+			Loan Management
+		</h1>
 		<?php
 		if($isEditor && $collid){
 			if($statusStr){
@@ -464,10 +469,31 @@ if($isEditor){
 				</div>
 			</div>
 			<?php
-		}
-		else{
-			if(!$isEditor) echo '<h2>You are not authorized to manage loans for this collection</h2>';
-			else echo '<h2>ERROR: unknown error, please contact system administrator</h2>';
+		}else{
+			?>
+			<div id="admincollection">
+				<h4>
+					List of collections you have permissions to manage
+				</h4>
+				<ul>
+				<?php
+				$smManager->setCollectionList();
+				if($collList = $smManager->getCollArr()){
+					foreach($collList as $k => $cArr){
+						echo '<li>';
+						echo '<a href="'.$CLIENT_ROOT.'/collections/loans/index.php?collid='.$k.'">';
+						echo $cArr['name'];
+						echo '</a>';
+						echo '</li>';
+					}
+				}
+				else{
+					echo "<li>".$LANG['NOEDITCOLL']."</li>";
+				}
+				?>
+				</ul>
+			</div>
+		<?php
 		}
 		?>
 	</div>
