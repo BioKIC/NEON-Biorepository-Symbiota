@@ -138,11 +138,77 @@
   "/neon/neon/index.php": [
     { "name": "Data & Samples", "href": "https://www.neonscience.org/data-samples" },
     { "name": "Sample Portal", "href": "http://localhost/neon/index.php" },
-    { "name": "Data Management" }
+    { "name": "Management Tools" }
     ],
   "/neon/sitemap.php": [
     { "name": "Data & Samples", "href": "https://www.neonscience.org/data-samples" },
     { "name": "Sample Portal", "href": "http://localhost/neon/index.php" },
     { "name": "Sitemap" }
+    ],
+  "/neon/neon/shipment/manifestloader.php": [
+    { "name": "Data & Samples", "href": "https://www.neonscience.org/data-samples" },
+    { "name": "Sample Portal", "href": "http://localhost/neon/index.php" },
+    { "name": "Management Tools", "href": "http://localhost/neon/neon/index.php" },
+    { "name": "Submit New Manifests" }
+    ],
+  "/neon/neon/shipment/samplecheckin.php": [
+    { "name": "Data & Samples", "href": "https://www.neonscience.org/data-samples" },
+    { "name": "Sample Portal", "href": "http://localhost/neon/index.php" },
+    { "name": "Management Tools", "href": "http://localhost/neon/neon/index.php" },
+    { "name": "Sample Check-in" }
+    ],
+  "/neon/neon/shipment/manifestsearch.php": [
+    { "name": "Data & Samples", "href": "https://www.neonscience.org/data-samples" },
+    { "name": "Sample Portal", "href": "http://localhost/neon/index.php" },
+    { "name": "Management Tools", "href": "http://localhost/neon/neon/index.php" },
+    { "name": "Manifest Search" }
+    ],
+  "/neon/collections/loans/index.php": [
+    { "name": "Data & Samples", "href": "https://www.neonscience.org/data-samples" },
+    { "name": "Sample Portal", "href": "http://localhost/neon/index.php" },
+    { "name": "Management Tools", "href": "http://localhost/neon/neon/index.php" },
+    { "name": "Loan Management" }
+    ],
+  "/neon/collections/reports/labelmanager.php": [
+    { "name": "Data & Samples", "href": "https://www.neonscience.org/data-samples" },
+    { "name": "Sample Portal", "href": "http://localhost/neon/index.php" },
+    { "name": "Management Tools", "href": "http://localhost/neon/neon/index.php" },
+    { "name": "Label Printing" }
+    ],
+  "/neon/neon/occurrenceharvester.php": [
+    { "name": "Data & Samples", "href": "https://www.neonscience.org/data-samples" },
+    { "name": "Sample Portal", "href": "http://localhost/neon/index.php" },
+    { "name": "Management Tools", "href": "http://localhost/neon/neon/index.php" },
+    { "name": "Batch Occurrence Harvester" }
+    ],
+  "/neon/neon/igsncontrol.php": [
+    { "name": "Data & Samples", "href": "https://www.neonscience.org/data-samples" },
+    { "name": "Sample Portal", "href": "http://localhost/neon/index.php" },
+    { "name": "Management Tools", "href": "http://localhost/neon/neon/index.php" },
+    { "name": "IGSN Control Panel" }
+    ],
+  "/neon/neon/shipment/harvesterreports.php": [
+    { "name": "Data & Samples", "href": "https://www.neonscience.org/data-samples" },
+    { "name": "Sample Portal", "href": "http://localhost/neon/index.php" },
+    { "name": "Management Tools", "href": "http://localhost/neon/neon/index.php" },
+    { "name": "Harvester Error Reports" }
+    ],
+  "/neon/neon/npsReportHandler.php": [
+    { "name": "Data & Samples", "href": "https://www.neonscience.org/data-samples" },
+    { "name": "Sample Portal", "href": "http://localhost/neon/index.php" },
+    { "name": "Management Tools", "href": "http://localhost/neon/neon/index.php" },
+    { "name": "NPS Year End Reports" }
+    ],
+  "/neon/neon/loans.php": [
+    { "name": "Data & Samples", "href": "https://www.neonscience.org/data-samples" },
+    { "name": "Sample Portal", "href": "http://localhost/neon/index.php" },
+    { "name": "Management Tools", "href": "http://localhost/neon/neon/index.php" },
+    { "name": "Loans Reports" }
+    ],
+  "/neon/neon/shipment/prepreports.php": [
+    { "name": "Data & Samples", "href": "https://www.neonscience.org/data-samples" },
+    { "name": "Sample Portal", "href": "http://localhost/neon/index.php" },
+    { "name": "Management Tools", "href": "http://localhost/neon/neon/index.php" },
+    { "name": "Preparation Reports" }
     ]
 }
