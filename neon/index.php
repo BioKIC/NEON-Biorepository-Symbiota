@@ -52,8 +52,8 @@ if($isEditor){
 				<li><a href="shipment/manifestloader.php">Submit New Manifests</a></li>
 				<li><a href="shipment/samplecheckin.php">Sample Check-in</a></li>
 				<li><a href="shipment/manifestsearch.php">Manifest Search</a></li>
-				<li><a href="collections/loans/index.php">Loan Management</a></li>
-				<li><a href="collections/reports/labelmanager.php">Label Printing</a></li>
+				<li><a href="../collections/loans/index.php">Loan Management</a></li>
+				<li><a href="../collections/reports/labelmanager.php">Label Printing</a></li>
 			</ul>
 			<h3>Data Management</h3>
 			<ul>
