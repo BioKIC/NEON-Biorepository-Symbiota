@@ -42,24 +42,33 @@ if($isEditor){
 	?>
 	<div id="innertext">
 		<fieldset style="padding:10px;">
-			<legend><b>Shipment Management Tools</b></legend>
-			<ul>
-				<li>Quick search:
+			<legend><b>Management Tools</b></legend>
+			<label>Quick search:</label>
 					<form name="sampleQuickSearchFrom" action="shipment/manifestviewer.php" method="post" style="display: inline" >
 						<input name="quicksearch" type="text" value="" onchange="this.form.submit()" style="width:400px;" />
 					</form>
-				</li>
-				<li><a href="shipment/manifestloader.php">Load and Process New Manifests</a></li>
-				<li><a href="shipment/samplecheckin.php">Sample Check-in Form</a></li>
-				<li><a href="shipment/manifestsearch.php">Manifest Listing and Advanced Search</a></li>
+			<h3>Sample Management</h3>
+			<ul>
+				<li><a href="shipment/manifestloader.php">Submit New Manifests</a></li>
+				<li><a href="shipment/samplecheckin.php">Sample Check-in</a></li>
+				<li><a href="shipment/manifestsearch.php">Manifest Search</a></li>
+				<li><a href="collections/loans/index.php">Loan Management</a></li>
+				<li><a href="collections/reports/labelmanager.php">Label Printing</a></li>
+			</ul>
+			<h3>Data Management</h3>
+			<ul>
 				<?php
 				if($IS_ADMIN){
 					?>
-					<li><a href="igsncontrol.php">NEON IGSN Control Panel</a></li>
 					<li><a href="occurrenceharvester.php">Batch Occurrence Harvester</a></li>
+					<li><a href="igsncontrol.php">NEON IGSN Control Panel</a></li>
 					<?php
 				}
 				?>
+				<li><a href="shipment/harvesterreports.php">Occurrence Harvester Error Reports</a></li>
+			</ul>
+			<h3>Reporting</h3>
+			<ul>
 				<li><a href="#" onclick="$('.nps-report').show();return false">NPS Year End Reports</a></li>
 				<li class="nps-report"><a href="npsReportHandler.php?dsid=110&year=2020" onclick="$('#BLDE20-working').show();">BLDE - 2020</a><span id="BLDE20-working" class="workingSpan"><img src="../images/workingcircle.gif" /></span></li>
 				<li class="nps-report"><a href="npsReportHandler.php?dsid=40&year=2020" onclick="$('#GRSM20-working').show();">GRSM - 2020</a><span id="GRSM20-working" class="workingSpan"><img src="../images/workingcircle.gif" /></span></li>
@@ -70,7 +79,6 @@ if($isEditor){
 				<li class="nps-report"><a href="npsReportHandler.php?dsid=99&year=2019" onclick="$('#LECO19-working').show();">LECO - 2019</a><span id="LECO19-working" class="workingSpan"><img src="../images/workingcircle.gif" /></span></li>
 				<li class="nps-report"><a href="npsReportHandler.php?dsid=131&year=2019" onclick="$('#YELL19-working').show();">YELL - 2019</a><span id="YELL19-working" class="workingSpan"><img src="../images/workingcircle.gif" /></span></li>
 				<li><a href="loans.php">Loans Reports</a></li>
-				<li><a href="shipment/harvesterreports.php">Occurrence Harvester Error Reports</a></li>
 				<li><a href="shipment/prepreports.php">Preparations Reports</a></li>
 			</ul>
 		</fieldset>
