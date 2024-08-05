@@ -3,11 +3,13 @@ include_once('../../config/symbini.php');
 @include_once('Image/Barcode.php');
 @include_once('Image/Barcode2.php');
 include_once($SERVER_ROOT.'/classes/OccurrenceLabel.php');
+include_once($SERVER_ROOT.'/classes/SiteMapManager.php');
+$smManager = new SiteMapManager();
 header("Content-Type: text/html; charset=".$CHARSET);
 
 if(!$SYMB_UID) header('Location: ../../profile/index.php?refurl=../collections/reports/labelmanager.php?'.htmlspecialchars($_SERVER['QUERY_STRING'], ENT_QUOTES));
 
-$collid = $_REQUEST['collid'];
+$collid = array_key_exists('collid',$_REQUEST)?$_REQUEST['collid']:'';
 $action = array_key_exists('submitaction',$_REQUEST)?$_REQUEST['submitaction']:'';
 
 //Sanitation
@@ -184,8 +186,11 @@ $labelFormatArr = $labelManager->getLabelFormatArr(true);
 	</div>
 	<!-- This is inner text! -->
 	<div id="innertext">
+		<h1>
+			Label Printing
+		</h1>
 		<?php
-		if($isEditor){
+		if($isEditor && $collid){
 			$reportsWritable = false;
 			if(is_writable($SERVER_ROOT.'/temp/report')) $reportsWritable = true;
 			if(!$reportsWritable){
@@ -482,16 +487,33 @@ $labelFormatArr = $labelManager->getLabelFormatArr(true);
 				</div>
 			</div>
 			<?php
-		}
-		else{
-			?>
-			<div style="font-weight:bold;margin:20px;font-weight:150%;">
-				You do not have permissions to print labels for this collection.
-				Please contact the site administrator to obtain the necessary permissions.
-			</div>
+			} else {
+				?>
+				<div id="admincollection">
+					<h4>
+						List of collections you have permissions to manage
+					</h4>
+					<ul>
+					<?php
+					$smManager->setCollectionList();
+					if($collList = $smManager->getCollArr()){
+						foreach($collList as $k => $cArr){
+							echo '<li>';
+							echo '<a href="'.$CLIENT_ROOT.'/collections/reports/labelmanager.php?collid='.$k.'">';
+							echo $cArr['name'];
+							echo '</a>';
+							echo '</li>';
+						}
+					}
+					else{
+						echo "<li>".$LANG['NOEDITCOLL']."</li>";
+					}
+					?>
+					</ul>
+				</div>
 			<?php
-		}
-		?>
+			}
+			?>
 	</div>
 	<?php
 	include($SERVER_ROOT.'/includes/footer.php');
