@@ -1,6 +1,7 @@
 <?php
 include_once($SERVER_ROOT.'/classes/OccurrenceTaxaManager.php');
 include_once($SERVER_ROOT.'/classes/OccurrenceSearchSupport.php');
+include_once($SERVER_ROOT . '/classes/OccurrenceManager.php');
 
 class ImageLibrarySearch extends OccurrenceTaxaManager{
 
@@ -18,12 +19,15 @@ class ImageLibrarySearch extends OccurrenceTaxaManager{
 	private $tidFocus;
 	private $searchSupportManager = null;
 	private $sqlWhere = '';
+	
+	protected $occurrenceManager;
 
 	function __construct() {
 		parent::__construct();
 		if(array_key_exists('TID_FOCUS', $GLOBALS) && preg_match('/^[\d,]+$/', $GLOBALS['TID_FOCUS'])){
 			$this->tidFocus = $GLOBALS['TID_FOCUS'];
 		}
+		$this->occurrenceManager = new OccurrenceManager();
 	}
 
 	function __destruct(){
@@ -34,7 +38,6 @@ class ImageLibrarySearch extends OccurrenceTaxaManager{
 		$retArr = Array();
 		$includeOccurrenceTable = false;
 		if($this->imageType == 1 || $this->imageType == 2 || ($this->dbStr && $this->dbStr != 'all')) $includeOccurrenceTable = true;
-		$this->setSqlWhere();
 		$this->setRecordCnt();
 		$sql = 'SELECT i.imgid, i.tid, i.url, i.thumbnailurl, i.originalurl, i.photographeruid, i.caption, i.occid, ';
 		if($includeOccurrenceTable) $sql .= 'IFNULL(t.sciname,o.sciname) as sciname ';
@@ -43,10 +46,10 @@ class ImageLibrarySearch extends OccurrenceTaxaManager{
 		$sql = 'SELECT DISTINCT i.imgid, o.tidinterpreted, t.tid, t.sciname, i.url, i.thumbnailurl, i.originalurl, i.photographeruid, i.caption, '.
 			'o.occid, o.stateprovince, o.catalognumber, CONCAT_WS("-",c.institutioncode, c.collectioncode) as instcode ';
 		*/
-		$sqlWhere = $this->sqlWhere;
+		$sqlWhere = $this->occurrenceManager->getSqlWhere();
 		if($this->imageCount == 'taxon') $sqlWhere .= 'GROUP BY sciname ';
 		elseif($this->imageCount == 'specimen') $sqlWhere .= 'GROUP BY i.occid ';
-		if($this->sqlWhere){
+		if($this->occurrenceManager->getSqlWhere()){
 			if($includeOccurrenceTable) $sqlWhere .= 'ORDER BY o.sciname ';
 			else  $sqlWhere .= 'ORDER BY t.sciname ';
 		}
@@ -155,7 +158,7 @@ class ImageLibrarySearch extends OccurrenceTaxaManager{
 			elseif($this->imageCount == 'specimen') $sql = "SELECT COUNT(DISTINCT i.occid) AS cnt ";
 			else $sql = "SELECT COUNT(DISTINCT i.imgid) AS cnt ";
 		}
-		$sql .= $this->getSqlBase().$this->sqlWhere;
+		$sql .= $this->getSqlBase().$this->occurrenceManager->getSqlWhere();;
 		$rs = $this->conn->query($sql);
 		if($r = $rs->fetch_object()){
 			$this->recordCount = $r->cnt;
@@ -186,7 +189,7 @@ class ImageLibrarySearch extends OccurrenceTaxaManager{
 		if($this->imageType == 1 || $this->imageType == 2){
 			$sql .= 'INNER JOIN omoccurrences o ON i.occid = o.occid INNER JOIN omcollections c ON o.collid = c.collid ';
 		}
-		elseif($this->dbStr && $this->dbStr != 'all'){
+		else{
 			$sql .= 'INNER JOIN omoccurrences o ON i.occid = o.occid ';
 		}
 		return $sql;
