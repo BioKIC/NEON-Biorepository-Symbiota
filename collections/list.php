@@ -3,6 +3,7 @@ include_once('../config/symbini.php');
 if ($LANG_TAG != 'en' && file_exists($SERVER_ROOT . '/content/lang/collections/list.' . $LANG_TAG . '.php')) include_once($SERVER_ROOT . '/content/lang/collections/list.' . $LANG_TAG . '.php');
 else include_once($SERVER_ROOT . '/content/lang/collections/list.en.php');
 include_once($SERVER_ROOT . '/classes/OccurrenceListManager.php');
+include_once($SERVER_ROOT.'/classes/ImageLibrarySearch.php');
 header("Content-Type: text/html; charset=" . $CHARSET);
 
 $taxonFilter = array_key_exists('taxonfilter', $_REQUEST) ? filter_var($_REQUEST['taxonfilter'], FILTER_SANITIZE_NUMBER_INT) : 0;
@@ -18,6 +19,8 @@ $searchVar = $collManager->getQueryTermStr();
 if ($targetTid && array_key_exists('mode', $_REQUEST)) $searchVar .= '&mode=voucher&targettid=' . $targetTid;
 $occurArr = $collManager->getSpecimenMap($pageNumber, $cntPerPage);
 $_SESSION['citationvar'] = $searchVar;
+
+$imgLibManager = new ImageLibrarySearch();
 ?>
 <html>
 
@@ -94,7 +97,7 @@ $_SESSION['citationvar'] = $searchVar;
 		fieldset { padding: 15px; }
 		legend { font-weight: bold; }
 		.checkbox-elem { margin: 5px; padding: 5px; border: 1px dashed orange; }
-		.ui-tabs .ui-tabs-nav li { width: 32%; }
+		.ui-tabs .ui-tabs-nav li { width: 24%; }
 		.ui-tabs .ui-tabs-nav li a { margin-left: 10px; }
 		.protected-span { color: red; }
 	</style>
@@ -138,6 +141,11 @@ $_SESSION['citationvar'] = $searchVar;
 				<li>
 					<a href="#maps">
 						<span><?php echo $LANG['TAB_MAP']; ?></span>
+					</a>
+				</li>
+				<li>
+					<a href="#imagesdiv">
+						<span id="imagetab">Images</span>
 					</a>
 				</li>
 			</ul>
@@ -409,6 +417,132 @@ $_SESSION['citationvar'] = $searchVar;
 					</div>
 				</form>
 			</div>
+			<div id="imagesdiv">
+				<div id="imagebox">
+					<?php
+					$imageArr = $imgLibManager->getImageArr($pageNumber,$cntPerPage);
+					$recordCnt = $imgLibManager->getRecordCnt();
+					if($imageArr){
+						?>
+						<form action="download/index.php" method="post" style="float:right" onsubmit="targetPopup(this)">
+							<button class="icon-button" title="Download Images">
+								<img src="../images/dl2.png" srcset="../images/download.svg" class="svg-icon" style="width:15px; height:15px" />
+							</button>
+							<input name="searchvar" type="hidden" value="<?php echo $searchVar; ?>" />
+							<input name="dltype" type="hidden" value="specimen" />
+						</form>
+						<?php
+						echo '<div style="clear:both;margin:5 0 5 0;"><hr /></div>';
+						
+						$lastPage = ceil($recordCnt / $cntPerPage);
+						$startPage = ($pageNumber > 4?$pageNumber - 4:1);
+						$endPage = ($lastPage > $startPage + 9?$startPage + 9:$lastPage);
+						$url = 'search.php?'.$imgLibManager->getQueryTermStr().'&submitaction=search';
+						$pageBar = '<div style="float:left" >';
+						if($startPage > 1){
+							$pageBar .= '<span class="pagination" style="margin-right:5px;"><a href="'.$url.'&page=1">First</a></span>';
+							$pageBar .= '<span class="pagination" style="margin-right:5px;"><a href="'.$url.'&page='.(($pageNumber - 10) < 1 ?1:$pageNumber - 10).'">&lt;&lt;</a></span>';
+						}
+						for($x = $startPage; $x <= $endPage; $x++){
+							if($pageNumber != $x){
+								$pageBar .= '<span class="pagination" style="margin-right:3px;"><a href="'.$url.'&page='.$x.'">'.$x.'</a></span>';
+							}
+							else{
+								$pageBar .= "<span class='pagination' style='margin-right:3px;font-weight:bold;'>".$x."</span>";
+							}
+						}
+						if(($lastPage - $startPage) >= 10){
+							$pageBar .= '<span class="pagination" style="margin-left:5px;"><a href="'.$url.'&page='.(($pageNumber + 10) > $lastPage?$lastPage:($pageNumber + 10)).'">&gt;&gt;</a></span>';
+							if($recordCnt < 10000) $pageBar .= '<span class="pagination" style="margin-left:5px;"><a href="'.$url.'&page='.$lastPage.'">Last</a></span>';
+						}
+						$pageBar .= '</div><div style="float:right;margin-top:4px;margin-bottom:8px;">';
+						$beginNum = ($pageNumber - 1)*$cntPerPage + 1;
+						$endNum = $beginNum + $cntPerPage - 1;
+						if($endNum > $recordCnt) $endNum = $recordCnt;
+						$pageBar .= "Page ".$pageNumber.", records ".number_format($beginNum)."-".number_format($endNum)." of ".number_format($recordCnt)."</div>";
+						$paginationStr = $pageBar;
+						echo '<div style="width:100%;">'.$paginationStr.'</div>';
+						echo '<div style="clear:both;margin:5 0 5 0;"><hr /></div>';
+						echo '<div style="width:98%;margin-left:auto;margin-right:auto;">';
+						$occArr = array();
+						$collArr = array();
+						if(isset($imageArr['occ'])){
+							$occArr = $imageArr['occ'];
+							unset($imageArr['occ']);
+							$collArr = $imageArr['coll'];
+							unset($imageArr['coll']);
+						}
+						foreach($imageArr as $imgArr){
+							$imgId = $imgArr['imgid'];
+							$imgUrl = $imgArr['url'];
+							$imgTn = $imgArr['thumbnailurl'];
+							if($imgTn){
+								$imgUrl = $imgTn;
+								if($IMAGE_DOMAIN && substr($imgTn,0,1)=='/') $imgUrl = $IMAGE_DOMAIN.$imgTn;
+							}
+							elseif($IMAGE_DOMAIN && substr($imgUrl,0,1)=='/'){
+								$imgUrl = $IMAGE_DOMAIN.$imgUrl;
+							}
+							?>
+							<div class="tndiv" style="margin-bottom:15px;margin-top:15px;">
+								<div class="tnimg">
+									<?php
+									$anchorLink = '';
+									if($imgArr['occid']){
+										$anchorLink = '<a href="#" onclick="openIndPU('.$imgArr['occid'].');return false;">';
+									}
+									else{
+										$anchorLink = '<a href="#" onclick="openImagePopup('.$imgId.');return false;">';
+									}
+									echo $anchorLink.'<img src="'.$imgUrl.'" /></a>';
+									?>
+								</div>
+								<div>
+									<?php
+									$sciname = $imgArr['sciname'];
+									if(!$sciname && $imgArr['occid'] && $occArr[$imgArr['occid']]['sciname']) $sciname = $occArr[$imgArr['occid']]['sciname'];
+									if($sciname){
+										if(strpos($imgArr['sciname'],' ')) $sciname = '<i>'.$sciname.'</i>';
+										if($imgArr['tid']) echo '<a href="'.$CLIENT_ROOT.'/taxa/index.php?tid='.$imgArr['tid'].'">';
+										echo $sciname;
+										if($imgArr['tid']) echo '</a>';
+										echo '<br />';
+									}
+									$photoAuthor = '';
+									$authorLink = '';
+									//if($imgArr['uid']){
+									//	$photoAuthor = $uidList[$imgArr['uid']];
+									//	if(strlen($photoAuthor) > 23){
+									//		$nameArr = explode(',',$photoAuthor);
+									//		$photoAuthor = array_shift($nameArr);
+									//	}
+									//}
+									if($fieldArr['catnum']){
+										echo $fieldArr['catnum'].'<br />';
+									}
+									if($imgArr['occid']){
+										echo '<a href="'.$CLIENT_ROOT.'/collections/individual/index.php?occid='.$imgArr['occid'].'"><b>Full Record Details</b></a>';
+									}
+									?>
+								</div>
+							</div>
+							<?php
+						}
+						echo "</div>";
+						if($lastPage > $startPage){
+							echo "<div style='clear:both;margin:5 0 5 0;'><hr /></div>";
+							echo '<div style="width:100%;">'.$paginationStr.'</div>';
+						}
+						?>
+						<div style="clear:both;"></div>
+						<?php
+					}
+					else{
+						echo '<h3>No images exist matching your search criteria. Please modify your search and try again.</h3>';
+					}
+					?>
+				</div>
+			</div>						
 		</div>
 	</div>
 	<?php
