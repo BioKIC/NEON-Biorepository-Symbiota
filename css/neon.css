@@ -76,13 +76,8 @@ h1 {
   font-weight: 400;
 }
 
-#innertext h1 {
-  font-size: 1.8rem;
-  padding: 0.8rem 0;
-}
-
 h2 {
-  font-size: 1.5rem;
+  font-size: 1.875rem;
   line-height: 1;
   font-weight: normal;
 }
@@ -94,7 +89,7 @@ h3 {
 }
 
 p {
-  font-size: 0.9rem;
+  font-size: 1rem;
   line-height: 1.6;
   margin: 1em 0;
   color: #565a5c;
@@ -360,3 +355,39 @@ p a {
 
 
 /******* 5. FOOTER ********/
+
+
+/******* 5. NEON CLASSES ********/
+
+.link--button.link--arrow {
+    display: inline-block;
+    border: 1px solid #0073CF;
+    border-radius: 2px;
+    font-weight: bold;
+    line-height: 24px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    text-decoration: none;
+    color: #0073CF;
+    margin: 0 0 0 0;
+    -webkit-transition: all 0.25s;
+    -o-transition: all 0.25s;
+    transition: all 0.25s;
+    padding: 0.5625rem 1.125rem 0.5625rem 1.125rem;
+    font-size: 0.8125rem;
+}
+
+.align-right {
+    float:right;
+    margin: 0 0 1.875rem 3.75rem;
+    max-width: 45%;
+}
+
+figure figcaption,figure .field--name-field-caption {
+    margin: 0;
+    background: #F5F6F7;
+    border-radius: 0px 0px 6px 6px;
+    padding: 1.125rem 1.875rem;
+    font-size: 15px;
+    color: #565A5C;
+}
