@@ -34,24 +34,24 @@
   "/neon/misc/sampleguidelines.php": [
     { "name": "Data & Samples", "href": "https://www.neonscience.org/data-samples" },
     { "name": "Sample Portal", "href": "http://localhost/neon/index.php" },
-    { "name": "Guidelines and Policies" }
+    { "name": "Sample Guidelines and Policies" }
     ],
   "/neon/misc/cite.php": [
     { "name": "Data & Samples", "href": "https://www.neonscience.org/data-samples" },
     { "name": "Sample Portal", "href": "http://localhost/neon/index.php" },
-    { "name": "Guidelines and Policies", "href": "http://localhost/neon/misc/sampleguidelines.php" },
+    { "name": "Sample Guidelines and Policies", "href": "http://localhost/neon/misc/sampleguidelines.php" },
     { "name": "Acknowledging and Citing" }
     ],
   "/neon/misc/samplepolicy.php": [
     { "name": "Data & Samples", "href": "https://www.neonscience.org/data-samples" },
     { "name": "Sample Portal", "href": "http://localhost/neon/index.php" },
-    { "name": "Guidelines and Policies", "href": "http://localhost/neon/misc/sampleguidelines.php" },
+    { "name": "Sample Guidelines and Policies", "href": "http://localhost/neon/misc/sampleguidelines.php" },
     { "name": "Sample Use Policy" }
     ],
   "/neon/misc/datasetpublishing.php": [
     { "name": "Data & Samples", "href": "https://www.neonscience.org/data-samples" },
     { "name": "Sample Portal", "href": "http://localhost/neon/index.php" },
-    { "name": "Guidelines and Policies", "href": "http://localhost/neon/misc/sampleguidelines.php" },
+    { "name": "Sample Guidelines and Policies", "href": "http://localhost/neon/misc/sampleguidelines.php" },
     { "name": "Dataset Publishing" }
     ],
   "/neon/misc/sampleservices.php": [
