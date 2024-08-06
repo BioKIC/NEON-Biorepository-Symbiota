@@ -104,6 +104,12 @@ p a {
   text-decoration: underline;
 }
 
+li {
+  font-size: 1rem;
+  line-height: 1.6;
+  color: #565a5c;
+}
+
 
 /******* 4. HEADER ********/
 
