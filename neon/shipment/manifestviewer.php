@@ -4,18 +4,25 @@ ini_set('display_errors', '1');
 include_once('../../config/symbini.php');
 include_once($SERVER_ROOT.'/neon/classes/ShipmentManager.php');
 include_once($SERVER_ROOT.'/neon/classes/OccurrenceHarvester.php');
-header("Content-Type: text/html; charset=".$CHARSET);
-if(!$SYMB_UID) header('Location: ../../profile/index.php?refurl='.$CLIENT_ROOT.'/neon/shipment/manifestviewer.php?'.$_SERVER['QUERY_STRING']);
+header('Content-Type: text/html; charset=' . $CHARSET);
+if(!$SYMB_UID) header('Location: ../../profile/index.php?refurl=' . $CLIENT_ROOT . '/neon/shipment/manifestviewer.php?' . $_SERVER['QUERY_STRING']);
 
-$action = array_key_exists("action",$_REQUEST)?$_REQUEST["action"]:"";
-$shipmentPK = array_key_exists("shipmentPK",$_REQUEST)?$_REQUEST["shipmentPK"]:"";
-$sampleFilter = isset($_REQUEST['sampleFilter'])?$_REQUEST['sampleFilter']:'';
-$quickSearchTerm = array_key_exists("quicksearch",$_REQUEST)?$_REQUEST["quicksearch"]:"";
+$shipmentPK = array_key_exists('shipmentPK', $_REQUEST) ? filter_var($_REQUEST['shipmentPK'], FILTER_SANITIZE_NUMBER_INT) : '';
+$sampleFilter = isset($_REQUEST['sampleFilter']) ? $_REQUEST['sampleFilter'] : '';
+$quickSearchTerm = array_key_exists('quicksearch', $_REQUEST) ? $_REQUEST['quicksearch'] : '';
+$quickSearchTerm = array_key_exists('quicksearch', $_REQUEST) ? $_REQUEST['quicksearch'] : '';
+$sortableTable = isset($_REQUEST['sortabletable']) ? filter_var($_REQUEST['sortabletable'], FILTER_SANITIZE_NUMBER_INT) : false;
+$action = array_key_exists('action', $_REQUEST) ? $_REQUEST['action'] : '';
 
 $shipManager = new ShipmentManager();
 if($shipmentPK) $shipManager->setShipmentPK($shipmentPK);
 elseif($quickSearchTerm) $shipmentPK = $shipManager->setQuickSearchTerm($quickSearchTerm);
-
+$sampleCntArr = $shipManager->getSampleCount();
+if($sortableTable === false){
+	//Variable has not been explicitly set by user, thus only turn on if manifest contains < 3000 samples
+	if($sampleCntArr['all'] < 3000) $sortableTable = 1;
+	else $sortableTable = 0;
+}
 $isEditor = false;
 if($IS_ADMIN) $isEditor = true;
 elseif(array_key_exists('CollAdmin',$USER_RIGHTS) || array_key_exists('CollEditor',$USER_RIGHTS)) $isEditor = true;
@@ -30,31 +37,43 @@ elseif(array_key_exists('CollAdmin',$USER_RIGHTS) || array_key_exists('CollEdito
 	?>
 	<script src="../../js/jquery-3.2.1.min.js" type="text/javascript"></script>
 	<script src="../../js/jquery-ui-1.12.1/jquery-ui.min.js" type="text/javascript"></script>
-	<link rel="stylesheet" href="../../js/datatables/datatables.css" />
-	<script src="../../js/datatables/datatables.js"></script>
+	<?php
+	if($sortableTable){
+		?>
+		<link rel="stylesheet" href="../../js/datatables/datatables.css" />
+		<script src="../../js/datatables/datatables.js"></script>
+
+		<?php
+	}
+	?>
 	<script type="text/javascript">
 		$(document).ready(function() {
 			$("#shipCheckinComment").keydown(function(evt){
 				var evt  = (evt) ? evt : ((event) ? event : null);
 				if ((evt.keyCode == 13)) { return false; }
 			});
-			$('#manifestTable').DataTable({
-				paging: false,
-				scrollY: 900,
-				scrollCollapse: true,
-				fixedHeader: true,
-				columnDefs: [{ orderable: false, targets: [0, -1]}],
+			<?php
+			if($sortableTable){
+				?>
+				$('#manifestTable').DataTable({
+					paging: false,
+					scrollY: 900,
+					scrollCollapse: true,
+					fixedHeader: true,
+					columnDefs: [{ orderable: false, targets: [0, -1]}],
+					});
+				$("#manifestTable").DataTable().rows().every( function () {
+					var tr = $(this.node());
+					var childValue = tr.data('child-value');
+
+					if (childValue !== undefined) {
+						this.child(childValue).show();
+						tr.addClass('shown');
+					}
 				});
-			$("#manifestTable").DataTable().rows().every( function () {
-				var tr = $(this.node());
-				var childValue = tr.data('child-value');
-			
-				if (childValue !== undefined) {
-					this.child(childValue).show();
-					tr.addClass('shown');
-				}
-			});
-			
+				<?php
+			}
+			?>
 		});
 
 		function batchCheckinFormVerify(f){
@@ -259,6 +278,15 @@ elseif(array_key_exists('CollAdmin',$USER_RIGHTS) || array_key_exists('CollEdito
 			$("#bindDiv").hide();
 		}
 
+		function tableSortHandlerChanged(cbElem){
+			let sortValue = 0;
+			if(cbElem.checked){
+				sortValue = 1;
+			}
+			document.getElementById('sortableTableID').value = sortValue;
+			document.refreshForm.submit();
+		}
+
 		function selectAll(cbObj){
 			var boxesChecked = true;
 			if(!cbObj.checked) boxesChecked = false;
@@ -320,9 +348,9 @@ elseif(array_key_exists('CollAdmin',$USER_RIGHTS) || array_key_exists('CollEdito
 		.displayFieldDiv { margin-bottom: 3px }
 		fieldset legend { font-weight: bold; }
 		.sample-row td { white-space: break-spaces; }
-		.sorting_1 { 
-		  background-color: #c0c0c0a6 !important; 
-		}		
+		.sorting_1 {
+		  background-color: #c0c0c0a6 !important;
+		}
 	</style>
 </head>
 <body>
@@ -416,14 +444,14 @@ include($SERVER_ROOT.'/includes/header.php');
 					if($shipArr['checkinTimestamp']){
 						echo '<div class="displayFieldDiv"><b>Shipment Check-in:</b> '.$shipArr['checkinUser'].' ('.$shipArr['checkinTimestamp'].')</div>';
 					}
-					$sampleCntArr = $shipManager->getSampleCount();
 					?>
 					<div style="margin-top:10px;">
 						<div class="displayFieldDiv">
 							<b>Total Sample Count:</b> <?php echo ($sampleCntArr['all']); ?>
 							<form name="refreshForm" action="manifestviewer.php" method="get" style="display:inline;" title="Refresh Counts and Sample Table">
-								<input name="shipmentPK" type="hidden" value="<?php echo $shipmentPK; ?>" />
-								<input type="image" src="../../images/refresh.png" style="width:15px;" />
+								<input name="shipmentPK" type="hidden" value="<?php echo $shipmentPK; ?>" >
+								<input id="sortableTableID" name="sortabletable" type="hidden" value="<?= $sortableTable ?>">
+								<input type="image" src="../../images/refresh.png" style="width:15px;" >
 							</form>
 						</div>
 						<div style="margin-left:15px">
@@ -521,6 +549,7 @@ include($SERVER_ROOT.'/includes/header.php');
 							<legend>Sample Listing</legend>
 							<div>
 								<div style="float:left">Records displayed: <?php echo count($sampleList); ?></div>
+								<div style="float:left; margin-left: 50px;"><input name="sorthandler" type="checkbox" onchange="tableSortHandlerChanged(this)" <?= ($sortableTable ? 'checked' : '') ?> > Make table sortable</div>
 								<div style="float:right;">
 									<form name="filterSampleForm" action="manifestviewer.php#samplePanel" method="post" style="">
 										Filter by:
@@ -541,6 +570,7 @@ include($SERVER_ROOT.'/includes/header.php');
 								if($sampleList){
 									?>
 									<form name="sampleListingForm" action="manifestviewer.php" method="post" onsubmit="return batchCheckinFormVerify(this)">
+										<input name="sortabletable" type="hidden" value="<?= $sortableTable ?>">
 										<table id="manifestTable" class="styledtable">
 											<thead>
 												<tr>
@@ -585,7 +615,7 @@ include($SERVER_ROOT.'/includes/header.php');
 															$propStr .= $category.': '.$propValue.'; ';
 														}
 													}
-													
+
 													$str = '';
 													if(isset($sampleArr['alternativeSampleID'])) $str .= '<div>Alternative Sample ID: '.$sampleArr['alternativeSampleID'].'</div>';
 													if(isset($sampleArr['hashedSampleID'])) $str .= '<div>Hashed Sample ID: '.$sampleArr['hashedSampleID'].'</div>';
@@ -611,7 +641,7 @@ include($SERVER_ROOT.'/includes/header.php');
 													} else {
 														echo '<tr class="sample-row">';
 													}
-													
+
 													echo '<td>';
 													echo '<input id="scbox-'.$samplePK.'" class="'.trim($classStr).'" name="scbox[]" type="checkbox" value="'.$samplePK.'" />';
 													echo ' <a href="#" onclick="return openSampleEditor('.$samplePK.')"><img src="../../images/edit.png" style="width:12px" /></a>';
@@ -894,7 +924,7 @@ include($SERVER_ROOT.'/includes/header.php');
 		}
 		else{
 			if($quickSearchTerm){
-				echo '<h2>Search term '.$quickSearchTerm.' failed to return results</h2>';
+				echo '<h2>Search term ' . htmlspecialchars($quickSearchTerm) . ' failed to return results</h2>';
 			}
 			else{
 				echo '<h2>Shipment does not exist or has been deleted</h2>';
