@@ -490,6 +490,7 @@ $labelFormatArr = $labelManager->getLabelFormatArr(true);
 			} else {
 				?>
 				<div id="admincollection">
+					<a href="<?php echo $CLIENT_ROOT; ?>/neon/loans.php">Loans Report</a>
 					<h4>
 						List of collections you have permissions to manage
 					</h4>
