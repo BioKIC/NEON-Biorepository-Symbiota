@@ -1,214 +1,214 @@
 {
-  "/neon/index.php": [
+  "/neon/portal/index.php": [
     { "name": "Data & Samples", "href": "https://www.neonscience.org/data-samples" },
     { "name": "Sample Portal" }
     ],
-  "/neon/neon/search/index.php": [
+  "/neon/portal/neon/search/index.php": [
     { "name": "Data & Samples", "href": "https://www.neonscience.org/data-samples" },
-    { "name": "Sample Portal", "href": "http://localhost/neon/index.php" },
+    { "name": "Sample Portal", "href": "https://biokic4.rc.asu.edu/neon/portal/index.php" },
     { "name": "Sample Search" }
     ],
-  "/neon/collections/list.php": [
+  "/neon/portal/collections/list.php": [
     { "name": "Data & Samples", "href": "https://www.neonscience.org/data-samples" },
-    { "name": "Sample Portal", "href": "http://localhost/neon/index.php" },
-    { "name": "Sample Search", "href": "http://localhost/neon/neon/search/index.php" },
+    { "name": "Sample Portal", "href": "https://biokic4.rc.asu.edu/neon/portal/index.php" },
+    { "name": "Sample Search", "href": "https://biokic4.rc.asu.edu/neon/portal/neon/search/index.php" },
     { "name": "Sample Search Results" }
   ],
-  "/neon/projects/index.php": [
+  "/neon/portal/projects/index.php": [
     { "name": "Data & Samples", "href": "https://www.neonscience.org/data-samples" },
-    { "name": "Sample Portal", "href": "http://localhost/neon/index.php" },
+    { "name": "Sample Portal", "href": "https://biokic4.rc.asu.edu/neon/portal/index.php" },
     { "name": "Species Checklists" }
     ],
   "Field Site url": [
     { "name": "Data & Samples", "href": "https://www.neonscience.org/data-samples" },
-    { "name": "Sample Portal", "href": "http://localhost/neon/index.php" },
-    { "name": "Species Checklists", "href": "http://localhost/neon/projects/index.php" },
+    { "name": "Sample Portal", "href": "https://biokic4.rc.asu.edu/neon/portal/index.php" },
+    { "name": "Species Checklists", "href": "https://biokic4.rc.asu.edu/neon/portal/projects/index.php" },
     { "name": "Field Site Diversity" }
     ],
   "Taxonomic Keys url": [
     { "name": "Data & Samples", "href": "https://www.neonscience.org/data-samples" },
-    { "name": "Sample Portal", "href": "http://localhost/neon/index.php" },
-    { "name": "Species Checklists", "href": "http://localhost/neon/projects/index.php" },
+    { "name": "Sample Portal", "href": "https://biokic4.rc.asu.edu/neon/portal/index.php" },
+    { "name": "Species Checklists", "href": "https://biokic4.rc.asu.edu/neon/portal/projects/index.php" },
     { "name": "Taxonomic Keys" }
     ],
-  "/neon/misc/sampleguidelines.php": [
+  "/neon/portal/misc/sampleguidelines.php": [
     { "name": "Data & Samples", "href": "https://www.neonscience.org/data-samples" },
-    { "name": "Sample Portal", "href": "http://localhost/neon/index.php" },
+    { "name": "Sample Portal", "href": "https://biokic4.rc.asu.edu/neon/portal/index.php" },
     { "name": "Sample Guidelines and Policies" }
     ],
-  "/neon/misc/cite.php": [
+  "/neon/portal/misc/cite.php": [
     { "name": "Data & Samples", "href": "https://www.neonscience.org/data-samples" },
-    { "name": "Sample Portal", "href": "http://localhost/neon/index.php" },
-    { "name": "Sample Guidelines and Policies", "href": "http://localhost/neon/misc/sampleguidelines.php" },
+    { "name": "Sample Portal", "href": "https://biokic4.rc.asu.edu/neon/portal/index.php" },
+    { "name": "Sample Guidelines and Policies", "href": "https://biokic4.rc.asu.edu/neon/portal/misc/sampleguidelines.php" },
     { "name": "Acknowledging and Citing" }
     ],
-  "/neon/misc/samplepolicy.php": [
+  "/neon/portal/misc/samplepolicy.php": [
     { "name": "Data & Samples", "href": "https://www.neonscience.org/data-samples" },
-    { "name": "Sample Portal", "href": "http://localhost/neon/index.php" },
-    { "name": "Sample Guidelines and Policies", "href": "http://localhost/neon/misc/sampleguidelines.php" },
+    { "name": "Sample Portal", "href": "https://biokic4.rc.asu.edu/neon/portal/index.php" },
+    { "name": "Sample Guidelines and Policies", "href": "https://biokic4.rc.asu.edu/neon/portal/misc/sampleguidelines.php" },
     { "name": "Sample Use Policy" }
     ],
-  "/neon/misc/datasetpublishing.php": [
+  "/neon/portal/misc/datasetpublishing.php": [
     { "name": "Data & Samples", "href": "https://www.neonscience.org/data-samples" },
-    { "name": "Sample Portal", "href": "http://localhost/neon/index.php" },
-    { "name": "Sample Guidelines and Policies", "href": "http://localhost/neon/misc/sampleguidelines.php" },
+    { "name": "Sample Portal", "href": "https://biokic4.rc.asu.edu/neon/portal/index.php" },
+    { "name": "Sample Guidelines and Policies", "href": "https://biokic4.rc.asu.edu/neon/portal/misc/sampleguidelines.php" },
     { "name": "Dataset Publishing" }
     ],
-  "/neon/misc/sampleservices.php": [
+  "/neon/portal/misc/sampleservices.php": [
     { "name": "Data & Samples", "href": "https://www.neonscience.org/data-samples" },
-    { "name": "Sample Portal", "href": "http://localhost/neon/index.php" },
+    { "name": "Sample Portal", "href": "https://biokic4.rc.asu.edu/neon/portal/index.php" },
     { "name": "Sample Services" }
     ],
-  "/neon/misc/samplerequest.php": [
+  "/neon/portal/misc/samplerequest.php": [
     { "name": "Data & Samples", "href": "https://www.neonscience.org/data-samples" },
-    { "name": "Sample Portal", "href": "http://localhost/neon/index.php" },
-    { "name": "Sample Services", "href": "http://localhost/neon/misc/sampleservices.php" },
+    { "name": "Sample Portal", "href": "https://biokic4.rc.asu.edu/neon/portal/index.php" },
+    { "name": "Sample Services", "href": "https://biokic4.rc.asu.edu/neon/portal/misc/sampleservices.php" },
     { "name": "Sample Request" }
     ],
-  "/neon/misc/samplearchiverequest.php": [
+  "/neon/portal/misc/samplearchiverequest.php": [
     { "name": "Data & Samples", "href": "https://www.neonscience.org/data-samples" },
-    { "name": "Sample Portal", "href": "http://localhost/neon/index.php" },
-    { "name": "Sample Services", "href": "http://localhost/neon/misc/sampleservices.php" },
+    { "name": "Sample Portal", "href": "https://biokic4.rc.asu.edu/neon/portal/index.php" },
+    { "name": "Sample Services", "href": "https://biokic4.rc.asu.edu/neon/portal/misc/sampleservices.php" },
     { "name": "Sample Archival Request" }
     ],
-  "/neon/misc/sampleanalysis.php": [
+  "/neon/portal/misc/sampleanalysis.php": [
     { "name": "Data & Samples", "href": "https://www.neonscience.org/data-samples" },
-    { "name": "Sample Portal", "href": "http://localhost/neon/index.php" },
+    { "name": "Sample Portal", "href": "https://biokic4.rc.asu.edu/neon/portal/index.php" },
     { "name": "Sample Analysis" }
     ],
-  "/neon/api/v2/documentation": [
+  "/neon/portal/api/v2/documentation": [
     { "name": "Data & Samples", "href": "https://www.neonscience.org/data-samples" },
-    { "name": "Sample Portal", "href": "http://localhost/neon/index.php" },
-    { "name": "Sample Analysis", "href": "http://localhost/neon/misc/sampleanalysis.php" },
+    { "name": "Sample Portal", "href": "https://biokic4.rc.asu.edu/neon/portal/index.php" },
+    { "name": "Sample Analysis", "href": "https://biokic4.rc.asu.edu/neon/portal/misc/sampleanalysis.php" },
     { "name": "Sample API" }
     ],
   "https://data.neonscience.org/sample-explorer": [
     { "name": "Data & Samples", "href": "https://www.neonscience.org/data-samples" },
-    { "name": "Sample Portal", "href": "http://localhost/neon/index.php" },
-    { "name": "Sample Analysis", "href": "http://localhost/neon/misc/sampleanalysis.php" },
+    { "name": "Sample Portal", "href": "https://biokic4.rc.asu.edu/neon/portal/index.php" },
+    { "name": "Sample Analysis", "href": "https://biokic4.rc.asu.edu/neon/portal/misc/sampleanalysis.php" },
     { "name": "Sample Explorer" }
     ],
-  "/neon/misc/samplehandling.php": [
+  "/neon/portal/misc/samplehandling.php": [
     { "name": "Data & Samples", "href": "https://www.neonscience.org/data-samples" },
-    { "name": "Sample Portal", "href": "http://localhost/neon/index.php" },
+    { "name": "Sample Portal", "href": "https://biokic4.rc.asu.edu/neon/portal/index.php" },
     { "name": "Sample Handling" }
     ],
   "https://www.neonscience.org/samples/sample-quality": [
     { "name": "Data & Samples", "href": "https://www.neonscience.org/data-samples" },
-    { "name": "Sample Portal", "href": "http://localhost/neon/index.php" },
-    { "name": "Sample Handling", "href": "http://localhost/neon/misc/samplehandling.php" },
+    { "name": "Sample Portal", "href": "https://biokic4.rc.asu.edu/neon/portal/index.php" },
+    { "name": "Sample Handling", "href": "https://biokic4.rc.asu.edu/neon/portal/misc/samplehandling.php" },
     { "name": "Sample Quality" }
     ],
   "https://www.neonscience.org/samples/sample-processing": [
     { "name": "Data & Samples", "href": "https://www.neonscience.org/data-samples" },
-    { "name": "Sample Portal", "href": "http://localhost/neon/index.php" },
-    { "name": "Sample Handling", "href": "http://localhost/neon/misc/samplehandling.php" },
+    { "name": "Sample Portal", "href": "https://biokic4.rc.asu.edu/neon/portal/index.php" },
+    { "name": "Sample Handling", "href": "https://biokic4.rc.asu.edu/neon/portal/misc/samplehandling.php" },
     { "name": "Sample Processing" }
     ],
   "https://www.neonscience.org/samples/sample-repositories": [
     { "name": "Data & Samples", "href": "https://www.neonscience.org/data-samples" },
-    { "name": "Sample Portal", "href": "http://localhost/neon/index.php" },
-    { "name": "Sample Handling", "href": "http://localhost/neon/misc/samplehandling.php" },
+    { "name": "Sample Portal", "href": "https://biokic4.rc.asu.edu/neon/portal/index.php" },
+    { "name": "Sample Handling", "href": "https://biokic4.rc.asu.edu/neon/portal/misc/samplehandling.php" },
     { "name": "Sample Repositories" }
     ],
   "https://www.neonscience.org/samples/sample-types": [
     { "name": "Data & Samples", "href": "https://www.neonscience.org/data-samples" },
-    { "name": "Sample Portal", "href": "http://localhost/neon/index.php" },
-    { "name": "Sample Handling", "href": "http://localhost/neon/misc/samplehandling.php" },
+    { "name": "Sample Portal", "href": "https://biokic4.rc.asu.edu/neon/portal/index.php" },
+    { "name": "Sample Handling", "href": "https://biokic4.rc.asu.edu/neon/portal/misc/samplehandling.php" },
     { "name": "Sample Types" }
     ],
   "https://www.neonscience.org/samples/soil-archive": [
     { "name": "Data & Samples", "href": "https://www.neonscience.org/data-samples" },
-    { "name": "Sample Portal", "href": "http://localhost/neon/index.php" },
-    { "name": "Sample Handling", "href": "http://localhost/neon/misc/samplehandling.php" },
+    { "name": "Sample Portal", "href": "https://biokic4.rc.asu.edu/neon/portal/index.php" },
+    { "name": "Sample Handling", "href": "https://biokic4.rc.asu.edu/neon/portal/misc/samplehandling.php" },
     { "name": "Soil Archives" }
     ],
   "https://www.neonscience.org/samples/soil-archive": [
     { "name": "Data & Samples", "href": "https://www.neonscience.org/data-samples" },
-    { "name": "Sample Portal", "href": "http://localhost/neon/index.php" },
-    { "name": "Sample Handling", "href": "http://localhost/neon/misc/samplehandling.php" },
+    { "name": "Sample Portal", "href": "https://biokic4.rc.asu.edu/neon/portal/index.php" },
+    { "name": "Sample Handling", "href": "https://biokic4.rc.asu.edu/neon/portal/misc/samplehandling.php" },
     { "name": "Soil Archives" }
     ],
-  "/neon/collections/misc/collprofiles.php": [
+  "/neon/portal/collections/misc/collprofiles.php": [
     { "name": "Data & Samples", "href": "https://www.neonscience.org/data-samples" },
-    { "name": "Sample Portal", "href": "http://localhost/neon/index.php" },
-    { "name": "Sample Handling", "href": "http://localhost/neon/misc/samplehandling.php" },
+    { "name": "Sample Portal", "href": "https://biokic4.rc.asu.edu/neon/portal/index.php" },
+    { "name": "Sample Handling", "href": "https://biokic4.rc.asu.edu/neon/portal/misc/samplehandling.php" },
     { "name": "Sample Collection Profiles" }
     ],
-  "/neon/neon/index.php": [
+  "/neon/portal/neon/index.php": [
     { "name": "Data & Samples", "href": "https://www.neonscience.org/data-samples" },
-    { "name": "Sample Portal", "href": "http://localhost/neon/index.php" },
+    { "name": "Sample Portal", "href": "https://biokic4.rc.asu.edu/neon/portal/index.php" },
     { "name": "Management Tools" }
     ],
-  "/neon/sitemap.php": [
+  "/neon/portal/sitemap.php": [
     { "name": "Data & Samples", "href": "https://www.neonscience.org/data-samples" },
-    { "name": "Sample Portal", "href": "http://localhost/neon/index.php" },
+    { "name": "Sample Portal", "href": "https://biokic4.rc.asu.edu/neon/portal/index.php" },
     { "name": "Sitemap" }
     ],
-  "/neon/neon/shipment/manifestloader.php": [
+  "/neon/portal/neon/shipment/manifestloader.php": [
     { "name": "Data & Samples", "href": "https://www.neonscience.org/data-samples" },
-    { "name": "Sample Portal", "href": "http://localhost/neon/index.php" },
-    { "name": "Management Tools", "href": "http://localhost/neon/neon/index.php" },
+    { "name": "Sample Portal", "href": "https://biokic4.rc.asu.edu/neon/portal/index.php" },
+    { "name": "Management Tools", "href": "https://biokic4.rc.asu.edu/neon/portal/neon/index.php" },
     { "name": "Submit New Manifests" }
     ],
-  "/neon/neon/shipment/samplecheckin.php": [
+  "/neon/portal/neon/shipment/samplecheckin.php": [
     { "name": "Data & Samples", "href": "https://www.neonscience.org/data-samples" },
-    { "name": "Sample Portal", "href": "http://localhost/neon/index.php" },
-    { "name": "Management Tools", "href": "http://localhost/neon/neon/index.php" },
+    { "name": "Sample Portal", "href": "https://biokic4.rc.asu.edu/neon/portal/index.php" },
+    { "name": "Management Tools", "href": "https://biokic4.rc.asu.edu/neon/portal/neon/index.php" },
     { "name": "Sample Check-in" }
     ],
-  "/neon/neon/shipment/manifestsearch.php": [
+  "/neon/portal/neon/shipment/manifestsearch.php": [
     { "name": "Data & Samples", "href": "https://www.neonscience.org/data-samples" },
-    { "name": "Sample Portal", "href": "http://localhost/neon/index.php" },
-    { "name": "Management Tools", "href": "http://localhost/neon/neon/index.php" },
+    { "name": "Sample Portal", "href": "https://biokic4.rc.asu.edu/neon/portal/index.php" },
+    { "name": "Management Tools", "href": "https://biokic4.rc.asu.edu/neon/portal/neon/index.php" },
     { "name": "Manifest Search" }
     ],
-  "/neon/collections/loans/index.php": [
+  "/neon/portal/collections/loans/index.php": [
     { "name": "Data & Samples", "href": "https://www.neonscience.org/data-samples" },
-    { "name": "Sample Portal", "href": "http://localhost/neon/index.php" },
-    { "name": "Management Tools", "href": "http://localhost/neon/neon/index.php" },
+    { "name": "Sample Portal", "href": "https://biokic4.rc.asu.edu/neon/portal/index.php" },
+    { "name": "Management Tools", "href": "https://biokic4.rc.asu.edu/neon/portal/neon/index.php" },
     { "name": "Loan Management" }
     ],
-  "/neon/collections/reports/labelmanager.php": [
+  "/neon/portal/collections/reports/labelmanager.php": [
     { "name": "Data & Samples", "href": "https://www.neonscience.org/data-samples" },
-    { "name": "Sample Portal", "href": "http://localhost/neon/index.php" },
-    { "name": "Management Tools", "href": "http://localhost/neon/neon/index.php" },
+    { "name": "Sample Portal", "href": "https://biokic4.rc.asu.edu/neon/portal/index.php" },
+    { "name": "Management Tools", "href": "https://biokic4.rc.asu.edu/neon/portal/neon/index.php" },
     { "name": "Label Printing" }
     ],
-  "/neon/neon/occurrenceharvester.php": [
+  "/neon/portal/neon/occurrenceharvester.php": [
     { "name": "Data & Samples", "href": "https://www.neonscience.org/data-samples" },
-    { "name": "Sample Portal", "href": "http://localhost/neon/index.php" },
-    { "name": "Management Tools", "href": "http://localhost/neon/neon/index.php" },
+    { "name": "Sample Portal", "href": "https://biokic4.rc.asu.edu/neon/portal/index.php" },
+    { "name": "Management Tools", "href": "https://biokic4.rc.asu.edu/neon/portal/neon/index.php" },
     { "name": "Batch Occurrence Harvester" }
     ],
-  "/neon/neon/igsncontrol.php": [
+  "/neon/portal/neon/igsncontrol.php": [
     { "name": "Data & Samples", "href": "https://www.neonscience.org/data-samples" },
-    { "name": "Sample Portal", "href": "http://localhost/neon/index.php" },
-    { "name": "Management Tools", "href": "http://localhost/neon/neon/index.php" },
+    { "name": "Sample Portal", "href": "https://biokic4.rc.asu.edu/neon/portal/index.php" },
+    { "name": "Management Tools", "href": "https://biokic4.rc.asu.edu/neon/portal/neon/index.php" },
     { "name": "IGSN Control Panel" }
     ],
-  "/neon/neon/shipment/harvesterreports.php": [
+  "/neon/portal/neon/shipment/harvesterreports.php": [
     { "name": "Data & Samples", "href": "https://www.neonscience.org/data-samples" },
-    { "name": "Sample Portal", "href": "http://localhost/neon/index.php" },
-    { "name": "Management Tools", "href": "http://localhost/neon/neon/index.php" },
+    { "name": "Sample Portal", "href": "https://biokic4.rc.asu.edu/neon/portal/index.php" },
+    { "name": "Management Tools", "href": "https://biokic4.rc.asu.edu/neon/portal/neon/index.php" },
     { "name": "Harvester Error Reports" }
     ],
-  "/neon/neon/npsReportHandler.php": [
+  "/neon/portal/neon/npsReportHandler.php": [
     { "name": "Data & Samples", "href": "https://www.neonscience.org/data-samples" },
-    { "name": "Sample Portal", "href": "http://localhost/neon/index.php" },
-    { "name": "Management Tools", "href": "http://localhost/neon/neon/index.php" },
+    { "name": "Sample Portal", "href": "https://biokic4.rc.asu.edu/neon/portal/index.php" },
+    { "name": "Management Tools", "href": "https://biokic4.rc.asu.edu/neon/portal/neon/index.php" },
     { "name": "NPS Year End Reports" }
     ],
-  "/neon/neon/loans.php": [
+  "/neon/portal/neon/loans.php": [
     { "name": "Data & Samples", "href": "https://www.neonscience.org/data-samples" },
-    { "name": "Sample Portal", "href": "http://localhost/neon/index.php" },
-    { "name": "Management Tools", "href": "http://localhost/neon/neon/index.php" },
+    { "name": "Sample Portal", "href": "https://biokic4.rc.asu.edu/neon/portal/index.php" },
+    { "name": "Management Tools", "href": "https://biokic4.rc.asu.edu/neon/portal/neon/index.php" },
     { "name": "Loans Reports" }
     ],
-  "/neon/neon/shipment/prepreports.php": [
+  "/neon/portal/neon/shipment/prepreports.php": [
     { "name": "Data & Samples", "href": "https://www.neonscience.org/data-samples" },
-    { "name": "Sample Portal", "href": "http://localhost/neon/index.php" },
-    { "name": "Management Tools", "href": "http://localhost/neon/neon/index.php" },
+    { "name": "Sample Portal", "href": "https://biokic4.rc.asu.edu/neon/portal/index.php" },
+    { "name": "Management Tools", "href": "https://biokic4.rc.asu.edu/neon/portal/neon/index.php" },
     { "name": "Preparation Reports" }
     ]
 }
