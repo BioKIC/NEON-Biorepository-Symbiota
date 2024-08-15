@@ -161,7 +161,7 @@ if ($SYMB_UID) {
 									<?php echo (isset($LANG['ADD_NEW_OCCUR']) ? $LANG['ADD_NEW_OCCUR'] : 'Add New Occurrence Record'); ?>
 								</a>
 							</li>
-							<?php
+<!--							<?php
 							if ($collData['colltype'] == 'Preserved Specimens') {
 							?>
 								<li style="margin-left:10px">
@@ -176,7 +176,7 @@ if ($SYMB_UID) {
 								</li>
 							<?php
 							}
-							?>
+							?>-->
 							<li>
 								<a href="../editor/occurrencetabledisplay.php?displayquery=1&collid=<?php echo $collid; ?>">
 									<?php echo (isset($LANG['EDIT_EXISTING']) ? $LANG['EDIT_EXISTING'] : 'Edit Existing Occurrence Records'); ?>
@@ -192,11 +192,11 @@ if ($SYMB_UID) {
 									<?php echo (isset($LANG['PRINT_LABELS']) ? $LANG['PRINT_LABELS'] : 'Print Specimen Labels'); ?>
 								</a>
 							</li>
-							<li>
+<!--							<li>
 								<a href="../reports/annotationmanager.php?collid=<?php echo $collid; ?>">
 									<?php echo (isset($LANG['PRINT_ANNOTATIONS']) ? $LANG['PRINT_ANNOTATIONS'] : 'Print Annotations Labels'); ?>
 								</a>
-							</li>
+							</li>-->
 							<?php
 							if ($collManager->traitCodingActivated()) {
 							?>
@@ -218,11 +218,11 @@ if ($SYMB_UID) {
 							<?php
 							}
 							?>
-							<li>
+<!--							<li>
 								<a href="../georef/batchgeoreftool.php?collid=<?php echo $collid; ?>">
 									<?php echo (isset($LANG['BATCH_GEOREF']) ? $LANG['BATCH_GEOREF'] : 'Batch Georeference Specimens'); ?>
 								</a>
-							</li>
+							</li>-->
 							<?php
 							if ($collData['colltype'] == 'Preserved Specimens') {
 							?>
