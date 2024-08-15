@@ -215,12 +215,6 @@ li {
 
 /* END OF TOP BAR (GLOBAL MENU) */
 
-#header {
-  /*position: fixed;*/
-  text-align: center !important;
-}
-
-
 /* Medium screens */
 
 @media (min-width: 426px) and (max-width: 1024px) {
