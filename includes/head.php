@@ -141,6 +141,29 @@ elseif (array_key_exists('CollAdmin', $USER_RIGHTS) || array_key_exists('CollEdi
             
             footerLogoDiv.appendChild(newImage1);
             footerLogoDiv.appendChild(newImage2);
+            
+        // image resizings
+            function updateElementWidth() {	
+                // blue div
+                var neonPageContent = document.querySelector('div[data-selenium="neon-page.content"]');
+                var neonPageContentWidth = neonPageContent.offsetWidth;
+    
+                var muiContainer = document.querySelector('div.MuiContainer-root');
+                var muiContainerStyle = window.getComputedStyle(muiContainer);
+                var muiContainerRightMargin = parseFloat(muiContainerStyle.marginRight);
+    
+                var neonPageContentStyle = window.getComputedStyle(neonPageContent);
+                var neonPageContentpaddingLeft = parseFloat(neonPageContentStyle.paddingLeft);
+                
+                document.getElementById('blue-div').style.width = (neonPageContentWidth + muiContainerRightMargin) + 'px';
+                document.getElementById('statistics-container').style.width = (neonPageContentWidth - (2* neonPageContentpaddingLeft)) + 'px'; 
+            }
+        
+            // Update the width on initial load
+            updateElementWidth();
+        
+            // Update the width on window resize
+            window.addEventListener('resize', updateElementWidth);
 
             //sign in and sign out
             <?php
