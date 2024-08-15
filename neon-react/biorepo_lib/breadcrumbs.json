@@ -163,6 +163,13 @@
     { "name": "Management Tools", "href": "http://localhost/neon/neon/index.php" },
     { "name": "Manifest Search" }
     ],
+  "/neon/neon/shipment/manifestviewer.php": [
+    { "name": "Data & Samples", "href": "https://www.neonscience.org/data-samples" },
+    { "name": "Sample Portal", "href": "http://localhost/neon/index.php" },
+    { "name": "Management Tools", "href": "http://localhost/neon/neon/index.php" },
+    { "name": "Manifest Search", "href": "http://localhost/neon/neon/shipment/manifestsearch.php" },
+    { "name": "Manifest Viewer" }
+    ],
   "/neon/collections/loans/index.php": [
     { "name": "Data & Samples", "href": "https://www.neonscience.org/data-samples" },
     { "name": "Sample Portal", "href": "http://localhost/neon/index.php" },
