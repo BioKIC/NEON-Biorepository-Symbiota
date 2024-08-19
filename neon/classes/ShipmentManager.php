@@ -942,6 +942,10 @@ class ShipmentManager{
 				$sqlWhere .= 'AND (s.trackingNumber = "'.$trackingId.'") ';
 				$this->searchArr['trackingNumber'] = $_REQUEST['trackingNumber'];
 			}
+			if(isset($_REQUEST['dynamicProperties']) && $_REQUEST['dynamicProperties']){
+				$sqlWhere .= 'AND (m.dynamicProperties LIKE "%'.$this->cleanInStr($_REQUEST['dynamicProperties']).'%") ';
+				$this->searchArr['dynamicProperties'] = $_REQUEST['dynamicProperties'];
+			}
 			if(isset($_REQUEST['dateShippedStart']) && $_REQUEST['dateShippedStart']){
 				$sqlWhere .= 'AND (s.dateShipped > "'.$_REQUEST['dateShippedStart'].'") ';
 				$this->searchArr['dateShippedStart'] = $_REQUEST['dateShippedStart'];
