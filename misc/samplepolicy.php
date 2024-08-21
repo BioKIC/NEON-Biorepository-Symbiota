@@ -57,7 +57,7 @@ header("Content-Type: text/html; charset=".$CHARSET);
             <p>We will generally be able to fulfill requests of < 100 samples within 4 weeks of approval. Larger requests or those that require additional sample processing may take significantly longer, and we will work with you to determine a timeline.</p>
           </li>
           <li>
-            <p>Researchers are responsible for proper handling of all samples, adhering to all aspects of the sample use agreement, and following all NEON and National Science Foundation data reporting and citation policies. The NEON Biorepository may elect not to approve future requests from researchers who do not adhere to these guidelines.</p>
+            <p>Researchers are responsible for proper handling of all samples, adhering to all aspects of the sample use agreement, and following all NEON and U.S. National Science Foundation data reporting and citation policies. The NEON Biorepository may elect not to approve future requests from researchers who do not adhere to these guidelines.</p>
           </li>
       <p>Please read our <a href="https://docs.google.com/document/d/1C1vSiysUJXSwgg5q2w0y7AP6i2wmCnUQ/edit?usp=sharing&ouid=111202796006164717361&rtpof=true&sd=true" target="_blank" rel="noopener noreferrer">General Guidelines for Sample Use</a> and the <a href="https://drive.google.com/file/d/1UwUH5LcfdN7n-CLzFvxuaAQzRxo5lZp8/view?usp=sharing" target="_blank" rel="noopener noreferrer">NEON Sample Use Policy</a> for more details and <a href="mailto:biorepo@asu.edu">contact us</a> for more information.</p>
 		</div>
