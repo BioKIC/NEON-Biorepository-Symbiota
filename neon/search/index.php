@@ -222,7 +222,7 @@ $siteData = new DatasetsMetadata();
 									<label for="hasgenetic">Limit to specimens with genetic data</label>
 								</div>
 								<div>
-									<input type="checkbox" name="availableforloan" value=1 data-chip="Only available for loan" checked>
+									<input type="checkbox" name="availableforloan" value=1 data-chip="Only available for loan">
 									<label for="availableforloan">Limit to specimens available for loan</label>
 								</div>
 							</div>
