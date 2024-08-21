@@ -294,6 +294,12 @@ body {
     background-color: #dfdfdf;
   }
   
+  table,
+  .ui-widget {
+    font-family: 'Inter', sans-serif !important;
+    font-size: 1em;
+  }
+  
   /* misc */
   
   div.genericpopup {
