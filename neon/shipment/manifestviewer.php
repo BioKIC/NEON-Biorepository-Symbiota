@@ -355,7 +355,6 @@ elseif(array_key_exists('CollAdmin',$USER_RIGHTS) || array_key_exists('CollEdito
 		}
 		
 		let timerInterval;
-		let currentUser = "<?php echo htmlspecialchars($USERNAME, ENT_QUOTES, 'UTF-8'); ?>"; // PHP Username
 	
 		// Check if a session is already active on page load
 		document.addEventListener('DOMContentLoaded', function() {
@@ -383,8 +382,7 @@ elseif(array_key_exists('CollAdmin',$USER_RIGHTS) || array_key_exists('CollEdito
 					'Content-Type': 'application/json'
 				},
 				body: JSON.stringify({
-					action: 'start_session',
-					user: currentUser
+					action: 'start_session'
 				})
 			}).then(response => response.json())
 			  .then(data => {

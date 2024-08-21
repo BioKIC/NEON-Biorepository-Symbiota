@@ -10,7 +10,6 @@ $data = json_decode($request_body, true);
 
 if ($data['action'] === 'start_session') {
     $session_data = [
-        'user' => $data['user'],
         'start_time' => date('Y-m-d H:i:s'),
         'end_time' => null
     ];
