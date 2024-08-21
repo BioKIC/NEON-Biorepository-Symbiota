@@ -365,8 +365,14 @@ elseif(array_key_exists('CollAdmin',$USER_RIGHTS) || array_key_exists('CollEdito
 			<?php else: ?>
 				toggleButtons(false); // Enable Start and Disable Stop
 			<?php endif; ?>
-			document.getElementById('start_session').addEventListener('click', startSession);
-			document.getElementById('stop_session').addEventListener('click', stopSession);
+			document.querySelectorAll('.start_session').forEach(button => {
+				button.addEventListener('click', startSession);
+			});
+		
+			// Attach event listeners to all stop session buttons
+			document.querySelectorAll('.stop_session').forEach(button => {
+				button.addEventListener('click', stopSession);
+			});
 		});
 	
 		function startSession() {
@@ -426,19 +432,33 @@ elseif(array_key_exists('CollAdmin',$USER_RIGHTS) || array_key_exists('CollEdito
 				minutes = String(minutes).padStart(2, '0');
 				seconds = String(seconds).padStart(2, '0');
 				
-				document.getElementById('timer').textContent = hours + ":" + minutes + ":" + seconds;
+				let timers = document.querySelectorAll('.timer');
+				timers.forEach(timer => {
+					timer.textContent = hours + ":" + minutes + ":" + seconds;
+				});
 			}, 1000);
 		}
 	
 		function stopTimer() {
 			// Clear the timer interval and reset the timer display
 			clearInterval(timerInterval);
-			document.getElementById('timer').textContent = "00:00:00";
+			let timers = document.querySelectorAll('.timer');
+			timers.forEach(timer => {
+				timer.textContent = "00:00:00";
+			});
 		}
 		
 		function toggleButtons(isSessionActive) {
-			document.getElementById('start_session').disabled = isSessionActive;
-			document.getElementById('stop_session').disabled = !isSessionActive;
+			let startButtons = document.querySelectorAll('.start_session');
+			let stopButtons = document.querySelectorAll('.stop_session');
+		
+			startButtons.forEach(button => {
+				button.disabled = isSessionActive;
+			});
+		
+			stopButtons.forEach(button => {
+				button.disabled = !isSessionActive;
+			});
 		}
 	</script>
 	<style type="text/css">
@@ -564,9 +584,9 @@ include($SERVER_ROOT.'/includes/header.php');
 							<div id="sampleCheckinDiv" style="margin-top:15px;background-color:white;top:50px;right:200px">
 								<fieldset style="padding:10px;width:500px">
 									<legend>Sample Check-in</legend>
-									<input type="radio" id="start_session" name="session" value="start"> Start Session
-									<input type="radio" id="stop_session" name="session" value="stop"> Stop Session
-									<div id="timer">00:00:00</div>
+									<input type="radio" class="start_session" name="session" value="start"> Start Session
+									<input type="radio" class="stop_session" name="session" value="stop"> Stop Session
+									<div class="timer">00:00:00</div>
 									<form name="submitform" method="post" onsubmit="checkinSample(this); return false;">
 										<div id="popoutDiv" style="float:right"><a href="#" onclick="popoutCheckinBox();return false" title="Popout Sample Check-in Box">&gt;&gt;</a></div>
 										<div id="bindDiv" style="float:right;display:none"><a href="#" onclick="bindCheckinBox();return false" title="Bind Sample Check-in Box to top of form">&lt;&lt;</a></div>
@@ -806,6 +826,11 @@ include($SERVER_ROOT.'/includes/header.php');
 												<?php
 												if($shipArr['checkinTimestamp']){
 													?>
+													<div class="displayFieldDiv">
+														<input type="radio" class="start_session" name="session" value="start"> Start Session
+														<input type="radio" class="stop_session" name="session" value="stop"> Stop Session
+														<div class="timer">00:00:00</div>
+													</div>	
 													<div class="displayFieldDiv">
 														<b>Sample Received:</b>
 														<input name="sampleReceived" type="radio" value="1" checked /> Yes
