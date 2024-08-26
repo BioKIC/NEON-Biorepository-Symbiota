@@ -57,7 +57,7 @@ header("Content-Type: text/html; charset=" . $CHARSET);
 			<h3>Collections and Samples</h3>
 			<li><a href="#h.umiu0nb3f0np">How do I search for samples?</a></li>
 			<li><a href="#h.o92dard0pqfu">How can I get more information about a collection that interests me?</a></li>
-			<li><a href="#h.o8zdx5f5mqid">Why are there "External Collections" in your Data Portal? </a></li>
+			<li><a href="#h.o8zdx5f5mqid">What are "All Additional NEON Collections?</a></li>
 			<li><a href="#h.ec4rhmcfzhf">Some samples have a scientific name that contains a "/" (e.g. "<span style="font-style: italic">Peromyscus leucopus/maniculatus</span>). What do these names mean?</a>
 			</li>
 			<li><a href="#h.98ri20ckc2zf">I'd like to search for samples from ecological or functional groups that correspond to different NEON sampling protocols (e.g. "Invertebrates"). Is there a way to filter search results by these criteria?</a>
@@ -118,13 +118,8 @@ header("Content-Type: text/html; charset=" . $CHARSET);
 		</article>
 
 		<article>
-			<h3 class="anchor" id="h.o8zdx5f5mqid">Why are there "External Collections" in your Data Portal?</h3>
-			<p>External Collections are of two types:</p>
-			<ol start="1">
-				<li><b>All Additional NEON Collections:</b> These are collections of NEON samples not held at the NEON Biorepository (e.g. carabid specimens at the Essig Museum of Entomology and legacy small mammal samples at the Museum of Southwestern Biology). These are generally legacy NEON samples collected before the initiation of the NEON Biorepository in late-2018 or reference collections held by contracted taxonomic experts. Include these samples to see results for all samples collected as part of NEON protocols.</li>
-				<li><b>All Other Collections from NEON sites:</b> These are collections of non-NEON samples that were collected at what are now NEON sites (e.g. SCAN Portal Network Arthropod Specimens and SEINet Portal Network Botanical Specimens). These samples are not part of the NEON Biorepository and are generally not held at Arizona State University. Search these collections to better understand background measures of diversity at NEON sites.</li>
-			</ol>
-			<p>Do not select these collections in the Sample Search or Map Search collections pages if you only wish to explore NEON Biorepository samples. If samples of interest are not housed at the NEON Biorepository, access requires that researchers reach out to the relevant institution.</p>
+			<h3 class="anchor" id="h.o8zdx5f5mqid">What are "All Additional NEON Collections"?</h3>
+			<p>These are collections of NEON samples not held at the NEON Biorepository (e.g. carabid specimens at the Essig Museum of Entomology and legacy small mammal samples at the Museum of Southwestern Biology). These are generally legacy NEON samples collected before the initiation of the NEON Biorepository in late-2018 or reference collections held by contracted taxonomic experts. Include these samples to see results for all samples collected as part of NEON protocols. Do not select these collections in the Sample Search or Map Search collections pages if you only wish to explore NEON Biorepository samples. If samples of interest are not housed at the NEON Biorepository, access requires that researchers reach out to the relevant institution.</p>
 		</article>
 
 		<article>

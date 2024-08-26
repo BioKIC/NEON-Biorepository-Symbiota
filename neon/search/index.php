@@ -90,17 +90,6 @@ $siteData = new DatasetsMetadata();
 										}; ?>
 									</li>
 								</ul>
-								<ul id="ext-collections-list">
-									<li><input id="all-ext" data-chip="All Ext Colls" type="checkbox" class="all-selector" data-form-id='ext-collections-list'><span class="material-icons expansion-icon">add_box</span><span>All Other Collections from NEON sites</span>
-										<?php if ($collsArr = $collData->getCollMetaByCat('Other Collections from NEON sites')) {
-											echo '<ul class="collapsed">';
-											foreach ($collsArr as $result) {
-												echo "<li><input type='checkbox' name='db' value='{$result["collid"]}' class='child' data-ccode='{$result["institutioncode"]}'><span class='ml-1'><a href='../../collections/misc/collprofiles.php?collid={$result["collid"]}' target='_blank' rel='noopener noreferrer'>{$result["collectionname"]} ({$result["institutioncode"]})</span></a></li>";
-											}
-											echo '</ul>';
-										}; ?>
-									</li>
-								</ul>
 							</div>
 						</div>
 						<p>Visit the <a href="<?php echo $CLIENT_ROOT . '/collections/misc/collprofiles.php'; ?>" target="_blank" rel="noopener noreferrer">Collections Information Page</a> for a full list of collections hosted by this portal.</p>
@@ -233,7 +222,7 @@ $siteData = new DatasetsMetadata();
 									<label for="hasgenetic">Limit to specimens with genetic data</label>
 								</div>
 								<div>
-									<input type="checkbox" name="availableforloan" value=1 data-chip="Only available for loan" checked>
+									<input type="checkbox" name="availableforloan" value=1 data-chip="Only available for loan">
 									<label for="availableforloan">Limit to specimens available for loan</label>
 								</div>
 							</div>

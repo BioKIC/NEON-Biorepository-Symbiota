@@ -135,9 +135,6 @@ $taxaArr = $stats->getNeonTaxa();
 						<li>Contribute and publish value-added sample data</li>
 					</ul>
 					<p>The majority of the NEON samples published here are physically housed at the <a href="https://biokic.asu.edu/collections" target="_blank">Arizona State University Biocollections</a>, located in Tempe, Arizona.</p>
-					<div class="disclaimer">
-						<p>The portal also integrates NEON samples with specimens from the same sites in external collections, allowing for research on biodiversity at NEON sites over a broader taxonomic and temporal extent.</p>
-					</div>
 				</div>
 				<div class="six columns">
 					<h2 class="centered">Learn more</h2>
