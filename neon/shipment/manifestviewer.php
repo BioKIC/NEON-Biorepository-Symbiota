@@ -38,8 +38,8 @@ elseif(array_key_exists('CollAdmin',$USER_RIGHTS) || array_key_exists('CollEdito
 	$activeSession = false;
 	$sessionStartTime = null;
 	
-	if (isset($_SESSION['session_data'])) {
-		$session_data = json_decode($_SESSION['session_data'], true);
+	if (isset($_SESSION['sampleCheckinSessionData'])) {
+		$session_data = $_SESSION['sampleCheckinSessionData'];
 	
 		// Check if the session is active (end_time is null)
 		if ($session_data['end_time'] === null) {

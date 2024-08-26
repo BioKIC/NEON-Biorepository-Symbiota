@@ -492,6 +492,10 @@ class ShipmentManager{
 					if($condition) $sqlUpdate .= ', sampleCondition = CONCAT_WS("; ",sampleCondition,"'.$this->cleanInStr($condition).'") ';
 					if($notes) $sqlUpdate .= ', checkinRemarks = "'.$this->cleanInStr($notes).'" ';
 					if($alternativeSampleID) $sqlUpdate .= ', alternativeSampleID = "'.$this->cleanInStr($alternativeSampleID).'" ';
+					if(isset($_SESSION['sampleCheckinSessionData']) && !isset($_SESSION['sampleCheckinSessionData']['end_time'])) {
+						$sessionData = json_encode($_SESSION['sampleCheckinSessionData']);
+						$sqlUpdate .= ', sessionData = \'' . $this->cleanInStr($sessionData) . '\' ';
+					}
 					$sqlUpdate .= 'WHERE (samplePK = "'.$samplePK.'") ';
 					if(!$this->conn->query($sqlUpdate)){
 						$this->errorStr = 'ERROR checking-in NEON sample: '.$this->conn->error;
@@ -513,9 +517,13 @@ class ShipmentManager{
 				if(isset($postArr['acceptedForAnalysis'])) $acceptedForAnalysis = ($postArr['acceptedForAnalysis']?1:0);
 				$sql = 'UPDATE NeonSample SET '.
 					'checkinUid = '.$GLOBALS['SYMB_UID'].', checkinTimestamp = now(), sampleReceived = '.$sampleReceived.', acceptedForAnalysis = '.$acceptedForAnalysis.' '.
-					($postArr['sampleCondition']?', sampleCondition = "'.$this->cleanInStr($postArr['sampleCondition']).'" ':'').
-					($postArr['checkinRemarks']?', checkinRemarks = "'.$this->cleanInStr($postArr['checkinRemarks']).'" ':'').
-					'WHERE (shipmentpk = '.$this->shipmentPK.') AND (checkinTimestamp IS NULL) AND (samplePK IN('.implode(',', $pkArr).'))';
+					($postArr['sampleCondition'] ? ', sampleCondition = "'.$this->cleanInStr($postArr['sampleCondition']).'" ' : '').
+					($postArr['checkinRemarks'] ? ', checkinRemarks = "'.$this->cleanInStr($postArr['checkinRemarks']).'" ' : '');
+				if(isset($_SESSION['sampleCheckinSessionData']) && !isset($_SESSION['sampleCheckinSessionData']['end_time'])) {
+					$sessionData = json_encode($_SESSION['sampleCheckinSessionData']);
+					$sql .= ', sessionData = \'' . $this->cleanInStr($sessionData) . '\' ';
+				}
+				$sql .= 'WHERE (shipmentpk = '.$this->shipmentPK.') AND (checkinTimestamp IS NULL) AND (samplePK IN('.implode(',', $pkArr).'))';
 				if(!$this->conn->query($sql)){
 					$this->errorStr = 'ERROR batch checking-in samples: '.$this->conn->error;
 					return false;
