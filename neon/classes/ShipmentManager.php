@@ -976,6 +976,10 @@ class ShipmentManager{
 				$this->searchArr['senderID'] = $_REQUEST['senderID'];
 			 }
 			 */
+			if(isset($_REQUEST['sessionData']) && $_REQUEST['sessionData']){
+				$sqlWhere .= 'AND ((m.sessionData = "'.$this->conn->real_escape_string($_REQUEST['sessionData']).'")) ';
+				$this->searchArr['sessionData'] = $_REQUEST['sessionData'];
+			}
 			if(isset($_REQUEST['checkinUid']) && $_REQUEST['checkinUid']){
 				$sqlWhere .= 'AND ((s.checkinUid = "'.$_REQUEST['checkinUid'].'") OR (m.checkinUid = "'.$_REQUEST['checkinUid'].'")) ';
 				$this->searchArr['checkinUid'] = $_REQUEST['checkinUid'];
@@ -1164,6 +1168,32 @@ class ShipmentManager{
 		return $retArr;
 	}
 
+	public function getSessionDataArr(){
+		$retArr = array();
+		$sql = 'SELECT DISTINCT sessionData FROM NeonSample s WHERE sessionData IS NOT NULL';
+		$rs = $this->conn->query($sql);
+		while($r = $rs->fetch_object()){
+			$retArr[$r->sessionData] = json_decode($r->sessionData, true);
+		}
+		
+		uasort($retArr, function($a, $b) {
+			$startComparison = strcmp($a['start_time'], $b['start_time']);
+			if ($startComparison === 0) {
+				return strcmp($a['end_time'], $b['end_time']);
+			}
+			return $startComparison;
+		});
+		
+		$returnArray = [];
+		foreach ($retArr as $key => $session) {
+			$startTime = $session['start_time'];
+			$endTime = $session['end_time'] ?? 'N/A';
+			$returnArray[$key] = $startTime . ' to ' . $endTime;
+		}
+
+		return $returnArray;
+	}	
+	
 	public function getTrackingStr(){
 		$retStr = '';
 		if($this->shipmentArr['trackingNumber']){
