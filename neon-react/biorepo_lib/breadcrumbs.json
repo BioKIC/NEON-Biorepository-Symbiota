@@ -252,6 +252,58 @@
     ],
   "/neon/collections/editor/occurrencetabledisplay.php": [
     { "name": "Data & Samples", "href": "https://www.neonscience.org/data-samples" },
-    { "name": "Character Management" }
+    { "name": "Sample Portal", "href": "http://localhost/neon/index.php" },
+    { "name": "Sample Handling", "href": "http://localhost/neon/misc/samplehandling.php" },
+    { "name": "Sample Collection Profiles", "href": "http://localhost/neon/collections/misc/collprofiles.php" },
+    { "name": "Occurrence Table View" }
+    ],
+  "/neon/collections/editor/batchdeterminations.php": [
+    { "name": "Data & Samples", "href": "https://www.neonscience.org/data-samples" },
+    { "name": "Sample Portal", "href": "http://localhost/neon/index.php" },
+    { "name": "Sample Handling", "href": "http://localhost/neon/misc/samplehandling.php" },
+    { "name": "Sample Collection Profiles", "href": "http://localhost/neon/collections/misc/collprofiles.php" },
+    { "name": "Batch Determination Editor" }
+    ],
+  "/neon/collections/misc/collmetadata.php": [
+    { "name": "Data & Samples", "href": "https://www.neonscience.org/data-samples" },
+    { "name": "Sample Portal", "href": "http://localhost/neon/index.php" },
+    { "name": "Sample Handling", "href": "http://localhost/neon/misc/samplehandling.php" },
+    { "name": "Sample Collection Profiles", "href": "http://localhost/neon/collections/misc/collprofiles.php" },
+    { "name": "Collection Metadata" }
+    ],
+  "/neon/collections/misc/collpermissions.php": [
+    { "name": "Data & Samples", "href": "https://www.neonscience.org/data-samples" },
+    { "name": "Sample Portal", "href": "http://localhost/neon/index.php" },
+    { "name": "Sample Handling", "href": "http://localhost/neon/misc/samplehandling.php" },
+    { "name": "Sample Collection Profiles", "href": "http://localhost/neon/collections/misc/collprofiles.php" },
+    { "name": "Collection Permissions" }
+    ],
+  "/neon/collections/admin/specupload.php": [
+    { "name": "Data & Samples", "href": "https://www.neonscience.org/data-samples" },
+    { "name": "Sample Portal", "href": "http://localhost/neon/index.php" },
+    { "name": "Sample Handling", "href": "http://localhost/neon/misc/samplehandling.php" },
+    { "name": "Sample Collection Profiles", "href": "http://localhost/neon/collections/misc/collprofiles.php" },
+    { "name": "Data Upload" }
+    ],
+  "/neon/collections/specprocessor/index.php": [
+    { "name": "Data & Samples", "href": "https://www.neonscience.org/data-samples" },
+    { "name": "Sample Portal", "href": "http://localhost/neon/index.php" },
+    { "name": "Sample Handling", "href": "http://localhost/neon/misc/samplehandling.php" },
+    { "name": "Sample Collection Profiles", "href": "http://localhost/neon/collections/misc/collprofiles.php" },
+    { "name": "Processing Toolbox" }
+    ],
+  "/neon/collections/editor/editreviewer.php": [
+    { "name": "Data & Samples", "href": "https://www.neonscience.org/data-samples" },
+    { "name": "Sample Portal", "href": "http://localhost/neon/index.php" },
+    { "name": "Sample Handling", "href": "http://localhost/neon/misc/samplehandling.php" },
+    { "name": "Sample Collection Profiles", "href": "http://localhost/neon/collections/misc/collprofiles.php" },
+    { "name": "Specimen Edit Reviewer" }
+    ],
+  "/neon/collections/admin/restorebackup.php": [
+    { "name": "Data & Samples", "href": "https://www.neonscience.org/data-samples" },
+    { "name": "Sample Portal", "href": "http://localhost/neon/index.php" },
+    { "name": "Sample Handling", "href": "http://localhost/neon/misc/samplehandling.php" },
+    { "name": "Sample Collection Profiles", "href": "http://localhost/neon/collections/misc/collprofiles.php" },
+    { "name": "Restore Backup File" }
     ]
 }
