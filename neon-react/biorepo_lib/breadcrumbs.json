@@ -217,5 +217,41 @@
     { "name": "Sample Portal", "href": "http://localhost/neon/index.php" },
     { "name": "Management Tools", "href": "http://localhost/neon/neon/index.php" },
     { "name": "Preparation Reports" }
+    ],
+  "/neon/collections/misc/collstats.php": [
+    { "name": "Data & Samples", "href": "https://www.neonscience.org/data-samples" },
+    { "name": "Sample Portal", "href": "http://localhost/neon/index.php" },
+    { "name": "Collections Statistics" }
+    ],
+  "/neon/collections/datasets/datapublisher.php": [
+    { "name": "Data & Samples", "href": "https://www.neonscience.org/data-samples" },
+    { "name": "Sample Portal", "href": "http://localhost/neon/index.php" },
+    { "name": "DwC-A Publishing" }
+    ],
+  "/neon/imagelib/search.php": [
+    { "name": "Data & Samples", "href": "https://www.neonscience.org/data-samples" },
+    { "name": "Sample Portal", "href": "http://localhost/neon/index.php" },
+    { "name": "Image Search" }
+    ],
+  "/neon/imagelib/contributors.php": [
+    { "name": "Data & Samples", "href": "https://www.neonscience.org/data-samples" },
+    { "name": "Sample Portal", "href": "http://localhost/neon/index.php" },
+    { "name": "Image Breakdown" }
+    ],
+  "/neon/collections/datasets/publiclist.php": [
+    { "name": "Impact", "href": "https://www.neonscience.org/impact" },
+    { "name": "Sample Datasets" }
+    ],
+  "/neon/profile/usermanagement.php": [
+    { "name": "Data & Samples", "href": "https://www.neonscience.org/data-samples" },
+    { "name": "User Management" }
+    ],
+  "/neon/ident/admin/index.php": [
+    { "name": "Data & Samples", "href": "https://www.neonscience.org/data-samples" },
+    { "name": "Character Management" }
+    ],
+  "/neon/collections/editor/occurrencetabledisplay.php": [
+    { "name": "Data & Samples", "href": "https://www.neonscience.org/data-samples" },
+    { "name": "Character Management" }
     ]
 }
