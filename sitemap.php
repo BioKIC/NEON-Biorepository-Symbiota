@@ -108,7 +108,7 @@ $smManager = new SiteMapManager();
 				<li><a href="checklists/index.php"><?php echo (isset($LANG['ALL_CHECKLISTS'])?$LANG['ALL_CHECKLISTS']:'All Public Checklists'); ?></a></li>
 			</ul>
 
-			<h2>Occurrence Datasets</h2>
+			<h2>Sample Datasets</h2>
 			<ul>
 				<li><a href="collections/datasets/publiclist.php"><?php echo (isset($LANG['ALLPUBDAT'])?$LANG['ALLPUBDAT']:'All Publicly Viewable Datasets') ;?></a></li>
 			</ul>
