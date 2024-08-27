@@ -30,7 +30,7 @@ if ($data['action'] === 'start_session') {
     $_SESSION['sampleCheckinSessionData'] = $session_data;
 
     // Return session data to frontend
-    echo json_encode(['start_time' => $session_data['start_time']]);
+    echo json_encode(['start_time' => $session_data['start_time'], 'sessionID' => $session_data['sessionID']]);
 }
 
 if ($data['action'] === 'stop_session') {

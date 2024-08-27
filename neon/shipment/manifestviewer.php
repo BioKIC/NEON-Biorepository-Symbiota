@@ -37,6 +37,7 @@ elseif(array_key_exists('CollAdmin',$USER_RIGHTS) || array_key_exists('CollEdito
 
 	$activeSession = false;
 	$sessionStartTime = null;
+	$sessionID = null;
 	
 	if (isset($_SESSION['sampleCheckinSessionData'])) {
 		$session_data = $_SESSION['sampleCheckinSessionData'];
@@ -45,6 +46,7 @@ elseif(array_key_exists('CollAdmin',$USER_RIGHTS) || array_key_exists('CollEdito
 		if ($session_data['end_time'] === null) {
 			$activeSession = true;
 			$sessionStartTime = $session_data['start_time'];
+			$sessionID = $session_data['sessionID'];
 		}
 	}
 	?>
@@ -355,14 +357,18 @@ elseif(array_key_exists('CollAdmin',$USER_RIGHTS) || array_key_exists('CollEdito
 		}
 		
 		let timerInterval;
+
+		let serverStartTime = "<?php echo $sessionStartTime; ?>";
+		let sessionID = "<?php echo $sessionID; ?>";
 	
 		// Check if a session is already active on page load
 		document.addEventListener('DOMContentLoaded', function() {
 			<?php if ($activeSession): ?>
-				startTimer(serverStartTime); // Automatically start the timer with the adjusted time
-				toggleButtons(true); // Disable Start and Enable Stop
+				startTimer(serverStartTime);
+				toggleButtons(true);
+				showSessionID(sessionID);
 			<?php else: ?>
-				toggleButtons(false); // Enable Start and Disable Stop
+				toggleButtons(false);
 			<?php endif; ?>
 			document.querySelectorAll('.start_session').forEach(button => {
 				button.addEventListener('click', startSession);
@@ -389,6 +395,7 @@ elseif(array_key_exists('CollAdmin',$USER_RIGHTS) || array_key_exists('CollEdito
 				  console.log('Session started at:', data.start_time);
 				  startTimer(data.start_time);
 				  toggleButtons(true);
+				  showSessionID(data.sessionID);
 			  });
 		}
 	
@@ -407,9 +414,7 @@ elseif(array_key_exists('CollAdmin',$USER_RIGHTS) || array_key_exists('CollEdito
 				  toggleButtons(false);
 			  });
 		}
-		
-		let serverStartTime = "<?php echo $sessionStartTime; ?>";
-		
+				
 		function startTimer(startTime) {
 			let start = new Date(startTime);
 	
@@ -417,7 +422,6 @@ elseif(array_key_exists('CollAdmin',$USER_RIGHTS) || array_key_exists('CollEdito
 			if (timerInterval) {
 				clearInterval(timerInterval);
 			}
-	
 			// Start the interval timer
 			timerInterval = setInterval(function() {
 				let now = new Date(new Date().toLocaleString("en-US", {timeZone: "America/Phoenix"}))
@@ -457,6 +461,14 @@ elseif(array_key_exists('CollAdmin',$USER_RIGHTS) || array_key_exists('CollEdito
 			stopButtons.forEach(button => {
 				button.disabled = !isSessionActive;
 			});
+		}
+		
+		function showSessionID(sessionID) {
+			let sessionIDdivs = document.querySelectorAll('.sessionID');
+			
+			sessionIDdivs.forEach(div => {
+				div.innerHTML  = '<strong>SessionID:</strong> ' + sessionID;
+			});	
 		}
 	</script>
 	<style type="text/css">
@@ -585,6 +597,7 @@ include($SERVER_ROOT.'/includes/header.php');
 									<input type="radio" class="start_session" name="session" value="start"> Start Session
 									<input type="radio" class="stop_session" name="session" value="stop"> Stop Session
 									<div class="timer">00:00:00</div>
+									<div class="sessionID"></div>
 									<form name="submitform" method="post" onsubmit="checkinSample(this); return false;">
 										<div id="popoutDiv" style="float:right"><a href="#" onclick="popoutCheckinBox();return false" title="Popout Sample Check-in Box">&gt;&gt;</a></div>
 										<div id="bindDiv" style="float:right;display:none"><a href="#" onclick="bindCheckinBox();return false" title="Bind Sample Check-in Box to top of form">&lt;&lt;</a></div>
@@ -828,6 +841,7 @@ include($SERVER_ROOT.'/includes/header.php');
 														<input type="radio" class="start_session" name="session" value="start"> Start Session
 														<input type="radio" class="stop_session" name="session" value="stop"> Stop Session
 														<div class="timer">00:00:00</div>
+														<div class="sessionID"></div>
 													</div>	
 													<div class="displayFieldDiv">
 														<b>Sample Received:</b>
