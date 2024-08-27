@@ -367,11 +367,11 @@ if ($SYMB_UID) {
 								<?php
 								if ($collData['colltype'] != 'General Observations') {
 								?>
-									<li style="margin-left:10px;">
-										<a href="../cleaning/index.php?obsuid=0&collid=<?php echo $collid; ?>">
-											<?php echo (isset($LANG['DATA_CLEANING']) ? $LANG['DATA_CLEANING'] : 'Data Cleaning Tools'); ?>
-										</a>
-									</li>
+									<!--<li style="margin-left:10px;">-->
+									<!--	<a href="../cleaning/index.php?obsuid=0&collid=<?php echo $collid; ?>">-->
+									<!--		<?php echo (isset($LANG['DATA_CLEANING']) ? $LANG['DATA_CLEANING'] : 'Data Cleaning Tools'); ?>-->
+									<!--	</a>-->
+									<!--</li>-->
 								<?php
 								}
 								?>
@@ -398,11 +398,11 @@ if ($SYMB_UID) {
 									</a>
 								</li>
 								 -->
-								<li style="margin-left:10px;">
-									<a href="../../imagelib/admin/thumbnailbuilder.php?collid=<?php echo $collid; ?>">
-										<?php echo (isset($LANG['THUMBNAIL_MAINTENANCE']) ? $LANG['THUMBNAIL_MAINTENANCE'] : 'Thumbnail Maintenance'); ?>
-									</a>
-								</li>
+								<!--<li style="margin-left:10px;">-->
+								<!--	<a href="../../imagelib/admin/thumbnailbuilder.php?collid=<?php echo $collid; ?>">-->
+								<!--		<?php echo (isset($LANG['THUMBNAIL_MAINTENANCE']) ? $LANG['THUMBNAIL_MAINTENANCE'] : 'Thumbnail Maintenance'); ?>-->
+								<!--	</a>-->
+								<!--</li>-->
 								<li style="margin-left:10px;">
 									<a href="collprofiles.php?collid=<?php echo $collid; ?>&action=UpdateStatistics">
 										<?php echo (isset($LANG['UPDATE_STATS']) ? $LANG['UPDATE_STATS'] : 'Update Statistics'); ?>
