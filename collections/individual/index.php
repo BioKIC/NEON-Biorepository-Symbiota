@@ -297,7 +297,7 @@ $traitArr = $indManager->getTraitArr();
 					if($genticArr) echo '<li><a href="#genetictab"><span>'.(isset($LANG['GENETIC'])?$LANG['GENETIC']:'Genetic').'</span></a></li>';
 					if($dupClusterArr) echo '<li><a href="#dupestab-div"><span>'.(isset($LANG['DUPLICATES'])?$LANG['DUPLICATES']:'Duplicates').'</span></a></li>';
 					?>
-					<li><a href="#commenttab"><span><?php echo ($commentArr?count($commentArr).' ':''); echo (isset($LANG['COMMENTS'])?$LANG['COMMENTS']:'Comments'); ?></span></a></li>
+					<!--<li><a href="#commenttab"><span><?php echo ($commentArr?count($commentArr).' ':''); echo (isset($LANG['COMMENTS'])?$LANG['COMMENTS']:'Comments'); ?></span></a></li>-->
 					<li><a href="linkedresources.php?occid=<?php echo $occid.'&tid='.$occArr['tidinterpreted'].'&clid='.$clid.'&collid='.$collid; ?>"><span><?php echo $LANG['LINKED_RESOURCES']; ?></span></a></li>
 					<?php
 					if($traitArr) echo '<li><a href="#traittab"><span>'.(isset($LANG['TRAITS'])?$LANG['TRAITS']:'Traits').'</span></a></li>';
@@ -1163,85 +1163,85 @@ $traitArr = $indManager->getTraitArr();
 					<?php
 				}
 				?>
-				<div id="commenttab">
-					<?php
-					$commentTabIndex = 1;
-					if($displayMap) $commentTabIndex++;
-					if($genticArr) $commentTabIndex++;
-					if($dupClusterArr) $commentTabIndex++;
-					if($commentArr){
-						echo '<div><label>'.count($commentArr).' '.$LANG['COMMENTS'].'</label></div>';
-						echo '<hr style="color:gray;"/>';
-						foreach($commentArr as $comId => $comArr){
-							?>
-							<div style="margin:15px;">
-								<?php
-								echo '<div>';
-								echo '<b>'.$comArr['username'].'</b> <span style="color:gray;">posted '.$comArr['initialtimestamp'].'</span>';
-								echo '</div>';
-								if($comArr['reviewstatus'] == 0 || $comArr['reviewstatus'] == 2) echo '<div style="color:red;">'.$LANG['COMMENT_NOT_PUBLIC'].'</div>';
-								echo '<div style="margin:10px;">'.$comArr['comment'].'</div>';
-								if($comArr['reviewstatus']){
-									if($SYMB_UID){
-									    echo '<div><a href="index.php?repcomid='.$comId.'&occid='.$occid.'&tabindex='.$commentTabIndex.'">';
-										echo $LANG['REPORT'];
-										echo '</a></div>';
-									}
-								}
-								else{
-								    echo '<div><a href="index.php?publiccomid='.$comId.'&occid='.$occid.'&tabindex='.$commentTabIndex.'">';
-									echo $LANG['MAKE_COMMENT_PUBLIC'];
-									echo '</a></div>';
-								}
-								if($isEditor || ($SYMB_UID && $comArr['username'] == $PARAMS_ARR['un'])){
-									?>
-									<div style="margin:20px;">
-										<form name="delcommentform" action="index.php" method="post" onsubmit="return confirm('<?php echo $LANG['CONFIRM_DELETE']; ?>?')">
-											<input name="occid" type="hidden" value="<?php echo $occid; ?>" />
-											<input name="comid" type="hidden" value="<?php echo $comId; ?>" />
-											<input name="tabindex" type="hidden" value="<?php echo $commentTabIndex; ?>" />
-											<button name="formsubmit" type="submit" value="deleteComment"><?php echo $LANG['DELETE_COMMENT']; ?></button>
-										</form>
-									</div>
-									<?php
-								}
-								?>
-							</div>
-							<hr style="color:gray;"/>
-							<?php
-						}
-					}
-					else echo '<div class="title2-div" style="margin:20px;">'.$LANG['NO_COMMENTS'].'</div>';
-					?>
-					<fieldset>
-						<legend><?php echo $LANG['NEW_COMMENT']; ?></legend>
-						<?php
-						if($SYMB_UID){
-							?>
-							<form name="commentform" action="index.php" method="post" onsubmit="return verifyCommentForm(this);">
-								<textarea name="commentstr" rows="8" style="width:98%;"></textarea>
-								<div style="margin:15px;">
-									<input name="occid" type="hidden" value="<?php echo $occid; ?>" />
-									<input name="tabindex" type="hidden" value="<?php echo $commentTabIndex; ?>" />
-									<button type="submit" name="formsubmit" value="submitComment"><?php echo $LANG['SUBMIT_COMMENT']; ?></button>
-								</div>
-								<div>
-									<?php echo $LANG['MESSAGE_WARNING']; ?>
-								</div>
-							</form>
-							<?php
-						}
-						else{
-							echo '<div style="margin:10px;">';
-							echo '<a href="../../profile/index.php?refurl=../collections/individual/index.php?tabindex=2&occid='.$occid.'">';
-							echo $LANG['LOGIN'];
-							echo '</a> ';
-							echo $LANG['TO_LEAVE_COMMENT'];
-							echo '</div>';
-						}
-						?>
-					</fieldset>
-				</div>
+				<!--<div id="commenttab">-->
+				<!--	<?php-->
+				<!--	$commentTabIndex = 1;-->
+				<!--	if($displayMap) $commentTabIndex++;-->
+				<!--	if($genticArr) $commentTabIndex++;-->
+				<!--	if($dupClusterArr) $commentTabIndex++;-->
+				<!--	if($commentArr){-->
+				<!--		echo '<div><label>'.count($commentArr).' '.$LANG['COMMENTS'].'</label></div>';-->
+				<!--		echo '<hr style="color:gray;"/>';-->
+				<!--		foreach($commentArr as $comId => $comArr){-->
+				<!--			?>-->
+				<!--			<div style="margin:15px;">-->
+				<!--				<?php-->
+				<!--				echo '<div>';-->
+				<!--				echo '<b>'.$comArr['username'].'</b> <span style="color:gray;">posted '.$comArr['initialtimestamp'].'</span>';-->
+				<!--				echo '</div>';-->
+				<!--				if($comArr['reviewstatus'] == 0 || $comArr['reviewstatus'] == 2) echo '<div style="color:red;">'.$LANG['COMMENT_NOT_PUBLIC'].'</div>';-->
+				<!--				echo '<div style="margin:10px;">'.$comArr['comment'].'</div>';-->
+				<!--				if($comArr['reviewstatus']){-->
+				<!--					if($SYMB_UID){-->
+				<!--					    echo '<div><a href="index.php?repcomid='.$comId.'&occid='.$occid.'&tabindex='.$commentTabIndex.'">';-->
+				<!--						echo $LANG['REPORT'];-->
+				<!--						echo '</a></div>';-->
+				<!--					}-->
+				<!--				}-->
+				<!--				else{-->
+				<!--				    echo '<div><a href="index.php?publiccomid='.$comId.'&occid='.$occid.'&tabindex='.$commentTabIndex.'">';-->
+				<!--					echo $LANG['MAKE_COMMENT_PUBLIC'];-->
+				<!--					echo '</a></div>';-->
+				<!--				}-->
+				<!--				if($isEditor || ($SYMB_UID && $comArr['username'] == $PARAMS_ARR['un'])){-->
+				<!--					?>-->
+				<!--					<div style="margin:20px;">-->
+				<!--						<form name="delcommentform" action="index.php" method="post" onsubmit="return confirm('<?php echo $LANG['CONFIRM_DELETE']; ?>?')">-->
+				<!--							<input name="occid" type="hidden" value="<?php echo $occid; ?>" />-->
+				<!--							<input name="comid" type="hidden" value="<?php echo $comId; ?>" />-->
+				<!--							<input name="tabindex" type="hidden" value="<?php echo $commentTabIndex; ?>" />-->
+				<!--							<button name="formsubmit" type="submit" value="deleteComment"><?php echo $LANG['DELETE_COMMENT']; ?></button>-->
+				<!--						</form>-->
+				<!--					</div>-->
+				<!--					<?php-->
+				<!--				}-->
+				<!--				?>-->
+				<!--			</div>-->
+				<!--			<hr style="color:gray;"/>-->
+				<!--			<?php-->
+				<!--		}-->
+				<!--	}-->
+				<!--	else echo '<div class="title2-div" style="margin:20px;">'.$LANG['NO_COMMENTS'].'</div>';-->
+				<!--	?>-->
+				<!--	<fieldset>-->
+				<!--		<legend><?php echo $LANG['NEW_COMMENT']; ?></legend>-->
+				<!--		<?php-->
+				<!--		if($SYMB_UID){-->
+				<!--			?>-->
+				<!--			<form name="commentform" action="index.php" method="post" onsubmit="return verifyCommentForm(this);">-->
+				<!--				<textarea name="commentstr" rows="8" style="width:98%;"></textarea>-->
+				<!--				<div style="margin:15px;">-->
+				<!--					<input name="occid" type="hidden" value="<?php echo $occid; ?>" />-->
+				<!--					<input name="tabindex" type="hidden" value="<?php echo $commentTabIndex; ?>" />-->
+				<!--					<button type="submit" name="formsubmit" value="submitComment"><?php echo $LANG['SUBMIT_COMMENT']; ?></button>-->
+				<!--				</div>-->
+				<!--				<div>-->
+				<!--					<?php echo $LANG['MESSAGE_WARNING']; ?>-->
+				<!--				</div>-->
+				<!--			</form>-->
+				<!--			<?php-->
+				<!--		}-->
+				<!--		else{-->
+				<!--			echo '<div style="margin:10px;">';-->
+				<!--			echo '<a href="../../profile/index.php?refurl=../collections/individual/index.php?tabindex=2&occid='.$occid.'">';-->
+				<!--			echo $LANG['LOGIN'];-->
+				<!--			echo '</a> ';-->
+				<!--			echo $LANG['TO_LEAVE_COMMENT'];-->
+				<!--			echo '</div>';-->
+				<!--		}-->
+				<!--		?>-->
+				<!--	</fieldset>-->
+				<!--</div>-->
 				<?php
 				if($traitArr){
 				    ?>

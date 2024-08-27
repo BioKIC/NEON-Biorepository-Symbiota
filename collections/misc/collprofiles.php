@@ -200,21 +200,21 @@ if ($SYMB_UID) {
 							<?php
 							if ($collManager->traitCodingActivated()) {
 							?>
-								<li>
-									<a href="#" onclick="$('li.traitItem').show(); return false;">
-										<?php echo (isset($LANG['TRAIT_CODING_TOOLS']) ? $LANG['TRAIT_CODING_TOOLS'] : 'Occurrence Trait Coding Tools'); ?>
-									</a>
-								</li>
-								<li class="traitItem" style="margin-left:10px;display:none;">
-									<a href="../traitattr/occurattributes.php?collid=<?php echo $collid; ?>">
-										<?php echo (isset($LANG['TRAIT_CODING']) ? $LANG['TRAIT_CODING'] : 'Trait Coding from Images'); ?>
-									</a>
-								</li>
-								<li class="traitItem" style="margin-left:10px;display:none;">
-									<a href="../traitattr/attributemining.php?collid=<?php echo $collid; ?>">
-										<?php echo (isset($LANG['TRAIT_MINING']) ? $LANG['TRAIT_MINING'] : 'Trait Mining from Verbatim Text'); ?>
-									</a>
-								</li>
+								<!--<li>-->
+								<!--	<a href="#" onclick="$('li.traitItem').show(); return false;">-->
+								<!--		<?php echo (isset($LANG['TRAIT_CODING_TOOLS']) ? $LANG['TRAIT_CODING_TOOLS'] : 'Occurrence Trait Coding Tools'); ?>-->
+								<!--	</a>-->
+								<!--</li>-->
+								<!--<li class="traitItem" style="margin-left:10px;display:none;">-->
+								<!--	<a href="../traitattr/occurattributes.php?collid=<?php echo $collid; ?>">-->
+								<!--		<?php echo (isset($LANG['TRAIT_CODING']) ? $LANG['TRAIT_CODING'] : 'Trait Coding from Images'); ?>-->
+								<!--	</a>-->
+								<!--</li>-->
+								<!--<li class="traitItem" style="margin-left:10px;display:none;">-->
+								<!--	<a href="../traitattr/attributemining.php?collid=<?php echo $collid; ?>">-->
+								<!--		<?php echo (isset($LANG['TRAIT_MINING']) ? $LANG['TRAIT_MINING'] : 'Trait Mining from Verbatim Text'); ?>-->
+								<!--	</a>-->
+								<!--</li>-->
 							<?php
 							}
 							?>
@@ -242,12 +242,12 @@ if ($SYMB_UID) {
 						<fieldset style="padding:10px;padding-left:25px;">
 							<legend><b><?php echo (isset($LANG['ADMIN_CONTROL']) ? $LANG['ADMIN_CONTROL'] : 'Administration Control Panel'); ?></b></legend>
 							<ul>
-								<li>
-									<a href="commentlist.php?collid=<?php echo $collid; ?>">
-										<?php echo (isset($LANG['VIEW_COMMENTS']) ? $LANG['VIEW_COMMENTS'] : 'View Posted Comments'); ?>
-									</a>
-									<?php if ($commCnt = $collManager->unreviewedCommentsExist()) echo '- <span style="color:orange">' . $commCnt . ' ' . (isset($LANG['UNREVIEWED_COMMENTS']) ? $LANG['UNREVIEWED_COMMENTS'] : 'unreviewed comments') . '</span>'; ?>
-								</li>
+								<!--<li>-->
+								<!--	<a href="commentlist.php?collid=<?php echo $collid; ?>">-->
+								<!--		<?php echo (isset($LANG['VIEW_COMMENTS']) ? $LANG['VIEW_COMMENTS'] : 'View Posted Comments'); ?>-->
+								<!--	</a>-->
+								<!--	<?php if ($commCnt = $collManager->unreviewedCommentsExist()) echo '- <span style="color:orange">' . $commCnt . ' ' . (isset($LANG['UNREVIEWED_COMMENTS']) ? $LANG['UNREVIEWED_COMMENTS'] : 'unreviewed comments') . '</span>'; ?>-->
+								<!--</li>-->
 								<li>
 									<a href="collmetadata.php?collid=<?php echo $collid; ?>">
 										<?php echo (isset($LANG['EDIT_META']) ? $LANG['EDIT_META'] : 'Edit Metadata'); ?>
