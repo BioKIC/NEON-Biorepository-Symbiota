@@ -47,7 +47,7 @@ $smManager = new SiteMapManager();
 			<ul>
 				<li><a href="neon/search/index.php"><?php echo $LANG['SEARCHENGINE'];?></a> - Search Biorepository</li>
 				<li><a href="collections/misc/collprofiles.php"><?php echo $LANG['COLLECTIONS'];?></a> - List of Biorepository Collections</li>
-<!--				<li><a href="collections/misc/collstats.php"><?php echo $LANG['COLLSTATS'];?></a></li>-->
+				<li><a href="collections/misc/collstats.php"><?php echo $LANG['COLLSTATS'];?></a></li>
 				<?php
 				if(isset($ACTIVATE_EXSICCATI) && $ACTIVATE_EXSICCATI){
 					echo '<li><a href="collections/exsiccati/index.php">'.$LANG['EXSICC'].'</a></li>';
@@ -69,8 +69,8 @@ $smManager = new SiteMapManager();
 			<div id="imglib"><h2><?php echo $LANG['IMGLIB'];?></h2></div>
 			<ul>
 				<!--<li><a href="imagelib/index.php"><?php echo $LANG['IMGLIB'];?></a></li>-->
-				<li><a href="imagelib/search.php"><?php echo ($LANG['IMAGE_SEARCH']?$LANG['IMAGE_SEARCH']:'Interactive Search Tool'); ?></a></li>
-				<li><a href="imagelib/contributors.php"><?php echo $LANG['CONTRIB'];?></a></li>
+				<li><a href="imagelib/search.php"><?php echo 'Image Search'; ?></a></li>
+				<li><a href="imagelib/contributors.php"><?php echo 'Image Breakdown';?></a></li>
 				<!--<li><a href="includes/usagepolicy.php"><?php echo $LANG['USAGEPOLICY'];?></a></li>-->
 			</ul>
 
@@ -256,7 +256,7 @@ $smManager = new SiteMapManager();
 						?>
 					</ul>-->
 
-					<h3>Species Checklists Projects</h3>
+					<h3>Species Checklists</h3>
 					<ul>
 						<?php
 						if($IS_ADMIN){
