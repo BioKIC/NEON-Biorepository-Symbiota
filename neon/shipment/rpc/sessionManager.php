@@ -12,9 +12,19 @@ $request_body = file_get_contents('php://input');
 $data = json_decode($request_body, true);
 
 if ($data['action'] === 'start_session') {
+    $conn = MySQLiConnectionFactory::getCon("write");
+    $sql = "SELECT LPAD(MAX(sessionID)+1, 3, '0') AS sessionNumber FROM NeonSample";    
+    $rs = $conn->query($sql);
+    while($r = $rs->fetch_object()){
+        $sessionNum = $r->sessionNumber;
+    }
+    $rs->free();    
+    if($conn) $conn->close();
+    
     $session_data = [
+        'sessionID' => $USERNAME.'-'.$sessionNum,
         'start_time' => date('Y-m-d H:i:s'),
-        'end_time' => null
+        'end_time' => null,
     ];
 
     $_SESSION['sampleCheckinSessionData'] = $session_data;

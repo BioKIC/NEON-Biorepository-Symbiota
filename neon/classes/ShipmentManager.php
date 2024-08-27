@@ -495,6 +495,7 @@ class ShipmentManager{
 					if(isset($_SESSION['sampleCheckinSessionData']) && !isset($_SESSION['sampleCheckinSessionData']['end_time'])) {
 						$sessionData = json_encode($_SESSION['sampleCheckinSessionData']);
 						$sqlUpdate .= ', sessionData = \'' . $this->cleanInStr($sessionData) . '\' ';
+						$sqlUpdate .= ', sessionID = \'' . $this->cleanInStr(substr($_SESSION['sampleCheckinSessionData']['sessionID'], strrpos($_SESSION['sampleCheckinSessionData']['sessionID'], '-') + 1)) . '\' ';
 					}
 					$sqlUpdate .= 'WHERE (samplePK = "'.$samplePK.'") ';
 					if(!$this->conn->query($sqlUpdate)){
@@ -522,6 +523,7 @@ class ShipmentManager{
 				if(isset($_SESSION['sampleCheckinSessionData']) && !isset($_SESSION['sampleCheckinSessionData']['end_time'])) {
 					$sessionData = json_encode($_SESSION['sampleCheckinSessionData']);
 					$sql .= ', sessionData = \'' . $this->cleanInStr($sessionData) . '\' ';
+					$sql .= ', sessionID = \'' . $this->cleanInStr(substr($_SESSION['sampleCheckinSessionData']['sessionID'], strrpos($_SESSION['sampleCheckinSessionData']['sessionID'], '-') + 1)) . '\' ';
 				}
 				$sql .= 'WHERE (shipmentpk = '.$this->shipmentPK.') AND (checkinTimestamp IS NULL) AND (samplePK IN('.implode(',', $pkArr).'))';
 				if(!$this->conn->query($sql)){
@@ -1076,7 +1078,7 @@ class ShipmentManager{
 		$fileName .= date('Y-m-d').'.csv';
 		$sql = 'SELECT s.shipmentID, m.samplePK, m.sampleID, m.alternativeSampleID, m.sampleCode, m.sampleClass, m.taxonID, m.individualCount, m.filterVolume, m.namedlocation, '.
 			'm.domainremarks, m.collectdate, m.quarantineStatus, m.sampleReceived, m.acceptedForAnalysis, m.sampleCondition, m.dynamicProperties, m.symbiotaTarget, m.errorMessage, m.notes, m.occid, '.
-			'CONCAT_WS(", ",u.lastname, u.firstname) AS checkinUser, m.checkinTimestamp, m.initialtimestamp '.
+			'CONCAT_WS(", ",u.lastname, u.firstname) AS checkinUser, m.sessionData, m.checkinTimestamp, m.initialtimestamp '.
 			'FROM NeonShipment s INNER JOIN NeonSample m ON s.shipmentpk = m.shipmentpk '.
 			'LEFT JOIN users u ON m.checkinUid = u.uid ';
 		$sql .= $this->getFilteredWhereSql();
@@ -1186,9 +1188,9 @@ class ShipmentManager{
 		
 		$returnArray = [];
 		foreach ($retArr as $key => $session) {
-			$startTime = $session['start_time'];
-			$endTime = $session['end_time'] ?? 'N/A';
-			$returnArray[$key] = $startTime . ' to ' . $endTime;
+			if(isset($session['sessionID'])){
+				$returnArray[$key] = $session['sessionID'];
+			}
 		}
 
 		return $returnArray;
