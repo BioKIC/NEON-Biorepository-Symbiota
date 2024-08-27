@@ -8,7 +8,7 @@ $dArr = $datasetManager->getPublicDatasets();
 ?>
 <html>
 	<head>
-		<title>Public Datasets List</title>
+		<title>Sample Datasets</title>
 		<?php
 		include_once($SERVER_ROOT.'/includes/head.php');
 		?>
@@ -24,7 +24,7 @@ $dArr = $datasetManager->getPublicDatasets();
 		</div>
 		<!-- This is inner text! -->
 		<div id="innertext">
-			<h1>Public Datasets List</h1>
+			<h1>Sample Datasets</h1>
 			<ul>
 				<?php				
 				if ($IS_ADMIN) {
