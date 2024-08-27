@@ -300,7 +300,7 @@ $traitArr = $indManager->getTraitArr();
 					<!--<li><a href="#commenttab"><span><?php echo ($commentArr?count($commentArr).' ':''); echo (isset($LANG['COMMENTS'])?$LANG['COMMENTS']:'Comments'); ?></span></a></li>-->
 					<li><a href="linkedresources.php?occid=<?php echo $occid.'&tid='.$occArr['tidinterpreted'].'&clid='.$clid.'&collid='.$collid; ?>"><span><?php echo $LANG['LINKED_RESOURCES']; ?></span></a></li>
 					<?php
-					if($traitArr) echo '<li><a href="#traittab"><span>'.(isset($LANG['TRAITS'])?$LANG['TRAITS']:'Traits').'</span></a></li>';
+					//if($traitArr) echo '<li><a href="#traittab"><span>'.(isset($LANG['TRAITS'])?$LANG['TRAITS']:'Traits').'</span></a></li>';
 					if($isEditor) echo '<li><a href="#edittab"><span>'.$LANG['EDIT_HISTORY'].'</span></a></li>';
 					?>
 				</ul>
@@ -1245,18 +1245,18 @@ $traitArr = $indManager->getTraitArr();
 				<?php
 				if($traitArr){
 				    ?>
-					<div id="traittab">
-						<?php
-						foreach($traitArr as $traitID => $tArr){
-							if(!$tArr['depStateID']){
-								echo '<div class="trait-div">';
-								$indManager->echoTraitUnit($traitArr[$traitID]);
-								$indManager->echoTraitDiv($traitArr,$traitID);
-								echo '</div>';
-							}
-						}
-						?>
-					</div>
+					<!--<div id="traittab">-->
+					<!--	<?php-->
+					<!--	foreach($traitArr as $traitID => $tArr){-->
+					<!--		if(!$tArr['depStateID']){-->
+					<!--			echo '<div class="trait-div">';-->
+					<!--			$indManager->echoTraitUnit($traitArr[$traitID]);-->
+					<!--			$indManager->echoTraitDiv($traitArr,$traitID);-->
+					<!--			echo '</div>';-->
+					<!--		}-->
+					<!--	}-->
+					<!--	?>-->
+					<!--</div>-->
 					<?php
 				}
 				if($isEditor){
