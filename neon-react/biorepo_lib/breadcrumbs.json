@@ -305,5 +305,10 @@
     { "name": "Sample Handling", "href": "http://localhost/neon/misc/samplehandling.php" },
     { "name": "Sample Collection Profiles", "href": "http://localhost/neon/collections/misc/collprofiles.php" },
     { "name": "Restore Backup File" }
-    ]
+    ],
+  "/neon/taxa/index.php": [
+    { "name": "Data & Samples", "href": "https://www.neonscience.org/data-samples" },
+    { "name": "Sample Portal", "href": "http://localhost/neon/index.php" },
+    { "name": "Taxon Page" }
+    ]  
 }
