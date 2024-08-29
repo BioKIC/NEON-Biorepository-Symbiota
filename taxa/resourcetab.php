@@ -32,11 +32,11 @@ if($SYMB_UID){
 		$occMsg = number_format($occNum).' '.(isset($LANG['OCCURRENCES'])?'occurrences':'');
 		if($occNum){
 			$occHref = '../collections/list.php?usethes=1&taxa='.$tid;
-			$occMsg = '<a class="btn" href="'.$occHref.'" target="_blank">'.$occMsg.'</a>';
+			$occMsg = '<a class="btn" href="'.$occHref.'">'.$occMsg.'</a>';
 		}
 		echo '<li>'.$occMsg.'</li>';
 	}
-	echo '<li><a href="taxonomy/taxonomydynamicdisplay.php?target='.$tid.'" target="_blank">Taxonomic Tree</a></li>';
+	//echo '<li><a href="taxonomy/taxonomydynamicdisplay.php?target='.$tid.'" target="_blank">Taxonomic Tree</a></li>';
 	echo '</ul>';
 	echo '</div>';
 	//TODO: list other internal resources such as Taxon Traits, etc
@@ -57,7 +57,7 @@ if($SYMB_UID){
 		echo '<div class="resource-title">'.(isset($LANG['TAXONOMIC_RESOURCES'])?$LANG['TAXONOMIC_RESOURCES']:'Taxonomic Resources').'</div>';
 		echo '<ul>';
 		foreach($resourceArr as $resourceObj){
-			echo '<li><a href="'.$resourceObj['url'].'" target="_blank">'.$resourceObj['name'].' #'.$resourceObj['id'].($resourceObj['guid']?$resourceObj['guid']:'').'</a></li>';
+			echo '<li><a href="'.$resourceObj['url'].'">'.$resourceObj['name'].' #'.$resourceObj['id'].($resourceObj['guid']?$resourceObj['guid']:'').'</a></li>';
 			if($resourceObj['notes']) echo '<li style="margin-left:10px">'.$resourceObj['notes'].'</li>';
 		}
 		echo '</ul>';

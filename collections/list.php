@@ -293,7 +293,7 @@ $imgLibManager = new ImageLibrarySearch();
 									echo '<div style="margin:4px;">';
 									if (isset($fieldArr['sciname'])) {
 										$sciStr = '<span style="font-style:italic;">' . $fieldArr['sciname'] . '</span>';
-										if(!empty($fieldArr['tidInterpreted'])) $sciStr = '<a target="_blank" href="../taxa/index.php?tid=' . $fieldArr['tidInterpreted'] . '">' . $sciStr . '</a>';
+										if(!empty($fieldArr['tidInterpreted'])) $sciStr = '<a href="../taxa/index.php?tid=' . $fieldArr['tidInterpreted'] . '">' . $sciStr . '</a>';
 										if(!empty($fieldArr['scientificNameAuthorship'])) $sciStr .= ' ' . $fieldArr['scientificNameAuthorship'];
 										echo $sciStr;
 									}
