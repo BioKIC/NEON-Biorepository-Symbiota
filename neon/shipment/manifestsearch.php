@@ -55,6 +55,7 @@ if($isEditor){
 			f.dateCheckinStart.value = "";
 			f.dateCheckinEnd.value = "";
 			f.checkinUid.value = "";
+			f.sessionData.value = "";
 			f.importedUid.value = "";
 			f.sampleCondition.value = "";
 			var radioList = document.getElementsByName('manifestStatus');
@@ -158,6 +159,19 @@ include($SERVER_ROOT.'/includes/header.php');
 					<div class="fieldDiv">
 						<b>Sample Check-in Date:</b> <input name="dateCheckinStart" type="date" value="<?php echo (isset($searchArgumentArr['dateCheckinStart'])?$searchArgumentArr['dateCheckinStart']:''); ?>" /> -
 						<input name="dateCheckinEnd" type="date" value="<?php echo (isset($searchArgumentArr['dateCheckinEnd'])?$searchArgumentArr['dateCheckinEnd']:''); ?>" />
+					</div>
+					<div class="fieldDiv">
+						<b>Session: </b>
+						<select name="sessionData" style="margin:5px 10px">
+							<option value="">All Records</option>
+							<option value="">------------------------</option>
+							<?php
+							$sessionDataArr = $shipManager->getSessionDataArr();
+							foreach($sessionDataArr as $key => $sessionData){
+								echo '<option value="'.htmlspecialchars($key).'" '.(isset($searchArgumentArr['sessionData'])&&$key==$searchArgumentArr['sessionData']?'SELECTED':'').'>'.$sessionData.'</option>';
+							}
+							?>
+						</select>
 					</div>
 				</div>
 				<div class="fieldGroupDiv">

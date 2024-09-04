@@ -34,6 +34,21 @@ elseif(array_key_exists('CollAdmin',$USER_RIGHTS) || array_key_exists('CollEdito
 	<?php
 	$activateJQuery = true;
 	include_once($SERVER_ROOT.'/includes/head.php');
+
+	$activeSession = false;
+	$sessionStartTime = null;
+	$sessionID = null;
+	
+	if (isset($_SESSION['sampleCheckinSessionData'])) {
+		$session_data = $_SESSION['sampleCheckinSessionData'];
+	
+		// Check if the session is active (end_time is null)
+		if ($session_data['end_time'] === null) {
+			$activeSession = true;
+			$sessionStartTime = $session_data['start_time'];
+			$sessionID = $session_data['sessionID'];
+		}
+	}
 	?>
 	<script src="../../js/jquery-3.2.1.min.js" type="text/javascript"></script>
 	<script src="../../js/jquery-ui-1.12.1/jquery-ui.min.js" type="text/javascript"></script>
@@ -340,6 +355,121 @@ elseif(array_key_exists('CollAdmin',$USER_RIGHTS) || array_key_exists('CollEdito
 			if (newWindow.opener == null) newWindow.opener = self;
 			return false;
 		}
+		
+		let timerInterval;
+
+		let serverStartTime = "<?php echo $sessionStartTime; ?>";
+		let sessionID = "<?php echo $sessionID; ?>";
+	
+		// Check if a session is already active on page load
+		document.addEventListener('DOMContentLoaded', function() {
+			<?php if ($activeSession): ?>
+				startTimer(serverStartTime);
+				toggleButtons(true);
+				showSessionID(sessionID);
+			<?php else: ?>
+				toggleButtons(false);
+			<?php endif; ?>
+			document.querySelectorAll('.start_session').forEach(button => {
+				button.addEventListener('click', startSession);
+			});
+		
+			// Attach event listeners to all stop session buttons
+			document.querySelectorAll('.stop_session').forEach(button => {
+				button.addEventListener('click', stopSession);
+			});
+		});
+	
+		function startSession() {
+			// Send AJAX request to start session
+			fetch('rpc/sessionManager.php', {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json'
+				},
+				body: JSON.stringify({
+					action: 'start_session'
+				})
+			}).then(response => response.json())
+			  .then(data => {
+				  console.log('Session started at:', data.start_time);
+				  startTimer(data.start_time);
+				  toggleButtons(true);
+				  showSessionID(data.sessionID);
+			  });
+		}
+	
+		function stopSession() {
+			// Send AJAX request to stop session
+			fetch('rpc/sessionManager.php', {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json'
+				},
+				body: JSON.stringify({ action: 'stop_session' })
+			}).then(response => response.json())
+			  .then(data => {
+				  console.log('Session ended at:', data.end_time);
+				  stopTimer();
+				  toggleButtons(false);
+			  });
+		}
+				
+		function startTimer(startTime) {
+			let start = new Date(startTime);
+	
+			// Clear any existing timer before starting a new one
+			if (timerInterval) {
+				clearInterval(timerInterval);
+			}
+			// Start the interval timer
+			timerInterval = setInterval(function() {
+				let now = new Date(new Date().toLocaleString("en-US", {timeZone: "America/Phoenix"}))
+				let diff = Math.floor((now - start) / 1000);
+				let hours = Math.floor(diff / 3600);
+				let minutes = Math.floor((diff % 3600) / 60);
+				let seconds = diff % 60;
+				
+				hours = String(hours).padStart(2, '0');
+				minutes = String(minutes).padStart(2, '0');
+				seconds = String(seconds).padStart(2, '0');
+				
+				let timers = document.querySelectorAll('.timer');
+				timers.forEach(timer => {
+					timer.textContent = hours + ":" + minutes + ":" + seconds;
+				});
+			}, 1000);
+		}
+	
+		function stopTimer() {
+			// Clear the timer interval and reset the timer display
+			clearInterval(timerInterval);
+			let timers = document.querySelectorAll('.timer');
+			timers.forEach(timer => {
+				timer.textContent = "00:00:00";
+			});
+		}
+		
+		function toggleButtons(isSessionActive) {
+			let startButtons = document.querySelectorAll('.start_session');
+			let stopButtons = document.querySelectorAll('.stop_session');
+		
+			startButtons.forEach(button => {
+				button.disabled = isSessionActive;
+			});
+		
+			stopButtons.forEach(button => {
+				button.disabled = !isSessionActive;
+			});
+		}
+		
+		function showSessionID(sessionID) {
+			let sessionIDdivs = document.querySelectorAll('.sessionID');
+			
+			sessionIDdivs.forEach(div => {
+				div.innerHTML  = '<strong>SessionID:</strong> ' + sessionID;
+			});	
+		}
 	</script>
 	<style type="text/css">
 		#innertext{ max-width: 1400px; }
@@ -464,6 +594,10 @@ include($SERVER_ROOT.'/includes/header.php');
 							<div id="sampleCheckinDiv" style="margin-top:15px;background-color:white;top:50px;right:200px">
 								<fieldset style="padding:10px;width:500px">
 									<legend>Sample Check-in</legend>
+									<input type="radio" class="start_session" name="session" value="start"> Start Session
+									<input type="radio" class="stop_session" name="session" value="stop"> Stop Session
+									<div class="timer">00:00:00</div>
+									<div class="sessionID"></div>
 									<form name="submitform" method="post" onsubmit="checkinSample(this); return false;">
 										<div id="popoutDiv" style="float:right"><a href="#" onclick="popoutCheckinBox();return false" title="Popout Sample Check-in Box">&gt;&gt;</a></div>
 										<div id="bindDiv" style="float:right;display:none"><a href="#" onclick="bindCheckinBox();return false" title="Bind Sample Check-in Box to top of form">&lt;&lt;</a></div>
@@ -703,6 +837,12 @@ include($SERVER_ROOT.'/includes/header.php');
 												<?php
 												if($shipArr['checkinTimestamp']){
 													?>
+													<div class="displayFieldDiv">
+														<input type="radio" class="start_session" name="session" value="start"> Start Session
+														<input type="radio" class="stop_session" name="session" value="stop"> Stop Session
+														<div class="timer">00:00:00</div>
+														<div class="sessionID"></div>
+													</div>	
 													<div class="displayFieldDiv">
 														<b>Sample Received:</b>
 														<input name="sampleReceived" type="radio" value="1" checked /> Yes
