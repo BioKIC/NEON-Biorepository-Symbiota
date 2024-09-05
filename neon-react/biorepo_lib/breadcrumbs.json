@@ -19,17 +19,17 @@
     { "name": "Sample Portal", "href": "http://localhost/neon/index.php" },
     { "name": "Species Checklists" }
     ],
-  "Field Site url": [
+  "/neon/checklists/checklist.php": [
     { "name": "Data & Samples", "href": "https://www.neonscience.org/data-samples" },
     { "name": "Sample Portal", "href": "http://localhost/neon/index.php" },
     { "name": "Species Checklists", "href": "http://localhost/neon/projects/index.php" },
-    { "name": "Field Site Diversity" }
+    { "name": "Checklist" }
     ],
-  "Taxonomic Keys url": [
+  "/neon/ident/key.php": [
     { "name": "Data & Samples", "href": "https://www.neonscience.org/data-samples" },
     { "name": "Sample Portal", "href": "http://localhost/neon/index.php" },
     { "name": "Species Checklists", "href": "http://localhost/neon/projects/index.php" },
-    { "name": "Taxonomic Keys" }
+    { "name": "Identification Key" }
     ],
   "/neon/misc/sampleguidelines.php": [
     { "name": "Data & Samples", "href": "https://www.neonscience.org/data-samples" },
