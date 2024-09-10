@@ -11,7 +11,6 @@ class Taxonomy extends Model{
 	protected $fillable = [  ];
 	protected $maps = [ 'sciName' => 'scientificName' ];
 	protected $appends = [ 'scientificName' ];
-	public static $snakeAttributes = false;
 
 	public function getScientificNameAttribute(){
 		return $this->attributes['sciName'];
@@ -23,9 +22,5 @@ class Taxonomy extends Model{
 
 	public function media(){
 		return $this->hasMany(media::class, 'tid', 'tid');
-	}
-
-	public function taxonCodes(){
-		return $this->hasMany(NeonTaxonomy::class, 'tid', 'tid');
 	}
 }

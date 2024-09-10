@@ -55,7 +55,7 @@ class TaxonomyController extends Controller{
 		$offset = $request->input('offset',0);
 
 		$fullCnt = Taxonomy::count();
-		$result = Taxonomy::with('taxonCodes')->skip($offset)->take($limit)->get();
+		$result = Taxonomy::skip($offset)->take($limit)->get();
 
 		$eor = false;
 		$retObj = [
@@ -73,13 +73,6 @@ class TaxonomyController extends Controller{
 	 *	 path="/api/v2/taxonomy/search",
 	 *	 operationId="/api/v2/taxonomy/search",
 	 *	 tags={""},
-	 *	 @OA\Parameter(
-	 *		 name="taxon",
-	 *		 in="query",
-	 *		 description="Taxon searh term",
-	 *		 required=true,
-	 *		 @OA\Schema(type="string")
-	 *	 ),
 	 *	 @OA\Parameter(
 	 *		 name="taxon",
 	 *		 in="query",
@@ -134,17 +127,17 @@ class TaxonomyController extends Controller{
 
 		$type = $request->input('type', 'EXACT');
 
-		$taxaModel = Taxonomy::with('taxonCodes');
+		$taxaModel = Taxonomy::query();
 		if($type == 'START'){
-			$taxaModel->where('sciname', 'like', $request->taxon . '%');
+			$taxaModel->where('sciname', 'LIKE', $request->taxon . '%');
 		}
 		elseif($type == 'WILD'){
-			$taxaModel->where('sciname', 'like', '%' . $request->taxon . '%');
+			$taxaModel->where('sciname', 'LIKE', '%' . $request->taxon . '%');
 		}
 		elseif($type == 'WHOLEWORD'){
 			$taxaModel->where('unitname1', $request->taxon)
-				->orWhere('unitname2', $request->taxon)
-				->orWhere('unitname3', $request->taxon);
+			->orWhere('unitname2', $request->taxon)
+			->orWhere('unitname3', $request->taxon);
 		}
 		else{
 			//Exact match
@@ -221,8 +214,6 @@ class TaxonomyController extends Controller{
 		->where('e.tid', $id)->where('e.taxauthid', 1);
 		$parStatusResult = $parStatus->get();
 		$taxonObj->classification = $parStatusResult;
-
-		$taxonObj->taxonCodes;
 
 		if(!$taxonObj->count()) $taxonObj = ['status' =>false, 'error' => 'Unable to locate inventory based on identifier'];
 		return response()->json($taxonObj);
