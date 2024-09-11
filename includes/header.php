@@ -112,10 +112,10 @@ elseif (array_key_exists('CollAdmin', $USER_RIGHTS) || array_key_exists('CollEdi
 			<li>
 				<a href="#" alt="Additional Information">Additional Information</a>
 				<ul>
-					<li>
+					<!-- <li>
 						<a href="<?php echo $CLIENT_ROOT; ?>/misc/tutorials.php" target="_blank" rel="noopener noreferrer" alt="Tutorials and Help">Tutorials and Help</a>
 					</li>
-					<li>
+					<li> -->
 						<a href="<?php echo $CLIENT_ROOT; ?>/misc/staff.php" target="_blank" rel="noopener noreferrer" alt="NEON Biorepository Staff">Biorepository Staff</a>
 					</li>
 					<li>
