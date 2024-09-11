@@ -1013,6 +1013,9 @@ class OccurrenceHarvester{
 		elseif($dwcArr['collid'] == 29 || $dwcArr['collid'] == 39 || $dwcArr['collid'] == 44 || $dwcArr['collid'] == 82 || $dwcArr['collid'] == 95){
 			$dwcArr['individualCount'] = 1;
 		}
+		elseif($dwcArr['collid'] == 11 || $dwcArr['collid'] == 12 || $dwcArr['collid'] == 14 || $dwcArr['collid'] == 15 || $dwcArr['collid'] == 17 || $dwcArr['collid'] == 18){
+			$dwcArr['individualCount'] = NULL;
+		}
 	}
 
 	private function protectTaxonomyTest($idArr){
