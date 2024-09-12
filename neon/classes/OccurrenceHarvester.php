@@ -484,7 +484,7 @@ class OccurrenceHarvester{
 				if(strpos($tableName,'shipment')) continue;
 				//if(strpos($tableName,'identification')) continue;
 				//if(strpos($tableName,'sorting')) continue;
-				if(strpos($tableName,'archive')) continue;
+				if(strpos($tableName,'scs_archive')) continue;
 				if(strpos($tableName,'barcoding')) continue;
 				if(strpos($tableName,'dnaStandardTaxon')) continue;
 				if(strpos($tableName,'dnaExtraction')) continue;
@@ -732,7 +732,7 @@ class OccurrenceHarvester{
 				}
 
 				//Taxonomic fields
-				$skipTaxonomy = array(5,6,10,13,16,21,23,31,41,42,58,60,61,62,67,68,69,76,92);
+				$skipTaxonomy = array(5,6,10,13,16,21,23,31,41,42,58,60,61,62,67,68,69,76,92,98);
 				if(!in_array($dwcArr['collid'],$skipTaxonomy)){
 					$identArr = array();
 					if(isset($sampleArr['identifications'])){
@@ -1012,6 +1012,9 @@ class OccurrenceHarvester{
 		}
 		elseif($dwcArr['collid'] == 29 || $dwcArr['collid'] == 39 || $dwcArr['collid'] == 44 || $dwcArr['collid'] == 82 || $dwcArr['collid'] == 95){
 			$dwcArr['individualCount'] = 1;
+		}
+		elseif($dwcArr['collid'] == 11 || $dwcArr['collid'] == 12 || $dwcArr['collid'] == 14 || $dwcArr['collid'] == 15 || $dwcArr['collid'] == 17 || $dwcArr['collid'] == 18){
+			$dwcArr['individualCount'] = NULL;
 		}
 	}
 
@@ -1779,7 +1782,7 @@ class OccurrenceHarvester{
 	}
 
 	private function getTaxonGroup($collid){
-		$taxonGroup = array( 46 => 'ALGAE', 47 => 'ALGAE', 49 => 'ALGAE', 50 => 'ALGAE',  73 => 'ALGAE',
+		$taxonGroup = array( 46 => 'ALGAE', 47 => 'ALGAE', 49 => 'ALGAE', 50 => 'ALGAE',  73 => 'ALGAE',  98 => 'ALGAE',
 			11 => 'BEETLE', 14 => 'BEETLE', 39 => 'BEETLE', 44 => 'BEETLE', 63 => 'BEETLE', 82 =>'BEETLE', 95 =>'BEETLE',
 			20 => 'FISH', 66 => 'FISH',
 			12 => 'HERPETOLOGY', 15 => 'HERPETOLOGY', 70 => 'HERPETOLOGY',
@@ -1796,7 +1799,7 @@ class OccurrenceHarvester{
 
 	private function getKingdomName(){
 		if(in_array($this->activeCollid, array( 4,11,12,13,14,15,16,17,19,20,21,22,24,25,26,27,28,29,39,44,45,48,52,53,55,56,57,58,59,60,61,62,63,64,65,66,70,71,74,75,82,83,84,85,90,91,95,97 ))) return 'Animalia';
-		elseif(in_array($this->activeCollid, array( 7,8,9,10,18,23,40,54,76,93 ))) return 'Plantae';
+		elseif(in_array($this->activeCollid, array( 7,8,9,10,18,23,40,54,76,93,98 ))) return 'Plantae';
 		//Let's use Plantae for algae group, which works for now
 		elseif(in_array($this->activeCollid, array( 46,47,49,50,73 ))) return 'Plantae';
 		elseif(in_array($this->activeCollid, array( 30,79,80 ))) return 'Soil';
