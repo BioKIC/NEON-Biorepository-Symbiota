@@ -70,10 +70,10 @@ class ImageLocalProcessor {
 		ini_set('memory_limit','1024M');
 		//Use deaults located within symbini, if they are available
 		//Will be replaced by values within configuration file, if they are set
-		if(isset($GLOBALS['imgWebWidth']) && $GLOBALS['imgWebWidth']) $this->webPixWidth = $GLOBALS['imgWebWidth'];
-		if(isset($GLOBALS['imgTnWidth']) && $GLOBALS['imgTnWidth']) $this->tnPixWidth = $GLOBALS['imgTnWidth'];
-		if(isset($GLOBALS['imgLgWidth']) && $GLOBALS['imgLgWidth']) $this->lgPixWidth = $GLOBALS['imgLgWidth'];
-		if(isset($GLOBALS['imgFileSizeLimit']) && $GLOBALS['imgFileSizeLimit']) $this->webFileSizeLimit = $GLOBALS['imgFileSizeLimit'];
+		if(!empty($GLOBALS['IMG_WEB_WIDTH'])) $this->webPixWidth = $GLOBALS['IMG_WEB_WIDTH'];
+		if(!empty($GLOBALS['IMG_TN_WIDTH'])) $this->tnPixWidth = $GLOBALS['IMG_TN_WIDTH'];
+		if(!empty($GLOBALS['IMG_LG_WIDTH'])) $this->lgPixWidth = $GLOBALS['IMG_LG_WIDTH'];
+		if(!empty($GLOBALS['IMG_FILE_SIZE_LIMIT'])) $this->webFileSizeLimit = $GLOBALS['IMG_FILE_SIZE_LIMIT'];
 	}
 
 	function __destruct(){
@@ -246,7 +246,7 @@ class ImageLocalProcessor {
 		//Set target base path
 		if(!$this->targetPathBase){
 			//Assume that we should use the portal's default image root path
-			$this->targetPathBase = $GLOBALS['imageRootPath'];
+			$this->targetPathBase = $GLOBALS['IMAGE_ROOT_PATH'];
 		}
 		if($this->targetPathBase && substr($this->targetPathBase,-1) != '/' && substr($this->targetPathBase,-1) != "\\"){
 			$this->targetPathBase .= '/';
@@ -255,9 +255,9 @@ class ImageLocalProcessor {
 		//Set image base URL
 		if(!$this->imgUrlBase){
 			//Assume that we should use the portal's default image url prefix
-			$this->imgUrlBase = $GLOBALS['imageRootUrl'];
+			$this->imgUrlBase = $GLOBALS['IMAGE_ROOT_URL'];
 		}
-		if(isset($GLOBALS['imageDomain']) && $GLOBALS['imageDomain']){
+		if(!empty($GLOBALS['IMAGE_DOMAIN'])){
 			//Since imageDomain is set, portal is not central portal thus add portals domain to url base
 			if(substr($this->imgUrlBase,0,7) != 'http://' && substr($this->imgUrlBase,0,8) != 'https://'){
 				$urlPrefix = "http://";
@@ -575,6 +575,7 @@ class ImageLocalProcessor {
 	private function processImageFile($imageArr, $targetFileName, $targetPath, $pathFrag = ''){
 		$sourceFileName = $imageArr['originalurl'];
 		$sourcePath = $this->sourcePathBase.$pathFrag;
+		$smallOriginal = 0;
 		//$this->logOrEcho("Processing image (".date('Y-m-d h:i:s A')."): ".$fileName);
 		//ob_flush();
 		flush();
@@ -586,6 +587,7 @@ class ImageLocalProcessor {
 			$fileNameBase = substr($sourceFileName,0,$p);
 		}
 		list($width, $height) = ImageShared::getImgDim($sourcePath.$sourceFileName);
+
 		if($width && $height){
 			$fileSize = 0;
 			if(substr($sourcePath,0,7)=='http://' || substr($sourcePath,0,8)=='https://') {
@@ -599,98 +601,55 @@ class ImageLocalProcessor {
 			//ob_flush();
 			//flush();
 
-			//Set medium web image
-			$medUrl = '';
-			if($this->medProcessingCode){
-				$medFileName = $fileNameBase.$this->medSourceSuffix.$fileNameExt;
-				$medTargetFileName = substr($targetFileName,0,-4).$this->medSourceSuffix.'.jpg';
-				if(isset($imageArr['url']) && $imageArr['url']){
-					$medFileName = $imageArr['url'];
-					$medTargetFileName = $imageArr['url'];
-				}
-				if($this->medProcessingCode == 1){
-					// evaluate source and import
-					if($fileSize < $this->webFileSizeLimit && $width < ($this->webPixWidth*2)){
-						if(copy($sourcePath.$sourceFileName, $targetPath.$medTargetFileName)){
-							$medUrl = $medTargetFileName;
-							$this->logOrEcho('Source image imported as web image ', 1);
-						}
-					}
-					else{
-						if($this->createNewImage($sourcePath.$sourceFileName, $targetPath.$medTargetFileName, $this->webPixWidth, round($this->webPixWidth*$height/$width), $width, $height)){
-							$medUrl = $medTargetFileName;
-							$this->logOrEcho('Web image created from source image ', 1);
-						}
-					}
-				}
-				elseif($this->medProcessingCode == 2){
-					// import source and use as is
-					if($this->uriExists($sourcePath.$medFileName)){
-						if(copy($sourcePath.$medFileName, $targetPath.$medTargetFileName)){
-							$medUrl = $medTargetFileName;
-							$this->logOrEcho('Web image imported as is ', 1);
-						}
-					}
-					else $this->logOrEcho('WARNING: predesignated medium does not appear to exist ('.$sourcePath.$medFileName.') ', 1);
-				}
-				elseif($this->medProcessingCode == 3){
-					// map to source as the web image
-					if($this->uriExists($sourcePath.$medFileName)){
-						$medUrl = $sourcePath.$medFileName;
-						$this->logOrEcho('Source used as web image ', 1);
-					}
-					else{
-						$this->logOrEcho('WARNING: predesignated medium does not appear to exist ('.$sourcePath.$medFileName.') ',1);
-					}
-				}
-			}
-			if($medUrl) $imageArr['url'] = $medUrl;
-			else $this->logOrEcho('Failed to create web image ', 1);
+
 			//Set large image
 			$lgUrl = '';
 			if($this->lgProcessingCode){
 				$lgTargetFileName = $targetFileName;
 				if($this->lgProcessingCode == 1){
 					// 1 = evaluate source for import as large image
-					if($width > ($this->webPixWidth*1.3)){
-						//Source image is big enough to serve as large version
-						if($width > $this->lgPixWidth){
-							//Image is too wide, thus let's resize and import
-							if($this->createNewImage($sourcePath.$sourceFileName, $targetPath.$lgTargetFileName, $this->lgPixWidth, round($this->lgPixWidth*$height/$width), $width, $height)){
-								$lgUrl = $lgTargetFileName;
-								$this->logOrEcho('Resized source as large derivative ',1);
-							}
+					if($width > $this->lgPixWidth){
+						//Image is too wide, thus let's resize and import
+						if($this->createNewImage($sourcePath.$sourceFileName, $targetPath.$lgTargetFileName, $this->lgPixWidth, round($this->lgPixWidth*$height/$width), $width, $height)){
+							$lgUrl = $lgTargetFileName;
+							$this->logOrEcho('Resized source as large derivative ',1);
 						}
-						elseif($fileSize && $fileSize > $this->lgFileSizeLimit) {
-							// Image file size is too big, thus let's resize and import
+					}
+					elseif($fileSize && $fileSize > $this->lgFileSizeLimit) {
+						// Image file size is too big, thus let's resize and import
 
-							// Figure out what factor to reduce filesize by
-							$scaleFactor = sqrt($this->lgFileSizeLimit / $fileSize);
+						// Figure out what factor to reduce filesize by
+						$scaleFactor = sqrt($this->lgFileSizeLimit / $fileSize);
 
-							// Scale by a factor of the square root of the filesize ratio
-							// Note, this is a good approximation to reduce the filesize, but will not be exact
-							// True reduction will also depend on the JPEG quality of the source & the large file
-							$newWidth = round($width * $scaleFactor);
+						// Scale by a factor of the square root of the filesize ratio
+						// Note, this is a good approximation to reduce the filesize, but will not be exact
+						// True reduction will also depend on the JPEG quality of the source & the large file
+						$newWidth = round($width * $scaleFactor);
 
-							// Resize the image
-							if($this->createNewImage($sourcePath.$sourceFileName, $targetPath.$lgTargetFileName, $newWidth, round($newWidth*$height/$width), $width, $height)){
-								$lgUrl = $lgTargetFileName;
-								$this->logOrEcho('Resized source as large derivative ',1);
-							}
+						// Resize the image
+						if($this->createNewImage($sourcePath.$sourceFileName, $targetPath.$lgTargetFileName, $newWidth, round($newWidth*$height/$width), $width, $height)){
+							$lgUrl = $lgTargetFileName;
+							$this->logOrEcho('Resized source as large derivative ',1);
+						}
+					}
+					else{
+						if($width < ($this->webPixWidth*1.3)){
+							//Source image is relatively small - no need to create a medium asset
+							$smallOriginal = 1;
+						}
+
+						//Source can serve as large version, thus just import as is
+						if(copy($sourcePath.$sourceFileName, $targetPath.$lgTargetFileName)){
+							$lgUrl = $lgTargetFileName;
+							$this->logOrEcho('Imported source as large derivative ',1);
 						}
 						else{
-							//Source can serve as large version, thus just import as is
-							if(copy($sourcePath.$sourceFileName, $targetPath.$lgTargetFileName)){
-								$lgUrl = $lgTargetFileName;
-								$this->logOrEcho('Imported source as large derivative ',1);
-							}
-							else{
-								$this->logOrEcho("WARNING: unable to import large derivative (".$sourcePath.$sourceFileName.") ",1);
-							}
+							$this->logOrEcho("WARNING: unable to import large derivative (".$sourcePath.$sourceFileName.") ",1);
 						}
-						$imgHash = md5_file($targetPath.$lgTargetFileName);
-						if($imgHash) $imageArr['mediamd5'] = $imgHash;
 					}
+					$imgHash = md5_file($targetPath.$lgTargetFileName);
+					if($imgHash) $imageArr['mediamd5'] = $imgHash;
+
 				}
 				elseif($this->lgProcessingCode == 2){
 					// 2 = map to source
@@ -739,6 +698,109 @@ class ImageLocalProcessor {
 				}
 			}
 			if($lgUrl) $imageArr['originalurl'] = $lgUrl;
+
+			//Set medium web image
+			$medUrl = '';
+			if($this->medProcessingCode){
+				$medFileName = $fileNameBase.$this->medSourceSuffix.$fileNameExt;
+				$medTargetFileName = substr($targetFileName,0,-4).$this->medSourceSuffix.'.jpg';
+				if(isset($imageArr['url']) && $imageArr['url']){
+					$medFileName = $imageArr['url'];
+					$medTargetFileName = $imageArr['url'];
+				}
+				if($this->medProcessingCode == 1){
+					// evaluate source and import
+					if (!$smallOriginal){
+						if($fileSize < $this->webFileSizeLimit && $width < ($this->webPixWidth*2)){
+							if(copy($sourcePath.$sourceFileName, $targetPath.$medTargetFileName)){
+								$medUrl = $medTargetFileName;
+								$this->logOrEcho('Source image imported as web image ', 1);
+							}
+						}
+						else{
+							if($this->createNewImage($sourcePath.$sourceFileName, $targetPath.$medTargetFileName, $this->webPixWidth, round($this->webPixWidth*$height/$width), $width, $height)){
+								$medUrl = $medTargetFileName;
+								$this->logOrEcho('Web image created from source image ', 1);
+							}
+						}
+					}
+					else {
+						$medUrl = $lgUrl;
+						$this->logOrEcho('Web image linked to original as source image is relativly small', 1);
+					}
+				}
+				elseif($this->medProcessingCode == 2){
+					// import source and use as is
+					if($this->uriExists($sourcePath.$medFileName)){
+						if(copy($sourcePath.$medFileName, $targetPath.$medTargetFileName)){
+							$medUrl = $medTargetFileName;
+							$this->logOrEcho('Web image imported as is ', 1);
+						}
+					}
+					else $this->logOrEcho('WARNING: predesignated medium does not appear to exist ('.$sourcePath.$medFileName.') ', 1);
+				}
+				elseif($this->medProcessingCode == 3){
+					// map to source as the web image
+					if($this->uriExists($sourcePath.$medFileName)){
+						$medUrl = $sourcePath.$medFileName;
+						$this->logOrEcho('Source used as web image ', 1);
+					}
+					else{
+						$this->logOrEcho('WARNING: predesignated medium does not appear to exist ('.$sourcePath.$medFileName.') ',1);
+					}
+				}
+			}
+			if($medUrl) $imageArr['url'] = $medUrl;
+			else $this->logOrEcho('Failed to create web image ', 1);
+
+			//Set medium web image
+			$medUrl = '';
+			if($this->medProcessingCode){
+				$medFileName = $fileNameBase.$this->medSourceSuffix.$fileNameExt;
+				$medTargetFileName = substr($targetFileName,0,-4).$this->medSourceSuffix.'.jpg';
+				if(isset($imageArr['url']) && $imageArr['url']){
+					$medFileName = $imageArr['url'];
+					$medTargetFileName = $imageArr['url'];
+				}
+				if($this->medProcessingCode == 1){
+					// evaluate source and import
+					if($fileSize < $this->webFileSizeLimit && $width < ($this->webPixWidth*2)){
+						if(copy($sourcePath.$sourceFileName, $targetPath.$medTargetFileName)){
+							$medUrl = $medTargetFileName;
+							$this->logOrEcho('Source image imported as web image ', 1);
+						}
+					}
+					else{
+						if($this->createNewImage($sourcePath.$sourceFileName, $targetPath.$medTargetFileName, $this->webPixWidth, round($this->webPixWidth*$height/$width), $width, $height)){
+							$medUrl = $medTargetFileName;
+							$this->logOrEcho('Web image created from source image ', 1);
+						}
+					}
+				}
+				elseif($this->medProcessingCode == 2){
+					// import source and use as is
+					if($this->uriExists($sourcePath.$medFileName)){
+						if(copy($sourcePath.$medFileName, $targetPath.$medTargetFileName)){
+							$medUrl = $medTargetFileName;
+							$this->logOrEcho('Web image imported as is ', 1);
+						}
+					}
+					else $this->logOrEcho('WARNING: predesignated medium does not appear to exist ('.$sourcePath.$medFileName.') ', 1);
+				}
+				elseif($this->medProcessingCode == 3){
+					// map to source as the web image
+					if($this->uriExists($sourcePath.$medFileName)){
+						$medUrl = $sourcePath.$medFileName;
+						$this->logOrEcho('Source used as web image ', 1);
+					}
+					else{
+						$this->logOrEcho('WARNING: predesignated medium does not appear to exist ('.$sourcePath.$medFileName.') ',1);
+					}
+				}
+			}
+			if($medUrl) $imageArr['url'] = $medUrl;
+			else $this->logOrEcho('Failed to create web image ', 1);
+
 			//Set thumbnail image
 			$tnUrl = '';
 			if($this->tnProcessingCode){
@@ -944,7 +1006,7 @@ class ImageLocalProcessor {
 					'VALUES('.$this->activeCollid.',"'.$catalogNumber.'","unprocessed","'.date('Y-m-d H:i:s').'")';
 				if($this->conn->query($sql2)){
 					$occid = $this->conn->insert_id;
-					$this->logOrEcho('Specimen record does not exist; new empty specimen record created and assigned an "unprocessed" status (occid = <a href="../individual/index.php?occid='.$occid.'" target="_blank">'.$occid.'</a>) ',1);
+					$this->logOrEcho('Specimen record does not exist; new empty specimen record created and assigned an "unprocessed" status (occid = <a href="../individual/index.php?occid=' . htmlspecialchars($occid, ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . '" target="_blank">' . htmlspecialchars($occid, ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . '</a>) ',1);
 				}
 				else $this->logOrEcho("ERROR creating new occurrence record: ".$this->conn->error,1);
 			}
@@ -1033,7 +1095,7 @@ class ImageLocalProcessor {
 			$sql2 = '';
 			foreach($imgArr as $fieldName => $fieldValue){
 				if(array_key_exists($fieldName, $this->imageTableMap)){
-					$sql1 .= $fieldName.',';
+					$sql1 .= $fieldName . ',';
 					$sql2 .= '?, ';
 					$paramType .= $this->imageTableMap[$fieldName]['type'];
 					$paramArr[] = $fieldValue;
@@ -1650,7 +1712,7 @@ class ImageLocalProcessor {
 				'Content-Transfer-Encoding: 8bit'.$eol.
 				'Images in the attached file have been processed and are ready to be uploaded into your collection. '.
 				'This can be done using the image loading tools located in the Processing Tools (see link below).'.
-				'<a href="'.$url.'">'.$url.'</a>'.
+				'<a href="' . htmlspecialchars($url, ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . '">' . htmlspecialchars($url, ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . '</a>'.
 				'<br/>If you have problems with the new password, contact the System Administrator ';
 
 			//Add attachment
@@ -2053,11 +2115,11 @@ class ImageLocalProcessor {
 
 		$localUrl = '';
 		if(substr($url,0,1) == '/'){
-			if(isset($GLOBALS['imageDomain']) && $GLOBALS['imageDomain']){
-				$url = $GLOBALS['imageDomain'].$url;
+			if(!empty($GLOBALS['IMAGE_DOMAIN'])){
+				$url = $GLOBALS['IMAGE_DOMAIN'].$url;
 			}
-			elseif($GLOBALS['imageRootUrl'] && strpos($url,$GLOBALS['imageRootUrl']) === 0){
-				$localUrl = str_replace($GLOBALS['imageRootUrl'],$GLOBALS['imageRootPath'],$url);
+			elseif($GLOBALS['IMAGE_ROOT_URL'] && strpos($url,$GLOBALS['IMAGE_ROOT_URL']) === 0){
+				$localUrl = str_replace($GLOBALS['IMAGE_ROOT_URL'],$GLOBALS['IMAGE_ROOT_PATH'],$url);
 			}
 			else{
 				$urlPrefix = "http://";
