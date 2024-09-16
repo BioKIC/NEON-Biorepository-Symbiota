@@ -14,7 +14,7 @@ class OmDeterminations extends Manager{
 	public function __construct($conn){
 		parent::__construct(null, 'write', $conn);
 		$this->schemaMap = array('identifiedBy' => 's', 'dateIdentified' => 's', 'higherClassification' => 's', 'family' => 's', 'sciname' => 's', 'verbatimIdentification' => 's',
-			'scientificNameAuthorship' => 's', 'identificationUncertain' => 'i', 'identificationQualifier' => 's', 'isCurrent' => 'i', 'printQueue' => 'i', 'appliedStatus' => 'i',
+			'scientificNameAuthorship' => 's', 'tidInterpreted' => 'i', 'identificationQualifier' => 's', 'isCurrent' => 'i', 'printQueue' => 'i', 'appliedStatus' => 'i',
 			'securityStatus' => 'i', 'securityStatusReason' => 's', 'detType' => 's', 'identificationReferences' => 's', 'identificationRemarks' => 's', 'taxonRemarks' => 's',
 			'identificationVerificationStatus' => 's', 'taxonConceptID' => 's', 'sourceIdentifier' => 's', 'sortSequence' => 'i');
 	}
@@ -52,6 +52,28 @@ class OmDeterminations extends Manager{
 			foreach($retArr as $detID => $detArr){
 				if($detArr['createdUid'] && array_key_exists($detArr['createdUid'], $uidArr)) $retArr[$detID]['createdBy'] = $uidArr[$detArr['createdUid']];
 				if($detArr['modifiedUid'] && array_key_exists($detArr['modifiedUid'], $uidArr)) $retArr[$detID]['modifiedBy'] = $uidArr[$detArr['modifiedUid']];
+			}
+		}
+		return $retArr;
+	}
+
+	public function getDeterminationSetArr($occidArr, $conditionArr = null){
+		$retArr = array();
+		$occidStr = implode(',', $occidArr);
+		if(preg_match('/^[\d,]+$/', $occidStr)){
+			$sql = 'SELECT detid, occid, '.implode(', ', array_keys($this->schemaMap)).', initialTimestamp FROM omoccurdeterminations WHERE occid IN('.$occidStr.') ';
+			if($conditionArr && is_array($conditionArr)){
+				foreach($conditionArr as $fieldName => $condition){
+					if(array_key_exists($fieldName, $this->schemaMap)){
+						$sql .= 'AND ('.$fieldName.' = "'.$this->conn->real_escape_string($condition).'") ';
+					}
+				}
+			}
+			if($rs = $this->conn->query($sql)){
+				while($r = $rs->fetch_assoc()){
+					$retArr[$r['occid']][$r['detid']] = $r;
+				}
+				$rs->free();
 			}
 		}
 		return $retArr;

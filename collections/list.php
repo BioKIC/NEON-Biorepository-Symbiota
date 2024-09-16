@@ -107,27 +107,11 @@ $_SESSION['citationvar'] = $searchVar;
 	<?php
 	$displayLeftMenu = (isset($collections_listMenu) ? $collections_listMenu : false);
 	include($SERVER_ROOT . '/includes/header.php');
-	if (isset($collections_listCrumbs)) {
-		if ($collections_listCrumbs) {
-			echo '<div class="navpath">';
-			echo '<a href="../index.php">' . htmlspecialchars($LANG['NAV_HOME'], ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . '</a> &gt;&gt; ';
-			echo $collections_listCrumbs . ' &gt;&gt; ';
-			echo '<b>' . $LANG['NAV_SPECIMEN_LIST'] . '</b>';
-			echo '</div>';
-		}
-	}
-	else {
-		echo '<div class="navpath">';
-		echo '<a href="../index.php">' . htmlspecialchars($LANG['NAV_HOME'], ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . '</a> &gt;&gt; ';
-		if($comingFrom !== 'search/index.php'){
-			echo '<a href="index.php">' . htmlspecialchars($LANG['NAV_COLLECTIONS'], ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . '</a> &gt;&gt; ';
-			echo '<a href="' . $CLIENT_ROOT . '/collections/harvestparams.php">' . htmlspecialchars($LANG['NAV_SEARCH'], ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . '</a> &gt;&gt; ';
-		} else{
-			echo '<a href="' . $CLIENT_ROOT . '/collections/search/index.php">' . htmlspecialchars($LANG['NAV_SEARCH'], ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . '</a> &gt;&gt; ';
-		}
-		echo '<b>' . $LANG['NAV_SPECIMEN_LIST'] . '</b>';
-		echo '</div>';
-	}
+	echo '<div class="navpath">';
+	echo '<a href="../index.php">' . $LANG['NAV_HOME'] . '</a> &gt;&gt; ';
+	echo '<a href="' . $CLIENT_ROOT . '/neon/search/index.php">' . $LANG['NAV_SEARCH'] . '</a> &gt;&gt; ';
+	echo '<b>' . $LANG['NAV_SPECIMEN_LIST'] . '</b>';
+	echo '</div>';
 	?>
 	<!-- This is inner text! -->
 	<div role="main" id="innertext">

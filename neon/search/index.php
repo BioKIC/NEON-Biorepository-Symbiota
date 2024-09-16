@@ -15,8 +15,9 @@ $siteData = new DatasetsMetadata();
 	include_once($SERVER_ROOT . '/includes/head.php');
 	include_once($SERVER_ROOT . '/includes/googleanalytics.php');
 	?>
-	<script src="js/jquery-3.2.1.min.js" type="text/javascript"></script>
-	<script src="<?= $CLIENT_ROOT ?>/js/jquery-ui-1.12.1/jquery-ui.min.js" type="text/javascript"></script>
+	<link href="<?= $CSS_BASE_PATH ?>/jquery-ui.min.css?ver=<?= $CSS_VERSION ?>" type="text/css" rel="stylesheet">
+	<script src="<?= $CLIENT_ROOT ?>/js/jquery-3.7.1.min.js" type="text/javascript"></script>
+	<script src="<?= $CLIENT_ROOT ?>/js/jquery-ui.min.js" type="text/javascript"></script>
 	<script src="<?= $CLIENT_ROOT ?>/js/symb/api.taxonomy.taxasuggest.js" type="text/javascript"></script>
 	<script>
 		const clientRoot = '<?php echo $CLIENT_ROOT; ?>';
@@ -248,7 +249,7 @@ $siteData = new DatasetsMetadata();
 										$sitesArr = $siteData->getNeonSitesByDom($domain["domainnumber"]);
 										if ($sitesArr) {
 											foreach ($sitesArr as $site) {
-												echo "<li><input type='checkbox' id='${site["siteid"]}' name='datasetid' value={$site["datasetid"]} class='child' data-domain={$domain["domainnumber"]} checked=''><span class='ml-1'><a href='https://www.neonscience.org/field-sites/{$site["siteid"]}' target='_blank' rel='noopener noreferrer'>({$site["siteid"]}) {$site["sitename"]}</a></span></li>";
+												echo "<li><input type='checkbox' id='{$site["siteid"]}' name='datasetid' value={$site["datasetid"]} class='child' data-domain={$domain["domainnumber"]} checked=''><span class='ml-1'><a href='https://www.neonscience.org/field-sites/{$site["siteid"]}' target='_blank' rel='noopener noreferrer'>({$site["siteid"]}) {$site["sitename"]}</a></span></li>";
 											}
 										};
 										echo "</ul>";
@@ -429,7 +430,7 @@ $siteData = new DatasetsMetadata();
 									<input type="text" name="collector" data-chip="Collector/ORCID">
 									<span data-label="Collector/ORCID"></span></label>
 								<span class="assistive-text">Any part of a collector's name or ORCID iD (XXXX-XXXX-XXXX-XXXX).</span>
-							</div>							
+							</div>
 						</div>
 					</div>
 				</section>
@@ -448,7 +449,7 @@ $siteData = new DatasetsMetadata();
 						?>
 
 
-					
+
 						</div>
 					</div>
 				</section>
