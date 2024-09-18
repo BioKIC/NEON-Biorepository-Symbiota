@@ -1027,6 +1027,7 @@ class OccurrenceHarvester{
 		$collArr = array();
 		//$collArr[49] = array('targetCollid' => 98, 'lotId' => 'Epilithon');
 		//$collArr[7] = array('targetCollid' => 98, 'lotId' => 'dynamic', 'defaultId' => 'Epilithon');
+		//$collArr[73] = array('targetCollid' => 98, 'lotId' => 'Epilithon');
 		//Add option to parse ID from sampleID
 		//Process identifications
 		$sourceCollid = $dwcArr['collid'];
@@ -1038,10 +1039,17 @@ class OccurrenceHarvester{
 				foreach($dwcArr['identifications'] as $idKey => $idArr){
 					if(!empty($idArr['securityStatus'])) continue;
 					if(empty($idArr['sciname'])) continue;
-					$dateIdentified = '0';
+					$dateIdentified = 0;
 					if(!empty($idArr['dateIdentified'])){
+						//If an actual date exists, extract to be used for grouping IDs
 						if(preg_match('/^(\d{4}-\d{2}-\d{2}).*/', $idArr['dateIdentified'], $m)){
 							$dateIdentified = $m[1];
+						}
+					}
+					if(!$dateIdentified){
+						//If date does not exist and collector does exist, increase group by 1, thus making it a sepparate and preferred group for subsampling
+						if(!empty($idArr['identifiedBy']) && $idArr['identifiedBy'] != 'undefined'){
+							$dateIdentified = 1;
 						}
 					}
 					$identificationsGrouped[$dateIdentified][] = $idKey;
