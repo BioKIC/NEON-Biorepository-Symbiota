@@ -613,14 +613,16 @@ class OccurrenceHarvester{
 				if(isset($sampleArr['life_stage'])) $dwcArr['lifeStage'] = $sampleArr['life_stage'];
 				if(isset($sampleArr['associated_taxa'])) $dwcArr['associatedTaxa'] = $this->translateAssociatedTaxa($sampleArr['associated_taxa']);
 				$occurRemarks = array();
-				if(isset($sampleArr['remarks'])) $occurRemarks[] = $sampleArr['remarks'];
-				if(isset($sampleArr['sample_type'])){
-					$sampleType = $sampleArr['sample_type'];
-					if($sampleType == 'M') $sampleType = 'mineral';
-					elseif($sampleType == 'O') $sampleType = 'organic';
-					$occurRemarks[] = 'sample type: '.$sampleType;
+				if(!in_array($dwcArr['collid'],array(46))){
+					if(isset($sampleArr['remarks'])) $occurRemarks[] = $sampleArr['remarks'];
+					if(isset($sampleArr['sample_type'])){
+						$sampleType = $sampleArr['sample_type'];
+						if($sampleType == 'M') $sampleType = 'mineral';
+						elseif($sampleType == 'O') $sampleType = 'organic';
+						$occurRemarks[] = 'sample type: '.$sampleType;
+					}
+					if($occurRemarks) $dwcArr['occurrenceRemarks'] = implode('; ',$occurRemarks);
 				}
-				if($occurRemarks) $dwcArr['occurrenceRemarks'] = implode('; ',$occurRemarks);
 				if(isset($sampleArr['assocMedia'])) $dwcArr['assocMedia'] = $sampleArr['assocMedia'];
 				if(isset($sampleArr['coordinate_uncertainty']) && $sampleArr['coordinate_uncertainty']) $dwcArr['coordinateUncertaintyInMeters'] = $sampleArr['coordinate_uncertainty'];
 				if(isset($sampleArr['decimal_latitude'])) $dwcArr['decimalLatitude'] = $sampleArr['decimal_latitude'];
