@@ -9,12 +9,93 @@ header('Content-Type: text/html; charset=' . $CHARSET);
 		include_once($SERVER_ROOT.'/includes/head.php');
 		?>
 	</head>
+	
+	<script>
+		window.onload = function() {
+			function updateElementWidth() {	
+				// hero image
+				var neonPageContent = document.querySelector('div[data-selenium="neon-page.content"]');
+				var neonPageContentWidth = neonPageContent.offsetWidth;
+	
+				var muiContainer = document.querySelector('div.MuiContainer-root');
+				var muiContainerStyle = window.getComputedStyle(muiContainer);
+				var muiContainerRightMargin = parseFloat(muiContainerStyle.marginRight);
+	
+				var neonPageContentStyle = window.getComputedStyle(neonPageContent);
+				var neonPageContentpaddingLeft = parseFloat(neonPageContentStyle.paddingLeft);
+				
+				document.getElementById('heroimage-div').style.width = (neonPageContentWidth + muiContainerRightMargin) + 'px';
+			}
+			
+			var heroDiv = document.getElementById('heroimage-div');
+			if (heroDiv) {
+				// Update the width on initial load
+				updateElementWidth();
+			
+				// Update the width on window resize
+				window.addEventListener('resize', updateElementWidth);
+			}
+		
+			
+		  document.getElementById("downloadButton").addEventListener("click", function() {
+			fetch("https://data.neonscience.org/api/v0/samples/supportedClasses")
+			  .then(response => response.json())
+			  .then(data => {
+				const entries = data.data.entries;
+		
+				// Convert the JSON entries to CSV format
+				const csvData = [];
+				const headers = ["key", "value"];
+				csvData.push(headers.join(","));
+		
+				entries.forEach(entry => {
+				  csvData.push([entry.key, entry.value].join(","));
+				});
+		
+				// Create a CSV blob
+				const blob = new Blob([csvData.join("\n")], { type: "text/csv" });
+				const url = URL.createObjectURL(blob);
+		
+				// Create a link to download the CSV file
+				const a = document.createElement("a");
+				a.href = url;
+				a.download = "sample_classes.csv";
+				document.body.appendChild(a);
+				a.click();
+				document.body.removeChild(a);
+			  })
+			  .catch(error => console.error('Error fetching or processing the data:', error));
+		  });
+		}
+	</script>
+
+	<style>
+	  #heroimage-div {
+		position: relative;
+		right: 74px;
+	  }
+	
+	  #heroimage-div::after {
+		content: '';
+		position: absolute;
+		background-image: url('<?php echo $CLIENT_ROOT . '/images/card-images/white-border.png'; ?>');
+		background-position: 50% 0;
+		background-repeat: repeat no-repeat;
+		bottom: -30px;
+		height: 60px;
+		width: 100%;
+		left: 0;
+	  }
+	</style>
+	
 	<body>
 		<!-- This is inner text! -->
 		<div id="innertext">
 			<h1>About Samples</h1>
 			</br>
-			<img src="<?php echo $CLIENT_ROOT . '/images/card-images/2021_04_Photo_Biorepository-ASU-handling-samples-jpg_0.jpg'; ?>" style="position: relative; right: 75px;" alt="ASU biorepository" loading="lazy">
+			<div id = "heroimage-div">
+				<img src="<?php echo $CLIENT_ROOT . '/images/card-images/2021_04_Photo_Biorepository-ASU-handling-samples-jpg_0.jpg'; ?>" style="max-width:100%" alt="ASU biorepository" loading="lazy">
+			</div>
 			<p>NEON has been collecting specimens as part of its sampling program since 2012. Certain samples are earmarked for immediate curation at an archival institution, while others are sent to analytical facilities for chemical, taxonomic or genetic analysis. Where possible, the downstream byproducts of these analyses are archived in lieu of the original sample (e.g., when ear tissue from small mammal collections are sent for genetic analysis, any surplus genomic extracts are preserved at an archive facility). In 2018, NEON began construction of the NEON Biorepository – a facility intended to archive most specimens curated by the NEON program - at the Arizona State University Biocollections in Tempe, AZ. The NEON Biorepository publishes occurrence records for every archived sample and specimen, as well as additional value-added sample-associated data not present in NEON data products in the sample portal and makes these samples available for loan.</p>
 			<h2>Sample Organization</h2>
 			<div id="biorepo-aboutsamples-content"></div>
@@ -30,7 +111,7 @@ header('Content-Type: text/html; charset=' . $CHARSET);
 			<!--		<path d="M19 12v7H5v-7H3v7c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2v-7h-2zm-6 .67l2.59-2.58L17 11.5l-5 5-5-5 1.41-1.41L11 12.67V3h2z"></path>-->
 			<!--	</svg>-->
 			<!--</a>-->
-			<button class="MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary" tabindex="0" type="button" data-selenium="download-sample-classes-button">
+			<button class="MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary" tabindex="0" type="button" data-selenium="download-sample-classes-button" id="downloadButton">
 				<span class="MuiButton-label" style="font-weight:600">Download current list of supported sample classes
 					<svg class="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall" focusable="false" viewBox="0 0 24 24" aria-hidden="true" style="margin-left: 8px;">
 						<path d="M19 12v7H5v-7H3v7c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2v-7h-2zm-6 .67l2.59-2.58L17 11.5l-5 5-5-5 1.41-1.41L11 12.67V3h2z"></path>
