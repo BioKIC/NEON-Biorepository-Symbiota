@@ -88,10 +88,10 @@
     { "name": "Sample Analysis", "href": "http://localhost/neon/misc/sampleanalysis.php" },
     { "name": "Sample Explorer" }
     ],
-  "/neon/misc/samplehandling.php": [
+  "/neon/misc/aboutsamples.php": [
     { "name": "Data & Samples", "href": "https://www.neonscience.org/data-samples" },
     { "name": "Sample Portal", "href": "http://localhost/neon/index.php" },
-    { "name": "Sample Handling" }
+    { "name": "About Samples" }
     ],
   "https://www.neonscience.org/samples/sample-quality": [
     { "name": "Data & Samples", "href": "https://www.neonscience.org/data-samples" },
