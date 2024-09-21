@@ -390,9 +390,10 @@ $traitArr = $indManager->getTraitArr();
 								if($resolvableGuid) echo '<a href="'.$occArr['occurrenceid'].'" target="_blank">';
 								echo $occArr['occurrenceid'];
 								if($resolvableGuid) echo '</a>';
-								echo '<span style="margin-left: 10px"><a href="https://doi.org/10.58052/' . $occArr['occurrenceid'] . '" target="_blank">SESAR Record</a></span>';
-								
-								
+								// Check if occurrenceid is an IGSN
+								if(preg_match('/^NEON[a-zA-Z0-9]{5}$/', $occArr['occurrenceid'])) {
+									echo '<span style="margin-left: 10px"><a href="https://doi.org/10.58052/' . $occArr['occurrenceid'] . '" target="_blank">SESAR Record</a></span>';
+								}
 								?>
 							</div>
 							<?php

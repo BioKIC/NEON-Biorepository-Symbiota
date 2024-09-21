@@ -50,7 +50,7 @@ header("Content-Type: text/html; charset=" . $CHARSET);
 		<ul>
 			<h3>General Information</h3>
 			<li><a href="#h.92fs9knk10ri">What is the NEON Biorepository?</a></li>
-			<li><a href="#h.dupjcs7lsdqj">Where is the NEON Biorepository located</a>?</li>
+			<li><a href="#h.dupjcs7lsdqj">Where is the NEON Biorepository located?</a></li>
 			<li><a href="#h.svmnyswsw36">What is this portal (NEON Biorepository Data Portal)?</a></li>
 		</ul>
 		<ul>
