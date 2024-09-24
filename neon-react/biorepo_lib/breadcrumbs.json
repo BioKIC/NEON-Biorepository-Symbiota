@@ -105,11 +105,18 @@
     { "name": "About Samples", "href": "https://biokic4.rc.asu.edu/neon/portal/misc/aboutsamples.php" },
     { "name": "Soil Archives" }
     ],
+  "/neon/portal/collections/misc/browsecollprofiles.php": [
+    { "name": "Data & Samples", "href": "https://www.neonscience.org/data-samples" },
+    { "name": "Sample Portal", "href": "https://biokic4.rc.asu.edu/neon/portal/index.php" },
+    { "name": "About Samples", "href": "https://biokic4.rc.asu.edu/neon/portal/misc/aboutsamples.php" },
+    { "name": "Browse Collection Profiles" }
+    ],
   "/neon/portal/collections/misc/collprofiles.php": [
     { "name": "Data & Samples", "href": "https://www.neonscience.org/data-samples" },
     { "name": "Sample Portal", "href": "https://biokic4.rc.asu.edu/neon/portal/index.php" },
     { "name": "About Samples", "href": "https://biokic4.rc.asu.edu/neon/portal/misc/aboutsamples.php" },
-    { "name": "Sample Collection Profiles" }
+    { "name": "Browse Collection Profiles", "href": "https://biokic4.rc.asu.edu/neon/portal/misc/browsecollprofiles.php" },
+    { "name": "Collection Profile" }
     ],
   "/neon/portal/neon/index.php": [
     { "name": "Data & Samples", "href": "https://www.neonscience.org/data-samples" },
