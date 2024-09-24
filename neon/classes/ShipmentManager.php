@@ -983,15 +983,15 @@ class ShipmentManager{
 				$this->searchArr['sessionData'] = $_REQUEST['sessionData'];
 			}
 			if(isset($_REQUEST['checkinUid']) && $_REQUEST['checkinUid']){
-				$sqlWhere .= 'AND ((s.checkinUid = "'.$_REQUEST['checkinUid'].'")) ';
+				$sqlWhere .= 'AND ((s.checkinUid IN ("' . implode('","', $_REQUEST['checkinUid']) . '")) ';
 				$this->searchArr['checkinUid'] = $_REQUEST['checkinUid'];
 			}
-			if (isset($_REQUEST['checkinsampleUid']) && !empty($_REQUEST['checkinsampleUid'])) {
+			if (isset($_REQUEST['checkinsampleUid']) && $_REQUEST['checkinsampleUid']) {
 				$sqlWhere .= 'AND (m.checkinUid IN ("' . implode('","', $_REQUEST['checkinsampleUid']) . '")) ';
 				$this->searchArr['checkinsampleUid'] = $_REQUEST['checkinsampleUid'];
 			}
 			if(isset($_REQUEST['importedUid']) && $_REQUEST['importedUid']){
-				$sqlWhere .= 'AND ((s.importUid = "'.$_REQUEST['importedUid'].'") OR (s.modifiedByUid = "'.$_REQUEST['importedUid'].'")) ';
+				$sqlWhere .= 'AND ((s.importUid IN ("' . implode('","', $_REQUEST['importUid']) .'") OR (s.modifiedByUid IN ("' . implode('","', $_REQUEST['importUid']).'")) ';
 				$this->searchArr['importedUid'] = $_REQUEST['importedUid'];
 			}
 			/*

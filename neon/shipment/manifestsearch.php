@@ -191,14 +191,12 @@ include($SERVER_ROOT.'/includes/header.php');
 						</select>
 					</div>
 					<div class="fieldDiv">
-						<b>Shipment Checked In by: </b>
-						<select name="checkinUid" style="margin:5px 10px">
-							<option value="">All Records</option>
-							<option value="">------------------------</option>
+						<b style="vertical-align: top;">Shipment Checked In by: </b>
+						<select name="checkinUid[]" multiple style="margin:5px 10px" multiselect-search="true">
 							<?php
 							$usercheckinArr = $shipManager->getCheckinUserArr();
 							foreach($usercheckinArr as $uid => $userName){
-								echo '<option value="'.$uid.'" '.(isset($searchArgumentArr['checkinUid'])&&$uid==$searchArgumentArr['checkinUid']?'SELECTED':'').'>'.$userName.'</option>';
+								echo '<option value="'.$uid.'" '.(isset($searchArgumentArr['checkinUid']) && in_array($uid, $searchArgumentArr['checkinUid'])?'SELECTED':'').'>'.$userName.'</option>';
 							}
 							?>
 						</select>
@@ -206,14 +204,12 @@ include($SERVER_ROOT.'/includes/header.php');
 				</div>
 				<div class="fieldGroupDiv">
 					<div class="fieldDiv">
-						<b>Imported/Modified by:</b>
-						<select name="importedUid" style="margin:5px 10px">
-							<option value="">All Records</option>
-							<option value="">------------------------</option>
+						<b style="vertical-align: top;">Imported/Modified by:</b>
+						<select name="importedUid[]" multiple style="margin:5px 10px" multiselect-search="true">
 							<?php
 							$userImportArr = $shipManager->getImportUserArr();
 							foreach($userImportArr as $uid => $userName){
-								echo '<option value="'.$uid.'" '.(isset($searchArgumentArr['importedUid'])&&$uid==$searchArgumentArr['importedUid']?'SELECTED':'').'>'.$userName.'</option>';
+								echo '<option value="'.$uid.'" '.(isset($searchArgumentArr['importedUid'])&& in_array($uid, $searchArgumentArr['importedUid'])?'SELECTED':'').'>'.$userName.'</option>';
 							}
 							?>
 						</select>
