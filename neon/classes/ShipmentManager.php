@@ -983,7 +983,7 @@ class ShipmentManager{
 				$this->searchArr['sessionData'] = $_REQUEST['sessionData'];
 			}
 			if(isset($_REQUEST['checkinUid']) && $_REQUEST['checkinUid']){
-				$sqlWhere .= 'AND ((s.checkinUid IN ("' . implode('","', $_REQUEST['checkinUid']) . '")) ';
+				$sqlWhere .= 'AND (s.checkinUid IN ("' . implode('","', $_REQUEST['checkinUid']) . '")) ';
 				$this->searchArr['checkinUid'] = $_REQUEST['checkinUid'];
 			}
 			if (isset($_REQUEST['checkinsampleUid']) && $_REQUEST['checkinsampleUid']) {
