@@ -29,6 +29,9 @@ if($isEditor){
 	}
 }
 ?>
+
+<script src="../js/multiselect-dropdown.js" ></script>
+
 <html>
 <head>
 	<title><?php echo $DEFAULT_TITLE; ?> Manifest Viewer</title>
@@ -55,6 +58,7 @@ if($isEditor){
 			f.dateCheckinStart.value = "";
 			f.dateCheckinEnd.value = "";
 			f.checkinUid.value = "";
+			f.checkinsampleUid.value = "";
 			f.sessionData.value = "";
 			f.importedUid.value = "";
 			f.sampleCondition.value = "";
@@ -176,7 +180,18 @@ include($SERVER_ROOT.'/includes/header.php');
 				</div>
 				<div class="fieldGroupDiv">
 					<div class="fieldDiv">
-						<b>Checked In by: </b>
+						<b style="vertical-align: top;">Samples Checked In by: </b>
+						<select name="checkinsampleUid[]" multiple style="margin:5px 10px" multiselect-search="true">
+							<?php
+							$usercheckinArr = $shipManager->getCheckinUserArr();
+							foreach($usercheckinArr as $uid => $userName){
+								echo '<option value="'.$uid.'" '.(isset($searchArgumentArr['checkinsampleUid']) && in_array($uid, $searchArgumentArr['checkinsampleUid']) ? 'SELECTED' : '').'>'.$userName.'</option>';
+							}
+							?>
+						</select>
+					</div>
+					<div class="fieldDiv">
+						<b>Shipment Checked In by: </b>
 						<select name="checkinUid" style="margin:5px 10px">
 							<option value="">All Records</option>
 							<option value="">------------------------</option>
@@ -188,6 +203,8 @@ include($SERVER_ROOT.'/includes/header.php');
 							?>
 						</select>
 					</div>
+				</div>
+				<div class="fieldGroupDiv">
 					<div class="fieldDiv">
 						<b>Imported/Modified by:</b>
 						<select name="importedUid" style="margin:5px 10px">
