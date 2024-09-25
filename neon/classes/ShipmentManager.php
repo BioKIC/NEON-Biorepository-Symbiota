@@ -1176,7 +1176,7 @@ class ShipmentManager{
 		$sql = 'SELECT DISTINCT sessionID, sessionName FROM neonsessioning WHERE endTime IS NOT NULL';
 		$rs = $this->conn->query($sql);
 		while($r = $rs->fetch_object()){
-			$retArr[$r->neonSessioningID] = $r->sessionName;
+			$retArr[$r->sessionID] = $r->sessionName;
 		}
 		
 		return $retArr;
