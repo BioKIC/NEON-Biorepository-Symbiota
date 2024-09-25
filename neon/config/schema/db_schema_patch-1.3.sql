@@ -9,4 +9,4 @@ CREATE TABLE `NeonSessioning` (
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 ALTER TABLE `NeonSample` 
-ADD COLUMN `sessionID` INT(10) unsigned NULL AFTER `isgn_check`;
+ADD COLUMN `sessionID` INT(10) unsigned NULL AFTER `igsn_check`;
