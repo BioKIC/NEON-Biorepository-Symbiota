@@ -1081,7 +1081,7 @@ class ShipmentManager{
 			'CONCAT_WS(", ",u.lastname, u.firstname) AS checkinUser, sess.sessionName, sess.startTime AS sessionStartTime, sess.endTime AS sessionEndTime, m.checkinTimestamp, m.initialtimestamp '.
 			'FROM NeonShipment s INNER JOIN NeonSample m ON s.shipmentpk = m.shipmentpk '.
 			'LEFT JOIN users u ON m.checkinUid = u.uid '.
-			'LEFT JOIN neonSessioning sess ON sess.neonSessioningID = m.sessionID ';
+			'LEFT JOIN NeonSessioning sess ON sess.sessionID = m.sessionID ';
 		$sql .= $this->getFilteredWhereSql();
 		$this->exportData($fileName, $sql);
 	}
@@ -1173,7 +1173,7 @@ class ShipmentManager{
 
 	public function getSessionDataArr(){
 		$retArr = array();
-		$sql = 'SELECT DISTINCT sessionID, sessionName FROM neonsessioning WHERE endTime IS NOT NULL';
+		$sql = 'SELECT DISTINCT sessionID, sessionName FROM NeonSessioning WHERE endTime IS NOT NULL';
 		$rs = $this->conn->query($sql);
 		while($r = $rs->fetch_object()){
 			$retArr[$r->sessionID] = $r->sessionName;

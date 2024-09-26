@@ -3,6 +3,7 @@ error_reporting(E_ALL);
 ini_set('display_errors', '1');
 include_once('../config/symbini.php');
 include_once($SERVER_ROOT.'/neon/classes/OccurrenceHarvester.php');
+include_once($SERVER_ROOT.'/neon/classes/ShipmentManager.php');
 header('Content-Type: text/html; charset='.$CHARSET);
 if(!$SYMB_UID) header('Location: ../profile/index.php?refurl='.$CLIENT_ROOT.'/neon/occurrenceharvester.php?'.$_SERVER['QUERY_STRING']);
 
@@ -21,6 +22,7 @@ if(!is_numeric($replaceFieldValues)) $replaceFieldValues = 1000;
 if(!is_numeric($limit)) $limit = 1000;
 
 $occurManager = new OccurrenceHarvester();
+$shipManager = new ShipmentManager();
 
 $isEditor = false;
 if($IS_ADMIN) $isEditor = true;
@@ -80,6 +82,7 @@ if($isEditor){
 				if(f.collid.value != "") subStatus = true;
 				else if(f.harvestDate.value != "") subStatus = true;
 				else if(f.errorStr.value != "" && f.errorStr.value != "nullError") subStatus = true;
+				else if(f.sessionid.value != "") subStatus = true;
 				if(!subStatus){
 					alert("Set at least one reharvest parameter");
 					return false;
@@ -147,19 +150,16 @@ include($SERVER_ROOT.'/includes/header.php');
 		</fieldset>
 		<fieldset>
 			<?php
-			$targetNewSample = true;
-			if($errorStr && $errorStr != 'nullError') $targetNewSample = false;
-			elseif($harvestDate) $targetNewSample = false;
 			$collectionArr = $occurManager->getTargetCollectionArr();
 			?>
 			<legend><b>Action Panel</b></legend>
 			<form action="occurrenceharvester.php" method="post" onsubmit="return verifyHarvestForm(this)">
 				<div class="fieldGroupDiv">
 					<div class="fieldDiv">
-						<input name="nullOccurrencesOnly" type="checkbox" value="1" onchange="nullOccurrenceOnlyChanged(this)" <?php echo ($targetNewSample?'checked':''); ?> /> Target New Samples only (NULL occid, no error message)
+						<input name="nullOccurrencesOnly" type="checkbox" value="1" onchange="nullOccurrenceOnlyChanged(this)" /> Target New Samples only (NULL occid, no error message)
 					</div>
 				</div>
-				<fieldset id="extendedVariables" style="display:<?php echo ($targetNewSample?'none':'block'); ?>">
+				<fieldset id="extendedVariables">
 					<legend>Reharvesting Parameters</legend>
 					<div class="fieldGroupDiv">
 						<div class="fieldDiv">
@@ -189,6 +189,21 @@ include($SERVER_ROOT.'/includes/header.php');
 								<?php
 								foreach($reportArr as $msg => $repCntArr){
 									echo '<option '.($errorStr==$msg?'selected':'').'>'.$msg.'</option>';
+								}
+								?>
+							</select>
+						</div>
+					</div>
+					<div class="fieldGroupDiv">
+						<div class="fieldDiv">
+							Target Session:
+							<select name="sessionid" >
+								<option value="">All Records</option>
+								<option value="">------------------------</option>
+								<?php
+								$sessionDataArr = $shipManager->getSessionDataArr();
+								foreach($sessionDataArr as $key => $sessionName){
+									echo '<option value="'.htmlspecialchars($key).'" '.(isset($searchArgumentArr['sessionData'])&&$key==$searchArgumentArr['sessionData']?'SELECTED':'').'>'.$sessionName.'</option>';
 								}
 								?>
 							</select>
