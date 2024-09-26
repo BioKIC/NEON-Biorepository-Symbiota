@@ -13,37 +13,42 @@ $data = json_decode($request_body, true);
 
 if ($data['action'] === 'start_session') {
     $conn = MySQLiConnectionFactory::getCon("write");
-    $sql = "SELECT LPAD(MAX(sessionID)+1, 3, '0') AS sessionNumber FROM NeonSample";    
+    $sql = "SELECT MAX(sessionnum)+1 AS sessionNumber FROM neonsessioning WHERE sessionUsername = '" . $USERNAME . "';";    
     $rs = $conn->query($sql);
     while($r = $rs->fetch_object()){
         $sessionNum = $r->sessionNumber;
+        if (is_null($sessionNum)) {
+            $sessionNum = 1;
+        }
     }
-    $rs->free();    
+    $rs->free();
+    
+    $sql = "INSERT INTO neonsessioning (sessionUsername, sessionNum, startTime) VALUES ('" . $USERNAME . "', " . $sessionNum . ", '" . date('Y-m-d H:i:s') . "');"; 
+    $conn->query($sql);
+    $sessionID = $conn->insert_id;
     if($conn) $conn->close();
     
     $session_data = [
-        'sessionID' => $USERNAME.'-'.$sessionNum,
+        'sessionName' => $USERNAME.'-'.$sessionNum,
         'start_time' => date('Y-m-d H:i:s'),
         'end_time' => null,
+        'sessionID' => $sessionID,
     ];
 
     $_SESSION['sampleCheckinSessionData'] = $session_data;
 
     // Return session data to frontend
-    echo json_encode(['start_time' => $session_data['start_time'], 'sessionID' => $session_data['sessionID']]);
+    echo json_encode(['start_time' => $session_data['start_time'],
+                      'sessionName' => $session_data['sessionName'],
+                      'sessionID' => $session_data['sessionID']]);
 }
 
 if ($data['action'] === 'stop_session') {
     $conn = MySQLiConnectionFactory::getCon("write");
     $session_data = $_SESSION['sampleCheckinSessionData'];
     $session_data['end_time'] = date('Y-m-d H:i:s');
-    $end_session_data_json = json_encode($session_data);
-    $start_session_data_json = json_encode($_SESSION['sampleCheckinSessionData']);    
     
-    $sqlUpdate = "UPDATE NeonSample 
-                  SET sessionData = '" . $conn->real_escape_string($end_session_data_json) . "' 
-                  WHERE sessionData = '" . $conn->real_escape_string($start_session_data_json) . "'";
-    
+    $sqlUpdate = "UPDATE NeonSessioning SET endTime = '".$session_data['end_time']."' WHERE sessionID = ". $session_data['sessionID'];
     $conn->query($sqlUpdate);
     if($conn) $conn->close();
     $_SESSION['sampleCheckinSessionData'] = $session_data;

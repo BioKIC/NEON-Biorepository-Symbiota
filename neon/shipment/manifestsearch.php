@@ -171,8 +171,8 @@ include($SERVER_ROOT.'/includes/header.php');
 							<option value="">------------------------</option>
 							<?php
 							$sessionDataArr = $shipManager->getSessionDataArr();
-							foreach($sessionDataArr as $key => $sessionData){
-								echo '<option value="'.htmlspecialchars($key).'" '.(isset($searchArgumentArr['sessionData'])&&$key==$searchArgumentArr['sessionData']?'SELECTED':'').'>'.$sessionData.'</option>';
+							foreach($sessionDataArr as $key => $sessionName){
+								echo '<option value="'.htmlspecialchars($key).'" '.(isset($searchArgumentArr['sessionData'])&&$key==$searchArgumentArr['sessionData']?'SELECTED':'').'>'.$sessionName.'</option>';
 							}
 							?>
 						</select>
