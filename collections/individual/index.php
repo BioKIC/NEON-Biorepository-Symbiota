@@ -419,7 +419,7 @@ $traitArr = $indManager->getTraitArr();
 										$catTagLabel = $catTag; 
 									}
 									
-									if ($catTag == 'NEON sampleID Hash' && !$GLOBALS['IS_ADMIN']) {
+									if ($catTag == 'NEON sampleID' && !$GLOBALS['IS_ADMIN']) {
 										continue;
 									}
 								
