@@ -13,7 +13,7 @@ $data = json_decode($request_body, true);
 
 if ($data['action'] === 'start_session') {
     $conn = MySQLiConnectionFactory::getCon("write");
-    $sql = "SELECT MAX(sessionnum)+1 AS sessionNumber FROM neonsessioning WHERE sessionUsername = '" . $USERNAME . "';";    
+    $sql = "SELECT MAX(sessionnum)+1 AS sessionNumber FROM NeonSessioning WHERE sessionUsername = '" . $USERNAME . "';";    
     $rs = $conn->query($sql);
     while($r = $rs->fetch_object()){
         $sessionNum = $r->sessionNumber;
@@ -23,7 +23,7 @@ if ($data['action'] === 'start_session') {
     }
     $rs->free();
     
-    $sql = "INSERT INTO neonsessioning (sessionUsername, sessionNum, startTime) VALUES ('" . $USERNAME . "', " . $sessionNum . ", '" . date('Y-m-d H:i:s') . "');"; 
+    $sql = "INSERT INTO NeonSessioning (sessionUsername, sessionNum, startTime) VALUES ('" . $USERNAME . "', " . $sessionNum . ", '" . date('Y-m-d H:i:s') . "');"; 
     $conn->query($sql);
     $sessionID = $conn->insert_id;
     if($conn) $conn->close();
