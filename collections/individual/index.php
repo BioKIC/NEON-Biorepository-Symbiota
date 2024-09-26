@@ -418,6 +418,10 @@ $traitArr = $indManager->getTraitArr();
 									} else {
 										$catTagLabel = $catTag; 
 									}
+									
+									if ($catTag == 'NEON sampleID Hash' && !$GLOBALS['IS_ADMIN']) {
+										continue;
+									}
 								
 									echo '<div class="assoccatnum-div"><label>'.$catTagLabel.':</label> '.implode('; ', $catValueArr);
 								
