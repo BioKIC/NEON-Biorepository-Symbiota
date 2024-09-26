@@ -223,7 +223,8 @@
     ],
   "/neon/portal/collections/datasets/publiclist.php": [
     { "name": "Impact", "href": "https://www.neonscience.org/impact" },
-    { "name": "Sample Datasets" }
+    { "name": "Papers & Publications", "href": "https://www.neonscience.org/impact/papers-publications" },
+    { "name": "Published Sample Research Datasets" }
     ],
   "/neon/portal/profile/usermanagement.php": [
     { "name": "Data & Samples", "href": "https://www.neonscience.org/data-samples" },
