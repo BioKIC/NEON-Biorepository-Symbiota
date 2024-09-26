@@ -376,35 +376,56 @@ $traitArr = $indManager->getTraitArr();
 								<?php
 								echo '<label>'.(isset($LANG['CATALOG_NUMBER'])?$LANG['CATALOG_NUMBER']:'Catalog #').': </label>';
 								echo $occArr['catalognumber'];
-								?>
-							</div>
-							<?php
-						}
-						if($occArr['occurrenceid']){
-							?>
-							<div id="occurrenceid-div">
-								<?php
-								echo '<label>'.$LANG['OCCURRENCE_ID'].': </label>';
-								$resolvableGuid = false;
-								if(substr($occArr['occurrenceid'],0,4) == 'http') $resolvableGuid = true;
-								if($resolvableGuid) echo '<a href="'.$occArr['occurrenceid'].'" target="_blank">';
-								echo $occArr['occurrenceid'];
-								if($resolvableGuid) echo '</a>';
 								// Check if occurrenceid is an IGSN
-								if(preg_match('/^NEON[a-zA-Z0-9]{5}$/', $occArr['occurrenceid'])) {
-									echo '<span style="margin-left: 10px"><a href="https://doi.org/10.58052/' . $occArr['occurrenceid'] . '" target="_blank">SESAR Record</a></span>';
+								if(preg_match('/^NEON[a-zA-Z0-9]{5}$/', $occArr['catalognumber'])) {
+									echo '<span style="margin-left: 10px"><a href="https://doi.org/10.58052/' . $occArr['catalognumber'] . '" target="_blank">SESAR Record</a></span>';
 								}
 								?>
 							</div>
 							<?php
 						}
+						//if($occArr['occurrenceid']){
+						//	?>
+							<!--<div id="occurrenceid-div">-->
+								<?php
+						//		echo '<label>'.$LANG['OCCURRENCE_ID'].': </label>';
+						//		$resolvableGuid = false;
+						//		if(substr($occArr['occurrenceid'],0,4) == 'http') $resolvableGuid = true;
+						//		if($resolvableGuid) echo '<a href="'.$occArr['occurrenceid'].'" target="_blank">';
+						//		echo $occArr['occurrenceid'];
+						//		if($resolvableGuid) echo '</a>';
+						//		// Check if occurrenceid is an IGSN
+						//		if(preg_match('/^NEON[a-zA-Z0-9]{5}$/', $occArr['occurrenceid'])) {
+						//			echo '<span style="margin-left: 10px"><a href="https://doi.org/10.58052/' . $occArr['occurrenceid'] . '" target="_blank">SESAR Record</a></span>';
+						//		}
+						//		?>
+							<!--</div>-->
+							<?php
+						//}
 						if($occArr['othercatalognumbers']){
 							$char = substr($occArr['othercatalognumbers'],0,1);
 							if($char == '{' || $char == '['){
 								$otherCatArr = json_decode($occArr['othercatalognumbers'],true);
+								$hideSampleID = isset($otherCatArr['NEON sampleID Hash']) && !$GLOBALS['IS_ADMIN'];
 								foreach($otherCatArr as $catTag => $catValueArr){
 									if(!$catTag) $catTag = $LANG['OTHER_CATALOG_NUMBERS'];
-									echo '<div class="assoccatnum-div"><label>'.$catTag.':</label> '.implode('; ', $catValueArr);
+
+									if ($catTag == 'NEON sampleID' && $hideSampleID) {
+										continue;
+									}
+									
+									if ($catTag == 'NEON sampleID') {
+										$catTagLabel = 'Sample Tag (SampleID)';
+									} elseif ($catTag == 'NEON sampleCode (barcode)') {
+										$catTagLabel = 'Barcode (sampleCode)';
+									} elseif ($catTag == 'NEON sampleUUID') {
+										$catTagLabel = 'SampleUuid';
+									} else {
+										$catTagLabel = $catTag; 
+									}
+								
+									echo '<div class="assoccatnum-div"><label>'.$catTagLabel.':</label> '.implode('; ', $catValueArr);
+								
 									if($IS_ADMIN){
 										if($catTag == 'NEON sampleCode (barcode)' || $catTag == 'NEON sampleID'){
 											echo '<span style="margin-left: 10px"><a href="../../neon/shipment/manifestviewer.php?quicksearch=' . array_pop($catValueArr) . '" target="_blank">Go to Manifest</a></span>';

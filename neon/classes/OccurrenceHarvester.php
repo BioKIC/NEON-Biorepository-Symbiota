@@ -73,6 +73,9 @@ class OccurrenceHarvester{
 			}
 			elseif($postArr['errorStr']){
 				$sqlWhere .= 'AND (s.errorMessage = "'.$this->cleanInStr($postArr['errorStr']).'") ';
+			}	
+			if($postArr['sessionid']){
+				$sqlWhere .= 'AND (s.sessionID = "'.$this->cleanInStr($postArr['sessionid']).'") ';
 			}
 			if($postArr['harvestDate']){
 				$sqlWhere .= 'AND (s.harvestTimestamp IS NULL OR s.harvestTimestamp < "'.$postArr['harvestDate'].'") ';
@@ -639,18 +642,18 @@ class OccurrenceHarvester{
 					}
 				}
 				$prepArr = array();
-				if(!empty($sampleArr['preservative_type'])) $prepArr[] = 'preservative type: '.$sampleArr['preservative_type'];
-				if(!empty($sampleArr['preservative_volume'])) $prepArr[] = 'preservative volume: '.$sampleArr['preservative_volume'];
-				if(!empty($sampleArr['preservative_concentration'])) $prepArr[] = 'preservative concentration: '.$sampleArr['preservative_concentration'];
-				if(!in_array($dwcArr['collid'], array(19,28,42,17,64))){
-					if(!empty($sampleArr['sample_mass']) && strpos($sampleArr['symbiotaTarget'],'sample mass') === false) $prepArr[] = 'sample mass: '.$sampleArr['sample_mass'];
-					if(!empty($sampleArr['sample_volume']) && strpos($sampleArr['symbiotaTarget'],'sample volume') === false) $prepArr[] = 'sample volume: '.$sampleArr['sample_volume'];
-					if(!empty($sampleArr['sex'])){
-						if($sampleArr['sex'] == 'M') $dwcArr['sex'] = 'Male';
-						elseif($sampleArr['sex'] == 'F') $dwcArr['sex'] = 'Female';
-						elseif($sampleArr['sex'] == 'U') $dwcArr['sex'] = 'Unknown';
+					if(!in_array($dwcArr['collid'], array(19,28,42,46,17,64))){
+						if(!empty($sampleArr['preservative_type'])) $prepArr[] = 'preservative type: '.$sampleArr['preservative_type'];
+						if(!empty($sampleArr['preservative_volume'])) $prepArr[] = 'preservative volume: '.$sampleArr['preservative_volume'];
+						if(!empty($sampleArr['preservative_concentration'])) $prepArr[] = 'preservative concentration: '.$sampleArr['preservative_concentration'];
+						if(!empty($sampleArr['sample_mass']) && strpos($sampleArr['symbiotaTarget'],'sample mass') === false) $prepArr[] = 'sample mass: '.$sampleArr['sample_mass'];
+						if(!empty($sampleArr['sample_volume']) && strpos($sampleArr['symbiotaTarget'],'sample volume') === false) $prepArr[] = 'sample volume: '.$sampleArr['sample_volume'];
+						if(!empty($sampleArr['sex'])){
+							if($sampleArr['sex'] == 'M') $dwcArr['sex'] = 'Male';
+							elseif($sampleArr['sex'] == 'F') $dwcArr['sex'] = 'Female';
+							elseif($sampleArr['sex'] == 'U') $dwcArr['sex'] = 'Unknown';
+						}
 					}
-				}
 				if($prepArr) $dwcArr['preparations'] = implode(', ',$prepArr);
 				$dynProp = array();
 				if(!empty($sampleArr['filterVolume'])) $dynProp[] = 'filterVolume: '.$sampleArr['filterVolume'];
@@ -710,10 +713,10 @@ class OccurrenceHarvester{
 				$skipTaxonomy = array(5,6,10,13,16,21,23,31,41,42,58,60,61,62,67,68,69,76,92,98);
 				if(!in_array($dwcArr['collid'],$skipTaxonomy)){
 					$identArr = array();
-					if(isset($sampleArr['identifications'])){
+					if(isset($sampleArr['identifications']) && !in_array($dwcArr['collid'], array(46))){
 						$identArr = $sampleArr['identifications'];
 					}
-					if(!$identArr && $sampleArr['taxonID']){
+					if(!$identArr && $sampleArr['taxonID'] && in_array($dwcArr['collid'], array(46))){
 						$hash = hash('md5', str_replace(' ','',$sampleArr['taxonID'].'manifests.d.'));
 						$identArr[$hash] = array('sciname' => $sampleArr['taxonID'], 'identifiedBy' => 'manifest', 'dateIdentified' => 's.d.', 'taxonRemarks' => 'Identification source: inferred from shipment manifest');
 					}
@@ -721,6 +724,12 @@ class OccurrenceHarvester{
 						//Identifications not supplied via API nor manifest, thus try to grab from sampleID
 						$taxonCode = '';
 						$taxonRemarks = '';
+						if(in_array($dwcArr['collid'], array(46))){
+							if (preg_match('/\.\d{8}\.([a-zA-Z]{2,15})\./', $sampleArr['sampleID'], $m)) {
+								$taxonCode = $m[1];
+								$taxonRemarks = 'Identification source: parsed from NEON sampleID';
+							}
+						}
 						if($dwcArr['collid'] == 30){
 							$identArr[] = array('sciname' => $dwcArr['identifications'][0]['sciname'],
 											  'identifiedBy' => 'NEON Lab',
@@ -738,11 +747,11 @@ class OccurrenceHarvester{
 						// 		$taxonRemarks = 'Identification source: parsed from NEON sampleID';
 						// 	}
 						// }
+					}
 						if($taxonCode){
 							$hash = hash('md5', str_replace(' ','',$taxonCode.'sampleIDs.d.'));
 							$identArr[$hash] = array('sciname' => $taxonCode, 'identifiedBy' => 'sampleID', 'dateIdentified' => 's.d.', 'taxonRemarks' => $taxonRemarks);
 						}
-					}
 					if($identArr){
 						$isCurrentKey = 0;
 						$bestDate = 0;
@@ -979,7 +988,7 @@ class OccurrenceHarvester{
 		elseif($dwcArr['collid'] == 29 || $dwcArr['collid'] == 39 || $dwcArr['collid'] == 44 || $dwcArr['collid'] == 82 || $dwcArr['collid'] == 95){
 			$dwcArr['individualCount'] = 1;
 		}
-		elseif($dwcArr['collid'] == 11 || $dwcArr['collid'] == 12 || $dwcArr['collid'] == 14 || $dwcArr['collid'] == 15 || $dwcArr['collid'] == 17 || $dwcArr['collid'] == 18){
+		elseif($dwcArr['collid'] == 46 ||$dwcArr['collid'] == 11 || $dwcArr['collid'] == 12 || $dwcArr['collid'] == 14 || $dwcArr['collid'] == 15 || $dwcArr['collid'] == 17 || $dwcArr['collid'] == 18){
 			$dwcArr['individualCount'] = NULL;
 		}
 	}

@@ -29,6 +29,9 @@ if($isEditor){
 	}
 }
 ?>
+
+<script src="../js/multiselect-dropdown.js" ></script>
+
 <html>
 <head>
 	<title><?php echo $DEFAULT_TITLE; ?> Manifest Viewer</title>
@@ -55,6 +58,7 @@ if($isEditor){
 			f.dateCheckinStart.value = "";
 			f.dateCheckinEnd.value = "";
 			f.checkinUid.value = "";
+			f.checkinsampleUid.value = "";
 			f.sessionData.value = "";
 			f.importedUid.value = "";
 			f.sampleCondition.value = "";
@@ -167,8 +171,8 @@ include($SERVER_ROOT.'/includes/header.php');
 							<option value="">------------------------</option>
 							<?php
 							$sessionDataArr = $shipManager->getSessionDataArr();
-							foreach($sessionDataArr as $key => $sessionData){
-								echo '<option value="'.htmlspecialchars($key).'" '.(isset($searchArgumentArr['sessionData'])&&$key==$searchArgumentArr['sessionData']?'SELECTED':'').'>'.$sessionData.'</option>';
+							foreach($sessionDataArr as $key => $sessionName){
+								echo '<option value="'.htmlspecialchars($key).'" '.(isset($searchArgumentArr['sessionData'])&&$key==$searchArgumentArr['sessionData']?'SELECTED':'').'>'.$sessionName.'</option>';
 							}
 							?>
 						</select>
@@ -176,27 +180,36 @@ include($SERVER_ROOT.'/includes/header.php');
 				</div>
 				<div class="fieldGroupDiv">
 					<div class="fieldDiv">
-						<b>Checked In by: </b>
-						<select name="checkinUid" style="margin:5px 10px">
-							<option value="">All Records</option>
-							<option value="">------------------------</option>
+						<b style="vertical-align: top;">Samples Checked In by: </b>
+						<select name="checkinsampleUid[]" multiple style="margin:5px 10px" multiselect-search="true">
 							<?php
 							$usercheckinArr = $shipManager->getCheckinUserArr();
 							foreach($usercheckinArr as $uid => $userName){
-								echo '<option value="'.$uid.'" '.(isset($searchArgumentArr['checkinUid'])&&$uid==$searchArgumentArr['checkinUid']?'SELECTED':'').'>'.$userName.'</option>';
+								echo '<option value="'.$uid.'" '.(isset($searchArgumentArr['checkinsampleUid']) && in_array($uid, $searchArgumentArr['checkinsampleUid']) ? 'SELECTED' : '').'>'.$userName.'</option>';
 							}
 							?>
 						</select>
 					</div>
 					<div class="fieldDiv">
-						<b>Imported/Modified by:</b>
-						<select name="importedUid" style="margin:5px 10px">
-							<option value="">All Records</option>
-							<option value="">------------------------</option>
+						<b style="vertical-align: top;">Shipment Checked In by: </b>
+						<select name="checkinUid[]" multiple style="margin:5px 10px" multiselect-search="true">
+							<?php
+							$usercheckinArr = $shipManager->getCheckinUserArr();
+							foreach($usercheckinArr as $uid => $userName){
+								echo '<option value="'.$uid.'" '.(isset($searchArgumentArr['checkinUid']) && in_array($uid, $searchArgumentArr['checkinUid'])?'SELECTED':'').'>'.$userName.'</option>';
+							}
+							?>
+						</select>
+					</div>
+				</div>
+				<div class="fieldGroupDiv">
+					<div class="fieldDiv">
+						<b style="vertical-align: top;">Imported/Modified by:</b>
+						<select name="importedUid[]" multiple style="margin:5px 10px" multiselect-search="true">
 							<?php
 							$userImportArr = $shipManager->getImportUserArr();
 							foreach($userImportArr as $uid => $userName){
-								echo '<option value="'.$uid.'" '.(isset($searchArgumentArr['importedUid'])&&$uid==$searchArgumentArr['importedUid']?'SELECTED':'').'>'.$userName.'</option>';
+								echo '<option value="'.$uid.'" '.(isset($searchArgumentArr['importedUid'])&& in_array($uid, $searchArgumentArr['importedUid'])?'SELECTED':'').'>'.$userName.'</option>';
 							}
 							?>
 						</select>

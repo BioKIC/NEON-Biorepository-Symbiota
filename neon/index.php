@@ -57,10 +57,10 @@ if($isEditor){
 			</ul>
 			<h3>Data Management</h3>
 			<ul>
+				<li><a href="occurrenceharvester.php">Batch Occurrence Harvester</a></li>
 				<?php
 				if($IS_ADMIN){
 					?>
-					<li><a href="occurrenceharvester.php">Batch Occurrence Harvester</a></li>
 					<li><a href="igsncontrol.php">NEON IGSN Control Panel</a></li>
 					<?php
 				}

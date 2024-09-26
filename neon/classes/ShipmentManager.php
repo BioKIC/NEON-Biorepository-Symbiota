@@ -492,10 +492,8 @@ class ShipmentManager{
 					if($condition) $sqlUpdate .= ', sampleCondition = CONCAT_WS("; ",sampleCondition,"'.$this->cleanInStr($condition).'") ';
 					if($notes) $sqlUpdate .= ', checkinRemarks = "'.$this->cleanInStr($notes).'" ';
 					if($alternativeSampleID) $sqlUpdate .= ', alternativeSampleID = "'.$this->cleanInStr($alternativeSampleID).'" ';
-					if(isset($_SESSION['sampleCheckinSessionData']) && !isset($_SESSION['sampleCheckinSessionData']['end_time'])) {
-						$sessionData = json_encode($_SESSION['sampleCheckinSessionData']);
-						$sqlUpdate .= ', sessionData = \'' . $this->cleanInStr($sessionData) . '\' ';
-						$sqlUpdate .= ', sessionID = \'' . $this->cleanInStr(substr($_SESSION['sampleCheckinSessionData']['sessionID'], strrpos($_SESSION['sampleCheckinSessionData']['sessionID'], '-') + 1)) . '\' ';
+					if(isset($_SESSION['sampleCheckinSessionData'])) {
+						$sqlUpdate .= ', sessionID = ' . $_SESSION['sampleCheckinSessionData']['sessionID'] . ' ';
 					}
 					$sqlUpdate .= 'WHERE (samplePK = "'.$samplePK.'") ';
 					if(!$this->conn->query($sqlUpdate)){
@@ -520,10 +518,8 @@ class ShipmentManager{
 					'checkinUid = '.$GLOBALS['SYMB_UID'].', checkinTimestamp = now(), sampleReceived = '.$sampleReceived.', acceptedForAnalysis = '.$acceptedForAnalysis.' '.
 					($postArr['sampleCondition'] ? ', sampleCondition = "'.$this->cleanInStr($postArr['sampleCondition']).'" ' : '').
 					($postArr['checkinRemarks'] ? ', checkinRemarks = "'.$this->cleanInStr($postArr['checkinRemarks']).'" ' : '');
-				if(isset($_SESSION['sampleCheckinSessionData']) && !isset($_SESSION['sampleCheckinSessionData']['end_time'])) {
-					$sessionData = json_encode($_SESSION['sampleCheckinSessionData']);
-					$sql .= ', sessionData = \'' . $this->cleanInStr($sessionData) . '\' ';
-					$sql .= ', sessionID = \'' . $this->cleanInStr(substr($_SESSION['sampleCheckinSessionData']['sessionID'], strrpos($_SESSION['sampleCheckinSessionData']['sessionID'], '-') + 1)) . '\' ';
+				if(isset($_SESSION['sampleCheckinSessionData'])) {
+					$sql .= ', sessionID = ' . $_SESSION['sampleCheckinSessionData']['sessionID'] . ' ';
 				}
 				$sql .= 'WHERE (shipmentpk = '.$this->shipmentPK.') AND (checkinTimestamp IS NULL) AND (samplePK IN('.implode(',', $pkArr).'))';
 				if(!$this->conn->query($sql)){
@@ -890,7 +886,7 @@ class ShipmentManager{
 
 	public function resetSampleCheckin($samplePK){
 		if(is_numeric($samplePK)){
-			$sql = 'UPDATE NeonSample SET checkinUid = NULL, checkinTimestamp = NULL, sampleReceived = NULL, acceptedForAnalysis = NULL, sampleCondition = NULL, checkinRemarks = NULL WHERE (samplepk = '.$samplePK.')';
+			$sql = 'UPDATE NeonSample SET checkinUid = NULL, checkinTimestamp = NULL, sampleReceived = NULL, acceptedForAnalysis = NULL, sampleCondition = NULL, checkinRemarks = NULL, sessionID = NULL WHERE (samplepk = '.$samplePK.')';
 			if(!$this->conn->query($sql)){
 				$this->errorStr = 'ERROR resetting sample check-in: '.$this->conn->error;
 				return false;
@@ -979,15 +975,19 @@ class ShipmentManager{
 			 }
 			 */
 			if(isset($_REQUEST['sessionData']) && $_REQUEST['sessionData']){
-				$sqlWhere .= 'AND ((m.sessionData = "'.$this->conn->real_escape_string($_REQUEST['sessionData']).'")) ';
+				$sqlWhere .= 'AND ((m.sessionID = "'.$this->conn->real_escape_string($_REQUEST['sessionData']).'")) ';
 				$this->searchArr['sessionData'] = $_REQUEST['sessionData'];
 			}
 			if(isset($_REQUEST['checkinUid']) && $_REQUEST['checkinUid']){
-				$sqlWhere .= 'AND ((s.checkinUid = "'.$_REQUEST['checkinUid'].'") OR (m.checkinUid = "'.$_REQUEST['checkinUid'].'")) ';
+				$sqlWhere .= 'AND (s.checkinUid IN ("' . implode('","', $_REQUEST['checkinUid']) . '")) ';
 				$this->searchArr['checkinUid'] = $_REQUEST['checkinUid'];
 			}
+			if (isset($_REQUEST['checkinsampleUid']) && $_REQUEST['checkinsampleUid']) {
+				$sqlWhere .= 'AND (m.checkinUid IN ("' . implode('","', $_REQUEST['checkinsampleUid']) . '")) ';
+				$this->searchArr['checkinsampleUid'] = $_REQUEST['checkinsampleUid'];
+			}
 			if(isset($_REQUEST['importedUid']) && $_REQUEST['importedUid']){
-				$sqlWhere .= 'AND ((s.importUid = "'.$_REQUEST['importedUid'].'") OR (s.modifiedByUid = "'.$_REQUEST['importedUid'].'")) ';
+				$sqlWhere .= 'AND ((s.importUid IN ("' . implode('","', $_REQUEST['importUid']) .'") OR (s.modifiedByUid IN ("' . implode('","', $_REQUEST['importUid']).'")) ';
 				$this->searchArr['importedUid'] = $_REQUEST['importedUid'];
 			}
 			/*
@@ -1078,9 +1078,10 @@ class ShipmentManager{
 		$fileName .= date('Y-m-d').'.csv';
 		$sql = 'SELECT s.shipmentID, m.samplePK, m.sampleID, m.alternativeSampleID, m.sampleCode, m.sampleClass, m.taxonID, m.individualCount, m.filterVolume, m.namedlocation, '.
 			'm.domainremarks, m.collectdate, m.quarantineStatus, m.sampleReceived, m.acceptedForAnalysis, m.sampleCondition, m.dynamicProperties, m.symbiotaTarget, m.errorMessage, m.notes, m.occid, '.
-			'CONCAT_WS(", ",u.lastname, u.firstname) AS checkinUser, m.sessionData, m.checkinTimestamp, m.initialtimestamp '.
+			'CONCAT_WS(", ",u.lastname, u.firstname) AS checkinUser, sess.sessionName, sess.startTime AS sessionStartTime, sess.endTime AS sessionEndTime, m.checkinTimestamp, m.initialtimestamp '.
 			'FROM NeonShipment s INNER JOIN NeonSample m ON s.shipmentpk = m.shipmentpk '.
-			'LEFT JOIN users u ON m.checkinUid = u.uid ';
+			'LEFT JOIN users u ON m.checkinUid = u.uid '.
+			'LEFT JOIN NeonSessioning sess ON sess.sessionID = m.sessionID ';
 		$sql .= $this->getFilteredWhereSql();
 		$this->exportData($fileName, $sql);
 	}
@@ -1172,28 +1173,13 @@ class ShipmentManager{
 
 	public function getSessionDataArr(){
 		$retArr = array();
-		$sql = 'SELECT DISTINCT sessionData FROM NeonSample s WHERE sessionData IS NOT NULL';
+		$sql = 'SELECT DISTINCT sessionID, sessionName FROM NeonSessioning WHERE endTime IS NOT NULL';
 		$rs = $this->conn->query($sql);
 		while($r = $rs->fetch_object()){
-			$retArr[$r->sessionData] = json_decode($r->sessionData, true);
+			$retArr[$r->sessionID] = $r->sessionName;
 		}
 		
-		uasort($retArr, function($a, $b) {
-			$startComparison = strcmp($a['start_time'], $b['start_time']);
-			if ($startComparison === 0) {
-				return strcmp($a['end_time'], $b['end_time']);
-			}
-			return $startComparison;
-		});
-		
-		$returnArray = [];
-		foreach ($retArr as $key => $session) {
-			if(isset($session['sessionID'])){
-				$returnArray[$key] = $session['sessionID'];
-			}
-		}
-
-		return $returnArray;
+		return $retArr;
 	}	
 	
 	public function getTrackingStr(){

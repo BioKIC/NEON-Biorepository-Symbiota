@@ -37,7 +37,7 @@ elseif(array_key_exists('CollAdmin',$USER_RIGHTS) || array_key_exists('CollEdito
 
 	$activeSession = false;
 	$sessionStartTime = null;
-	$sessionID = null;
+	$sessionName = null;
 	
 	if (isset($_SESSION['sampleCheckinSessionData'])) {
 		$session_data = $_SESSION['sampleCheckinSessionData'];
@@ -46,7 +46,7 @@ elseif(array_key_exists('CollAdmin',$USER_RIGHTS) || array_key_exists('CollEdito
 		if ($session_data['end_time'] === null) {
 			$activeSession = true;
 			$sessionStartTime = $session_data['start_time'];
-			$sessionID = $session_data['sessionID'];
+			$sessionName = $session_data['sessionName'];
 		}
 	}
 	?>
@@ -359,14 +359,14 @@ elseif(array_key_exists('CollAdmin',$USER_RIGHTS) || array_key_exists('CollEdito
 		let timerInterval;
 
 		let serverStartTime = "<?php echo $sessionStartTime; ?>";
-		let sessionID = "<?php echo $sessionID; ?>";
+		let sessionName = "<?php echo $sessionName; ?>";
 	
 		// Check if a session is already active on page load
 		document.addEventListener('DOMContentLoaded', function() {
 			<?php if ($activeSession): ?>
 				startTimer(serverStartTime);
 				toggleButtons(true);
-				showSessionID(sessionID);
+				showSessionID(sessionName);
 			<?php else: ?>
 				toggleButtons(false);
 			<?php endif; ?>
@@ -395,7 +395,7 @@ elseif(array_key_exists('CollAdmin',$USER_RIGHTS) || array_key_exists('CollEdito
 				  console.log('Session started at:', data.start_time);
 				  startTimer(data.start_time);
 				  toggleButtons(true);
-				  showSessionID(data.sessionID);
+				  showSessionID(data.sessionName);
 			  });
 		}
 	
@@ -463,11 +463,11 @@ elseif(array_key_exists('CollAdmin',$USER_RIGHTS) || array_key_exists('CollEdito
 			});
 		}
 		
-		function showSessionID(sessionID) {
-			let sessionIDdivs = document.querySelectorAll('.sessionID');
+		function showSessionID(sessionName) {
+			let sessionNamedivs = document.querySelectorAll('.sessionName');
 			
-			sessionIDdivs.forEach(div => {
-				div.innerHTML  = '<strong>SessionID:</strong> ' + sessionID;
+			sessionNamedivs.forEach(div => {
+				div.innerHTML  = '<strong>SessionID:</strong> ' + sessionName;
 			});	
 		}
 	</script>
@@ -597,7 +597,7 @@ include($SERVER_ROOT.'/includes/header.php');
 									<input type="radio" class="start_session" name="session" value="start"> Start Session
 									<input type="radio" class="stop_session" name="session" value="stop"> Stop Session
 									<div class="timer">00:00:00</div>
-									<div class="sessionID"></div>
+									<div class="sessionName"></div>
 									<form name="submitform" method="post" onsubmit="checkinSample(this); return false;">
 										<div id="popoutDiv" style="float:right"><a href="#" onclick="popoutCheckinBox();return false" title="Popout Sample Check-in Box">&gt;&gt;</a></div>
 										<div id="bindDiv" style="float:right;display:none"><a href="#" onclick="bindCheckinBox();return false" title="Bind Sample Check-in Box to top of form">&lt;&lt;</a></div>
@@ -841,7 +841,7 @@ include($SERVER_ROOT.'/includes/header.php');
 														<input type="radio" class="start_session" name="session" value="start"> Start Session
 														<input type="radio" class="stop_session" name="session" value="stop"> Stop Session
 														<div class="timer">00:00:00</div>
-														<div class="sessionID"></div>
+														<div class="sessionName"></div>
 													</div>	
 													<div class="displayFieldDiv">
 														<b>Sample Received:</b>
