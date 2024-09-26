@@ -406,9 +406,14 @@ $traitArr = $indManager->getTraitArr();
 							$char = substr($occArr['othercatalognumbers'],0,1);
 							if($char == '{' || $char == '['){
 								$otherCatArr = json_decode($occArr['othercatalognumbers'],true);
+								$hideSampleID = isset($otherCatArr['NEON sampleID Hash']) && !$GLOBALS['IS_ADMIN'];
 								foreach($otherCatArr as $catTag => $catValueArr){
 									if(!$catTag) $catTag = $LANG['OTHER_CATALOG_NUMBERS'];
 
+									if ($catTag == 'NEON sampleID' && $hideSampleID) {
+										continue;
+									}
+									
 									if ($catTag == 'NEON sampleID') {
 										$catTagLabel = 'Sample Tag (SampleID)';
 									} elseif ($catTag == 'NEON sampleCode (barcode)') {
@@ -417,10 +422,6 @@ $traitArr = $indManager->getTraitArr();
 										$catTagLabel = 'SampleUuid';
 									} else {
 										$catTagLabel = $catTag; 
-									}
-									
-									if ($catTag == 'NEON sampleID' && !$GLOBALS['IS_ADMIN']) {
-										continue;
 									}
 								
 									echo '<div class="assoccatnum-div"><label>'.$catTagLabel.':</label> '.implode('; ', $catValueArr);
