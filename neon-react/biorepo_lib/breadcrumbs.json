@@ -221,7 +221,7 @@
     { "name": "Sample Portal", "href": "https://biokic4.rc.asu.edu/neon/portal/index.php" },
     { "name": "Image Breakdown" }
     ],
-  "/neon/portal/collections/datasets/publiclist.php": [
+  "/neon/collections/datasets/publiclist.php": [
     { "name": "Impact", "href": "https://www.neonscience.org/impact" },
     { "name": "Papers & Publications", "href": "https://www.neonscience.org/impact/papers-publications" },
     { "name": "Published Sample Research Datasets" }

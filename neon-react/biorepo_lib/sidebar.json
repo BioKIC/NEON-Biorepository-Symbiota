@@ -1,0 +1,60 @@
+{
+  "/neon/collections/datasets/publiclist.php": {
+    "sidebarTitle": "Impact",
+    "links": [
+        {
+          "name": "Observatory Blog",
+          "hash": "https://www.neonscience.org/impact/observatory-blog"
+        },
+        {
+          "name": "Case Studies",
+          "hash": "https://www.neonscience.org/impact/case-studies"
+        },
+        {
+          "name": "Spotlights",
+          "hash": "https://www.neonscience.org/impact/spotlights"
+        },
+        {
+          "name": "Papers & Publications",
+          "hash": "https://www.neonscience.org/impact/papers-publications"
+        },
+        {
+          "name": "Newsroom",
+          "hash": "https://www.neonscience.org/impact/newsroom"
+        }
+    ]
+  },
+  "default": {
+    "sidebarTitle": "Data & Samples",
+    "links": [
+        {
+          "name": "Data Portal",
+          "hash": "https://www.neonscience.org/data"
+        },
+        {
+          "name": "Sample Portal",
+          "hash": "https://biokic4.rc.asu.edu/neon/portal/index.php"
+        },
+        {
+          "name": "Themes",
+          "hash": "https://www.neonscience.org/data-samples/data-themes"
+        },
+        {
+          "name": "Collection Methods",
+          "hash": "https://www.neonscience.org/data-collection"
+        },
+        {
+          "name": "Notifications",
+          "hash": "https://www.neonscience.org/data-samples/data-notifications"
+        },
+        {
+          "name": "Spatial Data & Maps",
+          "hash": "https://www.neonscience.org/data-samples/data/spatial-data-maps"
+        },
+        {
+          "name": "Document Library",
+          "hash": "https://data.neonscience.org/documents"
+        }
+    ]
+  }
+}
