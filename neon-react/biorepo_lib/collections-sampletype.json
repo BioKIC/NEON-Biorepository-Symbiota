@@ -1,7 +1,7 @@
 [
   {
     "id": 1,
-    "name": "Dry Sample",
+    "name": "Dry Samples",
     "children": [
       {
         "id": 2,
@@ -110,7 +110,7 @@
   },
   {
     "id": 22,
-    "name": "Fluid-Preserved Sample",
+    "name": "Fluid-Preserved Samples",
     "children": [
       {
         "id": 23,
@@ -249,7 +249,7 @@
   },
   {
     "id": 49,
-    "name": "Frozen Sample",
+    "name": "Frozen Samples",
     "children": [
       {
         "id": 50,
@@ -305,7 +305,7 @@
   },
   {
     "id": 60,
-    "name": "Genomic Sample",
+    "name": "Genomic Samples",
     "children": [
       {
         "id": 61,
@@ -399,7 +399,7 @@
   },
   {
     "id": 78,
-    "name": "Slide-Mounted Sample",
+    "name": "Slide-Mounted Samples",
     "children": [
       {
         "id": 79,
