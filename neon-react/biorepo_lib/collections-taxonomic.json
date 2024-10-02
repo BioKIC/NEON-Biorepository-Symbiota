@@ -1,0 +1,436 @@
+[
+  {
+    "id": 1,
+    "name": "Aquatic Plants, Bryophytes, Lichens, and Macroalgae",
+    "children": [
+      {
+        "id": 2,
+        "name": "Chemically-Preserved Specimens (from Clip Harvest Biomass Sampling)",
+        "collid": 50
+      },
+      {
+        "id": 3,
+        "name": "Chemically-Preserved Specimens (from Point Transects Sampling)",
+        "collid": 73
+      },
+      {
+        "id": 4,
+        "name": "Herbarium Specimens (from Clip Harvest Biomass Sampling)",
+        "collid": 9
+      },
+      {
+        "id": 5,
+        "name": "Herbarium Specimens (from Point Transect Sampling)",
+        "collid": 7
+      },
+      {
+        "id": 6,
+        "name": "Herbarium Specimens (from Opportunistic Sampling)",
+        "collid": 8
+      }
+    ]
+  },
+  {
+    "id": 7,
+    "name": "Environmental",
+    "children": [
+      {
+        "id": 8,
+        "name": "Aquatic Sediments",
+        "collid": 92
+      },
+      {
+        "id": 9,
+        "name": "Particulate Mass Filters",
+        "collid": 41
+      },
+      {
+        "id": 10,
+        "name": "Soils (Standard Sampling)",
+        "collid": 30
+      },
+      {
+        "id": 11,
+        "name": "Belowground Biomass (Megapit)",
+        "collid": 76
+      },
+      {
+        "id": 12,
+        "name": "Belowground Biomass (Tower Plots)",
+        "collid": 10
+      },
+      {
+        "id": 13,
+        "name": "Wet Deposition (Precipitation)",
+        "collid": 42
+      }
+    ]
+  },
+  {
+    "id": 14,
+    "name": "Invertebrates",
+    "children": [
+      {
+        "id": 15,
+        "name": "Aquatic Macroinvertebrates",
+        "children": [
+          {
+            "id": 16,
+            "name": "DNA Extracts",
+            "collid": 61
+          },
+          {
+            "id": 17,
+            "name": "Fluid Preserved Midges (Chironomids)",
+            "collid": 22
+          },
+          {
+            "id": 18,
+            "name": "Fluid Preserved Worms (Oligochaetes)",
+            "collid": 52
+          },
+          {
+            "id": 19,
+            "name": "Slide Mounted Midges and Worms (Chironomids/Oligochaetes)",
+            "collid": 53
+          },
+          {
+            "id": 20,
+            "name": "Taxonomic Reference Collection",
+            "collid": 48
+          },
+          {
+            "id": 21,
+            "name": "Taxonomy Subsample",
+            "collid": 57
+          },
+          {
+            "id": 22,
+            "name": "Unsorted Bulk Sample",
+            "collid": 21
+          }
+        ]
+      },
+      {
+        "id": 23,
+        "name": "Beetles (Carabids)",
+        "children": [
+          {
+            "id": 24,
+            "name": "DNA Extracts",
+            "collid": 63
+          },
+          {
+            "id": 25,
+            "name": "Pinned Specimens",
+            "collid": 39
+          },
+          {
+            "id": 26,
+            "name": "Pooled Samples (Within-plot)",
+            "collid": 11
+          },
+          {
+            "id": 27,
+            "name": "Pooled Samples (Within-trap)",
+            "collid": 14
+          }
+        ]
+      },
+      {
+        "id": 28,
+        "name": "Mosquitos",
+        "children": [
+          {
+            "id": 29,
+            "name": "Bulk Identified",
+            "collid": 56
+          },
+          {
+            "id": 30,
+            "name": "DNA Extracts",
+            "collid": 65
+          },
+          {
+            "id": 31,
+            "name": "Pathogen Extracts",
+            "collid": 59
+          },
+          {
+            "id": 32,
+            "name": "Pinned Specimens",
+            "collid": 29
+          }
+        ]
+      },
+      {
+        "id": 33,
+        "name": "Other Invertebrates",
+        "children": [
+          {
+            "id": 34,
+            "name": "Insect Taxonomic Reference Collection",
+            "collid": 4
+          },
+          {
+            "id": 35,
+            "name": "Invertebrate Bycatch (from Pitfall within-plot Pooling)",
+            "collid": 13
+          },
+          {
+            "id": 36,
+            "name": "Invertebrate Bycatch (from Pitfall within-trap Pooling)",
+            "collid": 16
+          },
+          {
+            "id": 37,
+            "name": "Mammal Parasite Specimens",
+            "collid": 85
+          },
+          {
+            "id": 38,
+            "name": "Tick Pathogen Extracts",
+            "collid": 75
+          }
+        ]
+      },
+      {
+        "id": 39,
+        "name": "Zooplankton",
+        "children": [
+          {
+            "id": 40,
+            "name": "DNA Extracts",
+            "collid": 62
+          },
+          {
+            "id": 41,
+            "name": "Remaining Bulk Taxonomy Sample",
+            "collid": 45
+          },
+          {
+            "id": 42,
+            "name": "Unsorted Bulk Sample",
+            "collid": 60
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": 43,
+    "name": "Microalgae (Periphyton, Seston, and Phytoplankton)",
+    "children": [
+      {
+        "id": 44,
+        "name": "Chemically Preserved",
+        "collid": 47
+      },
+      {
+        "id": 45,
+        "name": "Freeze-dried",
+        "collid": 46
+      },
+      {
+        "id": 46,
+        "name": "Microscope Slides",
+        "collid": 49
+      },
+      {
+        "id": 47,
+        "name": "Sterivex Filters",
+        "collid": 98
+      }
+    ]
+  },
+  {
+    "id": 48,
+    "name": "Microbes",
+    "children": [
+      {
+        "id": 49,
+        "name": "Benthic Microbes",
+        "children": [
+          {
+            "id": 50,
+            "name": "DNA Extracts",
+            "collid": 67
+          },
+          {
+            "id": 51,
+            "name": "Sterivex Filters",
+            "collid": 5
+          }
+        ]
+      },
+      {
+        "id": 52,
+        "name": "Soil Microbes",
+        "children": [
+          {
+            "id": 53,
+            "name": "Bulk Subsamples",
+            "collid": 31
+          },
+          {
+            "id": 54,
+            "name": "DNA Extracts",
+            "collid": 69
+          }
+        ]
+      },
+      {
+        "id": 55,
+        "name": "Surface Water Microbes",
+        "children": [
+          {
+            "id": 56,
+            "name": "DNA Extracts",
+            "collid": 68
+          },
+          {
+            "id": 57,
+            "name": "Sterivex Filters",
+            "collid": 6
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": 82,
+    "name": "Other",
+    "children": [
+      {
+        "id": 83,
+        "name": "Legacy and Prototype samples",
+        "collid": 0
+      }
+    ]
+  },
+  {
+    "id": 58,
+    "name": "Terrestrial Plants",
+    "children": [
+      {
+        "id": 59,
+        "name": "Herbarium Specimens",
+        "collid": 54
+      },
+      {
+        "id": 60,
+        "name": "Leaf Tissue",
+        "collid": 40
+      },
+      {
+        "id": 61,
+        "name": "Litterfall",
+        "collid": 23
+      },
+      {
+        "id": 62,
+        "name": "Oven Dried Canopy Foliage",
+        "collid": 18
+      }
+    ]
+  },
+  {
+    "id": 63,
+    "name": "Vertebrates",
+    "children": [
+      {
+        "id": 64,
+        "name": "Fish",
+        "children": [
+          {
+            "id": 65,
+            "name": "DNA Extracts",
+            "collid": 66
+          },
+          {
+            "id": 66,
+            "name": "Specimens",
+            "collid": 20
+          }
+        ]
+      },
+      {
+        "id": 67,
+        "name": "Mammals",
+        "children": [
+          {
+            "id": 68,
+            "name": "Blood Samples",
+            "collid": 24
+          },
+          {
+            "id": 69,
+            "name": "DNA Extracts",
+            "collid": 71
+          },
+          {
+            "id": 70,
+            "name": "Ear Tissue",
+            "collid": 25
+          },
+          {
+            "id": 71,
+            "name": "Fecal Samples",
+            "collid": 26
+          },
+          {
+            "id": 72,
+            "name": "Hair Samples",
+            "collid": 27
+          },
+          {
+            "id": 73,
+            "name": "Pathogen Extracts (from Blood)",
+            "collid": 91
+          },
+          {
+            "id": 74,
+            "name": "Pathogen Extracts (Ear Tissue)",
+            "collid": 90
+          },
+          {
+            "id": 75,
+            "name": "Pitfall Bycatch Specimens",
+            "collid": 17
+          },
+          {
+            "id": 76,
+            "name": "Specimens (Opportunistic)",
+            "collid": 19
+          },
+          {
+            "id": 77,
+            "name": "Specimens (Standard Sampling)",
+            "collid": 28
+          }
+        ]
+      },
+      {
+        "id": 78,
+        "name": "Reptiles and Amphibians",
+        "children": [
+          {
+            "id": 79,
+            "name": "Bycatch Specimens (from Pitfall within-plot Pooling)",
+            "collid": 12
+          },
+          {
+            "id": 80,
+            "name": "Bycatch Specimens (from Pitfall within-trap Pooling)",
+            "collid": 15
+          },
+          {
+            "id": 81,
+            "name": "Bycatch Specimens (from Small Mammal and Fish Sampling)",
+            "collid": 70
+          }
+        ]
+      }
+    ]
+  }
+]
