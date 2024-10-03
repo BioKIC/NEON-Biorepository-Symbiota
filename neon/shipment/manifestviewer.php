@@ -751,13 +751,13 @@ include($SERVER_ROOT.'/includes/header.php');
 													}
 
 													$str = '';
-													if(isset($sampleArr['alternativeSampleID'])) $str .= '<div>Alternative Sample ID: '.$sampleArr['alternativeSampleID'].'</div>';
-													if(isset($sampleArr['hashedSampleID'])) $str .= '<div>Hashed Sample ID: '.$sampleArr['hashedSampleID'].'</div>';
-													if(isset($sampleArr['individualCount'])) $str .= '<div>Individual Count: '.$sampleArr['individualCount'].'</div>';
-													if(isset($sampleArr['filterVolume'])) $str .= '<div>Filter Volume: '.$sampleArr['filterVolume'].'</div>';
-													if(isset($sampleArr['domainRemarks'])) $str .= '<div>Domain Remarks: '.$sampleArr['domainRemarks'].'</div>';
-													if(isset($sampleArr['sampleNotes'])) $str .= '<div>Sample Notes: '.$sampleArr['sampleNotes'].'</div>';
-													if(isset($sampleArr['checkinRemarks'])) $str .= '<div>Check-in Remarks: '.$sampleArr['checkinRemarks'].'</div>';
+													if(!empty($sampleArr['alternativeSampleID'])) $str .= '<div>Alternative Sample ID: '.$sampleArr['alternativeSampleID'].'</div>';
+													if(!empty($sampleArr['hashedSampleID'])) $str .= '<div>Hashed Sample ID: '.$sampleArr['hashedSampleID'].'</div>';
+													if(!empty($sampleArr['individualCount'])) $str .= '<div>Individual Count: '.$sampleArr['individualCount'].'</div>';
+													if(!empty($sampleArr['filterVolume'])) $str .= '<div>Filter Volume: '.$sampleArr['filterVolume'].'</div>';
+													if(!empty($sampleArr['domainRemarks'])) $str .= '<div>Domain Remarks: '.$sampleArr['domainRemarks'].'</div>';
+													if(!empty($sampleArr['sampleNotes'])) $str .= '<div>Sample Notes: '.$sampleArr['sampleNotes'].'</div>';
+													if(!empty($sampleArr['checkinRemarks'])) $str .= '<div>Check-in Remarks: '.$sampleArr['checkinRemarks'].'</div>';
 													if(isset($sampleArr['dynamicProperties']) && $sampleArr['dynamicProperties']){
 														$str .= '<div>'.trim($propStr,'; ').'</div>';
 													}
@@ -769,13 +769,16 @@ include($SERVER_ROOT.'/includes/header.php');
 														}
 														$str .= '<div>Symbiota targeted data ['.trim($symbStr,'; ').']</div>';
 													}
-													if(isset($sampleArr['occurErr'])) $str .= '<div>Occurrence Harvesting Error: '.$sampleArr['occurErr'].'</div>';
-													if($str) {
-														echo '<tr class="sample-row" data-child-value="'.trim($str,'; ').'">';
-													} else {
-														echo '<tr class="sample-row">';
+													if(!empty($sampleArr['occurErr'])) $str .= '<div>Occurrence Harvesting Error: '.$sampleArr['occurErr'].'</div>';		
+												
+													if($sortableTable){
+														if($str) {
+															echo '<tr class="sample-row" data-child-value="'.trim($str,'; ').'">';
+														} else {
+															echo '<tr class="sample-row">';
+														}															
 													}
-
+													
 													echo '<td>';
 													echo '<input id="scbox-'.$samplePK.'" class="'.trim($classStr).'" name="scbox[]" type="checkbox" value="'.$samplePK.'" />';
 													echo ' <a href="#" onclick="return openSampleEditor('.$samplePK.')"><img src="../../images/edit.png" style="width:12px" /></a>';
@@ -825,6 +828,9 @@ include($SERVER_ROOT.'/includes/header.php');
 													}
 													echo '</td>';
 													echo '</tr>';
+													if(!$sortableTable){
+														if($str) echo '<tr><td colspan="'.$rowCnt.'"><div style="margin-left:30px;">'.trim($str,'; ').'</div></td></tr>';
+													}
 
 												}
 												?>
