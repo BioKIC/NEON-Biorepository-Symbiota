@@ -118,7 +118,7 @@
         "children": [
           {
             "id": 24,
-            "name": "Aquatic Macroalgae (from Clip Harvest Biomass Sampling) ",
+            "name": "Aquatic Macroalgae (from Clip Harvest Biomass Sampling)",
             "collid": 50
           },
           {
@@ -163,12 +163,12 @@
           },
           {
             "id": 33,
-            "name": "Insect Specimen Bycatch (from Beetle within-plot Pooling)",
+            "name": "Invertebrate Specimen Bycatch (from Pitfall within-plot Pooling)",
             "collid": 13
           },
           {
             "id": 34,
-            "name": "Insect Specimen Bycatch (from Beetle within-trap Pooling)",
+            "name": "Invertebrate Specimen Bycatch (from Pitfall within-trap Pooling)",
             "collid": 16
           },
           {
@@ -220,7 +220,7 @@
           },
           {
             "id": 44,
-            "name": "Mammal Specimen Bycatch (from Beetle within-trap Pooling)",
+            "name": "Mammal Specimen Bycatch (from Pitfall within-trap Pooling)",
             "collid": 17
           },
           {
@@ -230,12 +230,12 @@
           },
           {
             "id": 46,
-            "name": "Reptiles and Amphibians Specimen Bycatch (from Beetle within-plot Pooling)",
+            "name": "Reptiles and Amphibians Specimen Bycatch (from Pitfall within-plot Pooling)",
             "collid": 12
           },
           {
             "id": 47,
-            "name": "Reptiles and Amphibians Specimen Bycatch (from Beetle within-trap Pooling)",
+            "name": "Reptiles and Amphibians Specimen Bycatch (from Pitfall within-trap Pooling)",
             "collid": 15
           },
           {
