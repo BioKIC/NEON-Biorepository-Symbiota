@@ -93,6 +93,7 @@ class OpenIdProfileManager extends ProfileManager{
 				else {
 					$row = $results->fetch_array(MYSQLI_ASSOC);
 					//found existing user. add 3rdparty auth info
+					//email in users should be unique - that way only one user gets added per login
 					$sql = 'INSERT INTO usersthirdpartyauth (uid, subUuid, provider) VALUES(?,?,?)';
 					$this->resetConnection();
 					if($stmt = $this->conn->prepare($sql)) {
