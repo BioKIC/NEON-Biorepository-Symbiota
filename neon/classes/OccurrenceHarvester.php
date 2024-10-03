@@ -713,6 +713,7 @@ class OccurrenceHarvester{
 				$skipTaxonomy = array(5,6,10,13,16,21,23,31,41,42,58,60,61,62,67,68,69,76,92,98);
 				if(!in_array($dwcArr['collid'],$skipTaxonomy)){
 					$identArr = array();
+					$taxonCode = '';
 					if(isset($sampleArr['identifications']) && !in_array($dwcArr['collid'], array(46))){
 						$identArr = $sampleArr['identifications'];
 					}
