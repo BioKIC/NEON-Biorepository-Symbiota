@@ -91,42 +91,16 @@ class OpenIdProfileManager extends ProfileManager{
 					return true;
 				}
 				else {
-					if($results->num_rows == 1){
-						$row = $results->fetch_array(MYSQLI_ASSOC);
-						if (($row['provider'] == '' && $row['subUuid'] == '') || ($row['provider'] && $row['provider'] !== $provider)){
-						//found existing user. add 3rdparty auth info
-							$sql = 'INSERT INTO usersthirdpartyauth (uid, subUuid, provider) VALUES(?,?,?)';
-							$this->resetConnection();
-							if($stmt = $this->conn->prepare($sql)) {
-								$stmt->bind_param('iss', $row['uid'], $sub, $provider);
-								$stmt->execute();
-							}
-							$this->uid = $row['uid'];
-							return true;
-						}
-
+					$row = $results->fetch_array(MYSQLI_ASSOC);
+					//found existing user. add 3rdparty auth info
+					$sql = 'INSERT INTO usersthirdpartyauth (uid, subUuid, provider) VALUES(?,?,?)';
+					$this->resetConnection();
+					if($stmt = $this->conn->prepare($sql)) {
+						$stmt->bind_param('iss', $row['uid'], $sub, $provider);
+						$stmt->execute();
 					}
-					else if($results->num_rows > 1){
-						$uidPlaceholder = '';
-						while ($row = $results->fetch_array(MYSQLI_ASSOC)) {
-							$uidPlaceholder = $row['uid']; // assumes one-to-one relationship between user and email address
-							if ($row['provider'] == $provider && $row['subUuid'] !== $sub){
-								return false; // current assumption is that if this happens, the subUuid is not kosher. 
-								// If this assumption is ever violated, one solution would be to purge relevant rows from usersthirdpartyauth
-							}
-							else continue;
-						}
-						// Provider not found - handle adding new entry to usersthirdpartyauth table
-						$sql = 'INSERT INTO usersthirdpartyauth (uid, subUuid, provider) VALUES(?,?,?)';
-						$this->resetConnection();
-						if($stmt = $this->conn->prepare($sql)) {
-							$stmt->bind_param('iss', $uidPlaceholder, $sub, $provider);
-							$stmt->execute();
-						}
-						$this->uid = $row['uid'];
-						return true;
-						
-					}
+					$this->uid = $row['uid'];
+					return true;
 				}
 			}
 		}
