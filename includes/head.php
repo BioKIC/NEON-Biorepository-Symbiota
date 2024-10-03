@@ -257,7 +257,7 @@ elseif (array_key_exists('CollAdmin', $USER_RIGHTS) || array_key_exists('CollEdi
                     signinButton.addEventListener('click', () => {
                 EOL;
                     
-                echo "window.location.href = '".$CLIENT_ROOT."/profile/index.php';";
+                echo "window.location.href = '".$CLIENT_ROOT."/profile/openIdAuth.php';";
                 echo <<<EOL
                     });
                     const signInDiv = document.getElementById("header__authentication-ui");
