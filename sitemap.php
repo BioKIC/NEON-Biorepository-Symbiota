@@ -135,7 +135,7 @@ $smManager = new SiteMapManager();
 						<h3><?php echo $LANG['ADMIN'];?></h3>
 						<ul>
 							<li>
-								<a href="profile/usermanagement.php"><?php echo $LANG['USERPERM'];?></a>
+								<a href="profile/usermanagement.php">User Permissions (Symbiota)</a>
 							</li>
 <!--							<li>
 								<a href="profile/usertaxonomymanager.php"><?php echo $LANG['TAXINTER'];?></a>

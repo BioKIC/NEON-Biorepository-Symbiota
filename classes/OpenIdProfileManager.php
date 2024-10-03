@@ -61,7 +61,7 @@ class OpenIdProfileManager extends ProfileManager{
 		return $status;
 	}
 
-	public function linkLocalUserOidSub($email, $sub, $provider){
+	public function linkLocalUserOidSub($email, $sub, $provider, $username, $firstname, $lastname){
 		if($email && $sub && $provider){
             $sql = 'SELECT u.uid, oid.subUuid, oid.provider from users u LEFT join usersthirdpartyauth oid ON u.uid = oid.uid 
 			WHERE u.email = ?';
@@ -72,8 +72,23 @@ class OpenIdProfileManager extends ProfileManager{
 					$stmt->close();
 				}
 				if ($results->num_rows < 1){
-					//Local user does not exist
-					throw new Exception ("User does not exist in symbiota database <ERR/>");
+					//user does not exist in user table, create user
+					$username = $username ?? $email;
+					$firstname = $firstname ?? $email;
+					$sql = 'INSERT INTO users (firstName, lastName, email, username) VALUES(?,?,?,?)';
+					$this->resetConnection();
+					if($stmt = $this->conn->prepare($sql)) {
+						$stmt->bind_param('ssss', $firstname, $lastname, $email, $username);
+						$stmt->execute();
+					}
+					$uid = $this->conn->insert_id;
+					$sql = 'INSERT INTO usersthirdpartyauth (uid, subUuid, provider) VALUES(?,?,?)';
+					$this->resetConnection();
+					if($stmt = $this->conn->prepare($sql)) {
+						$stmt->bind_param('iss', $uid, $sub, $provider);
+						$stmt->execute();
+					}
+					return true;
 				}
 				else {
 					if($results->num_rows == 1){

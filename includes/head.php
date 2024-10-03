@@ -169,7 +169,7 @@ elseif (array_key_exists('CollAdmin', $USER_RIGHTS) || array_key_exists('CollEdi
             }
             //sign in and sign out
             <?php
-            if ($USER_DISPLAY_NAME) {
+            if ($SYMB_UID) {
                 //add my account
                 echo <<<EOL
                     const myAccountButton = document.createElement('button');
