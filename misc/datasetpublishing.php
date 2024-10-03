@@ -44,7 +44,7 @@ header("Content-Type: text/html; charset=" . $CHARSET);
 	<div id="innertext">
 		<h1 style="text-align: center;">Dataset Publishing</h1>
 		<h2 style="text-align: center;">Publishing Research Output in the NEON Biorepository Data Portal</h2>
-		<p>For all of the following, please consult with us at <a href="mailto:biorepo@asu.edu">biorepo@asu.edu</a> to identify the best joint solution for highlighting your sample-associated research publications and publishing your sample-associated data.</p>
+		<p>For all of the following, please <a href="https://www.neonscience.org/about/contact-neon-biorepository">contact us</a> to identify the best joint solution for highlighting your sample-associated research publications and publishing your sample-associated data.</p>
 		<!-- Table of Contents -->
 		<h2 class="anchor" id="dataset-publishing-toc">Table of Contents</h2>
 
