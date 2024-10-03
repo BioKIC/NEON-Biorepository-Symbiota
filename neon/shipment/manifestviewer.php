@@ -72,9 +72,9 @@ elseif(array_key_exists('CollAdmin',$USER_RIGHTS) || array_key_exists('CollEdito
 				?>
 				$('#manifestTable').DataTable({
 					paging: false,
-					scrollY: 900,
 					scrollCollapse: true,
 					fixedHeader: true,
+					scrollX: true,
 					columnDefs: [{ orderable: false, targets: [0, -1]}],
 					});
 				$("#manifestTable").DataTable().rows().every( function () {
