@@ -989,7 +989,7 @@ class OccurrenceHarvester{
 		elseif(in_array($dwcArr['collid'], array(29,39,44,63,65,66,71,75,82,90,91,95))) {
 			$dwcArr['individualCount'] = 1;
 		}
-		elseif(in_array($dwcArr['collid'], array(46,11,12,1415,17,18))){
+		elseif(in_array($dwcArr['collid'], array(46,11,12,14,15,17,18))){
 			$dwcArr['individualCount'] = NULL;
 		}
 	}
