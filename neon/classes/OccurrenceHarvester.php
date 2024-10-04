@@ -461,7 +461,7 @@ class OccurrenceHarvester{
 				//if(strpos($tableName,'identification')) continue;
 				//if(strpos($tableName,'sorting')) continue;
 				if(strpos($tableName,'scs_archive')) continue;
-				if(strpos($tableName,'barcoding')) continue;
+				//if(strpos($tableName,'barcoding')) continue;
 				if(strpos($tableName,'dnaStandardTaxon')) continue;
 				if(strpos($tableName,'dnaExtraction')) continue;
 				if(strpos($tableName,'markerGeneSequencing')) continue;
