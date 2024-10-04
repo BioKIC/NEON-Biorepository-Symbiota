@@ -986,10 +986,10 @@ class OccurrenceHarvester{
 			$dwcArr['lifeStage'] = 'Nymph';
 			$dwcArr['sex'] = '';
 		}
-		elseif($dwcArr['collid'] == 29 || $dwcArr['collid'] == 39 || $dwcArr['collid'] == 44 || $dwcArr['collid'] == 82 || $dwcArr['collid'] == 95){
+		elseif(in_array($dwcArr['collid'], array(29,39,44,63,65,66,71,75,82,90,91,95))) {
 			$dwcArr['individualCount'] = 1;
 		}
-		elseif($dwcArr['collid'] == 46 ||$dwcArr['collid'] == 11 || $dwcArr['collid'] == 12 || $dwcArr['collid'] == 14 || $dwcArr['collid'] == 15 || $dwcArr['collid'] == 17 || $dwcArr['collid'] == 18){
+		elseif(in_array($dwcArr['collid'], array(46,11,12,1415,17,18))){
 			$dwcArr['individualCount'] = NULL;
 		}
 	}
