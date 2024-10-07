@@ -186,6 +186,7 @@ elseif (array_key_exists('CollAdmin', $USER_RIGHTS) || array_key_exists('CollEdi
                     myAccountButton.style.textTransform = 'uppercase';
                     myAccountButton.style.backgroundColor = 'white';
                     myAccountButton.style.borderWidth = '1px';
+                    myAccountButton.style.borderStyle = 'solid';
                     myAccountButton.style.borderRadius = '0';
                     myAccountButton.style.borderColor = '#0073cf';
                     myAccountButton.style.padding = '5px 10px';
@@ -218,6 +219,7 @@ elseif (array_key_exists('CollAdmin', $USER_RIGHTS) || array_key_exists('CollEdi
                     signoutButton.style.textTransform = 'uppercase';
                     signoutButton.style.backgroundColor = 'white';
                     signoutButton.style.borderWidth = '1px';
+                    signoutButton.style.borderStyle = 'solid';
                     signoutButton.style.borderRadius = '0';
                     signoutButton.style.borderColor = '#0073cf';
                     signoutButton.style.padding = '5px 10px';
@@ -250,6 +252,7 @@ elseif (array_key_exists('CollAdmin', $USER_RIGHTS) || array_key_exists('CollEdi
                     signinButton.style.textTransform = 'uppercase';
                     signinButton.style.backgroundColor = 'white';
                     signinButton.style.borderWidth = '1px';
+                    signinButton.style.borderStyle = 'solid';
                     signinButton.style.borderRadius = '0';
                     signinButton.style.borderColor = '#0073cf';
                     signinButton.style.padding = '5px 10px';
@@ -287,6 +290,7 @@ elseif (array_key_exists('CollAdmin', $USER_RIGHTS) || array_key_exists('CollEdi
                     dataManagementButton.style.textTransform = 'uppercase';
                     dataManagementButton.style.backgroundColor = 'white';
                     dataManagementButton.style.borderWidth = '1px';
+                    dataManagementButton.style.borderStyle = 'solid';
                     dataManagementButton.style.borderRadius = '0';
                     dataManagementButton.style.borderColor = '#0073cf';
                     dataManagementButton.style.padding = '5px 10px';
@@ -317,6 +321,7 @@ elseif (array_key_exists('CollAdmin', $USER_RIGHTS) || array_key_exists('CollEdi
                     utilitiesButton.style.textTransform = 'uppercase';
                     utilitiesButton.style.backgroundColor = 'white';
                     utilitiesButton.style.borderWidth = '1px';
+                    utilitiesButton.style.borderStyle = 'solid';
                     utilitiesButton.style.borderRadius = '0';
                     utilitiesButton.style.borderColor = '#0073cf';
                     utilitiesButton.style.padding = '5px 10px';
