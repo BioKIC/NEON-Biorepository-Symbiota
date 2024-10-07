@@ -13,17 +13,18 @@ header('Content-Type: text/html; charset=' . $CHARSET);
 		<!-- This is inner text! -->
 		<div id="innertext">
 			<h1>Sample Services</h1>
-			<h2>Request Forms</h2>
-			<p>
-				<a class="link--button link--arrow" href="<?php echo $CLIENT_ROOT; ?>/misc/samplerequest.php">Sample Request</a>
-				<a class="link--button link--arrow" href="<?php echo $CLIENT_ROOT; ?>/misc/samplearchiverequest.php">Sample Archival Request</a>
-			</p>
 			<h2>Types of Requests</h2>
+			<h3><strong>Loans</strong></h3>
 			<ul>
 				<li><p><strong>Loans for non-destructive use: </strong>These loans are typically granted for a 6-12 month period; a longer period of time may be accommodated if properly justified. Ordinarily, no more than one-half of a sample or series of samples from a NEON site may be borrowed at any one time for non-destructive use. All loan requests, no matter the quantity, are considered on a case-by-case basis. Endangered taxa, fragile specimens, or samples which are deemed to be in limited supply are generally not considered for loans. Because the NEON Biorepository is a community resource with finite materials, we ask that requestors only ask for what they need and do not request excess samples.</p></li>
 				<li><p><strong>Loans for destructive or consumptive use: </strong>Decisions to grant or not grant permission for destructive/consumptive/invasive sampling will be based on: (1) rarity of the species or sample and its representation within the NEON Biorepository collections; (2) degree of destruction/consumption/invasiveness; (3) physical condition of the specimen(s); (4) significance of the proposed research relative to NEON’s mission to enable continental-scale ecology; and (5) qualifications of the investigators. Any physical material remaining after the analysis will be returned to the NEON Biorepository unless otherwise agreed upon in writing. Because the NEON Biorepository is a community resource with finite materials, we ask that requestors only ask for what they need and do not request excess samples.</p></li>
-				<li><p><strong>Archival Storage Request: </strong>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+				<a class="link--button link--arrow" href="<?php echo $CLIENT_ROOT; ?>/misc/samplerequest.php">Sample Loan Request</a>
+			</ul>
+			<h3><strong>Storage</strong></h3>
+			<ul>
+				<li><p><strong>Archival Storage Request: </strong>NEON Biorepository at Arizona State University offers archival storage for samples collected through NEON Assignable Assets and other research at NEON sites. Archiving typically incurs a cost based on sample quantity and storage needs. Archived samples are published to the NEON Biorepository data portal and made available for future research.
 				</p></li>
+				<a class="link--button link--arrow" href="<?php echo $CLIENT_ROOT; ?>/misc/samplearchiverequest.php">Sample Archival Request</a>
 			</ul>
 			<h2>Considerations for Approval</h2>
 			<p>The internal evaluation and approval of sample requests will focus on technical and logistical criteria as well as scientific justification, particularly for requests for destructive or consumptive use. The latter is not intended to subsume the scientific merit review that may have been conducted by the sponsoring agency; but rather is a means to ensure the highest and best use of this valuable but limited resource, as well as transparency and accountability to the greater research and collections communities.</p>
