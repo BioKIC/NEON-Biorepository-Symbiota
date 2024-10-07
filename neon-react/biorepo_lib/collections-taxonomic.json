@@ -395,37 +395,42 @@
           },
           {
             "id": 75,
+            "name": "Mammal Parasite Specimens",
+            "collid": 85
+          },
+          {
+            "id": 76,
             "name": "Pitfall Bycatch Specimens",
             "collid": 17
           },
           {
-            "id": 76,
+            "id": 77,
             "name": "Specimens (Opportunistic)",
             "collid": 19
           },
           {
-            "id": 77,
+            "id": 78,
             "name": "Specimens (Standard Sampling)",
             "collid": 28
           }
         ]
       },
       {
-        "id": 78,
+        "id": 79,
         "name": "Reptiles and Amphibians",
         "children": [
           {
-            "id": 79,
+            "id": 80,
             "name": "Bycatch Specimens (from Pitfall within-plot Pooling)",
             "collid": 12
           },
           {
-            "id": 80,
+            "id": 81,
             "name": "Bycatch Specimens (from Pitfall within-trap Pooling)",
             "collid": 15
           },
           {
-            "id": 81,
+            "id": 82,
             "name": "Bycatch Specimens (from Small Mammal and Fish Sampling)",
             "collid": 70
           }
