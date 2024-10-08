@@ -424,13 +424,13 @@ $imgLibManager = new ImageLibrarySearch();
 					$recordCnt = $imgLibManager->getRecordCnt();
 					if($imageArr){
 						?>
-						<form action="download/index.php" method="post" style="float:right" onsubmit="targetPopup(this)">
+<!--						<form action="download/index.php" method="post" style="float:right" onsubmit="targetPopup(this)">
 							<button class="icon-button" title="Download Images">
 								<img src="../images/dl2.png" srcset="../images/download.svg" class="svg-icon" style="width:15px; height:15px" />
 							</button>
 							<input name="searchvar" type="hidden" value="<?php echo $searchVar; ?>" />
 							<input name="dltype" type="hidden" value="specimen" />
-						</form>
+						</form>-->
 						<?php
 						echo '<div style="clear:both;margin:5 0 5 0;"><hr /></div>';
 						
