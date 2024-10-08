@@ -14,15 +14,15 @@
     { "name": "Sample Search", "href": "https://biokic4.rc.asu.edu/neon/portal/neon/search/index.php" },
     { "name": "Sample Search Results" }
   ],
-  "/neon/portal/projects/index.php": [
+  "/neon/portal/projects/browsechecklists.php": [
     { "name": "Data & Samples", "href": "https://www.neonscience.org/data-samples" },
     { "name": "Sample Portal", "href": "https://biokic4.rc.asu.edu/neon/portal/index.php" },
-    { "name": "Species Checklists" }
+    { "name": "Browse Species Checklists" }
     ],
   "/neon/portal/checklists/checklist.php": [
     { "name": "Data & Samples", "href": "https://www.neonscience.org/data-samples" },
     { "name": "Sample Portal", "href": "https://biokic4.rc.asu.edu/neon/portal/index.php" },
-    { "name": "Species Checklists", "href": "https://biokic4.rc.asu.edu/neon/portal/projects/index.php" },
+    { "name": "Browse Species Checklists", "href": "https://biokic4.rc.asu.edu/neon/portal/projects/browsechecklists.php" },
     { "name": "Checklist" }
     ],
   "/neon/portal/ident/key.php": [

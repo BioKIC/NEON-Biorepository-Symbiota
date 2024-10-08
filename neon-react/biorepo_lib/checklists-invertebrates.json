@@ -1,0 +1,632 @@
+[
+  {
+    "id": 1,
+    "name": "Domains",
+    "children": [
+      {
+        "id": 82,
+        "name": "D01 - Northeast",
+        "collid": 0
+      },
+      {
+        "id": 83,
+        "name": "D02 - Mid-Atlantic",
+        "collid": 0
+      },
+      {
+        "id": 84,
+        "name": "D03 - Southeast",
+        "collid": 0
+      },
+      {
+        "id": 85,
+        "name": "D04 - Atlantic Neotropical",
+        "collid": 0
+      },
+      {
+        "id": 86,
+        "name": "D05 - Great Lakes",
+        "collid": 0
+      },
+      {
+        "id": 87,
+        "name": "D06 - Prairie Peninsula",
+        "collid": 0
+      },
+      {
+        "id": 88,
+        "name": "D07 - Appalachians & Cumberland Plateau",
+        "collid": 0
+      },
+      {
+        "id": 89,
+        "name": "D08 - Ozarks Complex",
+        "collid": 0
+      },
+      {
+        "id": 90,
+        "name": "D09 - Northern Plains",
+        "collid": 0
+      },
+      {
+        "id": 91,
+        "name": "D10 - Central Plains",
+        "collid": 0
+      },
+      {
+        "id": 92,
+        "name": "D11 - Southern Plains",
+        "collid": 0
+      },
+      {
+        "id": 93,
+        "name": "D12 - Northern Rockies",
+        "collid": 0
+      },
+      {
+        "id": 94,
+        "name": "D13 - Southern Rockies & Colorado Plateau",
+        "collid": 0
+      },
+      {
+        "id": 95,
+        "name": "D14 - Desert Southwest",
+        "collid": 0
+      },
+      {
+        "id": 96,
+        "name": "D15 - Great Basin",
+        "collid": 0
+      },
+      {
+        "id": 97,
+        "name": "D16 - Pacific Northwest",
+        "collid": 0
+      },
+      {
+        "id": 98,
+        "name": "D17 - Pacific Southwest",
+        "collid": 0
+      },
+      {
+        "id": 99,
+        "name": "D18 - Tundra",
+        "collid": 0
+      },
+      {
+        "id": 100,
+        "name": "D19 - Taiga",
+        "collid": 0
+      },
+      {
+        "id": 101,
+        "name": "D20 - Pacific Tropical",
+        "collid": 0
+      }
+    ]
+  },
+  {
+    "id": 7,
+    "name": "Sites",
+    "children": [
+      {
+        "id": 2,
+        "name": "Abby Road (ABBY)",
+        "collid": 101
+      },
+      {
+        "id": 3,
+        "name": "Arikaree River (ARIK)",
+        "collid": 160
+      },
+      {
+        "id": 4,
+        "name": "Bartlett Experimental Forest (BART)",
+        "collid": 103
+      },
+      {
+        "id": 5,
+        "name": "Black Warrior River (BLWA)",
+        "collid": 130
+      },
+      {
+        "id": 6,
+        "name": "Blacktail Deer Creek (BLDE)",
+        "collid": 161
+      },
+      {
+        "id": 7,
+        "name": "Blandy Experimental Farm (BLAN)",
+        "collid": 104
+      },
+      {
+        "id": 8,
+        "name": "Blue River (BLUE)",
+        "collid": 162
+      },
+      {
+        "id": 9,
+        "name": "Caribou Creek (CARI)",
+        "collid": 131
+      },
+      {
+        "id": 10,
+        "name": "Caribou-Poker Creeks Research Watershed (BONA)",
+        "collid": 113
+      },
+      {
+        "id": 11,
+        "name": "Central Plains Experimental Range (CPER)",
+        "collid": 105
+      },
+      {
+        "id": 12,
+        "name": "Chase Lake National Wildlife Refuge (WOOD)",
+        "collid": 159
+      },
+      {
+        "id": 13,
+        "name": "Como Creek (COMO)",
+        "collid": 163
+      },
+      {
+        "id": 14,
+        "name": "Crampton Lake (CRAM)",
+        "collid": 132
+      },
+      {
+        "id": 15,
+        "name": "Dakota Coteau Field Site (DCFS)",
+        "collid": 106
+      },
+      {
+        "id": 16,
+        "name": "Dead Lake (DELA)",
+        "collid": 116
+      },
+      {
+        "id": 17,
+        "name": "Delta Junction (DEJU)",
+        "collid": 107
+      },
+      {
+        "id": 18,
+        "name": "Disney Wilderness Preserve (DSNY)",
+        "collid": 108
+      },
+      {
+        "id": 19,
+        "name": "Flint River (FLNT)",
+        "collid": 135
+      },
+      {
+        "id": 20,
+        "name": "Great Smoky Mountains National Park (GRSM)",
+        "collid": 109
+      },
+      {
+        "id": 21,
+        "name": "Guanica Forest (GUAN)",
+        "collid": 110
+      },
+      {
+        "id": 22,
+        "name": "Harvard Forest & Quabbin Watershed (HARV)",
+        "collid": 120
+      },
+      {
+        "id": 23,
+        "name": "Healy (HEAL)",
+        "collid": 117
+      },
+      {
+        "id": 24,
+        "name": "Jornada Experimental Range (JORN)",
+        "collid": 119
+      },
+      {
+        "id": 25,
+        "name": "Kings Creek (KING)",
+        "collid": 164
+      },
+      {
+        "id": 26,
+        "name": "Konza Prairie Biological Station (KONZ)",
+        "collid": 121
+      },
+      {
+        "id": 27,
+        "name": "Lajas Experimental Station (LAJA)",
+        "collid": 122
+      },
+      {
+        "id": 28,
+        "name": "Lake Barco (BARC)",
+        "collid": 138
+      },
+      {
+        "id": 29,
+        "name": "Lake Suggs (SUGG)",
+        "collid": 175
+      },
+      {
+        "id": 30,
+        "name": "LeConte Creek (LECO)",
+        "collid": 165
+      },
+      {
+        "id": 31,
+        "name": "Lenoir Landing (LENO)",
+        "collid": 129
+      },
+      {
+        "id": 32,
+        "name": "Lewis Run (LEWI)",
+        "collid": 166
+      },
+      {
+        "id": 33,
+        "name": "Little Rock Lake (LIRO)",
+        "collid": 136
+      },
+      {
+        "id": 34,
+        "name": "Lower Hop Brook (HOPB)",
+        "collid": 167
+      },
+      {
+        "id": 35,
+        "name": "Lower Teakettle (TEAK)",
+        "collid": 133
+      },
+      {
+        "id": 36,
+        "name": "Lower Tombigbee River (TOMB)",
+        "collid": 168
+      },
+      {
+        "id": 37,
+        "name": "Lyndon B. Johnson National Grassland (CLBJ)",
+        "collid": 128
+      },
+      {
+        "id": 38,
+        "name": "Martha Creek (MART)",
+        "collid": 169
+      },
+      {
+        "id": 39,
+        "name": "Marvin Klemme Range Research Station (OAES)",
+        "collid": 111
+      },
+      {
+        "id": 40,
+        "name": "Mayfield Creek (MAYF)",
+        "collid": 170
+      },
+      {
+        "id": 41,
+        "name": "McDiffett Creek (MCDI)",
+        "collid": 171
+      },
+      {
+        "id": 42,
+        "name": "McRae Creek (MCRA)",
+        "collid": 172
+      },
+      {
+        "id": 43,
+        "name": "Moab (MOAB)",
+        "collid": 134
+      },
+      {
+        "id": 44,
+        "name": "Mountain Lake Biological Station (MLBS)",
+        "collid": 112
+      },
+      {
+        "id": 45,
+        "name": "Niwot Ridge (NIWO)",
+        "collid": 140
+      },
+      {
+        "id": 46,
+        "name": "North Sterling (STER)",
+        "collid": 114
+      },
+      {
+        "id": 47,
+        "name": "Northern Great Plains Research Laboratory (NOGP)",
+        "collid": 115
+      },
+      {
+        "id": 48,
+        "name": "Oak Ridge (ORNL)",
+        "collid": 141
+      },
+      {
+        "id": 49,
+        "name": "Oksrukuyik Creek (OKSR)",
+        "collid": 137
+      },
+      {
+        "id": 50,
+        "name": "Onaqui (ONAQ)",
+        "collid": 149
+      },
+      {
+        "id": 51,
+        "name": "Ordway-Swisher Biological Station (OSBS)",
+        "collid": 123
+      },
+      {
+        "id": 52,
+        "name": "Posey Creek (POSE)",
+        "collid": 173
+      },
+      {
+        "id": 53,
+        "name": "Prairie Lake (PRLA)",
+        "collid": 176
+      },
+      {
+        "id": 54,
+        "name": "Prairie Pothole (PRPO)",
+        "collid": 139
+      },
+      {
+        "id": 55,
+        "name": "Pringle Creek (PRIN)",
+        "collid": 174
+      },
+      {
+        "id": 56,
+        "name": "Pu'u Maka'ala Natural Area Reserve (PUUM)",
+        "collid": 153
+      },
+      {
+        "id": 57,
+        "name": "Red Butte Creek (REDB)",
+        "collid": 144
+      },
+      {
+        "id": 58,
+        "name": "Rio Cupeyes (CUPE)",
+        "collid": 145
+      },
+      {
+        "id": 59,
+        "name": "Rio Guilarte (GUIL)",
+        "collid": 146
+      },
+      {
+        "id": 60,
+        "name": "Rocky Mountains (RMNP)",
+        "collid": 142
+      },
+      {
+        "id": 61,
+        "name": "San Joaquin Experimental Range (SJER)",
+        "collid": 143
+      },
+      {
+        "id": 62,
+        "name": "Santa Rita Experimental Range (SRER)",
+        "collid": 99
+      },
+      {
+        "id": 63,
+        "name": "Smithsonian Conservation Biology Institute (SCBI)",
+        "collid": 150
+      },
+      {
+        "id": 64,
+        "name": "Smithsonian Environmental Research Center (SERC)",
+        "collid": 154
+      },
+      {
+        "id": 65,
+        "name": "Soaproot Saddle (SOAP)",
+        "collid": 124
+      },
+      {
+        "id": 66,
+        "name": "Steigerwaldt-Chequamegon (STEI)",
+        "collid": 155
+      },
+      {
+        "id": 67,
+        "name": "Sycamore Creek (SYCA)",
+        "collid": 177
+      },
+      {
+        "id": 68,
+        "name": "Talladega National Forest (TALL)",
+        "collid": 157
+      },
+      {
+        "id": 69,
+        "name": "Teakettle Creek - Watershed 2 (TECR)",
+        "collid": 147
+      },
+      {
+        "id": 70,
+        "name": "The Jones Center At Ichauway (JERC)",
+        "collid": 118
+      },
+      {
+        "id": 71,
+        "name": "Toolik Field Station (TOOL)",
+        "collid": 179
+      },
+      {
+        "id": 72,
+        "name": "Toolik Lake (TOOK)",
+        "collid": 125
+      },
+      {
+        "id": 73,
+        "name": "Treehaven (TREE)",
+        "collid": 158
+      },
+      {
+        "id": 74,
+        "name": "University of Kansas Field Station (UKFS)",
+        "collid": 156
+      },
+      {
+        "id": 75,
+        "name": "University of Notre Dame Environmental Research Center (UNDE)",
+        "collid": 126
+      },
+      {
+        "id": 76,
+        "name": "Upper Big Creek (BIGC)",
+        "collid": 148
+      },
+      {
+        "id": 77,
+        "name": "Utqiaġvik (BARR)",
+        "collid": 102
+      },
+      {
+        "id": 78,
+        "name": "Walker Branch (WALK)",
+        "collid": 151
+      },
+      {
+        "id": 79,
+        "name": "West St Louis Creek (WLOU)",
+        "collid": 152
+      },
+      {
+        "id": 80,
+        "name": "Wind River Experimental Forest (WREF)",
+        "collid": 127
+      },
+      {
+        "id": 81,
+        "name": "Yellowstone National Park (YELL)",
+        "collid": 178
+      }
+    ]
+  },
+  {
+    "id": 102,
+    "name": "Taxa Specific",
+    "children": [
+      {
+        "id": 123,
+        "name": "Beetles (Carabids)",
+        "children": [
+          {
+            "id": 124,
+            "name": "D15 - Great Basin",
+            "collid": 7977
+          }
+        ]
+      },
+      {
+        "id": 103,
+        "name": "Mosquitoes",
+        "children": [
+          {
+            "id": 104,
+            "name": "D01 - Northeast",
+            "collid": 7991
+          },
+          {
+            "id": 105,
+            "name": "D02 - Mid-Atlantic",
+            "collid": 7992
+          },
+          {
+            "id": 106,
+            "name": "D03 - Southeast",
+            "collid": 7993
+          },
+          {
+            "id": 107,
+            "name": "D04 - Atlantic Neotropical",
+            "collid": 7994
+          },
+          {
+            "id": 108,
+            "name": "D05 - Great Lakes",
+            "collid": 7995
+          },
+          {
+            "id": 109,
+            "name": "D06 - Prairie Peninsula",
+            "collid": 7996
+          },
+          {
+            "id": 110,
+            "name": "D07 - Appalachians & Cumberland Plateau",
+            "collid": 7997
+          },
+          {
+            "id": 111,
+            "name": "D08 - Ozarks Complex",
+            "collid": 7998
+          },
+          {
+            "id": 112,
+            "name": "D09 - Northern Plains",
+            "collid": 7999
+          },
+          {
+            "id": 113,
+            "name": "D10 - Central Plains",
+            "collid": 8000
+          },
+          {
+            "id": 114,
+            "name": "D11 - Southern Plains",
+            "collid": 8003
+          },
+          {
+            "id": 115,
+            "name": "D12 - Northern Rockies",
+            "collid": 8004
+          },
+          {
+            "id": 116,
+            "name": "D13 - Southern Rockies & Colorado Plateau",
+            "collid": 8005
+          },
+          {
+            "id": 117,
+            "name": "D14 - Desert Southwest",
+            "collid": 8006
+          },
+          {
+            "id": 118,
+            "name": "D15 - Great Basin",
+            "collid": 8007
+          },
+          {
+            "id": 119,
+            "name": "D16 - Pacific Northwest",
+            "collid": 8008
+          },
+          {
+            "id": 120,
+            "name": "D17 - Pacific Southwest",
+            "collid": 8010
+          },
+          {
+            "id": 121,
+            "name": "D18 - Tundra",
+            "collid": 8011
+          },
+          {
+            "id": 122,
+            "name": "D19 - Taiga",
+            "collid": 8012
+          }
+        ]
+      }
+    ]
+  }
+]
