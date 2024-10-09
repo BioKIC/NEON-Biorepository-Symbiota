@@ -934,3 +934,4 @@ $('.expansion-icon').click(function () {
 });
 // Hides MOSC-BU checkboxes
 hideColCheckbox(58);
+hideColCheckbox(96);
