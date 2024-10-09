@@ -406,6 +406,7 @@ class OccurrenceManager extends OccurrenceTaxaManager {
 			if($inFrag){
 				$catWhere .= 'OR (o.catalogNumber IN("'.implode('","',$inFrag).'")) ';
 				if($includeOtherCatNum){
+					$catWhere .='OR (o.occid IN("'.implode('","',$inFrag).'")) ';
 					$catWhere .= 'OR (o.othercatalognumbers IN("'.implode('","',$inFrag).'")) ';
 					$catWhere .= 'OR (o.occurrenceID IN("'.implode('","',$inFrag).'")) ';
 					$catWhere .= 'OR (o.recordID IN("'.implode('","',$inFrag).'")) ';

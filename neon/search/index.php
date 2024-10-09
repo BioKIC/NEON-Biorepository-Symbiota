@@ -203,7 +203,7 @@ $siteData = new DatasetsMetadata();
 							<div>
 								<div>
 									<input type="checkbox" name="includeothercatnum" id="includeothercatnum" value="1" data-chip="Include other IDs" checked>
-									<label for="includeothercatnum">Include other sample identifiers (e.g. Sample Tag (sampleID), Barcode (sampleCode), sampleUuid)</label>
+									<label for="includeothercatnum">Include other sample identifiers (e.g. Sample Tag (sampleID), Barcode (sampleCode), sampleUuid, occid)</label>
 								</div>
 								<div class="text-area-container">
 									<label for="" class="text-area--outlined">
