@@ -1045,91 +1045,107 @@ class OccurrenceHarvester{
 		$sourceCollid = $dwcArr['collid'];
 		if(array_key_exists($sourceCollid, $collArr)){
 			$targetCollid = $collArr[$sourceCollid]['targetCollid'];
-			if($dwcArr['identifications']){
-				//Evaluate identification cluster to determine which IDs should become subsamples
-				$identificationsGrouped = array();
-				foreach($dwcArr['identifications'] as $idKey => $idArr){
-					if(!empty($idArr['securityStatus'])) continue;
-					if(empty($idArr['sciname'])) continue;
-					$dateIdentified = 0;
-					if(!empty($idArr['dateIdentified'])){
-						//If an actual date exists, extract to be used for grouping IDs
-						if(preg_match('/^(\d{4}-\d{2}-\d{2}).*/', $idArr['dateIdentified'], $m)){
-							$dateIdentified = $m[1];
-						}
-					}
-					if(!$dateIdentified){
-						//If date does not exist and collector does exist, increase group by 1, thus making it a sepparate and preferred group for subsampling
-						if(!empty($idArr['identifiedBy']) && $idArr['identifiedBy'] != 'undefined'){
-							$dateIdentified = 1;
-						}
-					}
-					$identificationsGrouped[$dateIdentified][] = $idKey;
-				}
-
-				//Select group of identifications that were identified the latest
-				krsort($identificationsGrouped);
-				$baseDataIdentified = key($identificationsGrouped);
-				$targetIdentifications = current($identificationsGrouped);
-
-				//Subsample records
-				echo '<li style="margin-left:30px">Creating/updating ' . count($targetIdentifications) . ' subSample records ... </li>';
-				$currentSubsampleArr = $this->getSubSamples($parentOccid);
-				$associationArr = array();
-				$tidArr = array();
-				foreach($targetIdentifications as $identificationKey){
-					$identArr = $dwcArr['identifications'][$identificationKey];
-					unset($dwcArr['identifications'][$identificationKey]);
-					if(!empty($identArr['tidInterpreted'])){
-						//TIDs are used to determine common taxonomic node
-						$tidArr[$identArr['tidInterpreted']] = $identArr['tidInterpreted'];
-					}
-					$dwcArrClone = $dwcArr;
-					$dwcArrClone['collid'] = $targetCollid;
-					$identArr['isCurrent'] = 1;
-					$dwcArrClone['identifications'] = array($identArr);
-					unset($dwcArrClone['associations']);
-					unset($dwcArrClone['identifiers']);
-					$existingOccid = 0;
-					foreach($currentSubsampleArr as $subOccid => $subUnitArr){
-						if($identArr['sciname'] == $subUnitArr['sciname']){
-							//Subsample exists, thus set occid so that subsample is updated rather than creating a new one
-							$existingOccid = $subOccid;
-							unset($currentSubsampleArr[$subOccid]);
-							break;
-						}
-					}
-					$occid = $this->loadOccurrenceRecord($dwcArrClone, $existingOccid);
-					if(!$existingOccid && $occid){
-						//Add association to parent record
-						$associationArr[] = array('relationship' => 'originatingSampleOf', 'occidAssociate' => $occid);
-					}
-				}
-				//Delete all subsamples that are not identified as an subsample import
-				$this->deleteSubSamples($currentSubsampleArr);
-				//Reset base sample (parent) with new identification unit containing lot ID
-				$baseID = array('sciname' => 'undefined');
-				if(!empty($collArr[$sourceCollid]['lotId'])){
-					$lotId = $collArr[$sourceCollid]['lotId'];
-					if($lotId == 'dynamic'){
-						if($idArr){
-							if($commonIdArr = $this->getCommonID($tidArr)){
-								$baseID['tidInterpreted'] = key($commonIdArr);
-								$baseID['sciname'] = current($commonIdArr);
+			if(!empty($dwcArr['identifications'])){
+				if($dwcArr['identifications']){
+					//Evaluate identification cluster to determine which IDs should become subsamples
+					$identificationsGrouped = array();
+					foreach($dwcArr['identifications'] as $idKey => $idArr){
+						if(!empty($idArr['securityStatus'])) continue;
+						if(empty($idArr['sciname'])) continue;
+						$dateIdentified = 0;
+						if(!empty($idArr['dateIdentified'])){
+							//If an actual date exists, extract to be used for grouping IDs
+							if(preg_match('/^(\d{4}-\d{2}-\d{2}).*/', $idArr['dateIdentified'], $m)){
+								$dateIdentified = $m[1];
 							}
 						}
+						if(!$dateIdentified){
+							//If date does not exist and collector does exist, increase group by 1, thus making it a sepparate and preferred group for subsampling
+							if(!empty($idArr['identifiedBy']) && $idArr['identifiedBy'] != 'undefined'){
+								$dateIdentified = 1;
+							}
+						}
+						$identificationsGrouped[$dateIdentified][] = $idKey;
 					}
-					else{
-						$baseID['sciname'] = $lotId;
+	
+					//Select group of identifications that were identified the latest
+					krsort($identificationsGrouped);
+					$baseDataIdentified = key($identificationsGrouped);
+					$targetIdentifications = current($identificationsGrouped);
+	
+					//Subsample records
+					echo '<li style="margin-left:30px">Creating/updating ' . count($targetIdentifications) . ' subSample records ... </li>';
+					$currentSubsampleArr = $this->getSubSamples($parentOccid);
+					$associationArr = array();
+					$tidArr = array();
+					foreach($targetIdentifications as $identificationKey){
+						$identArr = $dwcArr['identifications'][$identificationKey];
+						unset($dwcArr['identifications'][$identificationKey]);
+						if(!empty($identArr['tidInterpreted'])){
+							//TIDs are used to determine common taxonomic node
+							$tidArr[$identArr['tidInterpreted']] = $identArr['tidInterpreted'];
+						}
+						$dwcArrClone = $dwcArr;
+						$dwcArrClone['collid'] = $targetCollid;
+						$identArr['isCurrent'] = 1;
+						$dwcArrClone['identifications'] = array($identArr);
+						unset($dwcArrClone['associations']);
+						unset($dwcArrClone['identifiers']);
+						$existingOccid = 0;
+						foreach($currentSubsampleArr as $subOccid => $subUnitArr){
+							if($identArr['sciname'] == $subUnitArr['sciname']){
+								//Subsample exists, thus set occid so that subsample is updated rather than creating a new one
+								$existingOccid = $subOccid;
+								unset($currentSubsampleArr[$subOccid]);
+								break;
+							}
+						}
+						//Add parent identifiers as additional identifiers (aka otherCatalogNumbers)
+						//Catalog numbers can't be transferred at this point because they are assigned well after the parent samples are created,
+						//thus we'll add this to the Stored Procedure that runs at the end of harvesting (aka occurrence_harvesting_sql)
+						unset($dwcArrClone['identifiers']);
+						if(!empty($dwcArr['identifiers']['NEON sampleCode (barcode)'])){
+							$dwcArrClone['identifiers']['Originating NEON barcode'] = $dwcArr['identifiers']['NEON sampleCode (barcode)'];
+						}
+						if(!empty($dwcArr['identifiers']['NEON sampleID'])){
+							$dwcArrClone['identifiers']['Originating NEON sampleID'] = $dwcArr['identifiers']['NEON sampleID'];
+						}
+						if(!empty($dwcArr['identifiers']['NEON sampleID Hash'])){
+							$dwcArrClone['identifiers']['Originating NEON sampleID Hash'] = $dwcArr['identifiers']['NEON sampleID Hash'];
+						}
+						//Load subsample into database
+						$occid = $this->loadOccurrenceRecord($dwcArrClone, $existingOccid);
+						if(!$existingOccid && $occid){
+							//Add association to parent record
+							$associationArr[] = array('relationship' => 'originatingSampleOf', 'occidAssociate' => $occid);
+						}
 					}
+					//Delete all subsamples that are not identified as an subsample import
+					$this->deleteSubSamples($currentSubsampleArr);
+					//Reset base sample (parent) with new identification unit containing lot ID
+					$baseID = array('sciname' => 'undefined');
+					if(!empty($collArr[$sourceCollid]['lotId'])){
+						$lotId = $collArr[$sourceCollid]['lotId'];
+						if($lotId == 'dynamic'){
+							if($idArr){
+								if($commonIdArr = $this->getCommonID($tidArr)){
+									$baseID['tidInterpreted'] = key($commonIdArr);
+									$baseID['sciname'] = current($commonIdArr);
+								}
+							}
+						}
+						else{
+							$baseID['sciname'] = $lotId;
+						}
+					}
+					$baseID['isCurrent'] = 1;
+					if($baseDataIdentified) $baseID['dateIdentified'] = $baseDataIdentified;
+					$baseID['taxonRemarks'] = 'Identification source: harvested from NEON API';
+					$dwcArr['identifications'][] = $baseID;
+					//Append associations
+					if(isset($dwcArr['associations'])) $associationArr = array_merge($dwcArr['associations'], $associationArr);
+					$dwcArr['associations'] = $associationArr;
 				}
-				$baseID['isCurrent'] = 1;
-				if($baseDataIdentified) $baseID['dateIdentified'] = $baseDataIdentified;
-				$baseID['taxonRemarks'] = 'Identification source: harvested from NEON API';
-				$dwcArr['identifications'][] = $baseID;
-				//Append associations
-				if(isset($dwcArr['associations'])) $associationArr = array_merge($dwcArr['associations'], $associationArr);
-				$dwcArr['associations'] = $associationArr;
 			}
 		}
 	}
