@@ -53,6 +53,7 @@ if($isEditor){
 			f.taxonID.value = "";
 			f.trackingNumber.value = "";
 			f.dynamicProperties.value = "";
+			f.occid.value = "";
 			f.dateShippedStart.value = "";
 			f.dateShippedEnd.value = "";
 			f.dateCheckinStart.value = "";
@@ -151,6 +152,11 @@ include($SERVER_ROOT.'/includes/header.php');
 				<div class="fieldGroupDiv">
 					<div class="fieldDiv">
 						<b>Dynamic Properties:</b> <input name="dynamicProperties" type="text" value="<?php echo (isset($searchArgumentArr['dynamicProperties'])?$searchArgumentArr['dynamicProperties']:''); ?>" />
+					</div>
+				</div>
+				<div class="fieldGroupDiv">
+					<div class="fieldDiv">
+						<b>occid:</b> <input name="occid" type="text" value="<?php echo (isset($searchArgumentArr['occid'])?$searchArgumentArr['occid']:''); ?>" />
 					</div>
 				</div>
 				<div class="fieldGroupDiv">
