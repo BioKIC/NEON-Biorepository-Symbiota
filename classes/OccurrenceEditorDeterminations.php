@@ -1,5 +1,7 @@
 <?php
 include_once($SERVER_ROOT.'/classes/OccurrenceEditorManager.php');
+include_once($SERVER_ROOT.'/utilities/SymbUtil.php');
+
 if($LANG_TAG != 'en' && file_exists($SERVER_ROOT.'/content/lang/classes/OccurrenceEditorDeterminations.'.$LANG_TAG.'.php')) include_once($SERVER_ROOT.'/content/lang/classes/OccurrenceEditorDeterminations.'.$LANG_TAG.'.php');
 else include_once($SERVER_ROOT.'/content/lang/classes/OccurrenceEditorDeterminations.en.php');
 
@@ -266,7 +268,6 @@ class OccurrenceEditorDeterminations extends OccurrenceEditorManager{
 			if(isset($taxonArr['tid']) && $taxonArr['tid']) $sql .= ', o.tidinterpreted = '.$taxonArr['tid'];
 			if(isset($taxonArr['security']) && $taxonArr['security']) $sql .= ', o.localitysecurity = '.$taxonArr['security'].', o.localitysecurityreason = "<Security Setting Locked>"';
 			$sql .= ' WHERE (d.iscurrent = 1) AND (d.detid = '.$detId.')';
-			$this->conn->query($sql);
 			$updated_base = $this->conn->query($sql);
 
 			//Whenever occurrence is updated also update associated images
@@ -276,7 +277,7 @@ class OccurrenceEditorDeterminations extends OccurrenceEditorManager{
 				INNER JOIN omoccurdeterminations od on od.occid = i.occid
 				SET tid = ? WHERE detid = ?;
 				SQL;
-				$this->conn->execute_query($sql, [$taxonArr['tid'], $detId]);
+				SymbUtil::execute_query($this->conn,$sql, [$taxonArr['tid'], $detId]);
 			}
 		}
 	}
