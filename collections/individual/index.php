@@ -461,10 +461,15 @@ $traitArr = $indManager->getTraitArr();
 								<?php
 								echo '<label>'.(isset($LANG['CATALOG_NUMBER'])?$LANG['CATALOG_NUMBER']:'Catalog #').': </label>';
 								echo $occArr['catalognumber'];
+								// Check if occurrenceid is an IGSN
+								if(preg_match('/^NEON[a-zA-Z0-9]{5}$/', $occArr['catalognumber'])) {
+									echo '<span style="margin-left: 10px"><a href="https://doi.org/10.58052/' . $occArr['catalognumber'] . '" target="_blank">SESAR Record</a></span>';
+								}
 								?>
 							</div>
 							<?php
 						}
+            /*
 						if($occArr['occurrenceid']){
 							?>
 							<div id="occurrenceid-div" class="bottom-breathing-room-rel-sm">
@@ -482,14 +487,21 @@ $traitArr = $indManager->getTraitArr();
 							</div>
 							<?php
 						}
+            */
 						if($occArr['othercatalognumbers']){
 							?>
 							<div id="assoccatnum-div" class="assoccatnum-div bottom-breathing-room-rel-sm">
 								<?php
 								foreach($occArr['othercatalognumbers'] as $catValueArr){
+                  if($catValueArr['name'] == 'NEON sampleID') continue; 
 									$catTag = $LANG['OTHER_CATALOG_NUMBERS'];
 									if(!empty($catValueArr['name'])) $catTag = $catValueArr['name'];
 									echo '<div><label>'.$catTag.':</label> ' . $catValueArr['value'] . '</div>';
+									if($IS_ADMIN){
+										if($catTag == 'NEON sampleCode (barcode)' || $catTag == 'NEON sampleID'){
+											echo '<span style="margin-left: 10px"><a href="../../neon/shipment/manifestviewer.php?quicksearch=' . $catValueArr['value'] . '" target="_blank">Go to Manifest</a></span>';
+										}
+									}
 								}
 								?>
 							</div>

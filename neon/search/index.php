@@ -204,12 +204,12 @@ $siteData = new DatasetsMetadata();
 							<div>
 								<div>
 									<input type="checkbox" name="includeothercatnum" id="includeothercatnum" value="1" data-chip="Include other IDs" checked>
-									<label for="includeothercatnum">Include other sample identifiers (e.g. NEON sampleID, barcode, UUID)</label>
+									<label for="includeothercatnum">Include other sample identifiers (e.g. Sample Tag (sampleID), Barcode (sampleCode), sampleUuid, occid)</label>
 								</div>
 								<div class="text-area-container">
 									<label for="" class="text-area--outlined">
 										<textarea name="catnum" data-chip="Catalog Number" style="width: 100%"></textarea>
-										<span data-label="Catalog Number"></span></label>
+										<span data-label="Catalog Number (archiveGUID)"></span></label>
 									<span class="assistive-text">Separate multiple with commas or new lines.</span>
 								</div>
 							</div>
@@ -468,5 +468,5 @@ $siteData = new DatasetsMetadata();
 	include($SERVER_ROOT . '/includes/footer.php');
 	?>
 </body>
-<script src="js/searchform.js?ver=05" type="text/javascript"></script>
+<script src="js/searchform.js?ver=07" type="text/javascript"></script>
 </html>

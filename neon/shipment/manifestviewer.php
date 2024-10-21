@@ -37,7 +37,7 @@ elseif(array_key_exists('CollAdmin',$USER_RIGHTS) || array_key_exists('CollEdito
 
 	$activeSession = false;
 	$sessionStartTime = null;
-	$sessionID = null;
+	$sessionName = null;
 	
 	if (isset($_SESSION['sampleCheckinSessionData'])) {
 		$session_data = $_SESSION['sampleCheckinSessionData'];
@@ -46,7 +46,7 @@ elseif(array_key_exists('CollAdmin',$USER_RIGHTS) || array_key_exists('CollEdito
 		if ($session_data['end_time'] === null) {
 			$activeSession = true;
 			$sessionStartTime = $session_data['start_time'];
-			$sessionID = $session_data['sessionID'];
+			$sessionName = $session_data['sessionName'];
 		}
 	}
 	?>
@@ -72,7 +72,6 @@ elseif(array_key_exists('CollAdmin',$USER_RIGHTS) || array_key_exists('CollEdito
 				?>
 				$('#manifestTable').DataTable({
 					paging: false,
-					scrollY: 900,
 					scrollCollapse: true,
 					fixedHeader: true,
 					columnDefs: [{ orderable: false, targets: [0, -1]}],
@@ -359,14 +358,14 @@ elseif(array_key_exists('CollAdmin',$USER_RIGHTS) || array_key_exists('CollEdito
 		let timerInterval;
 
 		let serverStartTime = "<?php echo $sessionStartTime; ?>";
-		let sessionID = "<?php echo $sessionID; ?>";
+		let sessionName = "<?php echo $sessionName; ?>";
 	
 		// Check if a session is already active on page load
 		document.addEventListener('DOMContentLoaded', function() {
 			<?php if ($activeSession): ?>
 				startTimer(serverStartTime);
 				toggleButtons(true);
-				showSessionID(sessionID);
+				showSessionID(sessionName);
 			<?php else: ?>
 				toggleButtons(false);
 			<?php endif; ?>
@@ -395,7 +394,7 @@ elseif(array_key_exists('CollAdmin',$USER_RIGHTS) || array_key_exists('CollEdito
 				  console.log('Session started at:', data.start_time);
 				  startTimer(data.start_time);
 				  toggleButtons(true);
-				  showSessionID(data.sessionID);
+				  showSessionID(data.sessionName);
 			  });
 		}
 	
@@ -463,11 +462,11 @@ elseif(array_key_exists('CollAdmin',$USER_RIGHTS) || array_key_exists('CollEdito
 			});
 		}
 		
-		function showSessionID(sessionID) {
-			let sessionIDdivs = document.querySelectorAll('.sessionID');
+		function showSessionID(sessionName) {
+			let sessionNamedivs = document.querySelectorAll('.sessionName');
 			
-			sessionIDdivs.forEach(div => {
-				div.innerHTML  = '<strong>SessionID:</strong> ' + sessionID;
+			sessionNamedivs.forEach(div => {
+				div.innerHTML  = '<strong>SessionID:</strong> ' + sessionName;
 			});	
 		}
 	</script>
@@ -597,7 +596,7 @@ include($SERVER_ROOT.'/includes/header.php');
 									<input type="radio" class="start_session" name="session" value="start"> Start Session
 									<input type="radio" class="stop_session" name="session" value="stop"> Stop Session
 									<div class="timer">00:00:00</div>
-									<div class="sessionID"></div>
+									<div class="sessionName"></div>
 									<form name="submitform" method="post" onsubmit="checkinSample(this); return false;">
 										<div id="popoutDiv" style="float:right"><a href="#" onclick="popoutCheckinBox();return false" title="Popout Sample Check-in Box">&gt;&gt;</a></div>
 										<div id="bindDiv" style="float:right;display:none"><a href="#" onclick="bindCheckinBox();return false" title="Bind Sample Check-in Box to top of form">&lt;&lt;</a></div>
@@ -751,13 +750,13 @@ include($SERVER_ROOT.'/includes/header.php');
 													}
 
 													$str = '';
-													if(isset($sampleArr['alternativeSampleID'])) $str .= '<div>Alternative Sample ID: '.$sampleArr['alternativeSampleID'].'</div>';
-													if(isset($sampleArr['hashedSampleID'])) $str .= '<div>Hashed Sample ID: '.$sampleArr['hashedSampleID'].'</div>';
-													if(isset($sampleArr['individualCount'])) $str .= '<div>Individual Count: '.$sampleArr['individualCount'].'</div>';
-													if(isset($sampleArr['filterVolume'])) $str .= '<div>Filter Volume: '.$sampleArr['filterVolume'].'</div>';
-													if(isset($sampleArr['domainRemarks'])) $str .= '<div>Domain Remarks: '.$sampleArr['domainRemarks'].'</div>';
-													if(isset($sampleArr['sampleNotes'])) $str .= '<div>Sample Notes: '.$sampleArr['sampleNotes'].'</div>';
-													if(isset($sampleArr['checkinRemarks'])) $str .= '<div>Check-in Remarks: '.$sampleArr['checkinRemarks'].'</div>';
+													if(!empty($sampleArr['alternativeSampleID'])) $str .= '<div>Alternative Sample ID: '.$sampleArr['alternativeSampleID'].'</div>';
+													if(!empty($sampleArr['hashedSampleID'])) $str .= '<div>Hashed Sample ID: '.$sampleArr['hashedSampleID'].'</div>';
+													if(!empty($sampleArr['individualCount'])) $str .= '<div>Individual Count: '.$sampleArr['individualCount'].'</div>';
+													if(!empty($sampleArr['filterVolume'])) $str .= '<div>Filter Volume: '.$sampleArr['filterVolume'].'</div>';
+													if(!empty($sampleArr['domainRemarks'])) $str .= '<div>Domain Remarks: '.$sampleArr['domainRemarks'].'</div>';
+													if(!empty($sampleArr['sampleNotes'])) $str .= '<div>Sample Notes: '.$sampleArr['sampleNotes'].'</div>';
+													if(!empty($sampleArr['checkinRemarks'])) $str .= '<div>Check-in Remarks: '.$sampleArr['checkinRemarks'].'</div>';
 													if(isset($sampleArr['dynamicProperties']) && $sampleArr['dynamicProperties']){
 														$str .= '<div>'.trim($propStr,'; ').'</div>';
 													}
@@ -769,13 +768,16 @@ include($SERVER_ROOT.'/includes/header.php');
 														}
 														$str .= '<div>Symbiota targeted data ['.trim($symbStr,'; ').']</div>';
 													}
-													if(isset($sampleArr['occurErr'])) $str .= '<div>Occurrence Harvesting Error: '.$sampleArr['occurErr'].'</div>';
-													if($str) {
-														echo '<tr class="sample-row" data-child-value="'.trim($str,'; ').'">';
-													} else {
-														echo '<tr class="sample-row">';
+													if(!empty($sampleArr['occurErr'])) $str .= '<div>Occurrence Harvesting Error: '.$sampleArr['occurErr'].'</div>';		
+												
+													if($sortableTable){
+														if($str) {
+															echo '<tr class="sample-row" data-child-value="'.trim($str,'; ').'">';
+														} else {
+															echo '<tr class="sample-row">';
+														}															
 													}
-
+													
 													echo '<td>';
 													echo '<input id="scbox-'.$samplePK.'" class="'.trim($classStr).'" name="scbox[]" type="checkbox" value="'.$samplePK.'" />';
 													echo ' <a href="#" onclick="return openSampleEditor('.$samplePK.')"><img src="../../images/edit.png" style="width:12px" /></a>';
@@ -819,12 +821,17 @@ include($SERVER_ROOT.'/includes/header.php');
 													echo '<td style="text-align:center">';
 													if(array_key_exists('occid',$sampleArr) && $sampleArr['occid']){
 														echo '<span title="harvested '.(isset($sampleArr['harvestTimestamp'])?$sampleArr['harvestTimestamp']:'').'">';
-														echo '<a href="../../collections/individual/index.php?occid='.$sampleArr['occid'].'" target="_blank"><img src="../../images/list.png" style="width:13px" /></a>&nbsp;&nbsp;&nbsp;';
+														echo '<a href="../../collections/individual/index.php?occid='.$sampleArr['occid'].'" target="_blank">'.$sampleArr['occid'].'</a>';
+														echo '</br>';
+														echo '</br>';
 														echo '<a href="../../collections/editor/occurrenceeditor.php?occid='.$sampleArr['occid'].'" target="_blank"><img src="../../images/edit.png" style="width:13px" /></a>';
 														echo '</span>';
 													}
 													echo '</td>';
 													echo '</tr>';
+													if(!$sortableTable){
+														if($str) echo '<tr><td colspan="'.$rowCnt.'"><div style="margin-left:30px;">'.trim($str,'; ').'</div></td></tr>';
+													}
 
 												}
 												?>
@@ -841,7 +848,7 @@ include($SERVER_ROOT.'/includes/header.php');
 														<input type="radio" class="start_session" name="session" value="start"> Start Session
 														<input type="radio" class="stop_session" name="session" value="stop"> Stop Session
 														<div class="timer">00:00:00</div>
-														<div class="sessionID"></div>
+														<div class="sessionName"></div>
 													</div>	
 													<div class="displayFieldDiv">
 														<b>Sample Received:</b>

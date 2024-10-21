@@ -324,9 +324,9 @@ class OccurrenceEditorDeterminations extends OccurrenceEditorManager{
 		$this->addDetermination($detArr, $isEditor);
 	}
 
-	public function getNewDetItem($catNum, $sciName, $allCatNum = 0){
+	public function getNewDetItem($catNum, $sciName, $allCatNum = 0, $fieldSite){
 		$retArr = array();
-		if($catNum || $sciName){
+		if($catNum || $sciName || $fieldSite){
 			$sql = 'SELECT o.occid, o.catalogNumber, o.otherCatalogNumbers, o.sciname, CONCAT_WS(" ", o.recordedby, IFNULL(o.recordnumber, o.eventdate)) AS collector, '.
 				'CONCAT_WS(", ", o.country, o.stateprovince, o.county, o.locality) AS locality ';
 			$catNumArr = explode(',',$catNum);
@@ -350,8 +350,13 @@ class OccurrenceEditorDeterminations extends OccurrenceEditorManager{
 				$sql .= ') ';
 			}
 			elseif($sciName){
-				$sql .= 'FROM omoccurrences o WHERE o.collid = '.$this->collId.' AND o.sciname = "'.$this->cleanInStr($sciName).'" ';
+				if($fieldSite){
+					$sql .= 'FROM omoccurrences o INNER JOIN omoccurdatasetlink ds ON o.occid = ds.occid WHERE ds.datasetid = '.$fieldSite.' AND o.collid = '.$this->collId.' AND o.sciname = "'.$this->cleanInStr($sciName).'" ';
+				} else {
+					$sql .= 'FROM omoccurrences o WHERE o.collid = '.$this->collId.' AND o.sciname = "'.$this->cleanInStr($sciName).'" ';
+				}
 			}
+
 			$sql .= 'LIMIT 400 ';
 			$rs = $this->conn->query($sql);
 			while($r = $rs->fetch_object()){
