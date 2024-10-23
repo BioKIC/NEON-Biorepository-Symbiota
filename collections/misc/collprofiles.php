@@ -31,7 +31,8 @@ $editCode = 0;		//0 = no permissions; 1 = CollEditor; 2 = CollAdmin; 3 = SuperAd
 if ($SYMB_UID) {
 	if ($IS_ADMIN) {
 		$editCode = 3;
-	} else if ($collid) {
+	}
+	else if ($collid) {
 		if (array_key_exists('CollAdmin', $USER_RIGHTS) && in_array($collid, $USER_RIGHTS['CollAdmin'])) $editCode = 2;
 		elseif (array_key_exists('CollEditor', $USER_RIGHTS) && in_array($collid, $USER_RIGHTS['CollEditor'])) $editCode = 1;
 	}
@@ -136,6 +137,9 @@ if ($SYMB_UID) {
 			margin-left: 3rem;
 		}
 
+		#quicksearch-box {
+			margin-top: 5px;
+		}
 		#quicksearch-box input {
 			width: 100%;
 		}
@@ -147,7 +151,6 @@ if ($SYMB_UID) {
 		.quicksearch-container {
 			top: 1rem;
 			right: 1rem;
-			position:sticky;
 			width: 100vw;
 			margin-left: calc(50% - 50vw);
 		}
@@ -222,7 +225,6 @@ if ($SYMB_UID) {
 	<link href="<?php echo $CLIENT_ROOT ?>/collections/search/css/searchStyles.css?ver=1" type="text/css" rel="stylesheet" />
 	<link href="<?php echo $CLIENT_ROOT ?>/collections/search/css/searchStylesInner.css" type="text/css" rel="stylesheet" />
 </head>
-
 <body>
 	<?php
 	include($SERVER_ROOT . '/includes/header.php');
@@ -289,13 +291,13 @@ if ($SYMB_UID) {
 				echo '<hr/>';
 			}
 		}
+
 		if ($collid && isset($collectionData[$collid])) {
 			$collData = $collectionData[$collid];
 			$codeStr = ' (' . $collData['institutioncode'];
 			if ($collData['collectioncode']) $codeStr .= '-' . $collData['collectioncode'];
 			$codeStr .= ')';
 			$_SESSION['colldata'] = $collData;
-
 			echo '<h1 class="page-heading">' . $LANG['COLL_PROF_FOR'] . ':<br>' . $collData['collectionname'] . $codeStr . '</h1>';
 			// GBIF citations widget
 			if ($datasetKey) {
@@ -336,13 +338,13 @@ if ($SYMB_UID) {
 						<ul>
 							<?php
 							if (stripos($collData['colltype'], 'observation') !== false) {
-							?>
+								?>
 								<li>
 									<a href="../editor/observationsubmit.php?collid=<?= $collid ?>" <?= $deactivateStyle ?>>
 										<?= $LANG['SUBMIT_IMAGE_V'] ?>
 									</a><?= $deactivateTag ?>
 								</li>
-							<?php
+								<?php
 							}
 							?>
 							<li>
@@ -352,7 +354,7 @@ if ($SYMB_UID) {
 							</li>
 							<?php
 							if ($collData['colltype'] == 'Preserved Specimens') {
-							?>
+								?>
 								<li style="margin-left:10px">
 									<a href="../editor/imageoccursubmit.php?collid=<?= $collid ?>" <?= $deactivateStyle ?>>
 										<?= $LANG['CREATE_NEW_REC'] ?>
@@ -363,7 +365,7 @@ if ($SYMB_UID) {
 										<?= $LANG['SKELETAL'] ?>
 									</a><?= $deactivateTag ?>
 								</li>
-							<?php
+								<?php
 							}
 							?>
 							<li>
@@ -388,7 +390,7 @@ if ($SYMB_UID) {
 							</li>
 							<?php
 							if ($collManager->traitCodingActivated()) {
-							?>
+								?>
 								<li>
 									<a href="#" onclick="$('li.traitItem').show(); return false;">
 										<?= $LANG['TRAIT_CODING_TOOLS'] ?>
@@ -404,7 +406,7 @@ if ($SYMB_UID) {
 										<?= $LANG['TRAIT_MINING'] ?>
 									</a>
 								</li>
-							<?php
+								<?php
 							}
 							?>
 							<li>
@@ -414,13 +416,13 @@ if ($SYMB_UID) {
 							</li>
 							<?php
 							if ($collData['colltype'] == 'Preserved Specimens') {
-							?>
+								?>
 								<li>
 									<a href="../loans/index.php?collid=<?= $collid ?>" <?= $deactivateStyle ?>>
 										<?= $LANG['LOAN_MANAGEMENT'] ?>
 									</a><?= $deactivateTag ?>
 								</li>
-							<?php
+								<?php
 							}
 							?>
 						</ul>
@@ -524,7 +526,7 @@ if ($SYMB_UID) {
 								<?php
 								if ($collData['colltype'] != 'General Observations') {
 									if ($collData['managementtype'] != 'Aggregate') {
-								?>
+										?>
 										<li>
 											<a href="../specprocessor/index.php?collid=<?= $collid ?>">
 												<?= $LANG['PROCESSING_TOOLBOX'] ?>
@@ -535,7 +537,7 @@ if ($SYMB_UID) {
 												<?= $LANG['DARWIN_CORE_PUB'] ?>
 											</a>
 										</li>
-									<?php
+										<?php
 									}
 									?>
 									<li>
@@ -550,16 +552,16 @@ if ($SYMB_UID) {
 										</a>
 									</li>
 									 -->
-								<?php
+									<?php
 								}
 								if (!empty($ACTIVATE_DUPLICATES)) {
-								?>
+									?>
 									<li>
 										<a href="../datasets/duplicatemanager.php?collid=<?= $collid ?>">
 											<?= $LANG['DUP_CLUSTER'] ?>
 										</a>
 									</li>
-								<?php
+									<?php
 								}
 								?>
 								<li>
@@ -599,9 +601,6 @@ if ($SYMB_UID) {
 									</a>
 								</li>
 								 -->
-									<?php
-								}
-								?>
 								<li style="margin-left:10px;">
 									<a href="../../imagelib/admin/thumbnailbuilder.php?collid=<?= $collid ?>">
 										<?= $LANG['THUMBNAIL_MAINTENANCE'] ?>
@@ -618,7 +617,7 @@ if ($SYMB_UID) {
 					}
 					?>
 				</div>
-			<?php
+				<?php
 			}
 			?>
 			<div class="coll-description bottom-breathing-room-rel"><?= $collData['fulldescription'] ?></div>
@@ -632,7 +631,7 @@ if ($SYMB_UID) {
 						<div class="field-div">
 							<a href="<?= htmlspecialchars($rArr['url'], ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) ?>" target="_blank"><?= $title ?></a>
 						</div>
-					<?php
+						<?php
 					}
 				}
 			}
@@ -685,7 +684,7 @@ if ($SYMB_UID) {
 					<div style="margin-top:5px;">
 						<div><b><?= $LANG['IDIGBIO_DATASET'] ?>:</b> <a href="<?= $dataUrl ?>" target="_blank" rel="noopener noreferrer"><?= $dataUrl ?></a></div>
 					</div>
-				<?php
+					<?php
 				}
 			}
 			if (file_exists($SERVER_ROOT . '/includes/citationcollection.php')) {

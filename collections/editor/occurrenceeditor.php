@@ -443,10 +443,6 @@ else{
 	<title><?= $DEFAULT_TITLE . ' ' . $LANG['OCCEDITOR'] ?></title>
 	<link href="<?= $CSS_BASE_PATH ?>/jquery-ui.css" type="text/css" rel="stylesheet">
 	<link href="<?= $CSS_BASE_PATH ?>/symbiota/variables.css" type="text/css" rel="stylesheet">
-	<?php
-	include_once($SERVER_ROOT.'/includes/head.php');
-	?>
-
     <?php
     if($crowdSourceMode == 1){
 		?>
@@ -455,7 +451,7 @@ else{
     }
     else{
 		?>
-		<link href="<?= $CSS_BASE_PATH ?>/symbiota/collections/editor/occurrenceeditor.css?ver=9" type="text/css" rel="stylesheet" id="editorCssLink" >
+		<link href="<?= $CSS_BASE_PATH ?>/symbiota/collections/editor/occurrenceeditor.css?ver=9b" type="text/css" rel="stylesheet" id="editorCssLink" >
 		<?php
 		if(isset($CSSARR)){
 			foreach($CSSARR as $cssVal){
@@ -533,8 +529,9 @@ else{
 				display: flex;
 			}
 		}
-		.fieldDiv{
+		.field-div{
 			display: inline;
+			margin: 2px;
 		}
 
 		.editimg{ width: 15px; }
