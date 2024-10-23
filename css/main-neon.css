@@ -60,6 +60,13 @@ body {
   margin-top: 0px;
 }
 
+h1,
+h2,
+h3,
+h4 {
+  color: var(--black, black);
+}
+
 /* Utilities */
 
 .visually-hidden {
@@ -125,6 +132,37 @@ body {
 
 /******* 2. LAYOUT ********/
 
+@media (min-width: 1024px) {
+  #top_navbar {
+    margin-top: 10px;
+  }
+}
+
+#top_navbar {
+  clear: both;
+  margin-left: auto;
+  margin-right: 1rem;
+  padding-right: 1rem;
+  height: 0px;
+}
+
+#right_navbarlinks {
+  clear: both;
+  font-size: 11px;
+  float: right;
+  color: #000000;
+}
+
+.navpath {
+  margin-left: 2rem;
+  font-size: 12px;
+}
+
+#innertext{
+  margin: 10px;
+  padding-top: 15px;
+}
+
 #innertext img {
   max-width: 100%;
 }
@@ -132,19 +170,6 @@ body {
 #middlecenter {
   padding: 0px;
 }
-
-/*Central div in the middle center table div */
-
-.navpath {
-  margin-left: 2rem;
-}
-/* div.navpath {
-  margin-left: auto;
-  margin-right: auto;
-  min-width: 1000px;
-  max-width: 1150px;
-  width: 90%;
-} */
 
 .disclaimer span {
   font-weight: bold;
@@ -190,11 +215,6 @@ body {
   .hide-on-large {
     display: none;
   }
-}
-
-.screen-reader-only {
-  position: absolute !important;
-  left: -10000px !important;
 }
 
 /* Medium screens */
@@ -296,11 +316,12 @@ li.header-title {
   position: relative;
 }
 
-.header-title a:hover {
+.header-title a {
   text-decoration: none;
+  font-family: 'Inter', sans-serif;
 }
 
-.header-title a {
+.header-title a:hover {
   text-decoration: none;
 }
 
@@ -327,30 +348,6 @@ li.header-title {
 .tndiv {
   font-size: 12px;
   line-height: 14px;
-}
-
-/* SYMBIOTA NAVIGATION */
-
-/* Admin bar */
-
-@media (min-width: 1024px) {
-  #top_navbar {
-    margin-top: 10px;
-  }
-}
-
-#top_navbar {
-  clear: both;
-  margin-left: auto;
-  margin-right: 1rem;
-  padding-right: 1rem;
-}
-
-#right_navbarlinks {
-  clear: both;
-  font-size: 11px;
-  float: right;
-  color: #000000;
 }
 
 /* Main menu bar */

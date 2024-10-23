@@ -294,6 +294,7 @@ class OccurrenceIndividual extends Manager{
 	}
 
 	private function setAdditionalIdentifiers(){
+		global $LANG;
 		$retArr = array();
 		$sql = 'SELECT idomoccuridentifiers, occid, identifiervalue, identifiername FROM omoccuridentifiers WHERE (occid = ?) ORDER BY sortBy';
 		if($stmt = $this->conn->prepare($sql)){
@@ -302,7 +303,19 @@ class OccurrenceIndividual extends Manager{
 			if($rs = $stmt->get_result()){
 				while($r = $rs->fetch_object()){
 					$identifierTag = $r->identifiername;
-					if(!$identifierTag) $identifierTag = 0;
+					if(!$identifierTag) $identifierTag = $LANG['OTHER_CATALOG_NUMBERS'];
+
+					//NEON specific customization
+					if ($identifierTag == 'NEON sampleID') {
+						$identifierTag = 'Sample Tag (SampleID)';
+					}
+					elseif ($identifierTag == 'NEON sampleCode (barcode)') {
+						$identifierTag = 'Barcode (sampleCode)';
+					}
+					elseif ($identifierTag == 'NEON sampleUUID') {
+						$identifierTag = 'SampleUuid';
+					}
+
 					$retArr[$r->idomoccuridentifiers]['name'] = $identifierTag;
 					$retArr[$r->idomoccuridentifiers]['value'] = $r->identifiervalue;
 				}

@@ -264,31 +264,31 @@ $traitArr = $indManager->getTraitArr();
 				var marker = new google.maps.Marker({
 					position: mLatLng,
 					map: map
-			});
+				});
 
-			if(coordError > 0) {
-			   new google.maps.Circle({
-				  center: mLatLng,
-				  radius: coordError,
-				  map: map
-			   })
-			}
+				if(coordError > 0) {
+				   new google.maps.Circle({
+					  center: mLatLng,
+					  radius: coordError,
+					  map: map
+				   })
+				}
 			}
 
 			function leafletInit() {
 				let mLatLng = [<?php echo $occArr['decimallatitude'].",".$occArr['decimallongitude']; ?>];
 
-            map = new LeafletMap("map_canvas", {
-               center: mLatLng,
-               zoom: 8,
-            });
+				map = new LeafletMap("map_canvas", {
+					center: mLatLng,
+					zoom: 8,
+				});
 
-			if(coordError > 0) {
-			   map.enableDrawing({...map.DEFAULT_DRAW_OPTIONS, control: false})
-			   map.drawShape({type: "circle", radius: coordError, latlng: mLatLng})
-			}
+				if(coordError > 0) {
+					map.enableDrawing({...map.DEFAULT_DRAW_OPTIONS, control: false})
+					map.drawShape({type: "circle", radius: coordError, latlng: mLatLng})
+				}
 				const marker = L.marker(mLatLng).addTo(map.mapLayer);
-			map.mapLayer.setZoom(8)
+				map.mapLayer.setZoom(8);
 			}
 
 			function initializeMap(){
@@ -469,7 +469,7 @@ $traitArr = $indManager->getTraitArr();
 							</div>
 							<?php
 						}
-            /*
+						/*
 						if($occArr['occurrenceid']){
 							?>
 							<div id="occurrenceid-div" class="bottom-breathing-room-rel-sm">
@@ -487,16 +487,38 @@ $traitArr = $indManager->getTraitArr();
 							</div>
 							<?php
 						}
-            */
+						*/
+
 						if($occArr['othercatalognumbers']){
 							?>
 							<div id="assoccatnum-div" class="assoccatnum-div bottom-breathing-room-rel-sm">
 								<?php
 								foreach($occArr['othercatalognumbers'] as $catValueArr){
-                  if($catValueArr['name'] == 'NEON sampleID') continue; 
 									$catTag = $LANG['OTHER_CATALOG_NUMBERS'];
 									if(!empty($catValueArr['name'])) $catTag = $catValueArr['name'];
 									echo '<div><label>'.$catTag.':</label> ' . $catValueArr['value'] . '</div>';
+								}
+								?>
+							</div>
+							<?php
+						}
+
+						if($occArr['othercatalognumbers']){
+							?>
+							<div id="assoccatnum-div" class="assoccatnum-div bottom-breathing-room-rel-sm">
+								<?php
+								foreach($occArr['othercatalognumbers'] as $catValueArr){
+
+									//NEON customization
+									if($catValueArr['name'] == 'NEON sampleID' && isset($otherCatArr['NEON sampleID Hash']) && !$GLOBALS['IS_ADMIN']){
+										continue;
+									}
+
+									$catTag = $LANG['OTHER_CATALOG_NUMBERS'];
+									if(!empty($catValueArr['name'])) $catTag = $catValueArr['name'];
+									echo '<div><label>'.$catTag.':</label> ' . $catValueArr['value'] . '</div>';
+
+									//NEON customization
 									if($IS_ADMIN){
 										if($catTag == 'NEON sampleCode (barcode)' || $catTag == 'NEON sampleID'){
 											echo '<span style="margin-left: 10px"><a href="../../neon/shipment/manifestviewer.php?quicksearch=' . $catValueArr['value'] . '" target="_blank">Go to Manifest</a></span>';
