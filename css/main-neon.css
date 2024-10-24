@@ -208,9 +208,6 @@ h4 {
     max-width: 30%;
     float: right;
   }
-  #cloptiondiv {
-    max-width: 20% !important;
-  }
   #img-container {
     width: 80%;
   }
@@ -238,9 +235,6 @@ h4 {
   #home-right {
     max-width: 40%;
     float: right;
-  }
-  #cloptiondiv {
-    max-width: 15% !important;
   }
   #taxon-container {
     max-width: 75%;
@@ -290,7 +284,7 @@ h4 {
 }
 
 @media (max-width: 425px) {
-  ul#biorepo-header {
+  #biorepo-header {
     position: relative;
     list-style: none;
     text-align: center;
