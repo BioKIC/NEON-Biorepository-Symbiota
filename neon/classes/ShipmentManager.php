@@ -903,7 +903,6 @@ class ShipmentManager{
 			$this->getFilteredWhereSql().
 			'ORDER BY s.shipmentID';
 		$rs = $this->conn->query($sql);
-		echo $sql;
 		while($r = $rs->fetch_object()){
 			$retArr[$r->shipmentPK]['id'] = $r->shipmentID;
 			$retArr[$r->shipmentPK]['ts'] = $r->initialtimestamp;
