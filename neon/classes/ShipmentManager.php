@@ -903,6 +903,7 @@ class ShipmentManager{
 			$this->getFilteredWhereSql().
 			'ORDER BY s.shipmentID';
 		$rs = $this->conn->query($sql);
+		echo $sql;
 		while($r = $rs->fetch_object()){
 			$retArr[$r->shipmentPK]['id'] = $r->shipmentID;
 			$retArr[$r->shipmentPK]['ts'] = $r->initialtimestamp;
@@ -1018,6 +1019,12 @@ class ShipmentManager{
 				}
 				if(in_array('receiptNotSubmitted', $statusArr, true)){
 					$sqlWhere .= 'AND (s.receiptstatus IS NULL OR s.receiptstatus NOT LIKE "submitted%") ';
+				}
+				if(in_array('allSamplesChecked', $statusArr, true)){
+					$sqlWhere .= 'AND m.shipmentPK IN (SELECT shipmentPK 
+									FROM NeonSample
+									GROUP BY shipmentPK
+									HAVING SUM(CASE WHEN checkinUid IS NOT NULL THEN 1 ELSE 0 END) = COUNT(samplePK))';
 				}
 				if(in_array('sampleCheck', $statusArr, true)){
 					$sqlWhere .= 'AND (m.checkinTimestamp IS NOT NULL) ';
