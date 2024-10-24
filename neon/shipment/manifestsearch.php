@@ -251,6 +251,9 @@ include($SERVER_ROOT.'/includes/header.php');
 					<div class="fieldDiv">
 						<input name="manifestStatus[]" type="checkbox" value="receiptNotSubmitted" <?php echo ($manifestStatus=='receiptNotSubmitted'?'checked':''); ?> /> <b>Receipt Not Submitted</b>
 					</div>
+					<div class="fieldDiv">
+						<input name="manifestStatus[]" type="checkbox" value="allSamplesChecked" <?php echo ($manifestStatus=='allSamplesChecked'?'checked':''); ?> /> <b>All Samples Checked In</b>
+					</div>
 				</div>
 				<div class="fieldGroupDiv">
 					<div class="fieldDiv">
