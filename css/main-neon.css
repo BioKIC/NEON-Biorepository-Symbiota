@@ -151,11 +151,13 @@ h4 {
   font-size: 11px;
   float: right;
   color: #000000;
+  
 }
 
 .navpath {
   margin-left: 2rem;
   font-size: 12px;
+  width: 75%;
 }
 
 #innertext{
