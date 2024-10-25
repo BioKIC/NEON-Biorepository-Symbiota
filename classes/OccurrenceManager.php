@@ -381,7 +381,7 @@ class OccurrenceManager extends OccurrenceTaxaManager {
 							$betweenFrag[] .= '(o.occid BETWEEN '.$term1.' AND '.$term2.')';	// NEON addition
 							/* NEON customization - commented out
 							$betweenFrag[] = '(o.othercatalognumbers BETWEEN '.$term1.' AND '.$term2.')';
-							$betweenFrag[] = '(oi.identifiervalue BETWEEN '.$term1.' AND '.$term2.')';
+							//$betweenFrag[] = '(oi.identifiervalue BETWEEN '.$term1.' AND '.$term2.')';
 							$identFrag[] = '(identifiervalue BETWEEN '.$term1.' AND '.$term2.')';
 							End of NEON Customization */
 
