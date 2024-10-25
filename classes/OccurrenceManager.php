@@ -363,12 +363,13 @@ class OccurrenceManager extends OccurrenceTaxaManager {
 		if(array_key_exists('catnum',$this->searchTermArr)){
 			$catStr = $this->cleanInStr($this->searchTermArr['catnum']);
 			$includeOtherCatNum = array_key_exists('includeothercatnum',$this->searchTermArr)?true:false;
-			$includeMaterialSample = array_key_exists('includematerialsample',$this->searchTermArr)?true:false;
+			$includeMaterialSample = array_key_exists('includematerialsample',$this->searchTermArr)?true:false;		//NEON customization
 
 			$catArr = explode(',',str_replace(';',',',$catStr));
 			$betweenFrag = array();
 			$inFrag = array();
 			$identFrag = array();
+			$matSampleFrag = array();
 			foreach($catArr as $v){
 				if($p = strpos($v,' - ')){
 					$term1 = trim(substr($v,0,$p));
@@ -376,25 +377,37 @@ class OccurrenceManager extends OccurrenceTaxaManager {
 					if(is_numeric($term1) && is_numeric($term2)){
 						$betweenFrag[] = '(o.catalogNumber BETWEEN '.$term1.' AND '.$term2.')';
 						if($includeOtherCatNum){
-							//$betweenFrag[] = '(o.othercatalognumbers BETWEEN '.$term1.' AND '.$term2.')';
-							$betweenFrag[] .= '(o.occid BETWEEN '.$term1.' AND '.$term2.')';
-							//$betweenFrag[] = '(oi.identifiervalue BETWEEN '.$term1.' AND '.$term2.')';
-							//$identFrag[] = '(oi.identifiervalue BETWEEN '.$term1.' AND '.$term2.')';
+
+							$betweenFrag[] .= '(o.occid BETWEEN '.$term1.' AND '.$term2.')';	// NEON addition
+							/* NEON customization - commented out
+							$betweenFrag[] = '(o.othercatalognumbers BETWEEN '.$term1.' AND '.$term2.')';
+							$betweenFrag[] = '(oi.identifiervalue BETWEEN '.$term1.' AND '.$term2.')';
+							$identFrag[] = '(identifiervalue BETWEEN '.$term1.' AND '.$term2.')';
+							End of NEON Customization */
+
 						}
-						// if($includeMaterialSample){
-						// 	$identFrag[] = '(m.catalogNumber BETWEEN '.$term1.' AND '.$term2.')';
-						// }
+
+						/* NEON customization - addition, but commented out
+						if($includeMaterialSample){
+							$matSampleFrag[] = '(catalogNumber BETWEEN '.$term1.' AND '.$term2.')';
+						}
+						End of NEON Customization */
+
 					}
-					// else{
-					// 	$catTerm = 'o.catalogNumber BETWEEN "'.$term1.'" AND "'.$term2.'"';
-					// 	if(strlen($term1) == strlen($term2)) $catTerm .= ' AND length(o.catalogNumber) = '.strlen($term2);
-					// 	$betweenFrag[] = '('.$catTerm.')';
-					// 	if($includeOtherCatNum){
-					// 		$betweenFrag[] = '(o.othercatalognumbers BETWEEN "'.$term1.'" AND "'.$term2.'")';
-					// 		//$betweenFrag[] = '(oi.identifiervalue BETWEEN "'.$term1.'" AND "'.$term2.'")';
-					// 		$identFrag[] = '(oi.identifiervalue BETWEEN "'.$term1.'" AND "'.$term2.'")';
-					// 	}
-					// }
+
+					/* NEON customization - commented out
+					else{
+						$catTerm = 'o.catalogNumber BETWEEN "'.$term1.'" AND "'.$term2.'"';
+						if(strlen($term1) == strlen($term2)) $catTerm .= ' AND length(o.catalogNumber) = '.strlen($term2);
+						$betweenFrag[] = '('.$catTerm.')';
+						if($includeOtherCatNum){
+							$betweenFrag[] = '(o.othercatalognumbers BETWEEN "'.$term1.'" AND "'.$term2.'")';
+							//$betweenFrag[] = '(oi.identifiervalue BETWEEN "'.$term1.'" AND "'.$term2.'")';
+							$identFrag[] = '(identifiervalue BETWEEN "'.$term1.'" AND "'.$term2.'")';
+						}
+					}
+					End of NEON Customization */
+
 				}
 				else{
 					$vStr = trim($v);
@@ -416,16 +429,28 @@ class OccurrenceManager extends OccurrenceTaxaManager {
 					$catWhere .= 'OR (o.occurrenceID IN("'.implode('","',$inFrag).'")) ';
 					$catWhere .= 'OR (o.recordID IN("'.implode('","',$inFrag).'")) ';
 					//$catWhere .= 'OR (oi.identifiervalue IN("'.implode('","',$inFrag).'")) ';
-					$identFrag[] = '(oi.identifiervalue IN("'.implode('","',$inFrag).'"))';
+					$identFrag[] = '(identifiervalue IN("'.implode('","',$inFrag).'"))';
 				}
+
+				// NEON customization - addition
 				if($includeMaterialSample){
-					$identFrag[] = '(m.catalogNumber IN("'.implode('","',$inFrag).'"))';
+					$matSampleFrag[] = '(catalogNumber IN("'.implode('","',$inFrag).'"))';
 				}
+				// End of NEON customization
+
 			}
 			if($identFrag){
-				$occidList = $this->getAdditionIdentifiers($identFrag,$includeMaterialSample);
+				$occidList = $this->getAdditionIdentifiers($identFrag);
 				if($occidList) $catWhere .= 'OR (o.occid IN('.implode(',',$occidList).')) ';
 			}
+
+			// NEON customization - addition
+			if($matSampleFrag){
+				$occidList = $this->getMaterialSampleIdentifiers($matSampleFrag);
+				if($occidList) $catWhere .= 'OR (o.occid IN('.implode(',',$occidList).')) ';
+			}
+			// End of NEON customization
+
 			$sqlWhere .= 'AND ('.substr($catWhere,3).') ';
 			$this->displaySearchArr[] = $this->searchTermArr['catnum'];
 		}
@@ -452,10 +477,18 @@ class OccurrenceManager extends OccurrenceTaxaManager {
 		if($sqlWhere){
 			if(!array_key_exists("includecult",$this->searchTermArr)){
 				$sqlWhere .= "AND (o.cultivationStatus IS NULL OR o.cultivationStatus = 0) ";
-				//$this->displaySearchArr[] = 'excluding cultivated/captive occurrences';
+
+				/* NEON customization - commented out
+				$this->displaySearchArr[] = 'excluding cultivated/captive occurrences';
+				End of NEON Customization */
+
 			}
 			else{
-				//$this->displaySearchArr[] = 'includes cultivated/captive occurrences';
+
+				/* NEON customization - commented out
+				$this->displaySearchArr[] = 'includes cultivated/captive occurrences';
+				End of NEON Customization */
+
 			}
 		}
 		if(array_key_exists('attr',$this->searchTermArr)){
@@ -483,7 +516,7 @@ class OccurrenceManager extends OccurrenceTaxaManager {
 		if (!empty($filteredArray)) {
 			$this->setAdvancedsqlWhere($filteredArray, $sqlWhere);
 		}
-		
+
 		if($sqlWhere) $this->sqlWhere = 'WHERE '.substr($sqlWhere,4);
 		else{
 			//Make the sql valid, but return nothing
@@ -495,7 +528,7 @@ class OccurrenceManager extends OccurrenceTaxaManager {
 	protected function setAdvancedsqlWhere($filteredArray, &$sqlWhere) {
 		$currentGroup = 1;
 		$conditionGroup = '';
-		
+
 		while (isset($filteredArray["q_customfield$currentGroup"])) {
 			$openParen = isset($filteredArray["q_customopenparen$currentGroup"]) ? $filteredArray["q_customopenparen$currentGroup"] : '';
 			$field = $filteredArray["q_customfield$currentGroup"];
@@ -503,7 +536,7 @@ class OccurrenceManager extends OccurrenceTaxaManager {
 			$value = $filteredArray["q_customvalue$currentGroup"] ?? null;
 			$closeParen = isset($filteredArray["q_customcloseparen$currentGroup"]) ? $filteredArray["q_customcloseparen$currentGroup"] : '';
 			$andOr = isset($filteredArray["q_customandor" . ($currentGroup + 1)]) ? $filteredArray["q_customandor" . ($currentGroup + 1)] : '';
-	
+
 			// Build the condition based on the type
 			switch ($type) {
 				case 'EQUALS':
@@ -537,7 +570,7 @@ class OccurrenceManager extends OccurrenceTaxaManager {
 					$condition = '';
 					break;
 			}
-	
+
 			// Add the condition to the group
 			if ($condition) {
 				$conditionGroup .= "$openParen$condition$closeParen";
@@ -545,28 +578,18 @@ class OccurrenceManager extends OccurrenceTaxaManager {
 					$conditionGroup .= " $andOr ";
 				}
 			}
-	
+
 			$currentGroup++;
-		}	
-		
+		}
+
 		$sqlWhere .= 'AND (' . trim($conditionGroup) . ') ';
 		$this->displaySearchArr[] = 'advanced search: '.trim($conditionGroup);
 	}
-	
-	
-	private function getAdditionIdentifiers($identFrag,$includeMaterialSample){
+
+	private function getAdditionIdentifiers($identFrag){
 		$retArr = array();
 		if($identFrag){
-			if(!$includeMaterialSample){
-				$sql = 'SELECT oi.occid FROM omoccuridentifiers oi 
-						WHERE '.implode(' OR ',$identFrag);
-			}
-			if($includeMaterialSample){
-				$sql = 'SELECT oi.occid FROM omoccuridentifiers oi 
-						RIGHT JOIN ommaterialsample m
-						ON oi.occid=m.occid
-						WHERE '.implode(' OR ',$identFrag);
-			}
+			$sql = 'SELECT occid FROM omoccuridentifiers WHERE '.implode(' OR ',$identFrag);
 			$rs = $this->conn->query($sql);
 			if($rs){
 				while($r = $rs->fetch_object()){
@@ -577,6 +600,23 @@ class OccurrenceManager extends OccurrenceTaxaManager {
 		}
 		return $retArr;
 	}
+
+	// NEON customization - addition
+	private function getMaterialSampleIdentifiers($matSampleFrag){
+		$retArr = array();
+		if($matSampleFrag){
+			$sql = 'SELECT occid FROM ommaterialsample WHERE '.implode(' OR ', $matSampleFrag);
+			$rs = $this->conn->query($sql);
+			if($rs){
+				while($r = $rs->fetch_object()){
+					$retArr[] = $r->occid;
+				}
+				$rs->free();
+			}
+		}
+		return $retArr;
+	}
+	// End of NEON customization
 
 	protected function formatDate($inDate){
 		$retDate = OccurrenceUtilities::formatDate($inDate);
@@ -913,15 +953,19 @@ class OccurrenceManager extends OccurrenceTaxaManager {
 		}
 		if(array_key_exists('catnum',$_REQUEST)){
 			$catNum = $this->cleanInputStr(str_replace(array(',', "\n", "\r\n", "\r"), '; ', $_REQUEST['catnum']));
-			if($catNum) {
+			if($catNum){
 				$this->searchTermArr['catnum'] = $catNum;
 				if(array_key_exists('includeothercatnum', $_REQUEST)) {
 					$this->searchTermArr['includeothercatnum'] = '1';
-				}		
+				}
+
+				// NEON customization - addition
 				if(array_key_exists('includematerialsample', $_REQUEST)) {
 					$this->searchTermArr['includematerialsample'] = '1';
 				}
-			} 
+				// End of NEON Customization
+
+			}
 			else{
 				unset($this->searchTermArr['catnum']);
 			}
