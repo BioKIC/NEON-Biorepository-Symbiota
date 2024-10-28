@@ -67,7 +67,7 @@ class ShipmentManager{
 			}
 			$rs->free();
 			//Get sample count not yet checked-in
-			$sql = 'SELECT COUNT(samplepk) AS cnt FROM NeonSample WHERE (shipmentPK = '.$this->shipmentPK.') AND (sampleReceived IN (NULL, 0)';
+			$sql = 'SELECT COUNT(samplepk) AS cnt FROM NeonSample WHERE (shipmentPK = '.$this->shipmentPK.') AND (sampleReceived IN (NULL, 0))';
 			$rs = $this->conn->query($sql);
 			while($r = $rs->fetch_object()){
 				$retArr[0] = $r->cnt;
