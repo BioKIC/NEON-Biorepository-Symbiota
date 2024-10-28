@@ -473,14 +473,17 @@ class ShipmentManager{
 
 			if(!$status){
 				//Check to see if sample has already been checked in
-				$sql = 'SELECT samplePK, alternativeSampleID, checkinTimestamp FROM NeonSample WHERE (sampleID = "'.$this->cleanInStr($sampleID).'" OR sampleCode = "'.$this->cleanInStr($sampleID).'") ';
+				$sql = 'SELECT samplePK, alternativeSampleID, sampleReceived FROM NeonSample WHERE (sampleID = "'.$this->cleanInStr($sampleID).'" OR sampleCode = "'.$this->cleanInStr($sampleID).'") ';
 				if($this->shipmentPK) $sql .= 'AND (shipmentpk = '.$this->shipmentPK.') ';
 				$rs = $this->conn->query($sql);
 				while($r = $rs->fetch_object()){
 					$samplePK = $r->samplePK;
 					if($alternativeSampleID && $r->alternativeSampleID && $alternativeSampleID != $r->alternativeSampleID) $alternativeSampleID .= '; '.$r->alternativeSampleID;
-					if($r->checkinTimestamp) $status = 2;
-					else $status = 1;
+					if($r->sampleReceived == 1) {
+						$status = 2;
+					} else {
+						$status = 1;
+					}
 				}
 				$rs->free();
 				if($status == 1 && $samplePK){
