@@ -491,7 +491,7 @@ class ShipmentManager{
 					$sampleReceived = ($sampleReceived?1:0);
 					if($acceptedForAnalysis === '') $acceptedForAnalysis = 'NULL';
 					else $acceptedForAnalysis = ($acceptedForAnalysis?1:0);
-					$sqlUpdate = 'UPDATE NeonSample SET checkinUid = '.$GLOBALS['SYMB_UID'].', checkinTimestamp = now(), sampleReceived = '.$sampleReceived.', acceptedForAnalysis = '.$acceptedForAnalysis.' ';
+					$sqlUpdate = 'UPDATE NeonSample SET checkinUid = ' . $GLOBALS['SYMB_UID'] . ', sampleReceived = ' . $sampleReceived . ',  acceptedForAnalysis = ' . $acceptedForAnalysis . ' , checkinTimestamp = IF(checkinTimestamp IS NULL, NOW(), checkinTimestamp) ';
 					if($condition) $sqlUpdate .= ', sampleCondition = CONCAT_WS("; ",sampleCondition,"'.$this->cleanInStr($condition).'") ';
 					if($notes) $sqlUpdate .= ', checkinRemarks = "'.$this->cleanInStr($notes).'" ';
 					if($alternativeSampleID) $sqlUpdate .= ', alternativeSampleID = "'.$this->cleanInStr($alternativeSampleID).'" ';
@@ -518,7 +518,7 @@ class ShipmentManager{
 				$acceptedForAnalysis = 'NULL';
 				if(isset($postArr['acceptedForAnalysis'])) $acceptedForAnalysis = ($postArr['acceptedForAnalysis']?1:0);
 				$sql = 'UPDATE NeonSample SET '.
-					'checkinUid = '.$GLOBALS['SYMB_UID'].', checkinTimestamp = now(), sampleReceived = '.$sampleReceived.', acceptedForAnalysis = '.$acceptedForAnalysis.' '.
+					'checkinUid = '.$GLOBALS['SYMB_UID'].', checkinTimestamp = IF(checkinTimestamp IS NULL, NOW(), checkinTimestamp),  sampleReceived = '.$sampleReceived.', acceptedForAnalysis = '.$acceptedForAnalysis.' '.
 					($postArr['sampleCondition'] ? ', sampleCondition = "'.$this->cleanInStr($postArr['sampleCondition']).'" ' : '').
 					($postArr['checkinRemarks'] ? ', checkinRemarks = "'.$this->cleanInStr($postArr['checkinRemarks']).'" ' : '');
 				if(isset($_SESSION['sampleCheckinSessionData'])) {
