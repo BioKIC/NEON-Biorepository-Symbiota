@@ -524,7 +524,7 @@ class ShipmentManager{
 				if(isset($_SESSION['sampleCheckinSessionData'])) {
 					$sql .= ', sessionID = ' . $_SESSION['sampleCheckinSessionData']['sessionID'] . ' ';
 				}
-				$sql .= 'WHERE (shipmentpk = '.$this->shipmentPK.') AND (checkinTimestamp IS NULL) AND (samplePK IN('.implode(',', $pkArr).'))';
+				$sql .= 'WHERE (shipmentpk = '.$this->shipmentPK.') AND (samplePK IN('.implode(',', $pkArr).'))';
 				if(!$this->conn->query($sql)){
 					$this->errorStr = 'ERROR batch checking-in samples: '.$this->conn->error;
 					return false;
