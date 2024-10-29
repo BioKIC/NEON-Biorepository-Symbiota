@@ -449,7 +449,7 @@ if ($SYMB_UID) {
 						}
 					}
 					?>
-					<button class="bg-blue-500 text-white font-bold px-4 rounded" style="height: 24px;">Browse Collection</button>
+					<button class="bg-blue-500 text-white font-normal px-4 rounded" style="height: 24px;">Browse Collection</button>
 				</div>
 			</div>
 			<div class="grid grid-cols-1 gap-4 mb-6">
@@ -470,7 +470,11 @@ if ($SYMB_UID) {
 						echo $output;
 					}
 					?>
-					<button class="bg-blue-500 text-white font-bold px-4 rounded" style="height: 24px;">Contact the Biorepository</button>
+					<a href="https://www.neonscience.org/about/contact-neon-biorepository">
+						<button class="bg-blue-500 text-white font-normal px-4 rounded" style="height: 24px;">
+							Contact the Biorepository
+						</button>
+					</a>
 				</div>
 			</div>
 			
@@ -494,106 +498,109 @@ if ($SYMB_UID) {
 				$georefPerc = 0;
 				if ($statsArr['georefcnt'] && $statsArr['recordcnt']) $georefPerc = (100 * ($statsArr['georefcnt'] / $statsArr['recordcnt']));
 				?>
-				<div class="lg:col-span-1">
-					<h2 class="text-xl font-semibold mb-2"><?php echo (isset($LANG['COLL_STATISTICS']) ? $LANG['COLL_STATISTICS'] : 'Collection Statistics'); ?></h2>
-					<ul class="list-disc pl-6">
-						<li><?php echo number_format($statsArr["recordcnt"]) . ' ' . (isset($LANG['SPECIMEN_RECORDS']) ? $LANG['SPECIMEN_RECORDS'] : 'specimen records'); ?></li>
-						<li><?php echo ($statsArr['georefcnt'] ? number_format($statsArr['georefcnt']) : 0) . ($georefPerc ? " (" . ($georefPerc > 1 ? round($georefPerc) : round($georefPerc, 2)) . "%)" : '') . ' ' . (isset($LANG['GEOREFERENCED']) ? $LANG['GEOREFERENCED'] : 'georeferenced'); ?></li>
+				<div class="lg:col-span-1 flex flex-col justify-around">
+					<div>
+						<h2 class="text-xl font-semibold mb-2"><?php echo (isset($LANG['COLL_STATISTICS']) ? $LANG['COLL_STATISTICS'] : 'Collection Statistics'); ?></h2>
+						<ul class="list-disc pl-6">
+							<li><?php echo number_format($statsArr["recordcnt"]) . ' ' . (isset($LANG['SPECIMEN_RECORDS']) ? $LANG['SPECIMEN_RECORDS'] : 'specimen records'); ?></li>
+							<li><?php echo ($statsArr['georefcnt'] ? number_format($statsArr['georefcnt']) : 0) . ($georefPerc ? " (" . ($georefPerc > 1 ? round($georefPerc) : round($georefPerc, 2)) . "%)" : '') . ' ' . (isset($LANG['GEOREFERENCED']) ? $LANG['GEOREFERENCED'] : 'georeferenced'); ?></li>
+							<?php
+							$extrastatsArr = array();
+							if ($statsArr['dynamicProperties']) $extrastatsArr = json_decode($statsArr['dynamicProperties'], true);
+							if ($extrastatsArr) {
+								if ($extrastatsArr['imgcnt']) {
+									$imgSpecCnt = $extrastatsArr['imgcnt'];
+									$imgCnt = 0;
+									if (strpos($imgSpecCnt, ':')) {
+										$imgCntArr = explode(':', $imgSpecCnt);
+										$imgCnt = $imgCntArr[0];
+										$imgSpecCnt = $imgCntArr[1];
+									}
+									if ($imgSpecCnt) {
+										$imgPerc = 0;
+										if ($statsArr['recordcnt']) $imgPerc = (100 * ($imgSpecCnt / $statsArr['recordcnt']));
+										echo '<li>';
+										echo number_format($imgSpecCnt) . ($imgPerc ? " (" . ($imgPerc > 1 ? round($imgPerc) : round($imgPerc, 2)) . "%)" : '') . ' ' . (isset($LANG['WITH_IMAGES']) ? $LANG['WITH_IMAGES'] : 'with images');
+										if ($imgCnt) echo ' (' . number_format($imgCnt) . ' ' . (isset($LANG['TOTAL_IMAGES']) ? $LANG['TOTAL_IMAGES'] : 'total images') . ')';
+										echo '</li>';
+									}
+								}
+								$genRefStr = '';
+								if (isset($extrastatsArr['gencnt']) && $extrastatsArr['gencnt']) $genRefStr = number_format($extrastatsArr['gencnt']) . ' ' . (isset($LANG['GENBANK_REF']) ? $LANG['GENBANK_REF'] : 'GenBank') . ', ';
+								if (isset($extrastatsArr['boldcnt']) && $extrastatsArr['boldcnt']) $genRefStr .= number_format($extrastatsArr['boldcnt']) . ' ' . (isset($LANG['BOLD_REF']) ? $LANG['BOLD_REF'] : 'BOLD') . ', ';
+								if (isset($extrastatsArr['geneticcnt']) && $extrastatsArr['geneticcnt']) $genRefStr .= number_format($extrastatsArr['geneticcnt']) . ' ' . (isset($LANG['OTHER_GENETIC_REF']) ? $LANG['OTHER_GENETIC_REF'] : 'other');
+								if ($genRefStr) echo '<li>' . trim($genRefStr, ' ,') . ' ' . (isset($LANG['GENETIC_REF']) ? $LANG['GENETIC_REF'] : 'genetic references') . '</li>';
+								if (isset($extrastatsArr['refcnt']) && $extrastatsArr['refcnt']) echo '<li>' . number_format($extrastatsArr['refcnt']) . ' ' . (isset($LANG['PUB_REFS']) ? $LANG['PUB_REFS'] : 'publication references') . '</li>';
+								if (isset($extrastatsArr['SpecimensCountID']) && $extrastatsArr['SpecimensCountID']) {
+									$spidPerc = (100 * ($extrastatsArr['SpecimensCountID'] / $statsArr['recordcnt']));
+									echo '<li>' . number_format($extrastatsArr['SpecimensCountID']) . ($spidPerc ? " (" . ($spidPerc > 1 ? round($spidPerc) : round($spidPerc, 2)) . "%)" : '') . ' ' . (isset($LANG['IDED_TO_SPECIES']) ? $LANG['IDED_TO_SPECIES'] : 'identified to species') . '</li>';
+								}
+							}
+							if (isset($statsArr['familycnt']) && $statsArr['familycnt']) echo '<li>' . number_format($statsArr['familycnt']) . ' ' . (isset($LANG['FAMILIES']) ? $LANG['FAMILIES'] : 'families') . '</li>';
+							if (isset($statsArr['genuscnt']) && $statsArr['genuscnt']) echo '<li>' . number_format($statsArr['genuscnt']) . ' ' . (isset($LANG['GENERA']) ? $LANG['GENERA'] : 'genera') . '</li>';
+							if (isset($statsArr['speciescnt']) && $statsArr['speciescnt']) echo '<li>' . number_format($statsArr['speciescnt']) . ' ' . (isset($LANG['SPECIES']) ? $LANG['SPECIES'] : 'species') . '</li>';
+							if ($extrastatsArr && $extrastatsArr['TotalTaxaCount']) echo '<li>' . number_format($extrastatsArr['TotalTaxaCount']) . ' ' . (isset($LANG['TOTAL_TAXA']) ? $LANG['TOTAL_TAXA'] : 'total taxa (including subsp. and var.)') . '</li>';
+							//if($extrastatsArr&&$extrastatsArr['TypeCount']) echo '<li>'.number_format($extrastatsArr['TypeCount']).' '.(isset($LANG['TYPE_SPECIMENS'])?$LANG['TYPE_SPECIMENS']:'type specimens').'</li>';
+							?>
+						</ul>
+					</div>
+					<div class="border-t-2 border-gray-200 mt-6 pt-4">
+						<h2 class="text-xl font-semibold mb-2">Citation</h2>
+						<p style="padding:16px"><strong>Please use the appropriate citation in your publications. See <a href="/neon/misc/cite.php">Acknowledging and Citing the Biorepository</a> for more info.</strong></p>
 						<?php
-						$extrastatsArr = array();
-						if ($statsArr['dynamicProperties']) $extrastatsArr = json_decode($statsArr['dynamicProperties'], true);
-						if ($extrastatsArr) {
-							if ($extrastatsArr['imgcnt']) {
-								$imgSpecCnt = $extrastatsArr['imgcnt'];
-								$imgCnt = 0;
-								if (strpos($imgSpecCnt, ':')) {
-									$imgCntArr = explode(':', $imgSpecCnt);
-									$imgCnt = $imgCntArr[0];
-									$imgSpecCnt = $imgCntArr[1];
+						if (file_exists($SERVER_ROOT . '/includes/citationcollection.php')) {
+							echo '<div style="border: 1px solid rgba(0, 0, 0, 0.12); padding: 16px;"">
+							<div id="citation" style="font-family: monospace; padding: 16px; font-size:large">';
+							// If GBIF dataset key is available, fetch GBIF format from API
+							if ($collData['publishtogbif'] && $datasetKey && file_exists($SERVER_ROOT . '/includes/citationgbif.php')) {
+								$gbifUrl = 'http://api.gbif.org/v1/dataset/' . $datasetKey;
+								$responseData = json_decode(file_get_contents($gbifUrl));
+								$collData['gbiftitle'] = $responseData->title;
+								$collData['doi'] = $responseData->doi;
+								$_SESSION['colldata'] = $collData;
+								include($SERVER_ROOT . '/includes/citationgbif.php');
+							} elseif ($collData['dynamicproperties'] && array_key_exists('edi', json_decode($collData['dynamicproperties'], true))) { // If EDI DOI is available, fetch EDI format from API
+								$doiNum = json_decode($collData['dynamicproperties'], true)['edi'];
+								if (substr($doiNum, 0, 4) === 'doi:') {
+									$doiNum = substr($doiNum, 4);
 								}
-								if ($imgSpecCnt) {
-									$imgPerc = 0;
-									if ($statsArr['recordcnt']) $imgPerc = (100 * ($imgSpecCnt / $statsArr['recordcnt']));
-									echo '<li>';
-									echo number_format($imgSpecCnt) . ($imgPerc ? " (" . ($imgPerc > 1 ? round($imgPerc) : round($imgPerc, 2)) . "%)" : '') . ' ' . (isset($LANG['WITH_IMAGES']) ? $LANG['WITH_IMAGES'] : 'with images');
-									if ($imgCnt) echo ' (' . number_format($imgCnt) . ' ' . (isset($LANG['TOTAL_IMAGES']) ? $LANG['TOTAL_IMAGES'] : 'total images') . ')';
-									echo '</li>';
-								}
+								$collData['doi'] = $doiNum;
+								$_SESSION['colldata'] = $collData;
+								include($SERVER_ROOT . '/includes/citationedi.php');
+							} else {
+								include($SERVER_ROOT . '/includes/citationcollection.php');
 							}
-							$genRefStr = '';
-							if (isset($extrastatsArr['gencnt']) && $extrastatsArr['gencnt']) $genRefStr = number_format($extrastatsArr['gencnt']) . ' ' . (isset($LANG['GENBANK_REF']) ? $LANG['GENBANK_REF'] : 'GenBank') . ', ';
-							if (isset($extrastatsArr['boldcnt']) && $extrastatsArr['boldcnt']) $genRefStr .= number_format($extrastatsArr['boldcnt']) . ' ' . (isset($LANG['BOLD_REF']) ? $LANG['BOLD_REF'] : 'BOLD') . ', ';
-							if (isset($extrastatsArr['geneticcnt']) && $extrastatsArr['geneticcnt']) $genRefStr .= number_format($extrastatsArr['geneticcnt']) . ' ' . (isset($LANG['OTHER_GENETIC_REF']) ? $LANG['OTHER_GENETIC_REF'] : 'other');
-							if ($genRefStr) echo '<li>' . trim($genRefStr, ' ,') . ' ' . (isset($LANG['GENETIC_REF']) ? $LANG['GENETIC_REF'] : 'genetic references') . '</li>';
-							if (isset($extrastatsArr['refcnt']) && $extrastatsArr['refcnt']) echo '<li>' . number_format($extrastatsArr['refcnt']) . ' ' . (isset($LANG['PUB_REFS']) ? $LANG['PUB_REFS'] : 'publication references') . '</li>';
-							if (isset($extrastatsArr['SpecimensCountID']) && $extrastatsArr['SpecimensCountID']) {
-								$spidPerc = (100 * ($extrastatsArr['SpecimensCountID'] / $statsArr['recordcnt']));
-								echo '<li>' . number_format($extrastatsArr['SpecimensCountID']) . ($spidPerc ? " (" . ($spidPerc > 1 ? round($spidPerc) : round($spidPerc, 2)) . "%)" : '') . ' ' . (isset($LANG['IDED_TO_SPECIES']) ? $LANG['IDED_TO_SPECIES'] : 'identified to species') . '</li>';
-							}
+							echo '</div>';
 						}
-						if (isset($statsArr['familycnt']) && $statsArr['familycnt']) echo '<li>' . number_format($statsArr['familycnt']) . ' ' . (isset($LANG['FAMILIES']) ? $LANG['FAMILIES'] : 'families') . '</li>';
-						if (isset($statsArr['genuscnt']) && $statsArr['genuscnt']) echo '<li>' . number_format($statsArr['genuscnt']) . ' ' . (isset($LANG['GENERA']) ? $LANG['GENERA'] : 'genera') . '</li>';
-						if (isset($statsArr['speciescnt']) && $statsArr['speciescnt']) echo '<li>' . number_format($statsArr['speciescnt']) . ' ' . (isset($LANG['SPECIES']) ? $LANG['SPECIES'] : 'species') . '</li>';
-						if ($extrastatsArr && $extrastatsArr['TotalTaxaCount']) echo '<li>' . number_format($extrastatsArr['TotalTaxaCount']) . ' ' . (isset($LANG['TOTAL_TAXA']) ? $LANG['TOTAL_TAXA'] : 'total taxa (including subsp. and var.)') . '</li>';
-						//if($extrastatsArr&&$extrastatsArr['TypeCount']) echo '<li>'.number_format($extrastatsArr['TypeCount']).' '.(isset($LANG['TYPE_SPECIMENS'])?$LANG['TYPE_SPECIMENS']:'type specimens').'</li>';
 						?>
-					</ul>
-				</div>
-			</div>
-			<div class="border-t-2 border-gray-200 mt-6 pt-4">
-			<p>Citation</p>
-			<p style="padding:16px"><strong>Please use the appropriate citation in your publications. See <a href="/neon/misc/cite.php">Acknowledging and Citing the Biorepository</a> for more info.</strong></p>
-				<?php
-				if (file_exists($SERVER_ROOT . '/includes/citationcollection.php')) {
-					echo '<div style="border: 1px solid rgba(0, 0, 0, 0.12); padding: 16px;"">
-					<div id="citation" style="font-family: monospace; padding: 16px; font-size:large">';
-					// If GBIF dataset key is available, fetch GBIF format from API
-					if ($collData['publishtogbif'] && $datasetKey && file_exists($SERVER_ROOT . '/includes/citationgbif.php')) {
-						$gbifUrl = 'http://api.gbif.org/v1/dataset/' . $datasetKey;
-						$responseData = json_decode(file_get_contents($gbifUrl));
-						$collData['gbiftitle'] = $responseData->title;
-						$collData['doi'] = $responseData->doi;
-						$_SESSION['colldata'] = $collData;
-						include($SERVER_ROOT . '/includes/citationgbif.php');
-					} elseif ($collData['dynamicproperties'] && array_key_exists('edi', json_decode($collData['dynamicproperties'], true))) { // If EDI DOI is available, fetch EDI format from API
-						$doiNum = json_decode($collData['dynamicproperties'], true)['edi'];
-						if (substr($doiNum, 0, 4) === 'doi:') {
-							$doiNum = substr($doiNum, 4);
-						}
-						$collData['doi'] = $doiNum;
-						$_SESSION['colldata'] = $collData;
-						include($SERVER_ROOT . '/includes/citationedi.php');
-					} else {
-						include($SERVER_ROOT . '/includes/citationcollection.php');
-					}
-					echo '</div>';
-				}
-				?>
-					<div class="flex space-x-2" style="padding-left: 16px;">
-						<button id="copyButton" data-tooltip-id="tooltip-copy" onclick="copyCitation()" class="tooltip-button bg-white-300 text-blue-800 py-2 px-4 rounded-none inline-flex items-center border-2 border-blue-800">
-							<i class="fas fa-copy mr-2"></i>
-							<span>COPY</span>
-							<span id="tooltip-copy" style="display:none; width:20rem; transform: translate(-15px, 65px);" class="tooltip absolute bg-gray-100 text-black border border-black p-2 rounded-none text-base">
-								Click to copy the above plain text citation to the clipboard
-							</span>
-						</button>
-						<button id="bibButton" data-tooltip-id="tooltip-bib" class="tooltip-button bg-white-300 text-blue-800 py-2 px-4 rounded-none inline-flex items-center border-2 border-blue-800">
-							<i class="fas fa-file-download mr-2"></i>
-							<span>DOWNLOAD (BIBTEX)</span>
-							<span id="tooltip-bib" style="display:none; width:20rem; transform: translate(-15px, 65px);" class="tooltip absolute bg-gray-100 text-black border border-black p-2 rounded-none text-base">
-								Click to download the citation as a file in BibTex format
-							</span>
-						</button>
-						<button id="risButton" data-tooltip-id="tooltip-ris" class="tooltip-button bg-white-300 text-blue-800 py-2 px-4 rounded-none inline-flex items-center border-2 border-blue-800">
-							<i class="fas fa-file-download mr-2"></i>
-							<span>DOWNLOAD (RIS)</span>
-							<span id="tooltip-ris" style="display:none; width:25rem; transform: translate(-15px, 65px);" class="tooltip absolute bg-gray-100 text-black border border-black p-2 rounded-none text-base">
-								Click to download the citation as a file in Research Information Systems (RIS) format
-							</span>
-						</button>
+							<div class="flex space-x-2" style="padding-left: 16px;">
+								<button id="copyButton" data-tooltip-id="tooltip-copy" onclick="copyCitation()" class="tooltip-button bg-white-300 text-blue-800 py-2 px-4 rounded-none inline-flex items-center border-2 border-blue-800">
+									<i class="fas fa-copy mr-2"></i>
+									<span>COPY</span>
+									<span id="tooltip-copy" style="display:none; width:20rem; transform: translate(-15px, 65px);" class="tooltip absolute bg-gray-100 text-black border border-black p-2 rounded-none text-base">
+										Click to copy the above plain text citation to the clipboard
+									</span>
+								</button>
+								<button id="bibButton" data-tooltip-id="tooltip-bib" class="tooltip-button bg-white-300 text-blue-800 py-2 px-4 rounded-none inline-flex items-center border-2 border-blue-800">
+									<i class="fas fa-file-download mr-2"></i>
+									<span>DOWNLOAD (BIBTEX)</span>
+									<span id="tooltip-bib" style="display:none; width:20rem; transform: translate(-15px, 65px);" class="tooltip absolute bg-gray-100 text-black border border-black p-2 rounded-none text-base">
+										Click to download the citation as a file in BibTex format
+									</span>
+								</button>
+								<button id="risButton" data-tooltip-id="tooltip-ris" class="tooltip-button bg-white-300 text-blue-800 py-2 px-4 rounded-none inline-flex items-center border-2 border-blue-800">
+									<i class="fas fa-file-download mr-2"></i>
+									<span>DOWNLOAD (RIS)</span>
+									<span id="tooltip-ris" style="display:none; width:25rem; transform: translate(-15px, 65px);" class="tooltip absolute bg-gray-100 text-black border border-black p-2 rounded-none text-base">
+										Click to download the citation as a file in Research Information Systems (RIS) format
+									</span>
+								</button>
+							</div>
+						</div>
 					</div>
 				</div>
 			</div>
+
 			
 			<div class="border-t-2 border-gray-200 mt-6 pt-4">
 			  <h2 class="text-xl font-semibold mb-2">External Links</h2>
