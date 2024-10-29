@@ -600,44 +600,84 @@ if ($SYMB_UID) {
 					</div>
 				</div>
 			</div>
-
 			
 			<div class="border-t-2 border-gray-200 mt-6 pt-4">
 			  <h2 class="text-xl font-semibold mb-2">External Links</h2>
 			  <div class="mb-4">
-				<div class="font-semibold mb-2">Associated Data Products</div>
-				<ul class="list-disc ml-5">
-				  <li class="mb-1">
-					<a href="https://data.neonscience.org/data-products/DP1.10043.001" class="text-blue-600 underline">Mosquitoes sampled from CO2 traps data product</a>
-				  </li>
-				  <li class="mb-1">
-					<a href="https://data.neonscience.org/data-products/DP1.10038.001" class="text-blue-600 underline">Mosquito sequences DNA barcode data product</a>
-				  </li>
-				  <li class="mb-1">
-					<a href="https://data.neonscience.org/data-products/DP1.10041.001" class="text-blue-600 underline">Mosquito pathogen status data product</a>
-				  </li>
-				</ul>
-			  </div>
+				<?php
+				if (isset($collData['resourcejson'])) {
+					if ($resourceArr = json_decode($collData['resourcejson'], true)) {
+						$groupedResources = [];
+						foreach ($resourceArr as $rArr) {
+							$type = $rArr['resourceType'];
+							$groupedResources[$type][] = $rArr;
+						}
+
+						foreach ($groupedResources as $type => $resources) {
+							echo '<div class="mb-4">';
+							echo '<div class="text-lg font-semibold mb-3">' . htmlspecialchars($type) . '</div>';
+							echo '<ul class="list-disc ml-5">';
+				
+							foreach ($resources as $rArr) {
+								$title = $rArr['title'][$LANG_TAG];
+								echo '<li class="mb-1">';
+								echo '<span class="label">' . htmlspecialchars($title) . ':</span> ';
+								echo '<a href="' . htmlspecialchars($rArr['url']) . '" target="_blank">' . htmlspecialchars($rArr['url']) . '</a>';
+								echo '</li>';
+							}
+				
+							echo '</ul>';
+							echo '</div>';
+						}
+					}
+				}
+				?>
 			  <div class="mb-4">
-				<div class="font-semibold mb-2">Sampling Protocols</div>
+				<div class="text-lg font-semibold mb-2">Collection Data</div>
 				<ul class="list-disc ml-5">
-				  <li class="mb-1">
-					<a href="https://data.neonscience.org/documents/10179/1883155/NEON.DOC.014049vM/158cc370-cf65-6c2a-d7b3-9bc01f1a417d" class="text-blue-600 underline">Sampling Protocol</a>
-				  </li>
-				</ul>
-			  </div>
-			  <div class="mb-4">
-				<div class="font-semibold mb-2">Collection Data</div>
-				<ul class="list-disc ml-5">
-				  <li class="mb-1">
-					<a href="https://biorepo.neonscience.org/portal/content/dwca/NEON-MOSC-PV_DwC-A.zip" class="text-blue-600 underline">DwC-Archive Access Point</a>
-				  </li>
-				  <li class="mb-1">
-					<a href="Digital Metadata: EML File" class="text-blue-600 underline">Digital Metadata: EML File</a>
-				  </li>
-				  <li class="mb-1">
-					<a href="http://www.gbif.org/dataset/72c42d42-030c-4b13-8815-281d3df11429" class="text-blue-600 underline">GBIF Dataset page</a>
-				  </li>
+					<?php
+					if ($collData['dwcaurl']) {
+						$dwcaUrl = $collData['dwcaurl'];
+						$outStr = '<li class="mb-1">';
+						$outStr .= '<span class="label">' . (isset($LANG['DWCA_PUB']) ? $LANG['DWCA_PUB'] : 'DwC-Archive Access Point') . ':</span> ';
+						$outStr .= '<a href="' . $dwcaUrl . '">' . $dwcaUrl . '</a>';
+						$outStr .= '</li>';
+						echo($outStr);
+					}
+					$outStr = '<li class="mb-1"><span class="label">' . (isset($LANG['DIGITAL_METADATA']) ? $LANG['DIGITAL_METADATA'] : 'Digital Metadata') . ':</span> <a href="../datasets/emlhandler.php?collid=' . $collData['collid'] . '" target="_blank">EML File</a></li>';
+					echo($outStr);
+					if ($collData['publishtogbif'] && $datasetKey) {
+						$dataUrl = 'http://www.gbif.org/dataset/' . $datasetKey;
+					?>
+						<li class="mb-1">
+							<div><b><?php echo (isset($LANG['GBIF_DATASET']) ? $LANG['GBIF_DATASET'] : 'GBIF Dataset page'); ?>:</b> <a href="<?php echo $dataUrl; ?>" target="_blank"><?php echo $dataUrl; ?></a></div>
+						</li>
+					<?php
+					} elseif ($collData['dynamicproperties'] && array_key_exists('edi', json_decode($collData['dynamicproperties'], true))) {
+						$doiNum = json_decode($collData['dynamicproperties'], true)['edi'];
+						if (substr($doiNum, 0, 4) === 'doi:') {
+							$doiNum = substr($doiNum, 4);
+						}
+						$dataUrl = 'https://www.doi.org/' . $doiNum;
+					?>
+						<li class="mb-1">
+							<div><b>EDI Dataset page:</b> <a href="<?php echo $dataUrl; ?>" target="_blank"><?php echo $dataUrl; ?></a></div>
+						</li>
+						<?php
+					}
+					if ($collData['publishtoidigbio']) {
+						$idigbioKey = $collManager->getIdigbioKey();
+						if (!$idigbioKey) $idigbioKey = $collManager->findIdigbioKey($collData['recordid']);
+						if ($idigbioKey) {
+							$dataUrl = 'https://www.idigbio.org/portal/recordsets/' . $idigbioKey;
+						?>
+							<div style="margin-top:5px;">
+								<div><b><?php echo (isset($LANG['IDIGBIO_DATASET']) ? $LANG['IDIGBIO_DATASET'] : 'iDigBio Dataset page'); ?>:</b> <a href="<?php echo $dataUrl; ?>" target="_blank"><?php echo $dataUrl; ?></a></div>
+							</div>
+						<?php
+						}
+					}
+					?>
 				</ul>
 			  </div>
 			</div>		
