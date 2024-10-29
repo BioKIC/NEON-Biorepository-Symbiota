@@ -53,6 +53,40 @@ if ($SYMB_UID) {
 			}
 			return false;
 		}
+
+		function copyCitation() {
+			const citationText = document.getElementById("citation").innerText;
+			const tempTextarea = document.createElement("textarea");
+			tempTextarea.value = citationText;
+			document.body.appendChild(tempTextarea);
+			tempTextarea.select();
+			document.execCommand("copy");
+			document.body.removeChild(tempTextarea);
+
+		}
+		
+		document.addEventListener("DOMContentLoaded", function () {
+			// Show tooltip
+			function showTooltip(event) {
+				const tooltipId = event.currentTarget.getAttribute("data-tooltip-id");
+				const tooltip = document.getElementById(tooltipId);
+				tooltip.style.display = "block";
+			}
+		
+			// Hide tooltip
+			function hideTooltip(event) {
+				const tooltipId = event.currentTarget.getAttribute("data-tooltip-id");
+				const tooltip = document.getElementById(tooltipId);
+				tooltip.style.display = "none";
+			}
+		
+			// Attach event listeners to all buttons with the class 'tooltip-button'
+			const tooltipButtons = document.querySelectorAll(".tooltip-button");
+			tooltipButtons.forEach(button => {
+				button.addEventListener("mouseover", showTooltip);
+				button.addEventListener("mouseout", hideTooltip);
+			});
+		});
 	</script>
 	<style type="text/css">
 		.field-div {
@@ -507,12 +541,12 @@ if ($SYMB_UID) {
 				</div>
 			</div>
 			<div class="border-t-2 border-gray-200 mt-6 pt-4">
-			<p>Cite this collection</p>
+			<p>Citation</p>
 			<p style="padding:16px"><strong>Please use the appropriate citation in your publications. See <a href="/neon/misc/cite.php">Acknowledging and Citing the Biorepository</a> for more info.</strong></p>
 				<?php
 				if (file_exists($SERVER_ROOT . '/includes/citationcollection.php')) {
 					echo '<div style="border: 1px solid rgba(0, 0, 0, 0.12); padding: 16px;"">
-					<div style="font-family: monospace; padding: 16px; font-size:large">';
+					<div id="citation" style="font-family: monospace; padding: 16px; font-size:large">';
 					// If GBIF dataset key is available, fetch GBIF format from API
 					if ($collData['publishtogbif'] && $datasetKey && file_exists($SERVER_ROOT . '/includes/citationgbif.php')) {
 						$gbifUrl = 'http://api.gbif.org/v1/dataset/' . $datasetKey;
@@ -536,17 +570,26 @@ if ($SYMB_UID) {
 				}
 				?>
 					<div class="flex space-x-2" style="padding-left: 16px;">
-						<button class="bg-white-300 text-blue-800 py-2 px-4 rounded inline-flex items-center border-2 border-blue-800">
+						<button id="copyButton" data-tooltip-id="tooltip-copy" onclick="copyCitation()" class="tooltip-button bg-white-300 text-blue-800 py-2 px-4 rounded-none inline-flex items-center border-2 border-blue-800">
 							<i class="fas fa-copy mr-2"></i>
 							<span>COPY</span>
+							<span id="tooltip-copy" style="display:none; width:20rem; transform: translate(-15px, 65px);" class="tooltip absolute bg-gray-100 text-black border border-black p-2 rounded-none text-base">
+								Click to copy the above plain text citation to the clipboard
+							</span>
 						</button>
-						<button class="bg-white-300 text-blue-800 py-2 px-4 rounded inline-flex items-center border-2 border-blue-800">
+						<button id="bibButton" data-tooltip-id="tooltip-bib" class="tooltip-button bg-white-300 text-blue-800 py-2 px-4 rounded-none inline-flex items-center border-2 border-blue-800">
 							<i class="fas fa-file-download mr-2"></i>
 							<span>DOWNLOAD (BIBTEX)</span>
+							<span id="tooltip-bib" style="display:none; width:20rem; transform: translate(-15px, 65px);" class="tooltip absolute bg-gray-100 text-black border border-black p-2 rounded-none text-base">
+								Click to download the citation as a file in BibTex format
+							</span>
 						</button>
-						<button class="bg-white-300 text-blue-800 py-2 px-4 rounded inline-flex items-center border-2 border-blue-800">
-							<i class="fas fa-table mr-2"></i>
+						<button id="risButton" data-tooltip-id="tooltip-ris" class="tooltip-button bg-white-300 text-blue-800 py-2 px-4 rounded-none inline-flex items-center border-2 border-blue-800">
+							<i class="fas fa-file-download mr-2"></i>
 							<span>DOWNLOAD (RIS)</span>
+							<span id="tooltip-ris" style="display:none; width:25rem; transform: translate(-15px, 65px);" class="tooltip absolute bg-gray-100 text-black border border-black p-2 rounded-none text-base">
+								Click to download the citation as a file in Research Information Systems (RIS) format
+							</span>
 						</button>
 					</div>
 				</div>
