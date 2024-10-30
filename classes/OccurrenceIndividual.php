@@ -315,6 +315,7 @@ class OccurrenceIndividual extends Manager{
 					elseif ($identifierTag == 'NEON sampleUUID') {
 						$identifierTag = 'SampleUuid';
 					}
+					//End NEON customization
 
 					$retArr[$r->idomoccuridentifiers]['name'] = $identifierTag;
 					$retArr[$r->idomoccuridentifiers]['value'] = $r->identifiervalue;
