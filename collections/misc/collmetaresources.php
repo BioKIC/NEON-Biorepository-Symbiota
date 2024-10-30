@@ -49,7 +49,14 @@ if($collid && $isEditor){
 						echo '<a href="'.$valueArr['url'].'" target="_blank">'.$valueArr['url'].'</a>';
 						echo '<a href="#" onclick="editLink('.$key.');return false"><img src="../../images/edit.png" /></a>';
 						echo '<a href="#" onclick="deleteLink('.$key.');return false"><img src="../../images/del.png" /></a>';
-						foreach($valueArr['title'] as $langCode => $titleValue){
+				
+						// NEON Specific
+						if (!empty($valueArr['resourceType'])) {
+							echo '<div class="resource-type-div" style="margin-left:10px;"><span class="label">' . (isset($LANG['RESOURCE_TYPE']) ? $LANG['RESOURCE_TYPE'] : 'Resource Type') . ':</span> ' . htmlspecialchars($valueArr['resourceType']) . '</div>';
+						}
+						// NEON Specific
+
+						foreach ($valueArr['title'] as $langCode => $titleValue) {
 							$langStr = $langCode;
 							if($langCode == 'en') $langStr = (isset($LANG['ENGLISH'])?$LANG['ENGLISH']:'English');
 							else if($langCode == 'es') $langStr = (isset($LANG['SPANISH'])?$LANG['SPANISH']:'Spanish');
@@ -80,6 +87,14 @@ if($collid && $isEditor){
 						<span class="field-label">URL:</span>
 						<span class="field-elem"><input name="url" type="text" style="width:600px;" /></span>
 					</div>
+					
+                    <!--NEON Specific-->
+					<div class="field-block">
+						<span class="field-label"><?php echo 'Resource Type'; ?>:</span>
+						<span class="field-elem"><input name="resourceType" type="text" style="width:600px;" /></span>
+					</div>
+					<!--NEON Specific-->
+					
 					<?php
 					foreach($langArr as $langCode){
 						$langStr = $langCode;
@@ -265,6 +280,13 @@ if($collid && $isEditor){
 			var f = document.linkForm;
 			clearForm();
 			f.url.value = resourceJSON[linkIndex].url;
+			
+			//NEON
+			if (resourceJSON[linkIndex].resourceType) {
+				f.resourceType.value = resourceJSON[linkIndex].resourceType;
+			}
+			//end NEON
+			
 			for(var i = 0; i < langArr.length; i++) {
 				try {
 					var titleValue = resourceJSON[linkIndex].title[langArr[i]];
@@ -290,7 +312,7 @@ if($collid && $isEditor){
 		function getFormObj(f){
 			var jsonObj;
 			if(f.url.value != ""){
-				jsonObj = {"title":{},"url":f.url.value};
+				jsonObj = {"title":{},"url":f.url.value,"resourceType":f.resourceType.value};
 				for(var i = 0; i < langArr.length; i++) {
 					if(f["title-"+langArr[i]] && f["title-"+langArr[i]].value){
 						jsonObj.title[langArr[i]] = f["title-"+langArr[i]].value;
