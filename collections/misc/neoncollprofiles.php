@@ -449,7 +449,10 @@ if ($SYMB_UID) {
 						}
 					}
 					?>
-					<button class="bg-blue-500 text-white font-normal px-4 rounded" style="height: 24px;">Browse Collection</button>
+					<a href="<?php echo $CLIENT_ROOT . '/collections/list.php?db=' . $collid; ?>">
+						<button class="bg-blue-500 text-white font-normal px-4 rounded" style="height: 24px;">Browse Collection</button>
+					</a>
+					
 				</div>
 			</div>
 			<div class="grid grid-cols-1 gap-4 mb-6">
