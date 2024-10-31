@@ -1174,7 +1174,6 @@ class OccurrenceHarvester{
 					//Add associations between subsamples
 					if($allSubOccids) {
 						$sharedAssocArr = $this->setSharedOriginAssoc($allSubOccids);
-						echo print_r($sharedAssocArr,true);
 						foreach ($sharedAssocArr as $occid => $assocArr) {
 							// Call the setAssociations function with the current occid and its associated array
 							$this -> setAssociations($occid, $assocArr);
