@@ -164,6 +164,18 @@ class OccurrenceHarvester{
 				$uuidManager->populateGuids();
 				//Update stats for each collection affected
 				if($collArr){
+					//if(in_array(7, $collArr)) {$collArr[] = 108;}
+					//if(in_array(8, $collArr)) {$collArr[] = 109;}
+					//if(in_array(9, $collArr)) { $collArr[] = 107;}
+					//if(in_array(22, $collArr)) {$collArr[] = 100;}
+					//if(in_array(45, $collArr)) {$collArr[] = 104;}
+					//if(in_array(47, $collArr)) {$collArr[] = 110;}
+					//if(in_array(49, $collArr)) {$collArr[] = 111;}
+					//if(in_array(50, $collArr)) {$collArr[] = 105;}
+					//if(in_array(52, $collArr)) {$collArr[] = 101;}
+					//if(in_array(53, $collArr)) {$collArr[] = 102;}
+					//if(in_array(57, $collArr)) {$collArr[] = 103;}
+					if(in_array(73, $collArr)) {$collArr[] = 106;}
 					echo '<li>Update stats for each collection...</li>';
 					$collManager = new OccurrenceCollectionProfile();
 					foreach($collArr as $collID){
@@ -476,6 +488,7 @@ class OccurrenceHarvester{
 				$fieldArr = $eArr['smsFieldEntries'];
 				$fateLocation = ''; $fateDate = '';
 				$readAssocTaxon = false;
+				$identRemarks = array();
 				$identArr = array(); $assocMedia = array(); $assocTaxa = array();
 				$tableArr = array();
 				foreach($fieldArr as $fArr){
@@ -546,7 +559,21 @@ class OccurrenceHarvester{
 							}
 							elseif($fArr['smsKey'] == 'identified_by' && $fArr['smsValue']) $identArr['identifiedBy'] = $this->translatePersonnel($fArr['smsValue']);
 							elseif($fArr['smsKey'] == 'identified_date' && $fArr['smsValue']) $identArr['dateIdentified'] = $fArr['smsValue'];
-							elseif($fArr['smsKey'] == 'identification_remarks' && $fArr['smsValue']) $identArr['identificationRemarks'] = $fArr['smsValue'];
+							elseif(in_array($tableName,array('ptx_taxonomy_in'))){
+								if($fArr['smsKey'] == 'sample_type' && $fArr['smsValue']){
+									$identRemarks[] = $fArr['smsValue'];
+								}
+								if($fArr['smsKey'] == 'remarks' && $fArr['smsValue']){
+									$identRemarks[] = $fArr['smsValue'];
+								}
+								if($fArr['smsKey'] == 'identification_remarks' && $fArr['smsValue']){
+									$identRemarks[] = $fArr['smsValue'];
+								}
+								$identArr['identificationRemarks'] = implode('; ',$identRemarks);
+							}
+							elseif(!in_array($tableName,array('ptx_taxonomy_in')) && $fArr['smsKey'] == 'identification_remarks' && $fArr['smsValue']) {
+									$identArr['identificationRemarks'] = $fArr['smsValue'];
+								}
 							elseif($fArr['smsKey'] == 'identification_references' && $fArr['smsValue']) $identArr['identificationReferences'] = $fArr['smsValue'];
 							elseif($fArr['smsKey'] == 'identification_qualifier' && $fArr['smsValue']) $identArr['identificationQualifier'] = $fArr['smsValue'];
 						}
@@ -616,7 +643,7 @@ class OccurrenceHarvester{
 				if(isset($sampleArr['life_stage'])) $dwcArr['lifeStage'] = $sampleArr['life_stage'];
 				if(isset($sampleArr['associated_taxa'])) $dwcArr['associatedTaxa'] = $this->translateAssociatedTaxa($sampleArr['associated_taxa']);
 				$occurRemarks = array();
-				if(!in_array($dwcArr['collid'],array(46))){
+				if(!in_array($dwcArr['collid'],array(46,73))){
 					if(isset($sampleArr['remarks'])) $occurRemarks[] = $sampleArr['remarks'];
 					if(isset($sampleArr['sample_type'])){
 						$sampleType = $sampleArr['sample_type'];
@@ -643,7 +670,9 @@ class OccurrenceHarvester{
 				}
 				$prepArr = array();
 					if(!in_array($dwcArr['collid'], array(19,28,42,46,17,64))){
-						if(!empty($sampleArr['preservative_type'])) $prepArr[] = 'preservative type: '.$sampleArr['preservative_type'];
+						if(!in_array($dwcArr['collid'],array(31,73))){
+							if(!empty($sampleArr['preservative_type'])) $prepArr[] = 'preservative type: '.$sampleArr['preservative_type'];
+						}
 						if(!empty($sampleArr['preservative_volume'])) $prepArr[] = 'preservative volume: '.$sampleArr['preservative_volume'];
 						if(!empty($sampleArr['preservative_concentration'])) $prepArr[] = 'preservative concentration: '.$sampleArr['preservative_concentration'];
 						if(!empty($sampleArr['sample_mass']) && strpos($sampleArr['symbiotaTarget'],'sample mass') === false) $prepArr[] = 'sample mass: '.$sampleArr['sample_mass'];
@@ -717,12 +746,12 @@ class OccurrenceHarvester{
 					if(isset($sampleArr['identifications']) && !in_array($dwcArr['collid'], array(46))){
 						$identArr = $sampleArr['identifications'];
 					}
-					if(!$identArr && $sampleArr['taxonID'] && in_array($dwcArr['collid'], array(46))){
+					if(!$identArr && $sampleArr['taxonID'] && !in_array($dwcArr['collid'], array(46))){
 						$hash = hash('md5', str_replace(' ','',$sampleArr['taxonID'].'manifests.d.'));
 						$identArr[$hash] = array('sciname' => $sampleArr['taxonID'], 'identifiedBy' => 'manifest', 'dateIdentified' => 's.d.', 'taxonRemarks' => 'Identification source: inferred from shipment manifest');
 					}
 					if(!$identArr){
-						//Identifications not supplied via API nor manifest, thus try to grab from sampleID
+						//Identifications not supplied via API nor manifest, thus try to grab from sampleID with collection specific format
 						$taxonCode = '';
 						$taxonRemarks = '';
 						if(in_array($dwcArr['collid'], array(46))){
@@ -731,11 +760,12 @@ class OccurrenceHarvester{
 								$taxonRemarks = 'Identification source: parsed from NEON sampleID';
 							}
 						}
-						if($dwcArr['collid'] == 30){
-							$identArr[] = array('sciname' => $dwcArr['identifications'][0]['sciname'],
-											  'identifiedBy' => 'NEON Lab',
-											  'dateIdentified' => 's.d.');
-						}
+						// Should not ever need this for collid 30 anymore, but leaving in case it's useful
+						// if($dwcArr['collid'] == 30){ 
+						// 	$identArr[] = array('sciname' => $dwcArr['identifications'][0]['sciname'],
+						// 					  'identifiedBy' => 'NEON Lab',
+						// 					  'dateIdentified' => 's.d.');
+						// }						
 						elseif($dwcArr['collid'] == 56){
 							if(preg_match('/\.\d{4}\.\d{1,2}\.([A-Z]{2,15}\d{0,2})\./', $sampleArr['sampleID'], $m)){
 								$taxonCode = $m[1];
@@ -749,10 +779,10 @@ class OccurrenceHarvester{
 						// 	}
 						// }
 					}
-						if($taxonCode){
+					if($taxonCode){
 							$hash = hash('md5', str_replace(' ','',$taxonCode.'sampleIDs.d.'));
 							$identArr[$hash] = array('sciname' => $taxonCode, 'identifiedBy' => 'sampleID', 'dateIdentified' => 's.d.', 'taxonRemarks' => $taxonRemarks);
-						}
+					}
 					if($identArr){
 						$isCurrentKey = 0;
 						$bestDate = 0;
@@ -1037,9 +1067,18 @@ class OccurrenceHarvester{
 
 	private function subSampleIdentifications(&$dwcArr, $parentOccid){
 		$collArr = array();
-		//$collArr[49] = array('targetCollid' => 98, 'lotId' => 'Epilithon');
-		//$collArr[7] = array('targetCollid' => 98, 'lotId' => 'dynamic', 'defaultId' => 'Epilithon');
-		//$collArr[73] = array('targetCollid' => 98, 'lotId' => 'Epilithon');
+		//$collArr[7] = array('targetCollid' => 108, 'lotId' => 'dynamic','defaultId' => 'Plantae');
+		//$collArr[8] = array('targetCollid' => 109, 'lotId' => 'dynamic','defaultId' => 'Plantae');
+		//$collArr[9] = array('targetCollid' => 107, 'lotId' => 'dynamic','defaultId' => 'Plantae');
+		//$collArr[22] = array('targetCollid' => 100, 'lotId' => 'dynamic','defaultId' => 'Chironomidae');
+		//$collArr[45] = array('targetCollid' => 104, 'lotId' => 'dynamic','defaultId' => 'Zooplankton');
+		//$collArr[47] = array('targetCollid' => 110, 'lotId' => 'dynamic','defaultId' => 'ECO');
+		//$collArr[49] = array('targetCollid' => 111, 'lotId' => 'dynamic','defaultId' => 'ECO');
+		//$collArr[50] = array('targetCollid' => 105, 'lotId' => 'dynamic','defaultId' => 'Plantae');
+		//$collArr[52] = array('targetCollid' => 101, 'lotId' => 'dynamic','defaultId' => 'Oligochaeta');
+		//$collArr[53] = array('targetCollid' => 102, 'lotId' => 'dynamic','defaultId' => 'Aquatic Macroinvertebrate');
+		//$collArr[57] = array('targetCollid' => 103, 'lotId' => 'dynamic','defaultId' => 'Aquatic Macroinvertebrate');
+		$collArr[73] = array('targetCollid' => 106, 'lotId' => 'dynamic','defaultId' => 'Plantae');
 		//Add option to parse ID from sampleID
 		//Process identifications
 		$sourceCollid = $dwcArr['collid'];
@@ -1076,6 +1115,7 @@ class OccurrenceHarvester{
 					//Subsample records
 					echo '<li style="margin-left:30px">Creating/updating ' . count($targetIdentifications) . ' subSample records ... </li>';
 					$currentSubsampleArr = $this->getSubSamples($parentOccid);
+					$allSubOccids = array_keys($currentSubsampleArr);
 					$associationArr = array();
 					$tidArr = array();
 					foreach($targetIdentifications as $identificationKey){
@@ -1103,7 +1143,6 @@ class OccurrenceHarvester{
 						//Add parent identifiers as additional identifiers (aka otherCatalogNumbers)
 						//Catalog numbers can't be transferred at this point because they are assigned well after the parent samples are created,
 						//thus we'll add this to the Stored Procedure that runs at the end of harvesting (aka occurrence_harvesting_sql)
-						unset($dwcArrClone['identifiers']);
 						if(!empty($dwcArr['identifiers']['NEON sampleCode (barcode)'])){
 							$dwcArrClone['identifiers']['Originating NEON barcode'] = $dwcArr['identifiers']['NEON sampleCode (barcode)'];
 						}
@@ -1113,14 +1152,36 @@ class OccurrenceHarvester{
 						if(!empty($dwcArr['identifiers']['NEON sampleID Hash'])){
 							$dwcArrClone['identifiers']['Originating NEON sampleID Hash'] = $dwcArr['identifiers']['NEON sampleID Hash'];
 						}
+						// Give verbatim Attributes based on destination collection datasetName
+						$sql = 'SELECT datasetName FROM omcollections WHERE collID = ' . $targetCollid;
+						$rs = $this->conn->query($sql); 
+						if ($rs) { 
+    						if ($r = $rs->fetch_assoc()) { 
+        						$dwcArrClone['verbatimAttributes'] = $r['datasetName']; 
+    						} else {
+        						$dwcArrClone['verbatimAttributes'] = $dwcArr['verbatimAttributes']; // Default to parent value
+    						}
+						} 
 						//Load subsample into database
 						$occid = $this->loadOccurrenceRecord($dwcArrClone, $existingOccid);
 						if(!$existingOccid && $occid){
 							//Add association to parent record
 							$associationArr[] = array('relationship' => 'originatingSampleOf', 'occidAssociate' => $occid);
+							$allSubOccids[] = $occid;
 						}
 					}
-					//Delete all subsamples that are not identified as an subsample import
+
+					//Add associations between subsamples
+					if($allSubOccids) {
+						$sharedAssocArr = $this->setSharedOriginAssoc($allSubOccids);
+						echo print_r($sharedAssocArr,true);
+						foreach ($sharedAssocArr as $occid => $assocArr) {
+							// Call the setAssociations function with the current occid and its associated array
+							$this -> setAssociations($occid, $assocArr);
+						}
+					}
+					
+					//Delete all subsamples that are not identified as a subsample import
 					$this->deleteSubSamples($currentSubsampleArr);
 					//Reset base sample (parent) with new identification unit containing lot ID
 					$baseID = array('sciname' => 'undefined');
@@ -1138,6 +1199,12 @@ class OccurrenceHarvester{
 							$baseID['sciname'] = $lotId;
 						}
 					}
+					
+					// make the baseID the default lotID if one exists and the current sciname is undefined
+					if ($baseID['sciname'] === 'undefined' && !empty($collArr[$sourceCollid]['defaultId'])) {
+						$baseID['sciname'] = $collArr[$sourceCollid]['defaultId'];
+					}
+
 					$baseID['isCurrent'] = 1;
 					if($baseDataIdentified) $baseID['dateIdentified'] = $baseDataIdentified;
 					$baseID['taxonRemarks'] = 'Identification source: harvested from NEON API';
@@ -1145,6 +1212,7 @@ class OccurrenceHarvester{
 					//Append associations
 					if(isset($dwcArr['associations'])) $associationArr = array_merge($dwcArr['associations'], $associationArr);
 					$dwcArr['associations'] = $associationArr;
+
 				}
 			}
 		}
@@ -1166,9 +1234,31 @@ class OccurrenceHarvester{
 		return $retArr;
 	}
 
+	private function setSharedOriginAssoc($allSubOccids) {
+		$combinations = [];
+			for ($i = 0; $i < count($allSubOccids); $i++) {
+			for ($j = $i + 1; $j < count($allSubOccids); $j++) {
+				// Only create one direction combination
+				$occid1 = $allSubOccids[$i];
+				$occid2 = $allSubOccids[$j];
+	
+				$combinations[$occid1][] = [
+					'occidAssociate' => $occid2,
+					'relationship' => 'sharesOriginatingSample'
+				];
+			}
+		}
+	
+		return $combinations;
+	}
+
 	private function deleteSubSamples($subSampleArr){
 		if($subSampleArr){
 			$sql = 'DELETE FROM omoccurrences WHERE occid IN(' . implode(',', array_keys($subSampleArr)) . ')';
+			$this->conn->query($sql);
+			$sql = 'DELETE FROM omoccurassociations WHERE occidAssociate IN(' . implode(',', array_keys($subSampleArr)) . ')';
+			$this->conn->query($sql);
+			$sql = 'DELETE FROM omoccurassociations WHERE occid IN(' . implode(',', array_keys($subSampleArr)) . ')';
 			$this->conn->query($sql);
 		}
 	}
@@ -1690,18 +1780,33 @@ class OccurrenceHarvester{
 			$tid = null;
 			if(!empty($assocUnit['tidInterpreted'])) $tid = $assocUnit['tidInterpreted'];
 			$relationship = $assocUnit['relationship'];
-			$sql = 'INSERT INTO omoccurassociations(occid, occidAssociate, associationType, verbatimSciname, tid, relationship, createdUid) VALUES(?, ?, "internalOccurrence", ?, ?, ?, 50)';
-			if($stmt = $this->conn->prepare($sql)) {
-				$stmt->bind_param('iisis', $occid, $occidAssociate, $scientificName, $tid, $relationship);
-				$stmt->execute();
-				if($stmt->error){
-					echo '<li style="margin-left:30px">ERROR inserting occurrence association: '.$stmt->error.'</li>';
-					$status = false;
+			// Check if the combination already exists
+			$checkSql = 'SELECT COUNT(*) FROM omoccurassociations WHERE occid = ? AND occidAssociate = ? AND relationship = ?';
+			if ($checkStmt = $this->conn->prepare($checkSql)) {
+				$checkStmt->bind_param('iis', $occid, $occidAssociate, $relationship);
+				$checkStmt->execute();
+				$checkStmt->bind_result($count);
+				$checkStmt->fetch();
+				$checkStmt->close();
+	
+				// If count is 0, then insert
+				if ($count == 0) {
+					$sql = 'INSERT INTO omoccurassociations(occid, occidAssociate, associationType, verbatimSciname, tid, relationship, createdUid) VALUES(?, ?, "internalOccurrence", ?, ?, ?, 50)';
+					if ($stmt = $this->conn->prepare($sql)) {
+						$stmt->bind_param('iisis', $occid, $occidAssociate, $scientificName, $tid, $relationship);
+						$stmt->execute();
+						if ($stmt->error) {
+							echo '<li style="margin-left:30px">ERROR inserting occurrence association: ' . $stmt->error . '</li>';
+							$status = false;
+						}
+						$stmt->close();
+					} else {
+						echo '<li style="margin-left:30px">ERROR preparing statement for inserting occurrence association: ' . $this->conn->error . '</li>';
+						$status = false;
+					}
 				}
-				$stmt->close();
-			}
-			else{
-				echo '<li style="margin-left:30px">ERROR preparing statement for inserting occurrence association: '.$this->conn->error.'</li>';
+			} else {
+				echo '<li style="margin-left:30px">ERROR preparing statement for checking existence: ' . $this->conn->error . '</li>';
 				$status = false;
 			}
 		}
