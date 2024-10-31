@@ -73,7 +73,7 @@ class OccurrenceHarvester{
 			}
 			elseif($postArr['errorStr']){
 				$sqlWhere .= 'AND (s.errorMessage = "'.$this->cleanInStr($postArr['errorStr']).'") ';
-			}	
+			}
 			if($postArr['sessionid']){
 				$sqlWhere .= 'AND (s.sessionID = "'.$this->cleanInStr($postArr['sessionid']).'") ';
 			}
@@ -1067,12 +1067,12 @@ class OccurrenceHarvester{
 						}
 						$identificationsGrouped[$dateIdentified][] = $idKey;
 					}
-	
+
 					//Select group of identifications that were identified the latest
 					krsort($identificationsGrouped);
 					$baseDataIdentified = key($identificationsGrouped);
 					$targetIdentifications = current($identificationsGrouped);
-	
+
 					//Subsample records
 					echo '<li style="margin-left:30px">Creating/updating ' . count($targetIdentifications) . ' subSample records ... </li>';
 					$currentSubsampleArr = $this->getSubSamples($parentOccid);
@@ -1316,7 +1316,7 @@ class OccurrenceHarvester{
 		}
 		$rs->free();
 		//Include identification edits
-		$sql = 'SELECT sciname, identifiedBy, dateIdentified FROM omoccurdeterminations WHERE (enteredByUid IS NULL OR enteredByUid != 50) AND occid = '.$occid;
+		$sql = 'SELECT sciname, identifiedBy, dateIdentified FROM omoccurdeterminations WHERE (createdUid IS NULL OR createdUid != 50) AND occid = '.$occid;
 		$rs = $this->conn->query($sql);
 		if($r = $rs->fetch_object()){
 			$retArr[] = 'sciname';
@@ -1411,7 +1411,7 @@ class OccurrenceHarvester{
 			//Check to see if a current determination was explicitly set by a collection manager, which thus needs to be maintained as the central current determination
 			$currentDetArr = $this->getCurrentDeterminationArr($occid);
 			foreach($currentDetArr as $detObj){
-				if($detObj['isCurrent'] && $detObj['enteredByUid'] && $detObj['enteredByUid'] != 50){
+				if($detObj['isCurrent'] && $detObj['createdUid'] && $detObj['createdUid'] != 50){
 					foreach($identArr as $k => $v){
 						if(!empty($v['isCurrent'])) $identArr[$k]['isCurrent'] = 0;
 					}
@@ -1425,7 +1425,7 @@ class OccurrenceHarvester{
 				$incomingIsCurrentExists = false;
 				foreach($currentDetArr as $detID => $cdArr){
 					$deleteDet = true;
-					if($cdArr['enteredByUid'] && $cdArr['enteredByUid'] != 50){
+					if($cdArr['createdUid'] && $cdArr['createdUid'] != 50){
 						$deleteDet = false;
 					}
 					if($deleteDet){
@@ -1498,13 +1498,13 @@ class OccurrenceHarvester{
 		if(isset($idArr['securityStatusReason']) && $idArr['securityStatusReason']) $securityStatusReason = $idArr['securityStatusReason'];
 		$isCurrent = 0;
 		if(isset($idArr['isCurrent']) && $idArr['isCurrent']) $isCurrent = 1;
-		$enteredByUid = 50;
+		$createdUid = 50;
 		$sql = 'INSERT IGNORE INTO omoccurdeterminations(occid, sciname, tidInterpreted, identifiedBy, dateIdentified, scientificNameAuthorship, family, taxonRemarks,
-			identificationRemarks, identificationReferences, identificationQualifier, securityStatus, securityStatusReason, isCurrent, enteredByUid)
+			identificationRemarks, identificationReferences, identificationQualifier, securityStatus, securityStatusReason, isCurrent, createdUid)
 			VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
 		if($stmt = $this->conn->prepare($sql)) {
 			$stmt->bind_param('isissssssssisii', $occid, $scientificName, $tidInterpreted, $identifiedBy, $dateIdentified, $scientificNameAuthorship, $family, $taxonRemarks,
-				$identificationRemarks, $identificationReferences, $identificationQualifier, $securityStatus, $securityStatusReason, $isCurrent, $enteredByUid);
+				$identificationRemarks, $identificationReferences, $identificationQualifier, $securityStatus, $securityStatusReason, $isCurrent, $createdUid);
 			$stmt->execute();
 			if($stmt->error){
 				echo '<li style="margin-left:30px">ERROR adding identification to omoccurdetermination: '.$stmt->error.'</li>';
@@ -1713,37 +1713,37 @@ class OccurrenceHarvester{
 			// get dataset id
 			$datasetID = null;
 			$selectDatasetID = 'SELECT datasetid FROM omoccurdatasets WHERE name = "'.$datasetName.'"';
-			
+
 			$result = $this->conn->query($selectDatasetID);
 			if ($result && $row = $result->fetch_assoc()) {
 				$datasetID = $row['datasetid'];
 			}
-			
+
 			if (!$datasetID) {
 				$this->errorStr = 'ERROR: Dataset "'.$datasetName.'" not found.';
 				return;
 			}
-	
+
 			if ($datasetID <= 20){
 				// Delete existing entries for the given occid, if necesary
-				$deleteSql = 'DELETE FROM omoccurdatasetlink 
-						  WHERE occid = '.$occid.' 
+				$deleteSql = 'DELETE FROM omoccurdatasetlink
+						  WHERE occid = '.$occid.'
 						  AND datasetid != '.$datasetID.'
 						  AND datasetid <=20';
-			
+
 				if (!$this->conn->query($deleteSql)) {
 					$this->errorStr = 'ERROR deleting unmatched entries for occid '.$occid.': '.$this->conn->errno.' - '.$this->conn->error;
-					return; 
+					return;
 				}
 			}
 
 			if ($datasetID >= 33 AND $datasetID <=133){
 				// Delete existing entries for the given occid, if necesary
-				$deleteSql = 'DELETE FROM omoccurdatasetlink 
-						  WHERE occid = '.$occid.' 
+				$deleteSql = 'DELETE FROM omoccurdatasetlink
+						  WHERE occid = '.$occid.'
 						  AND datasetid != '.$datasetID.'
 						  AND datasetid >=33 AND datasetid <=133';
-			
+
 				if (!$this->conn->query($deleteSql)) {
 					$this->errorStr = 'ERROR deleting unmatched entries for occid '.$occid.': '.$this->conn->errno.' - '.$this->conn->error;
 					return; // Stop execution if there's an error with the DELETE
@@ -1751,11 +1751,11 @@ class OccurrenceHarvester{
 			}
 
 			// Insert the correct datasetID and occid if not already present
-			$insertSql = 'INSERT IGNORE INTO omoccurdatasetlink (datasetid, occid) 
+			$insertSql = 'INSERT IGNORE INTO omoccurdatasetlink (datasetid, occid)
 						  VALUES ('.$datasetID.', '.$occid.')';
-			
+
 			if (!$this->conn->query($insertSql)) {
-				if ($this->conn->errno != 1062) { 
+				if ($this->conn->errno != 1062) {
 					$this->errorStr = 'ERROR assigning occurrence to '.$datasetName.' dataset: '.$this->conn->errno.' - '.$this->conn->error;
 				}
 			}
@@ -1794,7 +1794,7 @@ class OccurrenceHarvester{
 		$retArr = array();
 		if($occid){
 			$sql = 'SELECT detid, sciname, scientificNameAuthorship, taxonRemarks, identifiedBy, dateIdentified,
-				identificationRemarks, identificationReferences, identificationQualifier, isCurrent, enteredByUid
+				identificationRemarks, identificationReferences, identificationQualifier, isCurrent, createdUid
 				FROM omoccurdeterminations WHERE occid = '.$occid;
 			$rs = $this->conn->query($sql);
 			while($r = $rs->fetch_assoc()){
