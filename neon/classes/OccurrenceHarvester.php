@@ -1779,10 +1779,37 @@ class OccurrenceHarvester{
 			$tid = null;
 			if(!empty($assocUnit['tidInterpreted'])) $tid = $assocUnit['tidInterpreted'];
 			$relationship = $assocUnit['relationship'];
-			// Check if the combination already exists
-			$checkSql = 'SELECT COUNT(*) FROM omoccurassociations WHERE occid = ? AND occidAssociate = ? AND relationship = ?';
+	
+			$checkSql = 'SELECT COUNT(*) FROM omoccurassociations WHERE occid = ? AND relationship = ?';
+			$types = 'is';
+			$params = [$occid, $relationship];
+	
+			// Address potential null values
+			if ($occidAssociate !== null) {
+				$checkSql .= ' AND occidAssociate = ?';
+				$types .= 'i';
+				$params[] = $occidAssociate;
+			} else {
+				$checkSql .= ' AND occidAssociate IS NULL';
+			}
+			if ($scientificName !== null) {
+				$checkSql .= ' AND verbatimSciname = ?';
+				$types .= 's';
+				$params[] = $scientificName;
+			} else {
+				$checkSql .= ' AND verbatimSciname IS NULL';
+			}
+			if ($tid !== null) {
+				$checkSql .= ' AND tid = ?';
+				$types .= 'i';
+				$params[] = $tid;
+			} else {
+				$checkSql .= ' AND tid IS NULL';
+			}
+	
+			// Prepare and execute the check statement
 			if ($checkStmt = $this->conn->prepare($checkSql)) {
-				$checkStmt->bind_param('iis', $occid, $occidAssociate, $relationship);
+				$checkStmt->bind_param($types, ...$params);
 				$checkStmt->execute();
 				$checkStmt->bind_result($count);
 				$checkStmt->fetch();
@@ -1790,15 +1817,18 @@ class OccurrenceHarvester{
 	
 				// If count is 0, then insert
 				if ($count == 0) {
-					$sql = 'INSERT INTO omoccurassociations(occid, occidAssociate, associationType, verbatimSciname, tid, relationship, createdUid) VALUES(?, ?, "internalOccurrence", ?, ?, ?, 50)';
-					if ($stmt = $this->conn->prepare($sql)) {
-						$stmt->bind_param('iisis', $occid, $occidAssociate, $scientificName, $tid, $relationship);
-						$stmt->execute();
-						if ($stmt->error) {
-							echo '<li style="margin-left:30px">ERROR inserting occurrence association: ' . $stmt->error . '</li>';
+					$insertSql = 'INSERT INTO omoccurassociations (occid, occidAssociate, associationType, verbatimSciname, tid, relationship, createdUid) 
+								  VALUES (?, ?, "internalOccurrence", ?, ?, ?, 50)';
+					if ($insertStmt = $this->conn->prepare($insertSql)) {
+						$insertTypes = 'iisis';
+						$insertParams = [$occid, $occidAssociate, $scientificName, $tid, $relationship];
+						$insertStmt->bind_param($insertTypes, ...$insertParams);
+						$insertStmt->execute();
+						if ($insertStmt->error) {
+							echo '<li style="margin-left:30px">ERROR inserting occurrence association: ' . $insertStmt->error . '</li>';
 							$status = false;
 						}
-						$stmt->close();
+						$insertStmt->close();
 					} else {
 						echo '<li style="margin-left:30px">ERROR preparing statement for inserting occurrence association: ' . $this->conn->error . '</li>';
 						$status = false;
