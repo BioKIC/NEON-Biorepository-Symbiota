@@ -86,6 +86,13 @@ if ($SYMB_UID) {
 				button.addEventListener("mouseover", showTooltip);
 				button.addEventListener("mouseout", hideTooltip);
 			});
+			
+			let descriptionContainer = document.getElementById('fulldescription-container');
+			let imgElements = descriptionContainer.querySelectorAll('img');
+			let collimagesContainer = document.getElementById('collimages');
+			imgElements.forEach(img => {
+				collimagesContainer.appendChild(img);
+			});
 		});
 	</script>
 	<style type="text/css">
@@ -97,6 +104,20 @@ if ($SYMB_UID) {
 		.label {
 			font-weight: bold;
 		}
+		
+		#collimages {
+			max-height: 800px;
+			display: flex;
+			flex-direction: column;
+			justify-content: space-between;
+		}
+		#collimages img {
+			max-height: 50%; /* Ensures each image does not exceed half of the div height */
+			height: auto;
+			width: auto;
+			object-fit: contain; /* Keeps the aspect ratio intact */
+		}
+		
 	</style>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,600&display=swap" rel="stylesheet">
@@ -482,7 +503,7 @@ if ($SYMB_UID) {
 			</div>
 			
 			<div class="grid grid-cols-1 gap-4 mb-6">
-				<div>
+				<div id="fulldescription-container">
 					<h2 class="text-xl font-semibold mb-2">About Collection</h2>
 					<?php
 					echo $collData["fulldescription"];
@@ -491,8 +512,7 @@ if ($SYMB_UID) {
 			</div>
 	
 			<div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
-				<div class="lg:col-span-1">
-					<img src="https://drive.google.com/thumbnail?id=1Qtr7RHy_E-cltxXJUeR8x2iEwfJktdqU&amp;sz=w1000" alt="Pinned Mosquito" class="mb-4">
+				<div id="collimages" class="lg:col-span-1">
 				</div>
 
 				<?php
