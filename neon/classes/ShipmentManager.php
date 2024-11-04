@@ -67,7 +67,7 @@ class ShipmentManager{
 			}
 			$rs->free();
 			//Get sample count not yet checked-in
-			$sql = 'SELECT COUNT(samplepk) AS cnt FROM NeonSample WHERE (shipmentPK = '.$this->shipmentPK.') AND (checkinUid IS NULL)';
+			$sql = 'SELECT COUNT(samplepk) AS cnt FROM NeonSample WHERE (shipmentPK = '.$this->shipmentPK.') AND sampleReceived IS NULL';
 			$rs = $this->conn->query($sql);
 			while($r = $rs->fetch_object()){
 				$retArr[0] = $r->cnt;
@@ -473,14 +473,17 @@ class ShipmentManager{
 
 			if(!$status){
 				//Check to see if sample has already been checked in
-				$sql = 'SELECT samplePK, alternativeSampleID, checkinTimestamp FROM NeonSample WHERE (sampleID = "'.$this->cleanInStr($sampleID).'" OR sampleCode = "'.$this->cleanInStr($sampleID).'") ';
+				$sql = 'SELECT samplePK, alternativeSampleID, sampleReceived FROM NeonSample WHERE (sampleID = "'.$this->cleanInStr($sampleID).'" OR sampleCode = "'.$this->cleanInStr($sampleID).'") ';
 				if($this->shipmentPK) $sql .= 'AND (shipmentpk = '.$this->shipmentPK.') ';
 				$rs = $this->conn->query($sql);
 				while($r = $rs->fetch_object()){
 					$samplePK = $r->samplePK;
 					if($alternativeSampleID && $r->alternativeSampleID && $alternativeSampleID != $r->alternativeSampleID) $alternativeSampleID .= '; '.$r->alternativeSampleID;
-					if($r->checkinTimestamp) $status = 2;
-					else $status = 1;
+					if($r->sampleReceived == 1) {
+						$status = 2;
+					} else {
+						$status = 1;
+					}
 				}
 				$rs->free();
 				if($status == 1 && $samplePK){
@@ -488,7 +491,7 @@ class ShipmentManager{
 					$sampleReceived = ($sampleReceived?1:0);
 					if($acceptedForAnalysis === '') $acceptedForAnalysis = 'NULL';
 					else $acceptedForAnalysis = ($acceptedForAnalysis?1:0);
-					$sqlUpdate = 'UPDATE NeonSample SET checkinUid = '.$GLOBALS['SYMB_UID'].', checkinTimestamp = now(), sampleReceived = '.$sampleReceived.', acceptedForAnalysis = '.$acceptedForAnalysis.' ';
+					$sqlUpdate = 'UPDATE NeonSample SET checkinUid = ' . $GLOBALS['SYMB_UID'] . ', sampleReceived = ' . $sampleReceived . ',  acceptedForAnalysis = ' . $acceptedForAnalysis . ' , checkinTimestamp = IF(checkinTimestamp IS NULL, NOW(), checkinTimestamp) ';
 					if($condition) $sqlUpdate .= ', sampleCondition = CONCAT_WS("; ",sampleCondition,"'.$this->cleanInStr($condition).'") ';
 					if($notes) $sqlUpdate .= ', checkinRemarks = "'.$this->cleanInStr($notes).'" ';
 					if($alternativeSampleID) $sqlUpdate .= ', alternativeSampleID = "'.$this->cleanInStr($alternativeSampleID).'" ';
@@ -515,13 +518,13 @@ class ShipmentManager{
 				$acceptedForAnalysis = 'NULL';
 				if(isset($postArr['acceptedForAnalysis'])) $acceptedForAnalysis = ($postArr['acceptedForAnalysis']?1:0);
 				$sql = 'UPDATE NeonSample SET '.
-					'checkinUid = '.$GLOBALS['SYMB_UID'].', checkinTimestamp = now(), sampleReceived = '.$sampleReceived.', acceptedForAnalysis = '.$acceptedForAnalysis.' '.
+					'checkinUid = '.$GLOBALS['SYMB_UID'].', checkinTimestamp = IF(checkinTimestamp IS NULL, NOW(), checkinTimestamp),  sampleReceived = '.$sampleReceived.', acceptedForAnalysis = '.$acceptedForAnalysis.' '.
 					($postArr['sampleCondition'] ? ', sampleCondition = "'.$this->cleanInStr($postArr['sampleCondition']).'" ' : '').
 					($postArr['checkinRemarks'] ? ', checkinRemarks = "'.$this->cleanInStr($postArr['checkinRemarks']).'" ' : '');
 				if(isset($_SESSION['sampleCheckinSessionData'])) {
 					$sql .= ', sessionID = ' . $_SESSION['sampleCheckinSessionData']['sessionID'] . ' ';
 				}
-				$sql .= 'WHERE (shipmentpk = '.$this->shipmentPK.') AND (checkinTimestamp IS NULL) AND (samplePK IN('.implode(',', $pkArr).'))';
+				$sql .= 'WHERE (shipmentpk = '.$this->shipmentPK.') AND (samplePK IN('.implode(',', $pkArr).'))';
 				if(!$this->conn->query($sql)){
 					$this->errorStr = 'ERROR batch checking-in samples: '.$this->conn->error;
 					return false;
