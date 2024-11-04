@@ -1255,10 +1255,6 @@ class OccurrenceHarvester{
 		if($subSampleArr){
 			$sql = 'DELETE FROM omoccurrences WHERE occid IN(' . implode(',', array_keys($subSampleArr)) . ')';
 			$this->conn->query($sql);
-			$sql = 'DELETE FROM omoccurassociations WHERE occidAssociate IN(' . implode(',', array_keys($subSampleArr)) . ')';
-			$this->conn->query($sql);
-			$sql = 'DELETE FROM omoccurassociations WHERE occid IN(' . implode(',', array_keys($subSampleArr)) . ')';
-			$this->conn->query($sql);
 		}
 	}
 
