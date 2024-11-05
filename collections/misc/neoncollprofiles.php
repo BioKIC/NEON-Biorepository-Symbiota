@@ -65,6 +65,84 @@ if ($SYMB_UID) {
 
 		}
 		
+		function downloadBib() {
+		   const citationText = document.getElementById('citation').innerText;
+
+		   const citationRegex = /(.+?)\s\((\d{4})\)\.\s(?:NEON Biorepository\s)?(.+?)\.\sOccurrence dataset\s(.+?)\saccessed\svia\sthe\s(.+?),\s(.+?)\son\s(\d{4}-\d{2}-\d{2})\./;
+		   const match = citationText.match(citationRegex);
+	   
+		   if (match) {
+			   const author = match[1];
+			   const year = match[2];
+			   const title = match[3];
+			   const doi = match[4];
+			   const portalName = match[5];
+			   const portalUrl = match[6];
+			   const accessDate = match[7];
+	   
+			   const bibtexEntry = `
+@misc{${title.toLowerCase().replace(/\s+/g, '')}${accessDate},
+	doi = {${doi}},
+	author = {${author}},
+	language = {en},
+	title = {${title}},
+	publisher = {National Ecological Observatory Network (NEON)},
+	year = {${year}},
+	note = {Accessed via ${portalName}, \\url{${portalUrl}}, on ${accessDate}},
+	copyright = {Creative Commons Zero v1.0 Universal}
+}
+			   `.trim();
+
+			   const blob = new Blob([bibtexEntry], { type: 'text/plain' });
+			   const link = document.createElement('a');
+			   link.href = URL.createObjectURL(blob);
+			   link.download = `NEON-${title.replace(/[^a-zA-Z0-9]/g, '-')}-${accessDate}.bib`;
+			   document.body.appendChild(link);
+			   link.click();
+			   document.body.removeChild(link);
+		   }
+        }
+		
+		function downloadRis() {
+		   const citationText = document.getElementById('citation').innerText;
+		   const abstractText = document.querySelector('#fulldescription-container p').innerText;
+
+		   const citationRegex = /(.+?)\s\((\d{4})\)\.\s(?:NEON Biorepository\s)?(.+?)\.\sOccurrence dataset\s(.+?)\saccessed\svia\sthe\s(.+?),\s(.+?)\son\s(\d{4}-\d{2}-\d{2})\./;
+		   const match = citationText.match(citationRegex);
+	   
+		   if (match) {
+			   const author = match[1];
+			   const year = match[2];
+			   const title = match[3];
+			   const doi = match[4];
+			   const portalName = match[5];
+			   const portalUrl = match[6];
+			   const accessDate = match[7];
+	   
+				const risEntry = `
+TY  - DATA
+T1  - ${title}
+AU  - ${author}
+DO  - ${doi}
+AB  - ${abstractText}
+PY  - ${year}
+PB  - National Ecological Observatory Network (NEON)
+N1  - Accessed via ${portalName}, ${portalUrl}
+LA  - en
+DA  - ${accessDate}
+ER  -
+				`.trim();
+
+			   const blob = new Blob([risEntry], { type: 'text/plain' });
+			   const link = document.createElement('a');
+			   link.href = URL.createObjectURL(blob);
+			   link.download = `NEON-${title.replace(/[^a-zA-Z0-9]/g, '-')}-${accessDate}.ris`;
+			   document.body.appendChild(link);
+			   link.click();
+			   document.body.removeChild(link);
+		   }
+        }
+		
 		document.addEventListener("DOMContentLoaded", function () {
 			// Show tooltip
 			function showTooltip(event) {
@@ -110,12 +188,12 @@ if ($SYMB_UID) {
 			display: flex;
 			flex-direction: column;
 			justify-content: space-between;
+			align-items: center;
 		}
 		#collimages img {
-			max-height: 50%; /* Ensures each image does not exceed half of the div height */
 			height: auto;
 			width: auto;
-			object-fit: contain; /* Keeps the aspect ratio intact */
+			object-fit: contain;
 		}
 		
 	</style>
@@ -604,14 +682,14 @@ if ($SYMB_UID) {
 										Click to copy the above plain text citation to the clipboard
 									</span>
 								</button>
-								<button id="bibButton" data-tooltip-id="tooltip-bib" class="tooltip-button bg-white-300 text-blue-800 py-2 px-4 rounded-none inline-flex items-center border-2 border-blue-800">
+								<button id="bibButton" data-tooltip-id="tooltip-bib" onclick="downloadBib()" class="tooltip-button bg-white-300 text-blue-800 py-2 px-4 rounded-none inline-flex items-center border-2 border-blue-800">
 									<i class="fas fa-file-download mr-2"></i>
 									<span>DOWNLOAD (BIBTEX)</span>
 									<span id="tooltip-bib" style="display:none; width:20rem; transform: translate(-15px, 65px);" class="tooltip absolute bg-gray-100 text-black border border-black p-2 rounded-none text-base">
 										Click to download the citation as a file in BibTex format
 									</span>
 								</button>
-								<button id="risButton" data-tooltip-id="tooltip-ris" class="tooltip-button bg-white-300 text-blue-800 py-2 px-4 rounded-none inline-flex items-center border-2 border-blue-800">
+								<button id="risButton" data-tooltip-id="tooltip-ris" onclick="downloadRis()"class="tooltip-button bg-white-300 text-blue-800 py-2 px-4 rounded-none inline-flex items-center border-2 border-blue-800">
 									<i class="fas fa-file-download mr-2"></i>
 									<span>DOWNLOAD (RIS)</span>
 									<span id="tooltip-ris" style="display:none; width:25rem; transform: translate(-15px, 65px);" class="tooltip absolute bg-gray-100 text-black border border-black p-2 rounded-none text-base">
