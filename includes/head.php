@@ -68,6 +68,11 @@ elseif (array_key_exists('CollAdmin', $USER_RIGHTS) || array_key_exists('CollEdi
             if (navpath) {
                 navpath.remove();
             }
+            
+            const breadcrumbLink = document.querySelector('nav a[href="https://biokic4.rc.asu.edu/neon/portal/misc/neoncollprofiles.php?collid=#"]');
+            if (breadcrumbLink) {
+             breadcrumbLink.href = breadcrumbLink.href.replace('#', '<?php echo $collid; ?>');
+         }         
 
             // Edit footer
             const footerMessageDiv = document.querySelector('.footer-bottom__message');
