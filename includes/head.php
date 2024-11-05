@@ -32,6 +32,11 @@ elseif (array_key_exists('CollAdmin', $USER_RIGHTS) || array_key_exists('CollEdi
             innerText.parentNode.insertBefore(biorepoPage, innerText);
         }
         
+        const breadcrumbLink = document.querySelector('nav a[href="https://biokic4.rc.asu.edu/neon/portal/misc/neoncollprofiles.php?collid=#"]');
+        if (breadcrumbLink) {
+            breadcrumbLink.href = breadcrumbLink.href.replace('#', '<?php echo $collid; ?>');
+        }  
+        
         //javascript code created by React
         var reactScript = document.createElement('script');
         reactScript.src = '<?php echo $CLIENT_ROOT; ?>/neon-react/static/js/main.7e3f4f7b.js';
@@ -341,11 +346,6 @@ elseif (array_key_exists('CollAdmin', $USER_RIGHTS) || array_key_exists('CollEdi
         };
     
     document.body.appendChild(reactScript);
-   
-    const breadcrumbLink = document.querySelector('nav a[href="https://biokic4.rc.asu.edu/neon/portal/misc/neoncollprofiles.php?collid=#"]');
-    if (breadcrumbLink) {
-        breadcrumbLink.href = breadcrumbLink.href.replace('#', '<?php echo $collid; ?>');
-    }  
    
     });
 </script>
