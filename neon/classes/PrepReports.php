@@ -27,9 +27,36 @@
   public function getMamPrepsCntByPreparator(){
     $dataArr = array();
 
-    $sql = 'SELECT ethanols.prepBy, IFNULL(skinPrepCnt,0) AS skinPrepCnt, IFNULL(fluidPrepCnt, 0) AS fluidPrepCnt, IFNULL(skinPrepCnt,0) + IFNULL(fluidPrepCnt, 0) AS total
-FROM (SELECT TRIM(REGEXP_SUBSTR(dynamicProperties,"(?<=preparedBy:)(.*?)(?=,)")) AS prepBy, COUNT(occid) AS skinPrepCnt FROM omoccurrences WHERE dynamicProperties LIKE "%preparedBy%" AND preparations LIKE "%skin%" AND collid IN (17,19,24,25,26,27,28,64,71) GROUP BY prepBy) AS skins RIGHT JOIN ( SELECT TRIM(REGEXP_SUBSTR(dynamicProperties,"(?<=preparedBy:)(.*?)(?=,)")) AS prepBy, COUNT(occid) AS fluidPrepCnt FROM omoccurrences WHERE dynamicProperties LIKE "%preparedBy%" AND preparations LIKE "%eth%" AND collid IN (17,19,24,25,26,27,28,64,71) GROUP BY prepBy ) AS ethanols ON skins.prepBy = ethanols.prepBy ORDER BY prepBy;';
-
+    $sql = 'SELECT 
+    prepBy AS preparator,
+    SUM(skinPrepCnt) AS skinPrepCnt,
+    SUM(fluidPrepCnt) AS fluidPrepCnt,
+    SUM(skinPrepCnt) + SUM(fluidPrepCnt) AS total
+FROM (
+    SELECT 
+        TRIM(REGEXP_SUBSTR(dynamicProperties, "(?<=preparedBy:)(.*?)(?=,)")) AS prepBy, 
+        COUNT(occid) AS skinPrepCnt,
+        0 AS fluidPrepCnt
+    FROM omoccurrences
+    WHERE dynamicProperties LIKE "%preparedBy%" 
+    AND preparations LIKE "%skin%" 
+    AND collid IN (17, 19, 28)
+    GROUP BY prepBy
+    
+    UNION ALL
+    
+    SELECT 
+        TRIM(REGEXP_SUBSTR(dynamicProperties, "(?<=preparedBy:)(.*?)(?=,)")) AS prepBy, 
+        0 AS skinPrepCnt,
+        COUNT(occid) AS fluidPrepCnt
+    FROM omoccurrences
+    WHERE dynamicProperties LIKE "%preparedBy%" 
+    AND preparations LIKE "%eth%" 
+    AND collid IN (17, 19, 28)
+    GROUP BY prepBy
+) AS combined
+GROUP BY prepBy
+ORDER BY preparator;';
     $result = $this->conn->query($sql);
 
     if ($result) {
@@ -38,7 +65,7 @@ FROM (SELECT TRIM(REGEXP_SUBSTR(dynamicProperties,"(?<=preparedBy:)(.*?)(?=,)"))
         // originally
         // $dataArr[] = $row;
         $dataArr[] = array(
-          $row['prepBy'],
+          $row['preparator'],
           $row['skinPrepCnt'],
           $row['fluidPrepCnt'],
           $row['total'],

@@ -203,7 +203,11 @@ $siteData = new DatasetsMetadata();
 							<div>
 								<div>
 									<input type="checkbox" name="includeothercatnum" id="includeothercatnum" value="1" data-chip="Include other IDs" checked>
-									<label for="includeothercatnum">Include other sample identifiers (e.g. Sample Tag (sampleID), Barcode (sampleCode), sampleUuid)</label>
+									<label for="includeothercatnum">Include other sample identifiers (e.g. Sample Tag (sampleID), Barcode (sampleCode), sampleUuid, occid)</label>
+								</div>
+								<div>
+									<input type="checkbox" name="includematerialsample" id="includematerialsample" value=1 data-chip="Include material sample IDs" >
+									<label for="includematerialsample">Include material sample catalog numbers</label>
 								</div>
 								<div class="text-area-container">
 									<label for="" class="text-area--outlined">
@@ -248,7 +252,7 @@ $siteData = new DatasetsMetadata();
 										$sitesArr = $siteData->getNeonSitesByDom($domain["domainnumber"]);
 										if ($sitesArr) {
 											foreach ($sitesArr as $site) {
-												echo "<li><input type='checkbox' id='${site["siteid"]}' name='datasetid' value={$site["datasetid"]} class='child' data-domain={$domain["domainnumber"]} checked=''><span class='ml-1'><a href='https://www.neonscience.org/field-sites/{$site["siteid"]}' target='_blank' rel='noopener noreferrer'>({$site["siteid"]}) {$site["sitename"]}</a></span></li>";
+												echo "<li><input type='checkbox' id='{$site["siteid"]}' name='datasetid' value={$site["datasetid"]} class='child' data-domain={$domain["domainnumber"]} checked=''><span class='ml-1'><a href='https://www.neonscience.org/field-sites/{$site["siteid"]}' target='_blank' rel='noopener noreferrer'>({$site["siteid"]}) {$site["sitename"]}</a></span></li>";
 											}
 										};
 										echo "</ul>";
@@ -429,7 +433,7 @@ $siteData = new DatasetsMetadata();
 									<input type="text" name="collector" data-chip="Collector/ORCID">
 									<span data-label="Collector/ORCID"></span></label>
 								<span class="assistive-text">Any part of a collector's name or ORCID iD (XXXX-XXXX-XXXX-XXXX).</span>
-							</div>							
+							</div>
 						</div>
 					</div>
 				</section>
@@ -448,7 +452,7 @@ $siteData = new DatasetsMetadata();
 						?>
 
 
-					
+
 						</div>
 					</div>
 				</section>
@@ -467,5 +471,5 @@ $siteData = new DatasetsMetadata();
 	include($SERVER_ROOT . '/includes/footer.php');
 	?>
 </body>
-<script src="js/searchform.js?ver=05" type="text/javascript"></script>
+<script src="js/searchform.js?ver=07" type="text/javascript"></script>
 </html>
