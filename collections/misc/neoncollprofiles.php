@@ -244,11 +244,11 @@ ER  -
 				<div id="controlpanel" style="clear:both;display:<?php echo ($eMode ? 'block' : 'none'); ?>;">
 					<fieldset style="padding:10px;padding-left:25px;">
 						<legend><b><?php echo (isset($LANG['DAT_EDIT']) ? $LANG['DAT_EDIT'] : 'Data Editor Control Panel'); ?></b></legend>
-						<fieldset style="float:right;margin:5px" title="Quick Search">
+						<fieldset style="float:right;margin:5px;min-inline-size:0;padding:0.35em 0.625em 0.75em;" title="Quick Search">
 							<legend><b><?php echo (isset($LANG['QUICK_SEARCH']) ? $LANG['QUICK_SEARCH'] : 'Quick Search'); ?></b></legend>
 							<b><?php echo (isset($LANG['CAT_NUM']) ? $LANG['CAT_NUM'] : 'Catalog Number'); ?></b><br />
 							<form name="quicksearch" action="../editor/occurrenceeditor.php" method="post">
-								<input name="q_catalognumber" type="text" />
+								<input name="q_catalognumber" type="text" style="border:1px solid #d0d0d0 !important;"/>
 								<input name="collid" type="hidden" value="<?php echo $collid; ?>" />
 								<input name="occindex" type="hidden" value="0" />
 							</form>
