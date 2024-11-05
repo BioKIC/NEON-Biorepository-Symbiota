@@ -245,56 +245,64 @@
     { "name": "Data & Samples", "href": "https://www.neonscience.org/data-samples" },
     { "name": "Sample Portal", "href": "https://biokic4.rc.asu.edu/neon/portal/index.php" },
     { "name": "About Samples", "href": "https://biokic4.rc.asu.edu/neon/portal/misc/aboutsamples.php" },
-    { "name": "Sample Collection Profiles", "href": "https://biokic4.rc.asu.edu/neon/portal/collections/misc/collprofiles.php" },
+    { "name": "Browse Collection Profiles", "href": "https://biokic4.rc.asu.edu/neon/portal/misc/browsecollprofiles.php" },
+    { "name": "Collection Profile", "href": "https://biokic4.rc.asu.edu/neon/portal/misc/neoncollprofiles.php?collid=#" },
     { "name": "Occurrence Table View" }
     ],
   "/neon/portal/collections/editor/batchdeterminations.php": [
     { "name": "Data & Samples", "href": "https://www.neonscience.org/data-samples" },
     { "name": "Sample Portal", "href": "https://biokic4.rc.asu.edu/neon/portal/index.php" },
     { "name": "About Samples", "href": "https://biokic4.rc.asu.edu/neon/portal/misc/aboutsamples.php" },
-    { "name": "Sample Collection Profiles", "href": "https://biokic4.rc.asu.edu/neon/portal/collections/misc/collprofiles.php" },
+    { "name": "Browse Collection Profiles", "href": "https://biokic4.rc.asu.edu/neon/portal/misc/browsecollprofiles.php" },
+    { "name": "Collection Profile", "href": "https://biokic4.rc.asu.edu/neon/portal/misc/neoncollprofiles.php?collid=#" },
     { "name": "Batch Determination Editor" }
     ],
   "/neon/portal/collections/misc/collmetadata.php": [
     { "name": "Data & Samples", "href": "https://www.neonscience.org/data-samples" },
     { "name": "Sample Portal", "href": "https://biokic4.rc.asu.edu/neon/portal/index.php" },
     { "name": "About Samples", "href": "https://biokic4.rc.asu.edu/neon/portal/misc/aboutsamples.php" },
-    { "name": "Sample Collection Profiles", "href": "https://biokic4.rc.asu.edu/neon/portal/collections/misc/collprofiles.php" },
+    { "name": "Browse Collection Profiles", "href": "https://biokic4.rc.asu.edu/neon/portal/misc/browsecollprofiles.php" },
+    { "name": "Collection Profile", "href": "https://biokic4.rc.asu.edu/neon/portal/misc/neoncollprofiles.php?collid=#" },
     { "name": "Collection Metadata" }
     ],
   "/neon/portal/collections/misc/collpermissions.php": [
     { "name": "Data & Samples", "href": "https://www.neonscience.org/data-samples" },
     { "name": "Sample Portal", "href": "https://biokic4.rc.asu.edu/neon/portal/index.php" },
     { "name": "About Samples", "href": "https://biokic4.rc.asu.edu/neon/portal/misc/aboutsamples.php" },
-    { "name": "Sample Collection Profiles", "href": "https://biokic4.rc.asu.edu/neon/portal/collections/misc/collprofiles.php" },
+    { "name": "Browse Collection Profiles", "href": "https://biokic4.rc.asu.edu/neon/portal/misc/browsecollprofiles.php" },
+    { "name": "Collection Profile", "href": "https://biokic4.rc.asu.edu/neon/portal/misc/neoncollprofiles.php?collid=#" },
     { "name": "Collection Permissions" }
     ],
   "/neon/portal/collections/admin/specupload.php": [
     { "name": "Data & Samples", "href": "https://www.neonscience.org/data-samples" },
     { "name": "Sample Portal", "href": "https://biokic4.rc.asu.edu/neon/portal/index.php" },
     { "name": "About Samples", "href": "https://biokic4.rc.asu.edu/neon/portal/misc/aboutsamples.php" },
-    { "name": "Sample Collection Profiles", "href": "https://biokic4.rc.asu.edu/neon/portal/collections/misc/collprofiles.php" },
+    { "name": "Browse Collection Profiles", "href": "https://biokic4.rc.asu.edu/neon/portal/misc/browsecollprofiles.php" },
+    { "name": "Collection Profile", "href": "https://biokic4.rc.asu.edu/neon/portal/misc/neoncollprofiles.php?collid=#" },
     { "name": "Data Upload" }
     ],
   "/neon/portal/collections/specprocessor/index.php": [
     { "name": "Data & Samples", "href": "https://www.neonscience.org/data-samples" },
     { "name": "Sample Portal", "href": "https://biokic4.rc.asu.edu/neon/portal/index.php" },
     { "name": "About Samples", "href": "https://biokic4.rc.asu.edu/neon/portal/misc/aboutsamples.php" },
-    { "name": "Sample Collection Profiles", "href": "https://biokic4.rc.asu.edu/neon/portal/collections/misc/collprofiles.php" },
+    { "name": "Browse Collection Profiles", "href": "https://biokic4.rc.asu.edu/neon/portal/misc/browsecollprofiles.php" },
+    { "name": "Collection Profile", "href": "https://biokic4.rc.asu.edu/neon/portal/misc/neoncollprofiles.php?collid=#" },
     { "name": "Processing Toolbox" }
     ],
   "/neon/portal/collections/editor/editreviewer.php": [
     { "name": "Data & Samples", "href": "https://www.neonscience.org/data-samples" },
     { "name": "Sample Portal", "href": "https://biokic4.rc.asu.edu/neon/portal/index.php" },
     { "name": "About Samples", "href": "https://biokic4.rc.asu.edu/neon/portal/misc/aboutsamples.php" },
-    { "name": "Sample Collection Profiles", "href": "https://biokic4.rc.asu.edu/neon/portal/collections/misc/collprofiles.php" },
+    { "name": "Browse Collection Profiles", "href": "https://biokic4.rc.asu.edu/neon/portal/misc/browsecollprofiles.php" },
+    { "name": "Collection Profile", "href": "https://biokic4.rc.asu.edu/neon/portal/misc/neoncollprofiles.php?collid=#" },
     { "name": "Specimen Edit Reviewer" }
     ],
   "/neon/portal/collections/admin/restorebackup.php": [
     { "name": "Data & Samples", "href": "https://www.neonscience.org/data-samples" },
     { "name": "Sample Portal", "href": "https://biokic4.rc.asu.edu/neon/portal/index.php" },
     { "name": "About Samples", "href": "https://biokic4.rc.asu.edu/neon/portal/misc/aboutsamples.php" },
-    { "name": "Sample Collection Profiles", "href": "https://biokic4.rc.asu.edu/neon/portal/collections/misc/collprofiles.php" },
+    { "name": "Browse Collection Profiles", "href": "https://biokic4.rc.asu.edu/neon/portal/misc/browsecollprofiles.php" },
+    { "name": "Collection Profile", "href": "https://biokic4.rc.asu.edu/neon/portal/misc/neoncollprofiles.php?collid=#" },
     { "name": "Restore Backup File" }
     ],
   "/neon/portal/taxa/index.php": [
