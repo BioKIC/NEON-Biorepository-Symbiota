@@ -717,11 +717,7 @@ class OccurrenceHarvester{
 					if(isset($sampleArr['identifications']) && !in_array($dwcArr['collid'], array(46,98))){
 						$identArr = $sampleArr['identifications'];
 					}
-<<<<<<< Updated upstream
-					if(!$identArr && $sampleArr['taxonID'] && in_array($dwcArr['collid'], array(46))){
-=======
 					if(!$identArr && $sampleArr['taxonID'] && !in_array($dwcArr['collid'], array(46,98))){
->>>>>>> Stashed changes
 						$hash = hash('md5', str_replace(' ','',$sampleArr['taxonID'].'manifests.d.'));
 						$identArr[$hash] = array('sciname' => $sampleArr['taxonID'], 'identifiedBy' => 'manifest', 'dateIdentified' => 's.d.', 'taxonRemarks' => 'Identification source: inferred from shipment manifest');
 					}
