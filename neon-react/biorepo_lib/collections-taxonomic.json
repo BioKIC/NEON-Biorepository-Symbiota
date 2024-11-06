@@ -14,7 +14,7 @@
           },
           {
             "id": 1,
-            "name": "Identified Species Within Bulk Samples",
+            "name": "Identified Individals Within Bulk Samples",
             "collid": 0           
           }
         ]
@@ -22,7 +22,18 @@
       {
         "id": 3,
         "name": "Chemically-Preserved Specimens (from Point Transects Sampling)",
-        "collid": 73
+        "children": [
+          {
+            "id": 1,
+            "name": "Bulk Samples",
+            "collid": 73            
+          },
+          {
+            "id": 1,
+            "name": "Identified Individals Within Bulk Samples",
+            "collid": 0           
+          }
+        ]
       },
       {
         "id": 4,
