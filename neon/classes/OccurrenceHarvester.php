@@ -1199,8 +1199,8 @@ class OccurrenceHarvester{
 						}
 					}
 					
-					// make the baseID the default lotID if one exists and the current sciname is undefined
-					if ($baseID['sciname'] === 'undefined' && !empty($collArr[$sourceCollid]['defaultId'])) {
+					// make the baseID the default lotID if one exists and the current sciname is undefined or empty
+					if (($baseID['sciname'] === 'undefined' || empty($baseID['sciname'])) && !empty($collArr[$sourceCollid]['defaultId'])) {
 						$baseID['sciname'] = $collArr[$sourceCollid]['defaultId'];
 					}
 
@@ -1264,6 +1264,17 @@ class OccurrenceHarvester{
 			$tid = 0;
 			$sciname = '';
 			$tidCnt = count($idArr);
+			// Use input tid if there is only one
+			if ($tidCnt == 1) {
+				$sql = 'SELECT t.tid, t.sciname FROM taxa t WHERE t.tid = ' . key($idArr);
+				$rs = $this->conn->query($sql);		
+				if ($r = $rs->fetch_object()) {
+					$retArr[$r->tid] = $r->sciname;
+				}
+				$rs->free();
+				return $retArr; 
+			}
+			// find common id if there are multiple
 			$sql = 'SELECT t.tid, t.sciname, t.rankid, e.parenttid, count(e.tid) as cnt
 				FROM taxaenumtree e INNER JOIN taxa t ON e.parenttid = t.tid
 				WHERE e.taxauthid = 1 AND e.tid IN(' . implode(',', $idArr) . ') AND t.rankid > 5
@@ -1292,28 +1303,39 @@ class OccurrenceHarvester{
 			unset($dwcArr['siteID']);
 			if(!isset($dwcArr['identifications'])){
 				$sciname = '';
+				$tid = '';
 				if($dwcArr['collid'] == 5 || $dwcArr['collid'] == 67){
 					$sciname = 'Benthic Microbe';
+					$tid = 126842;
 				}
 				elseif($dwcArr['collid'] == 6 || $dwcArr['collid'] == 68){
 					$sciname = 'Surface Water Microbe';
+					$tid = 126843;
 				}
 				elseif($dwcArr['collid'] == 31 || $dwcArr['collid'] == 69){
 					$sciname = 'Soil Microbe';
+					$tid = 126874;
 				}
 				elseif($dwcArr['collid'] == 41){
 					$sciname = 'Dry Deposition';
+					$tid = 126848;
 				}
 				elseif($dwcArr['collid'] == 42){
 					$sciname = 'Wet Deposition';
+					$tid = 126847;
+				}
+				elseif(in_array($dwcArr['collid'],array(7,8,9,18,50,73))){
+					$sciname = 'Plantae';
+					$tid = 4;
 				}
 				elseif($dwcArr['collid'] == 92){
 					$sciname = 'Aquatic Sediments';
+					$tid = 131450;
 				}
 				if($sciname){
 					$idDate = 's.d.';
 					if(!empty($dwcArr['eventDate'])) $idDate = $dwcArr['eventDate'];
-					$dwcArr['identifications'][] = array('sciname' => $sciname, 'identifiedBy' => 'NEON Lab', 'dateIdentified' => $idDate, 'isCurrent' => 1);
+					$dwcArr['identifications'][] = array('sciname' => $sciname,'tidInterpreted'=>$tid, 'identifiedBy' => 'NEON Lab', 'dateIdentified' => $idDate, 'isCurrent' => 1);
 				}
 			}
 			$numericFieldArr = array('collid','decimalLatitude','decimalLongitude','minimumElevationInMeters','maximumElevationInMeters');
