@@ -9,12 +9,12 @@
         "children": [
           {
             "id": 1,
-            "name": "non identified",
+            "name": "Bulk Samples",
             "collid": 50            
           },
           {
             "id": 1,
-            "name": "Identified",
+            "name": "Identified Species Within Bulk Samples",
             "collid": 0           
           }
         ]
