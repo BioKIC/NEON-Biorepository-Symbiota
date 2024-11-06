@@ -143,12 +143,12 @@
           },
           {
             "id": 29,
-            "name": "Beetles (Carabids) Pooled Samples (Within-plot)",
+            "name": "Beetles (Carabids) Samples (from Pitfall Sampling; Multi-trap Pooled)",
             "collid": 11
           },
           {
             "id": 30,
-            "name": "Beetles (Carabids) Pooled Samples (Within-trap)",
+            "name": "Beetles (Carabids) Samples (from Pitfall Sampling; Single-trap)",
             "collid": 14
           },
           {
@@ -163,12 +163,12 @@
           },
           {
             "id": 33,
-            "name": "Invertebrate Specimen Bycatch (from Pitfall within-plot Pooling)",
+            "name": "Invertebrate Specimen Bycatch (from Pitfall Sampling; Multi-trap Pooled)",
             "collid": 13
           },
           {
             "id": 34,
-            "name": "Invertebrate Specimen Bycatch (from Pitfall within-trap Pooling)",
+            "name": "Invertebrate Specimen Bycatch (from Pitfall Sampling; Single-trap)",
             "collid": 16
           },
           {
@@ -220,7 +220,7 @@
           },
           {
             "id": 44,
-            "name": "Mammal Specimen Bycatch (from Pitfall within-trap Pooling)",
+            "name": "Mammal Specimen Bycatch (from Pitfall Sampling; Single-trap)",
             "collid": 17
           },
           {
@@ -230,12 +230,12 @@
           },
           {
             "id": 46,
-            "name": "Reptiles and Amphibians Specimen Bycatch (from Pitfall within-plot Pooling)",
+            "name": "Reptiles and Amphibians Specimen Bycatch (from Pitfall Sampling; Multi-trap Pooled)",
             "collid": 12
           },
           {
             "id": 47,
-            "name": "Reptiles and Amphibians Specimen Bycatch (from Pitfall within-trap Pooling)",
+            "name": "Reptiles and Amphibians Specimen Bycatch (from Pitfall Sampling; Single-trap)",
             "collid": 15
           },
           {

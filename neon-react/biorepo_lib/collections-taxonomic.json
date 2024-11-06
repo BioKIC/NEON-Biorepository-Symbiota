@@ -127,12 +127,12 @@
           },
           {
             "id": 26,
-            "name": "Pooled Samples (Within-plot)",
+            "name": "Pitfall Samples (Multi-trap Pooled)",
             "collid": 11
           },
           {
             "id": 27,
-            "name": "Pooled Samples (Within-trap)",
+            "name": "Pitfall Samples (Single-trap)",
             "collid": 14
           }
         ]
@@ -174,12 +174,12 @@
           },
           {
             "id": 35,
-            "name": "Invertebrate Bycatch (from Pitfall within-plot Pooling)",
+            "name": "Invertebrate Bycatch (from Pitfall Sampling; Multi-trap Pooled)",
             "collid": 13
           },
           {
             "id": 36,
-            "name": "Invertebrate Bycatch (from Pitfall within-trap Pooling)",
+            "name": "Invertebrate Bycatch (from Pitfall Sampling; Single-trap)",
             "collid": 16
           },
           {
@@ -421,12 +421,12 @@
         "children": [
           {
             "id": 80,
-            "name": "Bycatch Specimens (from Pitfall within-plot Pooling)",
+            "name": "Bycatch Specimens (from Pitfall Sampling; Multi-trap Pooled)",
             "collid": 12
           },
           {
             "id": 81,
-            "name": "Bycatch Specimens (from Pitfall within-trap Pooling)",
+            "name": "Bycatch Specimens (from Pitfall Sampling; Single-trap)",
             "collid": 15
           },
           {

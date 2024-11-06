@@ -133,7 +133,7 @@
       },
       {
         "id": 26,
-        "name": "Within-plot Pooling",
+        "name": "Multi-trap Pooled Samples",
         "children": [
           {
             "id": 27,
@@ -154,7 +154,7 @@
       },
       {
         "id": 30,
-        "name": "Within-trap Pooling",
+        "name": "Single-trap Samples",
         "children": [
           {
             "id": 19,
