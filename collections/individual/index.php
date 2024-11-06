@@ -2,7 +2,7 @@
 include_once('../../config/symbini.php');
 include_once($SERVER_ROOT . '/classes/OccurrenceIndividual.php');
 include_once($SERVER_ROOT . '/classes/DwcArchiverCore.php');
-include_once($SERVER_ROOT . '/classes/RdfUtil.php');
+include_once($SERVER_ROOT . '/classes/RdfUtility.php');
 
 $langPath = $SERVER_ROOT.'/content/lang/collections/';
 if($LANG_TAG != 'en' && file_exists($langPath.'individual/index.'.$LANG_TAG.'.php')){

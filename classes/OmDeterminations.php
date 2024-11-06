@@ -117,10 +117,8 @@ class OmDeterminations extends Manager{
 	}
 
 	private function getUserNames($uidArr){
-		print_r($uidArr);
 		$retArr = array();
 		$sql = 'SELECT uid, firstname, lastname, username FROM users WHERE uid IN('.implode(',', $uidArr).')';
-		echo $sql;
 		if($rs = $this->conn->query($sql)){
 			while($r = $rs->fetch_object()){
 				$retArr[$r->uid] = $r->lastname . ($r->firstname ? ', ' . $r->firstname : '');
