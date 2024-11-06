@@ -187,7 +187,7 @@ ER  -
 			max-height: 800px;
 			display: flex;
 			flex-direction: column;
-			justify-content: space-between;
+			justify-content: space-evenly;
 			align-items: center;
 		}
 		#collimages img {
