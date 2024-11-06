@@ -38,17 +38,50 @@
       {
         "id": 4,
         "name": "Herbarium Specimens (from Clip Harvest Biomass Sampling)",
-        "collid": 9
+        "children": [
+          {
+            "id": 1,
+            "name": "Bulk Samples",
+            "collid": 9            
+          },
+          {
+            "id": 1,
+            "name": "Identified Individals Within Bulk Samples",
+            "collid": 0           
+          }
+        ]
       },
       {
         "id": 5,
         "name": "Herbarium Specimens (from Point Transect Sampling)",
-        "collid": 7
+        "children": [
+          {
+            "id": 1,
+            "name": "Bulk Samples",
+            "collid": 7            
+          },
+          {
+            "id": 1,
+            "name": "Identified Individals Within Bulk Samples",
+            "collid": 0           
+          }
+        ]
       },
       {
         "id": 6,
         "name": "Herbarium Specimens (from Opportunistic Sampling)",
-        "collid": 8
+        "children": [
+          {
+            "id": 1,
+            "name": "Bulk Samples",
+            "collid": 8            
+          },
+          {
+            "id": 1,
+            "name": "Identified Individals Within Bulk Samples",
+            "collid": 0           
+          }
+        ]
       }
     ]
   },
