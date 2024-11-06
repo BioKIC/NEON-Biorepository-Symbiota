@@ -6,7 +6,18 @@
       {
         "id": 2,
         "name": "Chemically-Preserved Specimens (from Clip Harvest Biomass Sampling)",
-        "collid": 50
+        "children": [
+          {
+            "id": 1,
+            "name": "non identified",
+            "collid": 50            
+          },
+          {
+            "id": 1,
+            "name": "Identified",
+            "collid": 0           
+          }
+        ]
       },
       {
         "id": 3,
