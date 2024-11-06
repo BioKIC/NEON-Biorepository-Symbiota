@@ -62,17 +62,47 @@
           {
             "id": 13,
             "name": "Aquatic Plant, Bryophyte, and Macroalgae Herbarium Specimens (from Clip Harvest Biomass Sampling)",
-            "collid": 9
+            "children": [
+              {
+                "id": 1,
+                "name": "Bulk Samples",
+                "collid": 9            
+              },
+              {
+                "id": 1,
+                "name": "Identified Individals Within Bulk Samples",
+                "collid": 107           
+              }
           },
           {
             "id": 14,
             "name": "Aquatic Plant, Bryophyte, and Macroalgae Herbarium Specimens (from Point Transect Sampling)",
-            "collid": 7
+            "children": [
+              {
+                "id": 1,
+                "name": "Bulk Samples",
+                "collid": 7            
+              },
+              {
+                "id": 1,
+                "name": "Identified Individals Within Bulk Samples",
+                "collid": 108           
+              }
           },
           {
             "id": 15,
             "name": "Aquatic Plant, Bryophyte, and Macroalgae Herbarium Specimens (from Opportunistic Sampling)",
-            "collid": 8
+            "children": [
+              {
+                "id": 1,
+                "name": "Bulk Samples",
+                "collid": 8            
+              },
+              {
+                "id": 1,
+                "name": "Identified Individals Within Bulk Samples",
+                "collid": 109           
+              }
           },
           {
             "id": 16,
@@ -119,12 +149,32 @@
           {
             "id": 24,
             "name": "Aquatic Macroalgae (from Clip Harvest Biomass Sampling)",
-            "collid": 50
+            "children": [
+              {
+                "id": 1,
+                "name": "Bulk Samples",
+                "collid": 50            
+              },
+              {
+                "id": 1,
+                "name": "Identified Individals Within Bulk Samples",
+                "collid": 105           
+              }
           },
           {
             "id": 25,
             "name": "Aquatic Macroalgae (from Point Transects Sampling)",
-            "collid": 73
+            "children": [
+              {
+                "id": 1,
+                "name": "Bulk Samples",
+                "collid": 73            
+              },
+              {
+                "id": 1,
+                "name": "Identified Individals Within Bulk Samples",
+                "collid": 106           
+              }
           },
           {
             "id": 26,

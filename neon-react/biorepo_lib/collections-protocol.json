@@ -62,13 +62,33 @@
           {
             "id": 13,
             "name": "Aquatic Plant, Bryophyte, and Macroalgae Chemical Preservation",
-            "collid": 50
+            "children": [
+              {
+                "id": 1,
+                "name": "Bulk Samples",
+                "collid": 50            
+              },
+              {
+                "id": 1,
+                "name": "Identified Individals Within Bulk Samples",
+                "collid": 105           
+              }
           },
           {
             "id": 14,
             "name": "Aquatic Plant, Bryophyte, and Macroalgae Herbarium Specimens",
-            "collid": 9
-          }
+            "children": [
+              {
+                "id": 1,
+                "name": "Bulk Samples",
+                "collid": 9            
+              },
+              {
+                "id": 1,
+                "name": "Identified Individals Within Bulk Samples",
+                "collid": 107           
+              }
+          },
         ]
       },
       {
@@ -78,12 +98,32 @@
           {
             "id": 16,
             "name": "Aquatic Plant, Bryophyte, and Macroalgae Chemical Preservation",
-            "collid": 73
+            "children": [
+              {
+                "id": 1,
+                "name": "Bulk Samples",
+                "collid": 73            
+              },
+              {
+                "id": 1,
+                "name": "Identified Individals Within Bulk Samples",
+                "collid": 106           
+              }
           },
           {
             "id": 17,
             "name": "Aquatic Plant, Bryophyte, and Macroalgae Herbarium Specimens",
-            "collid": 7
+            "children": [
+              {
+                "id": 1,
+                "name": "Bulk Samples",
+                "collid": 7            
+              },
+              {
+                "id": 1,
+                "name": "Identified Individals Within Bulk Samples",
+                "collid": 108           
+              }
           }
         ]
       },
@@ -94,7 +134,17 @@
           {
             "id": 19,
             "name": "Aquatic Plant, Bryophyte, and Macroalgae Opportunistic Specimens",
-            "collid": 48
+            "children": [
+              {
+                "id": 1,
+                "name": "Bulk Samples",
+                "collid": 8            
+              },
+              {
+                "id": 1,
+                "name": "Identified Individals Within Bulk Samples",
+                "collid": 109           
+              }
           }
         ]
       }
