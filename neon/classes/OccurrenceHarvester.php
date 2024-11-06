@@ -710,14 +710,14 @@ class OccurrenceHarvester{
 				}
 
 				//Taxonomic fields
-				$skipTaxonomy = array(5,6,10,13,16,21,23,31,41,42,58,60,61,62,67,68,69,76,92,98);
+				$skipTaxonomy = array(5,6,10,13,16,21,23,31,41,42,58,60,61,62,67,68,69,76,92);
 				if(!in_array($dwcArr['collid'],$skipTaxonomy)){
 					$identArr = array();
 					$taxonCode = '';
-					if(isset($sampleArr['identifications']) && !in_array($dwcArr['collid'], array(46))){
+					if(isset($sampleArr['identifications']) && !in_array($dwcArr['collid'], array(46,98))){
 						$identArr = $sampleArr['identifications'];
 					}
-					if(!$identArr && $sampleArr['taxonID'] && in_array($dwcArr['collid'], array(46))){
+					if(!$identArr && $sampleArr['taxonID'] && !in_array($dwcArr['collid'], array(46,98))){
 						$hash = hash('md5', str_replace(' ','',$sampleArr['taxonID'].'manifests.d.'));
 						$identArr[$hash] = array('sciname' => $sampleArr['taxonID'], 'identifiedBy' => 'manifest', 'dateIdentified' => 's.d.', 'taxonRemarks' => 'Identification source: inferred from shipment manifest');
 					}
@@ -725,7 +725,7 @@ class OccurrenceHarvester{
 						//Identifications not supplied via API nor manifest, thus try to grab from sampleID
 						$taxonCode = '';
 						$taxonRemarks = '';
-						if(in_array($dwcArr['collid'], array(46))){
+						if(in_array($dwcArr['collid'], array(46,98))){
 							if (preg_match('/\.\d{8}\.([a-zA-Z]{2,15})\./', $sampleArr['sampleID'], $m)) {
 								$taxonCode = $m[1];
 								$taxonRemarks = 'Identification source: parsed from NEON sampleID';
@@ -1209,18 +1209,36 @@ class OccurrenceHarvester{
 				$sciname = '';
 				if($dwcArr['collid'] == 5 || $dwcArr['collid'] == 67){
 					$sciname = 'Benthic Microbe';
+				} 
+				if($dwcArr['collid'] == 21 || $dwcArr['collid'] == 61){
+					$sciname = 'Bulk Aquatic Macroinvertebrates';
+				}
+				if($dwcArr['collid'] == 23){
+					$sciname = 'Terrestrial Plant Litterfall';
 				}
 				elseif($dwcArr['collid'] == 6 || $dwcArr['collid'] == 68){
 					$sciname = 'Surface Water Microbe';
 				}
+				elseif($dwcArr['collid'] == 13 || $dwcArr['collid'] == 16 ){
+					$sciname = 'Bulk Terrestrial Invertebrates';
+				}
 				elseif($dwcArr['collid'] == 31 || $dwcArr['collid'] == 69){
 					$sciname = 'Soil Microbe';
+				}
+				elseif($dwcArr['collid'] == 30){
+					$sciname = 'Soil';
 				}
 				elseif($dwcArr['collid'] == 41){
 					$sciname = 'Dry Deposition';
 				}
 				elseif($dwcArr['collid'] == 42){
 					$sciname = 'Wet Deposition';
+				}
+				elseif($dwcArr['collid'] == 10){
+					$sciname = 'Belowground Plant Biomass';
+				}
+				elseif($dwcArr['collid'] == 60|| $dwcArr['collid'] == 62){
+					$sciname = 'Zooplankton';
 				}
 				elseif($dwcArr['collid'] == 92){
 					$sciname = 'Aquatic Sediments';
