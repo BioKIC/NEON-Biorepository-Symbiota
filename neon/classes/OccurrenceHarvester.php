@@ -171,7 +171,7 @@ class OccurrenceHarvester{
 					//if(in_array(45, $collArr)) {$collArr[] = 104;}
 					//if(in_array(47, $collArr)) {$collArr[] = 110;}
 					//if(in_array(49, $collArr)) {$collArr[] = 111;}
-					//if(in_array(50, $collArr)) {$collArr[] = 105;}
+					if(in_array(50, $collArr)) {$collArr[] = 105;}
 					//if(in_array(52, $collArr)) {$collArr[] = 101;}
 					//if(in_array(53, $collArr)) {$collArr[] = 102;}
 					//if(in_array(57, $collArr)) {$collArr[] = 103;}
@@ -523,11 +523,11 @@ class OccurrenceHarvester{
 						elseif($fArr['smsKey'] == 'sex' && $fArr['smsValue']) $tableArr['sex'] = $fArr['smsValue'];
 						elseif($fArr['smsKey'] == 'life_stage' && $fArr['smsValue']) $tableArr['life_stage'] = $fArr['smsValue'];
 						elseif($fArr['smsKey'] == 'associated_taxa' && $fArr['smsValue']) $tableArr['associated_taxa'] = $fArr['smsValue'];
-						elseif($fArr['smsKey'] == 'remarks' && $fArr['smsValue']) $tableArr['remarks'] = $fArr['smsValue'];
+						elseif($fArr['smsKey'] == 'remarks' && $fArr['smsValue'] && !in_array($tableName,array('ptx_taxonomy_in'))) $tableArr['remarks'] = $fArr['smsValue'];
 						elseif($fArr['smsKey'] == 'preservative_concentration' && $fArr['smsValue']) $tableArr['preservative_concentration'] = $fArr['smsValue'];
 						elseif($fArr['smsKey'] == 'preservative_volume' && $fArr['smsValue']) $tableArr['preservative_volume'] = $fArr['smsValue'];
 						elseif($fArr['smsKey'] == 'preservative_type' && $fArr['smsValue']) $tableArr['preservative_type'] = $fArr['smsValue'];
-						elseif($fArr['smsKey'] == 'sample_type' && $fArr['smsValue']) $tableArr['sample_type'] = $fArr['smsValue'];
+						elseif($fArr['smsKey'] == 'sample_type' && $fArr['smsValue'] && !in_array($tableName,array('ptx_taxonomy_in'))) $tableArr['sample_type'] = $fArr['smsValue'];
 						//elseif($fArr['smsKey'] == 'sample_condition' && $fArr['smsValue']) $tableArr['sample_condition'] = $fArr['smsValue'];
 						elseif($fArr['smsKey'] == 'sample_mass' && $fArr['smsValue']) $tableArr['sample_mass'] = $fArr['smsValue'];
 						elseif($fArr['smsKey'] == 'sample_volume' && $fArr['smsValue']) $tableArr['sample_volume'] = $fArr['smsValue'];
@@ -670,7 +670,7 @@ class OccurrenceHarvester{
 				}
 				$prepArr = array();
 					if(!in_array($dwcArr['collid'], array(19,28,42,46,17,64))){
-						if(!in_array($dwcArr['collid'],array(31,73))){
+						if(!in_array($dwcArr['collid'],array(31,50,73))){
 							if(!empty($sampleArr['preservative_type'])) $prepArr[] = 'preservative type: '.$sampleArr['preservative_type'];
 						}
 						if(!empty($sampleArr['preservative_volume'])) $prepArr[] = 'preservative volume: '.$sampleArr['preservative_volume'];
@@ -1074,7 +1074,7 @@ class OccurrenceHarvester{
 		//$collArr[45] = array('targetCollid' => 104, 'lotId' => 'dynamic','defaultId' => 'Zooplankton');
 		//$collArr[47] = array('targetCollid' => 110, 'lotId' => 'dynamic','defaultId' => 'ECO');
 		//$collArr[49] = array('targetCollid' => 111, 'lotId' => 'dynamic','defaultId' => 'ECO');
-		//$collArr[50] = array('targetCollid' => 105, 'lotId' => 'dynamic','defaultId' => 'Plantae');
+		$collArr[50] = array('targetCollid' => 105, 'lotId' => 'dynamic','defaultId' => 'Plantae');
 		//$collArr[52] = array('targetCollid' => 101, 'lotId' => 'dynamic','defaultId' => 'Oligochaeta');
 		//$collArr[53] = array('targetCollid' => 102, 'lotId' => 'dynamic','defaultId' => 'Aquatic Macroinvertebrate');
 		//$collArr[57] = array('targetCollid' => 103, 'lotId' => 'dynamic','defaultId' => 'Aquatic Macroinvertebrate');
