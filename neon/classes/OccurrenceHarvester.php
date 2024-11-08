@@ -1222,6 +1222,10 @@ class OccurrenceHarvester{
 				elseif($dwcArr['collid'] == 13 || $dwcArr['collid'] == 16 ){
 					$sciname = 'Bulk Terrestrial Invertebrates';
 				}
+				elseif($dwcArr['collid'] == 18){
+					$sciname = 'Bulk Canopy Foliage';
+					$tid=126850;
+				}
 				elseif($dwcArr['collid'] == 31 || $dwcArr['collid'] == 69){
 					$sciname = 'Soil Microbe';
 				}
