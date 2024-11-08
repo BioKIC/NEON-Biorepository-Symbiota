@@ -1235,7 +1235,7 @@ class OccurrenceHarvester{
 
 	private function setSharedOriginAssoc($allSubOccids) {
 		$combinations = [];
-			for ($i = 0; $i < count($allSubOccids); $i++) {
+		for ($i = 0; $i < count($allSubOccids); $i++) {
 			for ($j = $i + 1; $j < count($allSubOccids); $j++) {
 				// Only create one direction combination
 				$occid1 = $allSubOccids[$i];
