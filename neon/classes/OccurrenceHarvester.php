@@ -1310,9 +1310,11 @@ class OccurrenceHarvester{
 				$tid = '';
 				if($dwcArr['collid'] == 5 || $dwcArr['collid'] == 67){
 					$sciname = 'Benthic Microbe';
+					$tid = 126842;
 				} 
 				if($dwcArr['collid'] == 21 || $dwcArr['collid'] == 61){
 					$sciname = 'Bulk Aquatic Macroinvertebrates';
+					$tid = 126822;
 				}
 				if($dwcArr['collid'] == 23){
 					$sciname = 'Terrestrial Plant Litterfall';
@@ -1324,10 +1326,11 @@ class OccurrenceHarvester{
 				}
 				elseif($dwcArr['collid'] == 13 || $dwcArr['collid'] == 16 ){
 					$sciname = 'Bulk Terrestrial Invertebrates';
+					$tid = 126821;
 				}
 				elseif($dwcArr['collid'] == 18){
 					$sciname = 'Bulk Canopy Foliage';
-					$tid=126850;
+					$tid = 126850;
 				}
 				elseif($dwcArr['collid'] == 31 || $dwcArr['collid'] == 69){
 					$sciname = 'Soil Microbe';
@@ -1335,6 +1338,7 @@ class OccurrenceHarvester{
 				}
 				elseif($dwcArr['collid'] == 30){
 					$sciname = 'Soil';
+					$tid = 126845;
 				}
 				elseif($dwcArr['collid'] == 41){
 					$sciname = 'Dry Deposition';
@@ -1344,15 +1348,21 @@ class OccurrenceHarvester{
 					$sciname = 'Wet Deposition';
 					$tid = 126847;
 				}
-				elseif(in_array($dwcArr['collid'],array(7,8,9,18,50,73))){
+				elseif(in_array($dwcArr['collid'],array(7,8,9,50,73))){
 					$sciname = 'Plantae';
 					$tid = 4;
 				}
-				elseif($dwcArr['collid'] == 10){
-					$sciname = 'Belowground Plant Biomass';
+				elseif($dwcArr['collid'] == 10||$dwcArr['collid'] == 76){
+					$sciname = 'Belowground Biomass';
+					$tid = 126849;
+				}
+				elseif($dwcArr['collid']== 23){
+					$sciname = "Terrestrial Plant Litterfall";
+					$tid = 126851;
 				}
 				elseif($dwcArr['collid'] == 60|| $dwcArr['collid'] == 62){
 					$sciname = 'Zooplankton';
+					$tid = 126824;
 				}
 				elseif($dwcArr['collid'] == 92){
 					$sciname = 'Aquatic Sediments';
