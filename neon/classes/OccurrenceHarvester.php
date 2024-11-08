@@ -761,11 +761,11 @@ class OccurrenceHarvester{
 							}
 						}
 						// Should not ever need this for collid 30 anymore, but leaving in case it's useful
-						// if($dwcArr['collid'] == 30){ 
+						// if($dwcArr['collid'] == 30){
 						// 	$identArr[] = array('sciname' => $dwcArr['identifications'][0]['sciname'],
 						// 					  'identifiedBy' => 'NEON Lab',
 						// 					  'dateIdentified' => 's.d.');
-						// }						
+						// }
 						elseif($dwcArr['collid'] == 56){
 							if(preg_match('/\.\d{4}\.\d{1,2}\.([A-Z]{2,15}\d{0,2})\./', $sampleArr['sampleID'], $m)){
 								$taxonCode = $m[1];
@@ -1154,14 +1154,14 @@ class OccurrenceHarvester{
 						}
 						// Give verbatim Attributes based on destination collection datasetName
 						$sql = 'SELECT datasetName FROM omcollections WHERE collID = ' . $targetCollid;
-						$rs = $this->conn->query($sql); 
-						if ($rs) { 
-    						if ($r = $rs->fetch_assoc()) { 
-        						$dwcArrClone['verbatimAttributes'] = $r['datasetName']; 
-    						} else {
-        						$dwcArrClone['verbatimAttributes'] = $dwcArr['verbatimAttributes']; // Default to parent value
-    						}
-						} 
+						$rs = $this->conn->query($sql);
+						if ($rs) {
+							if ($r = $rs->fetch_assoc()) {
+								$dwcArrClone['verbatimAttributes'] = $r['datasetName'];
+							} else {
+								$dwcArrClone['verbatimAttributes'] = $dwcArr['verbatimAttributes']; // Default to parent value
+							}
+						}
 						//Load subsample into database
 						$occid = $this->loadOccurrenceRecord($dwcArrClone, $existingOccid);
 						if(!$existingOccid && $occid){
@@ -1179,7 +1179,7 @@ class OccurrenceHarvester{
 							$this -> setAssociations($occid, $assocArr);
 						}
 					}
-					
+
 					//Delete all subsamples that are not identified as a subsample import
 					$this->deleteSubSamples($currentSubsampleArr);
 					//Reset base sample (parent) with new identification unit containing lot ID
@@ -1198,7 +1198,7 @@ class OccurrenceHarvester{
 							$baseID['sciname'] = $lotId;
 						}
 					}
-					
+
 					// make the baseID the default lotID if one exists and the current sciname is undefined or empty
 					if (($baseID['sciname'] === 'undefined' || empty($baseID['sciname'])) && !empty($collArr[$sourceCollid]['defaultId'])) {
 						$baseID['sciname'] = $collArr[$sourceCollid]['defaultId'];
@@ -1240,14 +1240,14 @@ class OccurrenceHarvester{
 				// Only create one direction combination
 				$occid1 = $allSubOccids[$i];
 				$occid2 = $allSubOccids[$j];
-	
+
 				$combinations[$occid1][] = [
 					'occidAssociate' => $occid2,
 					'relationship' => 'sharesOriginatingSample'
 				];
 			}
 		}
-	
+
 		return $combinations;
 	}
 
@@ -1267,12 +1267,12 @@ class OccurrenceHarvester{
 			// Use input tid if there is only one
 			if ($tidCnt == 1) {
 				$sql = 'SELECT t.tid, t.sciname FROM taxa t WHERE t.tid = ' . key($idArr);
-				$rs = $this->conn->query($sql);		
+				$rs = $this->conn->query($sql);
 				if ($r = $rs->fetch_object()) {
 					$retArr[$r->tid] = $r->sciname;
 				}
 				$rs->free();
-				return $retArr; 
+				return $retArr;
 			}
 			// find common id if there are multiple
 			$sql = 'SELECT t.tid, t.sciname, t.rankid, e.parenttid, count(e.tid) as cnt
