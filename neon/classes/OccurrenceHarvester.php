@@ -1089,6 +1089,12 @@ class OccurrenceHarvester{
 		if(array_key_exists($sourceCollid, $collArr)){
 			$targetCollid = $collArr[$sourceCollid]['targetCollid'];
 			if(!empty($dwcArr['identifications'])){
+				$sql = 'SELECT datasetName FROM omcollections WHERE collID= ' .$collArr[$sourceCollid]['targetCollid'];
+				$rs = $this->conn->query($sql);
+				$r = $rs->fetch_assoc();
+				if ($r['datasetName'] !== NULL) {
+				$collArr[$sourceCollid]['verbatimAttributes'] = $r['datasetName'] ;
+				}
 				if($dwcArr['identifications']){
 					//Evaluate identification cluster to determine which IDs should become subsamples
 					$identificationsGrouped = array();
@@ -1156,16 +1162,9 @@ class OccurrenceHarvester{
 						if(!empty($dwcArr['identifiers']['NEON sampleID Hash'])){
 							$dwcArrClone['identifiers']['Originating NEON sampleID Hash'] = $dwcArr['identifiers']['NEON sampleID Hash'];
 						}
-						// Give verbatim Attributes based on destination collection datasetName
-						$sql = 'SELECT datasetName FROM omcollections WHERE collID = ' . $targetCollid;
-						$rs = $this->conn->query($sql);
-						if ($rs) {
-							if ($r = $rs->fetch_assoc()) {
-								$dwcArrClone['verbatimAttributes'] = $r['datasetName'];
-							} else {
-								$dwcArrClone['verbatimAttributes'] = $dwcArr['verbatimAttributes']; // Default to parent value
-							}
-						}
+						if (isset($collArr[$sourceCollid]['verbatimAttributes'])) {
+							$dwcArrClone['verbatimAttributes'] = $collArr[$sourceCollid]['verbatimAttributes']; // use dataset name of destination collection
+						}						
 						//Load subsample into database
 						$occid = $this->loadOccurrenceRecord($dwcArrClone, $existingOccid);
 						if(!$existingOccid && $occid){
@@ -1183,7 +1182,6 @@ class OccurrenceHarvester{
 							$this -> setAssociations($occid, $assocArr);
 						}
 					}
-
 					//Delete all subsamples that are not identified as a subsample import
 					$this->deleteSubSamples($currentSubsampleArr);
 					//Reset base sample (parent) with new identification unit containing lot ID
