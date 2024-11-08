@@ -164,6 +164,7 @@ class OccurrenceHarvester{
 				$uuidManager->populateGuids();
 				//Update stats for each collection affected
 				if($collArr){
+					echo '<li>Update stats and associations for each collection...</li>';
 					//if(in_array(7, $collArr)) {$collArr[] = 108;}
 					//if(in_array(8, $collArr)) {$collArr[] = 109;}
 					//if(in_array(9, $collArr)) { $collArr[] = 107;}
@@ -176,9 +177,12 @@ class OccurrenceHarvester{
 					//if(in_array(53, $collArr)) {$collArr[] = 102;}
 					//if(in_array(57, $collArr)) {$collArr[] = 103;}
 					if(in_array(73, $collArr)) {$collArr[] = 106;}
-					echo '<li>Update stats for each collection...</li>';
 					$collManager = new OccurrenceCollectionProfile();
 					foreach($collArr as $collID){
+						if (in_array($collID,array(17,19,24,25,26,27,28,71,90,91))){
+							echo '<li style="margin-left:15px"><b>Setting mammal occurrence associations.</b></li>';
+							$this->conn->query('call new_create_mammal_associations()');
+						}
 						echo '<li style="margin-left:15px">Stat update for collection <a href="'.$GLOBALS['CLIENT_ROOT'].'/collections/misc/collprofiles.php?collid='.$collID.'" target="_blank">#'.$collID.'</a>...</li>';
 						$collManager->setCollid($collID);
 						$collManager->updateStatistics(false);
@@ -569,7 +573,6 @@ class OccurrenceHarvester{
 								if($fArr['smsKey'] == 'identification_remarks' && $fArr['smsValue']){
 									$identRemarks[] = $fArr['smsValue'];
 								}
-								$identArr['identificationRemarks'] = implode('; ',$identRemarks);
 							}
 							elseif(!in_array($tableName,array('ptx_taxonomy_in')) && $fArr['smsKey'] == 'identification_remarks' && $fArr['smsValue']) {
 									$identArr['identificationRemarks'] = $fArr['smsValue'];
@@ -579,6 +582,7 @@ class OccurrenceHarvester{
 						}
 					}
 				}
+				$identArr['identificationRemarks'] = implode('; ',$identRemarks);
 				if($assocMedia && isset($assocMedia['url'])) $tableArr['assocMedia'][] = $assocMedia;
 				if(empty($this->fateLocationArr[1]['loc'])){
 					//locationID has not yet been harvested from collection_location field, thus looking for value set within parent
@@ -739,14 +743,14 @@ class OccurrenceHarvester{
 				}
 
 				//Taxonomic fields
-				$skipTaxonomy = array(5,6,10,13,16,21,23,31,41,42,58,60,61,62,67,68,69,76,92,98);
+				$skipTaxonomy = array(5,6,10,13,16,21,23,31,41,42,58,60,61,62,67,68,69,76,92);
 				if(!in_array($dwcArr['collid'],$skipTaxonomy)){
 					$identArr = array();
 					$taxonCode = '';
-					if(isset($sampleArr['identifications']) && !in_array($dwcArr['collid'], array(46))){
+					if(isset($sampleArr['identifications']) && !in_array($dwcArr['collid'], array(46,98))){
 						$identArr = $sampleArr['identifications'];
 					}
-					if(!$identArr && $sampleArr['taxonID'] && !in_array($dwcArr['collid'], array(46))){
+					if(!$identArr && $sampleArr['taxonID'] && !in_array($dwcArr['collid'], array(46,98))){
 						$hash = hash('md5', str_replace(' ','',$sampleArr['taxonID'].'manifests.d.'));
 						$identArr[$hash] = array('sciname' => $sampleArr['taxonID'], 'identifiedBy' => 'manifest', 'dateIdentified' => 's.d.', 'taxonRemarks' => 'Identification source: inferred from shipment manifest');
 					}
@@ -754,7 +758,7 @@ class OccurrenceHarvester{
 						//Identifications not supplied via API nor manifest, thus try to grab from sampleID with collection specific format
 						$taxonCode = '';
 						$taxonRemarks = '';
-						if(in_array($dwcArr['collid'], array(46))){
+						if(in_array($dwcArr['collid'], array(46,98))){
 							if (preg_match('/\.\d{8}\.([a-zA-Z]{2,15})\./', $sampleArr['sampleID'], $m)) {
 								$taxonCode = $m[1];
 								$taxonRemarks = 'Identification source: parsed from NEON sampleID';
@@ -1306,15 +1310,31 @@ class OccurrenceHarvester{
 				$tid = '';
 				if($dwcArr['collid'] == 5 || $dwcArr['collid'] == 67){
 					$sciname = 'Benthic Microbe';
+				} 
+				if($dwcArr['collid'] == 21 || $dwcArr['collid'] == 61){
+					$sciname = 'Bulk Aquatic Macroinvertebrates';
+				}
+				if($dwcArr['collid'] == 23){
+					$sciname = 'Terrestrial Plant Litterfall';
 					$tid = 126842;
 				}
 				elseif($dwcArr['collid'] == 6 || $dwcArr['collid'] == 68){
 					$sciname = 'Surface Water Microbe';
 					$tid = 126843;
 				}
+				elseif($dwcArr['collid'] == 13 || $dwcArr['collid'] == 16 ){
+					$sciname = 'Bulk Terrestrial Invertebrates';
+				}
+				elseif($dwcArr['collid'] == 18){
+					$sciname = 'Bulk Canopy Foliage';
+					$tid=126850;
+				}
 				elseif($dwcArr['collid'] == 31 || $dwcArr['collid'] == 69){
 					$sciname = 'Soil Microbe';
 					$tid = 126874;
+				}
+				elseif($dwcArr['collid'] == 30){
+					$sciname = 'Soil';
 				}
 				elseif($dwcArr['collid'] == 41){
 					$sciname = 'Dry Deposition';
@@ -1327,6 +1347,12 @@ class OccurrenceHarvester{
 				elseif(in_array($dwcArr['collid'],array(7,8,9,18,50,73))){
 					$sciname = 'Plantae';
 					$tid = 4;
+				}
+				elseif($dwcArr['collid'] == 10){
+					$sciname = 'Belowground Plant Biomass';
+				}
+				elseif($dwcArr['collid'] == 60|| $dwcArr['collid'] == 62){
+					$sciname = 'Zooplankton';
 				}
 				elseif($dwcArr['collid'] == 92){
 					$sciname = 'Aquatic Sediments';
