@@ -164,9 +164,13 @@ class OccurrenceHarvester{
 				$uuidManager->populateGuids();
 				//Update stats for each collection affected
 				if($collArr){
-					echo '<li>Update stats for each collection...</li>';
+					echo '<li>Update stats and associations for each collection...</li>';
 					$collManager = new OccurrenceCollectionProfile();
 					foreach($collArr as $collID){
+						if (in_array($collID,array(17,19,24,25,26,27,28,71,90,91))){
+							echo '<li style="margin-left:15px"><b>Setting mammal occurrence associations.</b></li>';
+							$this->conn->query('call new_create_mammal_associations()');
+						}
 						echo '<li style="margin-left:15px">Stat update for collection <a href="'.$GLOBALS['CLIENT_ROOT'].'/collections/misc/collprofiles.php?collid='.$collID.'" target="_blank">#'.$collID.'</a>...</li>';
 						$collManager->setCollid($collID);
 						$collManager->updateStatistics(false);
