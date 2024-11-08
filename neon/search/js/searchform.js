@@ -945,8 +945,6 @@ hideColCheckbox(101);
 hideColCheckbox(102);
 hideColCheckbox(103);
 hideColCheckbox(104);
-hideColCheckbox(105);
-hideColCheckbox(106);
 hideColCheckbox(107);
 hideColCheckbox(108);
 hideColCheckbox(109);
