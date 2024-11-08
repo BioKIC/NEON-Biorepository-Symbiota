@@ -569,7 +569,6 @@ class OccurrenceHarvester{
 								if($fArr['smsKey'] == 'identification_remarks' && $fArr['smsValue']){
 									$identRemarks[] = $fArr['smsValue'];
 								}
-								$identArr['identificationRemarks'] = implode('; ',$identRemarks);
 							}
 							elseif(!in_array($tableName,array('ptx_taxonomy_in')) && $fArr['smsKey'] == 'identification_remarks' && $fArr['smsValue']) {
 									$identArr['identificationRemarks'] = $fArr['smsValue'];
@@ -579,6 +578,7 @@ class OccurrenceHarvester{
 						}
 					}
 				}
+				$identArr['identificationRemarks'] = implode('; ',$identRemarks);
 				if($assocMedia && isset($assocMedia['url'])) $tableArr['assocMedia'][] = $assocMedia;
 				if(empty($this->fateLocationArr[1]['loc'])){
 					//locationID has not yet been harvested from collection_location field, thus looking for value set within parent
