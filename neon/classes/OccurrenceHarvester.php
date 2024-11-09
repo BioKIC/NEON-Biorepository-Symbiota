@@ -9,7 +9,7 @@ class OccurrenceHarvester{
 
 	private $conn;
 	private $activeCollid = 0;
-	private $collArr = array();
+	private $collectionArr = array();
 	private $fateLocationArr;
 	private $taxonCodeArr = array();
 	private $taxonArr = array();
@@ -1295,8 +1295,8 @@ class OccurrenceHarvester{
 
 	private function getDatasetName($collid){
 		$datasetName = '';
-		if(!empty($this->collArr[$collid]['datasetName'])){
-			$datasetName = $this->collArr[$collid]['datasetName'];
+		if(!empty($this->collectionArr[$collid]['datasetName'])){
+			$datasetName = $this->collectionArr[$collid]['datasetName'];
 		}
 		else{
 			$sql = 'SELECT datasetName FROM omcollections WHERE collID= ' .$collid;
@@ -1304,7 +1304,7 @@ class OccurrenceHarvester{
 			if($r = $rs->fetch_object()){
 				if($r->datasetName) {
 					$datasetName = $r->datasetName;
-					$this->collArr[$collid]['datasetName'] = $datasetName;
+					$this->collectionArr[$collid]['datasetName'] = $datasetName;
 				}
 			}
 			$rs->free();
