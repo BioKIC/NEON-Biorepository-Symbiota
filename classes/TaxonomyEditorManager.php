@@ -200,14 +200,12 @@ class TaxonomyEditorManager extends Manager{
 	}
 
 	private function setParentName(){
-		$sql = "SELECT t.sciname, t.author ".
-			"FROM taxa t ".
-			"WHERE (t.tid = ".$this->parentTid.")";
-		//echo $sql."<br>";
+		$sql = 'SELECT sciname, author, rankid FROM taxa WHERE (tid = ' . $this->parentTid . ')';
 		$rs = $this->conn->query($sql);
 		if($r = $rs->fetch_object()){
-			$this->parentNameFull = '<i>'.$r->sciname.'</i> '.$r->author;
-			$this->parentName = $r->sciname;
+			if($r->rankid >= 180) $this->parentNameFull = '<i>' . htmlspecialchars($r->sciname, ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . '</i> ' . $r->author;
+			else $this->parentNameFull = htmlspecialchars($r->sciname . ' ' . $r->author, ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE);
+			$this->parentName = htmlspecialchars($r->sciname, ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE);
 		}
 		$rs->free();
 	}
@@ -240,8 +238,15 @@ class TaxonomyEditorManager extends Manager{
 		//If SecurityStatus was changed, set security status within omoccurrence table
 		if($postArr['securitystatus'] != $_REQUEST['securitystatusstart']){
 			if(is_numeric($postArr['securitystatus'])){
-				$sql2 = 'UPDATE omoccurrences SET localitysecurity = '.$postArr['securitystatus'].' WHERE (tidinterpreted = '.$this->tid.') AND (localitySecurityReason IS NULL)';
-				$this->conn->query($sql2);
+				$sql2 = 'UPDATE omoccurrences SET localitysecurity = 0 WHERE (tidinterpreted = ?) AND (localitySecurityReason IS NULL)';
+				if($postArr['securitystatus']){
+					$sql2 = 'UPDATE omoccurrences SET localitysecurity = 1 WHERE (tidinterpreted = ?) AND (localitySecurityReason IS NULL) AND (cultivationStatus = 0 OR cultivationStatus IS NULL)';
+				}
+				if($stmt = $this->conn->prepare($sql2)){
+					$stmt->bind_param('i', $this->tid);
+					$stmt->execute();
+					$stmt->close();
+				}
 			}
 		}
 		return $statusStr;
@@ -601,12 +606,28 @@ class TaxonomyEditorManager extends Manager{
 				return (isset($this->langArr['ERROR_MISSING_PARENTID'])?$this->langArr['ERROR_MISSING_PARENTID']:'ERROR loading taxon due to missing parentTid');
 			}
 
-			//Link new name to existing specimens and set locality secirity if needed
-			$sql1 = 'UPDATE omoccurrences o INNER JOIN taxa t ON o.sciname = t.sciname SET o.TidInterpreted = t.tid ';
-			if($dataArr['securitystatus'] == 1) $sql1 .= ',o.localitysecurity = 1 ';
-			$sql1 .= 'WHERE (o.sciname = "'.$this->cleanInStr($dataArr["sciname"]).'") ';
-			if(!$this->conn->query($sql1)){
-				echo (isset($this->langArr['WARNING_OCCURRENCES_NOT UPDATED'])?$this->langArr['WARNING_OCCURRENCES_NOT']:'WARNING: Taxon loaded into taxa, but  occurrences must be updated with matching name').': '.$this->conn->error;
+			//Link new name to existing specimens
+			$sqlUpdate1 = 'UPDATE omoccurrences o INNER JOIN taxa t ON o.sciname = t.sciname SET o.TidInterpreted = t.tid WHERE (o.sciname = ?)';
+			if($stmt = $this->conn->prepare($sqlUpdate1)){
+				$stmt->bind_param('s', $dataArr["sciname"]);
+				$stmt->execute();
+				if($stmt->error){
+					if(isset($this->langArr['WARNING_OCCURRENCES_NOT'])) echo $this->langArr['WARNING_OCCURRENCES_NOT'];
+					else echo 'WARNING: Taxon loaded into taxa, but occurrences must be updated with matching name';
+					echo ': ' . $this->conn->error;
+				}
+				$stmt->close();
+			}
+			if($dataArr['securitystatus'] == 1){
+				//Set locality security
+				$sqlUpdate2 = 'UPDATE omoccurrences o INNER JOIN taxa t ON o.sciname = t.sciname
+					SET o.localitysecurity = 1
+					WHERE (o.localitySecurityReason IS NULL) AND (cultivationStatus = 0 OR cultivationStatus IS NULL) AND (o.sciname = ?) ';
+				if($stmt = $this->conn->prepare($sqlUpdate2)){
+					$stmt->bind_param('s', $dataArr["sciname"]);
+					$stmt->execute();
+					$stmt->close();
+				}
 			}
 
 			//Link occurrence images to the new name
@@ -788,15 +809,15 @@ class TaxonomyEditorManager extends Manager{
 			if(!$this->conn->query($sql)) $this->warningArr[] = (isset($this->langArr['ERROR_TRANSFER_TAXLINKS'])?$this->langArr['ERROR_TRANSFER_TAXLINKS']:'ERROR transferring taxa links').' ('.$this->conn->error.')';
 
 			//Transfer children taxa
-			$sql ='UPDATE taxstatus SET parenttid = '.$targetTid.' WHERE parenttid = '.$this->tid;
+			$sql ='UPDATE IGNORE taxstatus SET parenttid = '.$targetTid.' WHERE parenttid = '.$this->tid;
 			if(!$this->conn->query($sql)) $this->warningArr[] = (isset($this->langArr['ERROR_TRANSFER_CHILD'])?$this->langArr['ERROR_TRANSFER_CHILD']:'ERROR transferring child taxa').' ('.$this->conn->error.')';
 
 			//Transfer Synonyms
-			$sql ='UPDATE taxstatus SET tidaccepted = '.$targetTid.' WHERE tidaccepted = '.$this->tid;
+			$sql ='UPDATE IGNORE taxstatus SET tidaccepted = '.$targetTid.' WHERE tidaccepted = '.$this->tid;
 			if(!$this->conn->query($sql)) $this->warningArr[] = (isset($this->langArr['ERROR_TRANSFER_SYN'])?$this->langArr['ERROR_TRANSFER_SYN']:'ERROR transferring synonyms taxa').' ('.$this->conn->error.')';
 
 			//Adjust taxaEnumTree index table
-			$sql ='UPDATE taxaenumtree SET parenttid = '.$targetTid.' WHERE parenttid = '.$this->tid;
+			$sql ='UPDATE IGNORE taxaenumtree SET parenttid = '.$targetTid.' WHERE parenttid = '.$this->tid;
 			if(!$this->conn->query($sql)) $this->warningArr[] = (isset($this->langArr['ERROR_TRANSFER_TAXENUMTREE'])?$this->langArr['ERROR_TRANSFER_TAXENUMTREE']:'ERROR resetting taxaEnumTree index').' ('.$this->conn->error.')';
 
 			$status = $this->deleteTaxon();

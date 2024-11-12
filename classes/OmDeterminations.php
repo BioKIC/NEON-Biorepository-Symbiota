@@ -1,94 +1,129 @@
 <?php
+include_once('Manager.php');
+include_once('OccurrenceUtilities.php');
 include_once('UuidFactory.php');
 
-class OmDeterminations{
+class OmDeterminations extends Manager{
 
-	private $conn;
 	private $detID = null;
 	private $occid = null;
-	private $fieldMap = array();
+	private $schemaMap = array();
 	private $parameterArr = array();
 	private $typeStr = '';
-	private $errorMessage = '';
 
 	public function __construct($conn){
-		$this->conn = $conn;
-		/*
-		$this->fieldMap = array('identifiedBy' => 's', 'identifiedByAgentID' => 'i', 'identifiedByID' => 's', 'dateIdentified' => 's', 'dateIdentifiedInterpreted' => 's',
-			'higherClassification' => 's', 'family' => 's', 'sciname' => 's', 'verbatimIdentification' => 's', 'scientificNameAuthorship' => 's', 'tidInterpreted' => 'i',
-			'identificationUncertain' => 'i', 'identificationQualifier' => 's', 'genus' => 's', 'specificEpithet' => 's', 'verbatimTaxonRank' => 's', 'taxonRank' => 's',
-			'infraSpecificEpithet' => 's', 'isCurrent' => 'i', 'printQueue' => 'i', 'appliedStatus' => 'i', 'securityStatus' => 'i', 'securityStatusReason' => 's',
-			'detType' => 's', 'identificationReferences' => 's', 'identificationRemarks' => 's', 'taxonRemarks' => 's', 'identificationVerificationStatus' => 's',
-			'taxonConceptID' => 's', 'sourceIdentifier' => 's', 'sortSequence' => 'i', 'recordID' => 's', 'createdUid' => 'i', 'modifiedUid' => 'i', 'dateLastModified' => 's');
-		*/
-		$this->fieldMap = array('identifiedBy' => 's', 'identifiedByAgentID' => 'i', 'identifiedByID' => 's', 'dateIdentified' => 's', 'dateIdentifiedInterpreted' => 's',
-			'higherClassification' => 's', 'family' => 's', 'sciname' => 's', 'verbatimIdentification' => 's', 'scientificNameAuthorship' => 's', 'tidInterpreted' => 'i',
-			'identificationQualifier' => 's', 'genus' => 's', 'specificEpithet' => 's', 'verbatimTaxonRank' => 's', 'taxonRank' => 's',
-			'infraSpecificEpithet' => 's', 'isCurrent' => 'i', 'printQueue' => 'i', 'appliedStatus' => 'i', 'securityStatus' => 'i', 'securityStatusReason' => 's',
-			'detType' => 's', 'identificationReferences' => 's', 'identificationRemarks' => 's', 'taxonRemarks' => 's', 'identificationVerificationStatus' => 's',
-			'taxonConceptID' => 's', 'sortSequence' => 'i', 'recordID' => 's', 'dateLastModified' => 's');
+		parent::__construct(null, 'write', $conn);
+		$this->schemaMap = array('identifiedBy' => 's', 'dateIdentified' => 's', 'dateIdentifiedInterpreted' => 's', 'higherClassification' => 's', 'family' => 's', 'sciname' => 's', 'verbatimIdentification' => 's',
+				'scientificNameAuthorship' => 's', 'tidInterpreted' => 'i', 'identificationuncertain' => 'i', 'identificationQualifier' => 's', 'isCurrent' => 'i', 'printQueue' => 'i', 'appliedStatus' => 'i',
+				'securityStatus' => 'i', 'securityStatusReason' => 's', 'detType' => 's', 'identificationReferences' => 's', 'identificationRemarks' => 's', 'taxonRemarks' => 's',
+				'identificationVerificationStatus' => 's', 'taxonConceptID' => 's', 'sourceIdentifier' => 's', 'sortSequence' => 'i', 'createdUid' => 'i', 'modifiedUid' => 'i');
 	}
 
 	public function __destruct(){
+		parent::__destruct();
 	}
 
-	public function getDeterminationArr($conditionArr = null){
+	public function getDeterminationArr($filterArr = null){
+		//Returns determinations based on a single matching detID or occid (determinations for a single occurrence)
 		$retArr = array();
-		$uidArr = array();
-		$sql = 'SELECT detid, occid, '.implode(', ', array_keys($this->fieldMap)).', initialTimestamp FROM omoccurdeterminations WHERE ';
-		if($this->detID) $sql .= 'detid = '.$this->detID;
+		$sql = 'SELECT detID, occid, '.implode(', ', array_keys($this->schemaMap)).', initialTimestamp FROM omoccurdeterminations WHERE ';
+		if($this->detID) $sql .= '(detID = '.$this->detID.') ';
 		elseif($this->occid) $sql .= '(occid = '.$this->occid.') ';
-		if($conditionArr && is_array($conditionArr)){
-			foreach($conditionArr as $fieldName => $condition){
-				if(array_key_exists($fieldName, $this->fieldMap)){
-					$sql .= 'AND ('.$fieldName.' = "'.$this->conn->real_escape_string($condition).'") ';
-				}
+		//Apply input filter conditions
+		$paramArr = array();
+		if($filterArr){
+			$this->setParameterArr($filterArr);
+			foreach($this->parameterArr as $field => $value){
+				$sql .= 'AND '.$field.' = ? ';
+				$paramArr[] = $value;
 			}
 		}
-		$sql .= 'ORDER BY sortSequence ASC, dateIdentifiedInterpreted DESC, detid DESC';
-		if($rs = $this->conn->query($sql)){
-			while($r = $rs->fetch_assoc()){
-				$retArr[$r['detid']] = $r;
-				//$uidArr[$r['createdUid']] = $r['createdUid'];
-				//$uidArr[$r['modifiedUid']] = $r['modifiedUid'];
-			}
-			$rs->free();
-		}
-		if($uidArr){
-			//Add user names for modified and created by
-			$sql = 'SELECT uid, firstname, lastname, username FROM users WHERE uid IN('.implode(',', $uidArr).')';
-			if($rs = $this->conn->query($sql)){
-				while($r = $rs->fetch_object()){
-					$uidArr[$r->uid] = $r->lastname . ($r->firstname ? ', ' . $r->firstname : '');
+		//Run query
+		$uidArr = array();
+		if($stmt = $this->conn->prepare($sql)){
+			if($paramArr) $stmt->bind_param($this->typeStr, $paramArr);
+			$stmt->execute();
+			if($rs = $stmt->get_result()){
+				while($r = $rs->fetch_assoc()){
+					$retArr[$r['detID']] = $r;
+					if($r['createdUid']) $uidArr[$r['createdUid']] = $r['createdUid'];
+					if($r['modifiedUid']) $uidArr[$r['modifiedUid']] = $r['modifiedUid'];
 				}
 				$rs->free();
 			}
+			$stmt->close();
+		}
+		if($uidArr){
+			//Add user names based on modifiedBy and createdBy IDs
+			$uidArr = $this->getUserNames($uidArr);
 			foreach($retArr as $detID => $detArr){
-				if($detArr['createdUid'] && array_key_exists($detArr['createdUid'], $uidArr)) $retArr[$detID]['createdBy'] = $uidArr[$detArr['createdUid']];
-				if($detArr['modifiedUid'] && array_key_exists($detArr['modifiedUid'], $uidArr)) $retArr[$detID]['modifiedBy'] = $uidArr[$detArr['modifiedUid']];
+				if($detArr['createdUid'] && array_key_exists($detArr['createdUid'], $uidArr)){
+					$retArr[$detID]['createdBy'] = $uidArr[$detArr['createdUid']];
+				}
+				if($detArr['modifiedUid'] && array_key_exists($detArr['modifiedUid'], $uidArr)){
+					$retArr[$detID]['modifiedBy'] = $uidArr[$detArr['modifiedUid']];
+				}
 			}
 		}
 		return $retArr;
 	}
 
-	public function getDeterminationSetArr($occidArr, $conditionArr = null){
+	public function getDeterminationSetArr($occidArr, $filterArr = null){
+		//Returns determinations based on a set of occurrence (determinations for many occurrences)
 		$retArr = array();
 		$occidStr = implode(',', $occidArr);
 		if(preg_match('/^[\d,]+$/', $occidStr)){
-			$sql = 'SELECT detid, occid, '.implode(', ', array_keys($this->fieldMap)).', initialTimestamp FROM omoccurdeterminations WHERE occid IN('.$occidStr.') ';
-			if($conditionArr && is_array($conditionArr)){
-				foreach($conditionArr as $fieldName => $condition){
-					if(array_key_exists($fieldName, $this->fieldMap)){
-						$sql .= 'AND ('.$fieldName.' = "'.$this->conn->real_escape_string($condition).'") ';
+			$sql = 'SELECT detID, occid, ' . implode(', ', array_keys($this->schemaMap)) . ', initialTimestamp FROM omoccurdeterminations WHERE occid IN(' . $occidStr . ') ';
+			//Apply input filter conditions
+			$paramArr = array();
+			if($filterArr){
+				$this->setParameterArr($filterArr);
+				foreach($this->parameterArr as $field => $value){
+					$sql .= 'AND '.$field.' = ? ';
+					$paramArr[] = $value;
+				}
+			}
+			//Run query
+			$uidArr = array();
+			if($stmt = $this->conn->prepare($sql)){
+				if($paramArr) $stmt->bind_param($this->typeStr, ...$paramArr);
+				$stmt->execute();
+				if($rs = $stmt->get_result()){
+					while($r = $rs->fetch_assoc()){
+						$retArr[$r['occid']][$r['detID']] = $r;
+						if($r['createdUid']) $uidArr[$r['createdUid']] = $r['createdUid'];
+						if($r['modifiedUid']) $uidArr[$r['modifiedUid']] = $r['modifiedUid'];
+					}
+					$rs->free();
+				}
+				$stmt->close();
+			}
+			if($uidArr){
+				//Add user names based on modifiedBy and createdBy IDs
+				$uidArr = $this->getUserNames($uidArr);
+				foreach($retArr as $occid => $dArr){
+					foreach($dArr as $detID => $detArr){
+						if($detArr['createdUid'] && array_key_exists($detArr['createdUid'], $uidArr)){
+							$retArr[$occid][$detID]['createdBy'] = $uidArr[$detArr['createdUid']];
+						}
+						if($detArr['modifiedUid'] && array_key_exists($detArr['modifiedUid'], $uidArr)){
+							$retArr[$occid][$detID]['modifiedBy'] = $uidArr[$detArr['modifiedUid']];
+						}
 					}
 				}
 			}
-			if($rs = $this->conn->query($sql)){
-				while($r = $rs->fetch_assoc()){
-					$retArr[$r['occid']][$r['detid']] = $r;
-				}
-				$rs->free();
+		}
+		return $retArr;
+	}
+
+	private function getUserNames($uidArr){
+		$retArr = array();
+		$sql = 'SELECT uid, firstname, lastname, username FROM users WHERE uid IN('.implode(',', $uidArr).')';
+		if($rs = $this->conn->query($sql)){
+			while($r = $rs->fetch_object()){
+				$retArr[$r->uid] = $r->lastname . ($r->firstname ? ', ' . $r->firstname : '');
 			}
+			$rs->free();
 		}
 		return $retArr;
 	}
@@ -108,17 +143,26 @@ class OmDeterminations{
 				$sqlValues .= '?, ';
 				$paramArr[] = $value;
 			}
-			$sql .= ') VALUES('.trim($sqlValues, ', ').') ';
+			$sql .= ') VALUES(' . trim($sqlValues, ', ') . ') ';
 			if($stmt = $this->conn->prepare($sql)){
 				$stmt->bind_param($this->typeStr, ...$paramArr);
-				if($stmt->execute()){
-					if($stmt->affected_rows || !$stmt->error){
-						$this->detID = $stmt->insert_id;
-						$status = true;
+				try {
+					if($stmt->execute()){
+						if($stmt->affected_rows || !$stmt->error){
+							$this->detID = $stmt->insert_id;
+							$status = true;
+						}
+						else $this->errorMessage = 'ERROR inserting omoccurdeterminations record (2): '.$stmt->error;
 					}
-					else $this->errorMessage = 'ERROR inserting omoccurdeterminations record (2): '.$stmt->error;
+					else $this->errorMessage = 'ERROR inserting omoccurdeterminations record (1): '.$stmt->error;
+				} catch (mysqli_sql_exception $e) {
+					if ($e->getCode() == '1062' || $e->getCode() == '1406') {
+						$this->errorMessage = $e->getMessage();
+					}
+					else {
+						throw $e;
+					}
 				}
-				else $this->errorMessage = 'ERROR inserting omoccurdeterminations record (1): '.$stmt->error;
 				$stmt->close();
 			}
 			else $this->errorMessage = 'ERROR preparing statement for omoccurdeterminations insert: '.$this->conn->error;
@@ -138,7 +182,7 @@ class OmDeterminations{
 			}
 			$paramArr[] = $this->detID;
 			$this->typeStr .= 'i';
-			$sql = 'UPDATE omoccurdeterminations SET '.trim($sqlFrag, ', ').' WHERE (detid = ?)';
+			$sql = 'UPDATE omoccurdeterminations SET '.trim($sqlFrag, ', ').' WHERE (detID = ?)';
 			if($stmt = $this->conn->prepare($sql)) {
 				$stmt->bind_param($this->typeStr, ...$paramArr);
 				$stmt->execute();
@@ -152,15 +196,28 @@ class OmDeterminations{
 	}
 
 	private function setParameterArr($inputArr){
-		foreach($this->fieldMap as $field => $type){
+		foreach($this->schemaMap as $field => $type){
 			$postField = '';
 			if(isset($inputArr[$field])) $postField = $field;
 			elseif(isset($inputArr[strtolower($field)])) $postField = strtolower($field);
 			if($postField){
 				$value = trim($inputArr[$postField]);
-				if(!$value) $value = null;
+				if($value){
+					$postField = strtolower($postField);
+					if($postField == 'modifieduid') $value = OccurrenceUtilities::verifyUser($value, $this->conn);
+					elseif($postField == 'createduid') $value = OccurrenceUtilities::verifyUser($value, $this->conn);
+					elseif($type == 'i'){
+						if(!is_numeric($value)){
+							$value = strtolower($value);
+							if($value == 'yes' || $value == 'true') $value = 1;
+							else $value = 0;
+						}
+						if($postField == 'sortsequence') $value = 10;
+					}
+				}
+				else $value = null;
 				$this->parameterArr[$field] = $value;
-				$this->typeStr .= ($this->typeStr ? ',' : '') . $type;
+				$this->typeStr .= $type;
 			}
 		}
 		if(isset($inputArr['occid']) && $inputArr['occid'] && !$this->occid) $this->occid = $inputArr['occid'];
@@ -168,7 +225,7 @@ class OmDeterminations{
 
 	public function deleteDetermination(){
 		if($this->detID){
-			$sql = 'DELETE FROM omoccurdeterminations WHERE detid = '.$this->detID;
+			$sql = 'DELETE FROM omoccurdeterminations WHERE detID = '.$this->detID;
 			if($this->conn->query($sql)){
 				return true;
 			}
@@ -192,12 +249,8 @@ class OmDeterminations{
 		if(is_numeric($id)) $this->occid = $id;
 	}
 
-	public function getFieldMap(){
-		return $this->fieldMap;
-	}
-
-	public function getErrorMessage(){
-		return $this->errorMessage;
+	public function getSchemaMap(){
+		return $this->schemaMap;
 	}
 }
 ?>

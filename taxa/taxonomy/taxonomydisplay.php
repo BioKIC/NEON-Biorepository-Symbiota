@@ -48,8 +48,8 @@ if($IS_ADMIN || array_key_exists('Taxonomy', $USER_RIGHTS)){
 	include_once($SERVER_ROOT.'/includes/head.php');
 	include_once($SERVER_ROOT.'/includes/googleanalytics.php');
 	?>
-	<script src="../../js/jquery.js" type="text/javascript"></script>
-	<script src="../../js/jquery-ui.js" type="text/javascript"></script>
+	<script src="<?php echo $CLIENT_ROOT; ?>/js/jquery-3.7.1.min.js" type="text/javascript"></script>
+	<script src="<?php echo $CLIENT_ROOT; ?>/js/jquery-ui.min.js" type="text/javascript"></script>
 	<script type="text/javascript">
 		$(document).ready(function() {
 			$("#taxontarget").autocomplete({
@@ -80,10 +80,11 @@ if($IS_ADMIN || array_key_exists('Taxonomy', $USER_RIGHTS)){
 		<a href="../../index.php"><?= $LANG['HOME'] ?></a> &gt;&gt;
 		<a href="taxonomydisplay.php"><b><?= $LANG['TAX_TREE_VIEWER'] ?></b></a>
 	</div>
-	<div id="innertext">
+	<div role="main" id="innertext">
+		<h1 class="page-heading">Central Taxonomic Thesaurus</h1>
 		<?php
 		if($statusStr){
-			$statusStr = str_replace(';', '<br/>', htmlspecialchars($statusStr, HTML_SPECIAL_CHARS_FLAGS));
+			$statusStr = str_replace(';', '<br/>', htmlspecialchars($statusStr, ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE));
 			?>
 			<hr/>
 			<div style="color:<?php echo (stripos($statusStr,'SUCCESS') !== false?'green':'red'); ?>;margin:15px;">
@@ -162,7 +163,7 @@ if($IS_ADMIN || array_key_exists('Taxonomy', $USER_RIGHTS)){
 		</div>
 		<?php
 		if(!$taxonDisplayObj->displayTaxonomyHierarchy()){
-			echo '<div style="margin:20px;">No taxa found matching your search</div>';
+			echo '<div style="margin:20px;">' . $LANG['NO_TAXA_FOUND'] . '</div>';
 		}
 		?>
 	</div>

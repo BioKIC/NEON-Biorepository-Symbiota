@@ -592,7 +592,7 @@ class OccurrenceExsiccatae {
 		}
 		if($transferCnt){
 			$statusStr = 'SUCCESS transferring '.$transferCnt.' records ';
-			//if($datasetId) $statusStr = '<br/>Records linked to dataset: <a href="">'.$datasetTitle.'</a>';
+			//if($datasetId) $statusStr = '<br/>Records linked to dataset: <a href="">' . htmlspecialchars($datasetTitle, ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . '</a>';
 		}
 		return $statusStr;
 	}
@@ -721,13 +721,14 @@ class OccurrenceExsiccatae {
 	}
 
 	public function getTargetCollArr(){
+		global $USER_RIGHTS;
 		$retArr = array();
 		$collArr = array();
-		if(isset($GLOBALS['CollAdmin'])){
-			$collArr = $GLOBALS['CollAdmin'];
+		if(isset($USER_RIGHTS['CollAdmin'])){
+			$collArr = $USER_RIGHTS['CollAdmin'];
 		}
-		if(isset($GLOBALS['CollEditor'])){
-			$collArr = array_merge($collArr,$GLOBALS['CollEditor']);
+		if(isset($USER_RIGHTS['CollEditor'])){
+			$collArr = array_merge($collArr, $USER_RIGHTS['CollEditor']);
 		}
 		if($collArr){
 			$sql ='SELECT DISTINCT c.collid, c.collectionname, c.institutioncode, c.collectioncode '.
@@ -762,7 +763,7 @@ class OccurrenceExsiccatae {
 		$retStr .= '<td align="center"><a href="#" onclick="openExsPU('.$omenid.')">#'.$oArr['exsnum'].'</a></td>';
 		$retStr .= '<td>';
 		$retStr .= '<span '.($isTarget?'style="color:red;"':'').' title="'.$oArr['collname'].'">'.$oArr['collcode'].'</span>, ';
-		$retStr .= '<a href="#" onclick="openIndPU('.$occid.')">'.$oArr['recby'].' '.($oArr['recnum']?$oArr['recnum']:'s.n.').'</a>';
+		$retStr .= '<a href="#" onclick="openIndPU(' . htmlspecialchars($occid, ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . ')">' . htmlspecialchars($oArr['recby'], ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . ' ' . htmlspecialchars(($oArr['recnum']?$oArr['recnum']:'s.n.'), ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . '</a>';
 		$retStr .= ($oArr['eventdate']?', '.$oArr['eventdate']:'');
 		$retStr .= ', <i>'.$oArr['sciname'].'</i> '.$oArr['author'];
 		$retStr .= $oArr['country'].', '.$oArr['state'].', '.$oArr['county'].', '.(strlen($oArr['locality'])>75?substr($oArr['locality'],0,75).'...':$oArr['locality']);
