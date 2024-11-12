@@ -9,6 +9,7 @@ class OccurrenceHarvester{
 
 	private $conn;
 	private $activeCollid = 0;
+	private $collectionArr = array();
 	private $fateLocationArr;
 	private $taxonCodeArr = array();
 	private $taxonArr = array();
@@ -1089,12 +1090,6 @@ class OccurrenceHarvester{
 		if(array_key_exists($sourceCollid, $collArr)){
 			$targetCollid = $collArr[$sourceCollid]['targetCollid'];
 			if(!empty($dwcArr['identifications'])){
-				$sql = 'SELECT datasetName FROM omcollections WHERE collID= ' .$collArr[$sourceCollid]['targetCollid'];
-				$rs = $this->conn->query($sql);
-				$r = $rs->fetch_assoc();
-				if ($r['datasetName'] !== NULL) {
-				$collArr[$sourceCollid]['verbatimAttributes'] = $r['datasetName'] ;
-				}
 				if($dwcArr['identifications']){
 					//Evaluate identification cluster to determine which IDs should become subsamples
 					$identificationsGrouped = array();
@@ -1162,9 +1157,10 @@ class OccurrenceHarvester{
 						if(!empty($dwcArr['identifiers']['NEON sampleID Hash'])){
 							$dwcArrClone['identifiers']['Originating NEON sampleID Hash'] = $dwcArr['identifiers']['NEON sampleID Hash'];
 						}
-						if (isset($collArr[$sourceCollid]['verbatimAttributes'])) {
-							$dwcArrClone['verbatimAttributes'] = $collArr[$sourceCollid]['verbatimAttributes']; // use dataset name of destination collection
-						}						
+						if($datasetName = $this->getDatasetName($targetCollid)){
+							// use dataset name of destination collection, if it exists, otherwise it will just maintain the parent datasetName
+							$dwcArrClone['verbatimAttributes'] = $datasetName;
+						}
 						//Load subsample into database
 						$occid = $this->loadOccurrenceRecord($dwcArrClone, $existingOccid);
 						if(!$existingOccid && $occid){
@@ -1179,7 +1175,7 @@ class OccurrenceHarvester{
 						$sharedAssocArr = $this->setSharedOriginAssoc($allSubOccids);
 						foreach ($sharedAssocArr as $occid => $assocArr) {
 							// Call the setAssociations function with the current occid and its associated array
-							$this -> setAssociations($occid, $assocArr);
+							$this->setAssociations($occid, $assocArr);
 						}
 					}
 					//Delete all subsamples that are not identified as a subsample import
@@ -1297,6 +1293,25 @@ class OccurrenceHarvester{
 		return $retArr;
 	}
 
+	private function getDatasetName($collid){
+		$datasetName = '';
+		if(!empty($this->collectionArr[$collid]['datasetName'])){
+			$datasetName = $this->collectionArr[$collid]['datasetName'];
+		}
+		else{
+			$sql = 'SELECT datasetName FROM omcollections WHERE collID= ' .$collid;
+			$rs = $this->conn->query($sql);
+			if($r = $rs->fetch_object()){
+				if($r->datasetName) {
+					$datasetName = $r->datasetName;
+					$this->collectionArr[$collid]['datasetName'] = $datasetName;
+				}
+			}
+			$rs->free();
+		}
+		return $datasetName;
+	}
+
 	private function loadOccurrenceRecord($dwcArr, $occid = null, $samplePK = null){
 		if($dwcArr){
 			$domainID = (isset($dwcArr['domainID'])?$dwcArr['domainID']:0);
@@ -1308,7 +1323,7 @@ class OccurrenceHarvester{
 				$tid = '';
 				if($dwcArr['collid'] == 5 || $dwcArr['collid'] == 67){
 					$sciname = 'Benthic Microbe';
-				} 
+				}
 				if($dwcArr['collid'] == 21 || $dwcArr['collid'] == 61){
 					$sciname = 'Bulk Aquatic Macroinvertebrates';
 				}
