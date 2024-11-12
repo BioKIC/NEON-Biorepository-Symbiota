@@ -87,7 +87,7 @@ class OccurrenceEditorDeterminations extends OccurrenceEditorManager{
 		}
 		$guid = UuidFactory::getUuidV4();
 		$sql = 'INSERT IGNORE INTO omoccurdeterminations(occid, identifiedBy, dateIdentified, sciname, family, scientificNameAuthorship, '.
-			'identificationQualifier, iscurrent, printqueue, appliedStatus, identificationReferences, identificationRemarks, taxonRemarks, recordID, enteredByUid, sortsequence) '.
+			'identificationQualifier, iscurrent, printqueue, appliedStatus, identificationReferences, identificationRemarks, taxonRemarks, recordID, createdUid, sortsequence) '.
 			'VALUES ('.$this->occid.',"'.$this->cleanInStr($detArr['identifiedby']).'","'.$this->cleanInStr($detArr['dateidentified']).'","'.
 			$sciname.'",'.
 			($detArr['family']?'"'.$this->cleanInStr($detArr['family']).'"':'NULL').','.
@@ -153,7 +153,7 @@ class OccurrenceEditorDeterminations extends OccurrenceEditorManager{
 				'taxonRemarks = '.($detArr['taxonremarks']?'"'.$this->cleanInStr($detArr['taxonremarks']).'"':'NULL').','.
 				'sortsequence = '.($detArr['sortsequence']?$detArr['sortsequence']:'10').','.
 				'printqueue = '.($detArr['printqueue']?$detArr['printqueue']:'NULL').','.
-				'enteredByUid = '.$GLOBALS["SYMB_UID"].' '.
+				'createdUid = '.$GLOBALS["SYMB_UID"].' '.
 				'WHERE (detid = '.$detArr['detid'].')';
 			if($this->conn->query($sql)){
 				$this->updateBaseOccurrence($detArr['detid']);
