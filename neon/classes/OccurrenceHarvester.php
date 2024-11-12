@@ -9,6 +9,7 @@ class OccurrenceHarvester{
 
 	private $conn;
 	private $activeCollid = 0;
+	private $collectionArr = array();
 	private $fateLocationArr;
 	private $taxonCodeArr = array();
 	private $taxonArr = array();
@@ -1156,15 +1157,9 @@ class OccurrenceHarvester{
 						if(!empty($dwcArr['identifiers']['NEON sampleID Hash'])){
 							$dwcArrClone['identifiers']['Originating NEON sampleID Hash'] = $dwcArr['identifiers']['NEON sampleID Hash'];
 						}
-						// Give verbatim Attributes based on destination collection datasetName
-						$sql = 'SELECT datasetName FROM omcollections WHERE collID = ' . $targetCollid;
-						$rs = $this->conn->query($sql);
-						if ($rs) {
-							if ($r = $rs->fetch_assoc()) {
-								$dwcArrClone['verbatimAttributes'] = $r['datasetName'];
-							} else {
-								$dwcArrClone['verbatimAttributes'] = $dwcArr['verbatimAttributes']; // Default to parent value
-							}
+						if($datasetName = $this->getDatasetName($targetCollid)){
+							// use dataset name of destination collection, if it exists, otherwise it will just maintain the parent datasetName
+							$dwcArrClone['verbatimAttributes'] = $datasetName;
 						}
 						//Load subsample into database
 						$occid = $this->loadOccurrenceRecord($dwcArrClone, $existingOccid);
@@ -1180,10 +1175,9 @@ class OccurrenceHarvester{
 						$sharedAssocArr = $this->setSharedOriginAssoc($allSubOccids);
 						foreach ($sharedAssocArr as $occid => $assocArr) {
 							// Call the setAssociations function with the current occid and its associated array
-							$this -> setAssociations($occid, $assocArr);
+							$this->setAssociations($occid, $assocArr);
 						}
 					}
-
 					//Delete all subsamples that are not identified as a subsample import
 					$this->deleteSubSamples($currentSubsampleArr);
 					//Reset base sample (parent) with new identification unit containing lot ID
@@ -1239,7 +1233,7 @@ class OccurrenceHarvester{
 
 	private function setSharedOriginAssoc($allSubOccids) {
 		$combinations = [];
-			for ($i = 0; $i < count($allSubOccids); $i++) {
+		for ($i = 0; $i < count($allSubOccids); $i++) {
 			for ($j = $i + 1; $j < count($allSubOccids); $j++) {
 				// Only create one direction combination
 				$occid1 = $allSubOccids[$i];
@@ -1297,6 +1291,25 @@ class OccurrenceHarvester{
 			$rs->free();
 		}
 		return $retArr;
+	}
+
+	private function getDatasetName($collid){
+		$datasetName = '';
+		if(!empty($this->collectionArr[$collid]['datasetName'])){
+			$datasetName = $this->collectionArr[$collid]['datasetName'];
+		}
+		else{
+			$sql = 'SELECT datasetName FROM omcollections WHERE collID= ' .$collid;
+			$rs = $this->conn->query($sql);
+			if($r = $rs->fetch_object()){
+				if($r->datasetName) {
+					$datasetName = $r->datasetName;
+					$this->collectionArr[$collid]['datasetName'] = $datasetName;
+				}
+			}
+			$rs->free();
+		}
+		return $datasetName;
 	}
 
 	private function loadOccurrenceRecord($dwcArr, $occid = null, $samplePK = null){
