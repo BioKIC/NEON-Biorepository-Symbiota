@@ -137,6 +137,9 @@ if ($SYMB_UID) {
 			margin-left: 3rem;
 		}
 
+		#quicksearch-box {
+			margin-top: 5px;
+		}
 		#quicksearch-box input {
 			width: 100%;
 		}
@@ -148,7 +151,6 @@ if ($SYMB_UID) {
 		.quicksearch-container {
 			top: 1rem;
 			right: 1rem;
-			position:sticky;
 			width: 100vw;
 			margin-left: calc(50% - 50vw);
 		}
@@ -589,6 +591,9 @@ if ($SYMB_UID) {
 											<?= $LANG['RESTORE_BACKUP'] ?>
 										</a>
 									</li>
+									<?php
+								}
+								?>
 								<!--
 								<li style="margin-left:10px;">
 									<a href="../../imagelib/admin/igsnmapper.php?collid=<?= $collid ?>">
@@ -596,9 +601,6 @@ if ($SYMB_UID) {
 									</a>
 								</li>
 								 -->
-									<?php
-								}
-								?>
 								<li style="margin-left:10px;">
 									<a href="../../imagelib/admin/thumbnailbuilder.php?collid=<?= $collid ?>">
 										<?= $LANG['THUMBNAIL_MAINTENANCE'] ?>

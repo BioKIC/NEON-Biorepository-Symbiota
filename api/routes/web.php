@@ -19,7 +19,7 @@
 */
 
 $router->get('/', function () use ($router) {
-    return $router->app->version();
+	return $router->app->version();
 });
 
 $router->get('/v2', function () use ($router) {

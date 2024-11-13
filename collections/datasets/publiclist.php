@@ -10,7 +10,7 @@ $dArr = $datasetManager->getPublicDatasets();
 <!DOCTYPE html>
 <html lang="<?php echo $LANG_TAG ?>">
 	<head>
-		<title>Public Datasets List</title>
+		<title>Published Sample Research Datasets</title>
 		<?php
 		include_once($SERVER_ROOT.'/includes/head.php');
 		?>
@@ -21,14 +21,21 @@ $dArr = $datasetManager->getPublicDatasets();
 		include($SERVER_ROOT.'/includes/header.php');
 		?>
 		<div class="navpath">
-			<a href="<?php echo htmlspecialchars($CLIENT_ROOT, ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE); ?>/index.php"> <?php echo htmlspecialchars($LANG['H_HOME'], ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) ?> </a> &gt;&gt;
-			<b> <?php echo htmlspecialchars($LANG['PUB_DAT_LIST'], ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) ?> </b>
+			<a href="<?= $CLIENT_ROOT ?>/index.php"> <?= $LANG['H_HOME'] ?> </a> &gt;&gt;
+			<b> <?= $LANG['PUB_DAT_LIST'] ?> </b>
 		</div>
 		<!-- This is inner text! -->
 		<div role="main" id="innertext">
-			<h1 class="page-heading"><?php echo htmlspecialchars($LANG['PUB_DAT_LIST'], ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) ?></h1>
+			<h1 class="page-heading"><?= $LANG['PUB_DAT_LIST'] ?></h1>
 			<ul>
-				<?php
+				<?php				
+				if ($IS_ADMIN) {
+					echo '<p><a href="index.php">Dataset Management</a></p>';
+				}
+				
+					echo '<p>The datasets below link to samples and specimens associated with published research and special collections. Visit the <b><a href="https://scholar.google.com/citations?user=MGg_jIcAAAAJ&hl=en&oi=ao">NEON Biorepository Google Scholar Profile</a></b> for an up-to-date list of publications related to NEON samples and specimens.</p>';
+				
+
 				if($dArr){
 					$catArr = array();
 					// Creates categories array
@@ -62,4 +69,9 @@ $dArr = $datasetManager->getPublicDatasets();
 		include($SERVER_ROOT.'/includes/footer.php');
 		?>
 	</body>
+<script>
+	let pubTools = document.getElementById('pubtools');
+	// toggle visibility of save button
+	pubTools.addEventListener('click', function() {});
+</script>
 </html>

@@ -109,9 +109,9 @@ class OccurrenceTaxaManager {
 				}
 				else{
 					if($this->taxaArr['usethes']){
-						$sql .= 'INNER JOIN taxstatus ts ON t.tid = ts.tidaccepted
-							INNER JOIN taxa t2 ON ts.tid = t2.tid
-							WHERE (ts.taxauthid = '.$this->taxAuthId.') AND (t2.sciname IN("'.$this->cleanInStr($searchTerm).'"))';
+						$sql .= 'LEFT JOIN taxstatus ts ON t.tid = ts.tidaccepted
+							LEFT JOIN taxa t2 ON ts.tid = t2.tid
+							WHERE (ts.taxauthid = '.$this->taxAuthId.') AND (t2.sciname IN("'.$this->cleanInStr($searchTerm).'")) OR t.sciname IN("'.$this->cleanInStr($searchTerm).'")';
 					}
 					else{
 						$sql .= 'WHERE t.sciname IN("'.$this->cleanInStr($searchTerm).'")';
