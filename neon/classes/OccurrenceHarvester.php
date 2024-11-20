@@ -1024,8 +1024,12 @@ class OccurrenceHarvester{
 		elseif(in_array($dwcArr['collid'], array(29,39,44,63,65,66,71,75,82,90,91,95))) {
 			$dwcArr['individualCount'] = 1;
 		}
-		elseif(in_array($dwcArr['collid'], array(46,11,12,14,15,17,18))){
+		elseif(in_array($dwcArr['collid'], array(11,12,14,15,17,18,46,62))){
 			$dwcArr['individualCount'] = NULL;
+		}
+		elseif(in_array($dwcArr['collid'], array(61))){
+			$dwcArr['individualCount'] = NULL;
+			$dwcArr['lifeStage'] = NULL;
 		}
 	}
 
