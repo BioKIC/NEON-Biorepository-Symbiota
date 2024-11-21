@@ -228,12 +228,12 @@
           },
           {
             "id": 35,
-            "name": "Zooplankton Remaining Bulk Taxonomy Sample",
+            "name": "Zooplankton Taxonomy Samples",
             "collid": 45
           },
           {
             "id": 36,
-            "name": "Zooplankton Unsorted Bulk Sample",
+            "name": "Zooplankton Unprocessed Samples (For DNA; Bouts 1 & 3)",
             "collid": 60
           }
         ]

@@ -526,17 +526,17 @@
     "children": [
       {
         "id": 84,
-        "name": "Zooplankton DNA Extracts",
+        "name": "Zooplankton DNA Extracts (Bout 2)",
         "collid": 62
       },
       {
         "id": 85,
-        "name": "Zooplankton Remaining Bulk Taxonomy Sample",
+        "name": "Zooplankton Taxonomy Samples",
         "collid": 45
       },
       {
         "id": 86,
-        "name": "Zooplankton Unsorted Bulk Sample",
+        "name": "Zooplankton Unprocessed DNA Samples (Bouts 1 & 3)",
         "collid": 60
       }
     ]
