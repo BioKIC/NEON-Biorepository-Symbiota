@@ -23,11 +23,11 @@ $LANG['DWC'] = 'Darwin Core';
 $LANG['DWCA_EXPLAIN_3'] = ' exchange standard. We recommend that you also review instructions for';
 $LANG['PUBLISH_IDIGBIO'] = 'Publishing Occurrence Data to iDigBio';
 $LANG['PUBLISH_GBIF'] = 'Publishing Occurrence Data to GBIF';
-$LANG['DWCA_DOWNLOAD_EXPLAIN_1'] = 'The following downloads are occurrence data packages from collections being published as ';
-$LANG['DWCA_DOWNLOAD_EXPLAIN_2'] = 'files. DwC-A files are a single compressed ZIP file that contains one to several data files along with a meta.xml
-	document that describes the content and a CITEME.txt file that describes how to cite the portal. Archives published through this portal contain comma separated (CSV) files containing occurrences,
-	identifications (determinations), material samples, measurement or facts, and multimedia metadata. Fields within the occurrences.csv file are defined by the';
-$LANG['DWCA_DOWNLOAD_EXPLAIN_3'] = 'exchange standard. Other files follow the DwC extensions for those data types.';
+$LANG['DWCA_DOWNLOAD_EXPLAIN_1'] = 'The following downloads are occurrence data packages from collections that have chosen to publish their complete dataset as a';
+$LANG['DWCA_DOWNLOAD_EXPLAIN_2'] = 'file. DwC-A files are a single compressed ZIP file that contains one to several data files along with a meta.xml
+	document that describes the content. Archives published through this portal contain three comma separated (CSV) files containing occurrences,
+	identifications (determinations), and image metadata. Fields within the occurrences.csv file are defined by the';
+$LANG['DWCA_DOWNLOAD_EXPLAIN_3'] = 'exchange standard. The identification and image files follow the DwC extensions for those data types.';
 $LANG['DATA_USE_POLICY'] = 'Data Usage Policy';
 $LANG['DATA_POLICY_1'] = 'Use of these datasets requires agreement with the terms and conditions in our';
 $LANG['DATA_POLICY_2'] = 'Locality details for rare, threatened, or sensitive records have been redacted from these data files.
@@ -84,6 +84,7 @@ $LANG['INCLUDE_DETS'] = 'Include Determination History';
 $LANG['INCLUDE_IMGS'] = 'Include Image URLs';
 $LANG['INCLUDE_ATTRIBUTES'] = 'Include Occurrence Trait Attributes';
 $LANG['INCLUDE_MATSAMPLE'] = 'Include Material Sample';
+$LANG['INCLUDE_IDENTIFIERS'] = 'Include Alternative Identifiers';
 $LANG['REDACT_LOC'] = 'Redact Sensitive Localities';
 $LANG['CREATE_REFRESH'] = 'Create/Refresh Darwin Core Archive';
 $LANG['NOTE_LACKING_EXCLUDED'] = 'NOTE: all records lacking occurrenceID GUIDs will be excluded';
@@ -97,4 +98,5 @@ $LANG['METADATA'] = 'Metadata';
 $LANG['PUB_DATE'] = 'Pub Date';
 $LANG['NO_PUBLISHABLE'] = 'There are no publishable collections';
 $LANG['ADDIT_SOURCES'] = 'Additional Data Sources within the Portal Network';
+$LANG['EDIT'] = 'Edit';
 ?>
