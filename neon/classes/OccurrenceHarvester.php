@@ -166,9 +166,9 @@ class OccurrenceHarvester{
 				//Update stats for each collection affected
 				if($collArr){
 					echo '<li>Update stats and associations for each collection...</li>';
-					//if(in_array(7, $collArr)) {$collArr[] = 108;}
-					//if(in_array(8, $collArr)) {$collArr[] = 109;}
-					//if(in_array(9, $collArr)) { $collArr[] = 107;}
+					if(in_array(7, $collArr)) {$collArr[] = 108;}
+					if(in_array(8, $collArr)) {$collArr[] = 109;}
+					if(in_array(9, $collArr)) { $collArr[] = 107;}
 					//if(in_array(22, $collArr)) {$collArr[] = 100;}
 					//if(in_array(45, $collArr)) {$collArr[] = 104;}
 					//if(in_array(47, $collArr)) {$collArr[] = 110;}
@@ -674,7 +674,7 @@ class OccurrenceHarvester{
 					}
 				}
 				$prepArr = array();
-					if(!in_array($dwcArr['collid'], array(19,28,42,46,17,64))){
+					if(!in_array($dwcArr['collid'], array(7,8,9,19,28,42,46,17,64))){
 						if(!in_array($dwcArr['collid'],array(31,50,73))){
 							if(!empty($sampleArr['preservative_type'])) $prepArr[] = 'preservative type: '.$sampleArr['preservative_type'];
 						}
@@ -1076,9 +1076,9 @@ class OccurrenceHarvester{
 
 	private function subSampleIdentifications(&$dwcArr, $parentOccid){
 		$collArr = array();
-		//$collArr[7] = array('targetCollid' => 108, 'lotId' => 'dynamic','defaultId' => 'Plantae');
-		//$collArr[8] = array('targetCollid' => 109, 'lotId' => 'dynamic','defaultId' => 'Plantae');
-		//$collArr[9] = array('targetCollid' => 107, 'lotId' => 'dynamic','defaultId' => 'Plantae');
+		$collArr[7] = array('targetCollid' => 108, 'lotId' => 'dynamic','defaultId' => 'Plantae');
+		$collArr[8] = array('targetCollid' => 109, 'lotId' => 'dynamic','defaultId' => 'Plantae');
+		$collArr[9] = array('targetCollid' => 107, 'lotId' => 'dynamic','defaultId' => 'Plantae');
 		//$collArr[22] = array('targetCollid' => 100, 'lotId' => 'dynamic','defaultId' => 'Chironomidae');
 		//$collArr[45] = array('targetCollid' => 104, 'lotId' => 'dynamic','defaultId' => 'Zooplankton');
 		//$collArr[47] = array('targetCollid' => 110, 'lotId' => 'dynamic','defaultId' => 'ECO');
@@ -1108,7 +1108,7 @@ class OccurrenceHarvester{
 							}
 						}
 						if(!$dateIdentified){
-							//If date does not exist and collector does exist, increase group by 1, thus making it a sepparate and preferred group for subsampling
+							//If date does not exist and collector does exist, increase group by 1, thus making it a separate and preferred group for subsampling
 							if(!empty($idArr['identifiedBy']) && $idArr['identifiedBy'] != 'undefined'){
 								$dateIdentified = 1;
 							}
@@ -1118,9 +1118,8 @@ class OccurrenceHarvester{
 
 					//Select group of identifications that were identified the latest
 					krsort($identificationsGrouped);
-					$baseDataIdentified = key($identificationsGrouped);
+					$baseDateIdentified = key($identificationsGrouped);
 					$targetIdentifications = current($identificationsGrouped);
-
 					//Subsample records
 					echo '<li style="margin-left:30px">Creating/updating ' . count($targetIdentifications) . ' subSample records ... </li>';
 					$currentSubsampleArr = $this->getSubSamples($parentOccid);
@@ -1193,6 +1192,7 @@ class OccurrenceHarvester{
 								if($commonIdArr = $this->getCommonID($tidArr)){
 									$baseID['tidInterpreted'] = key($commonIdArr);
 									$baseID['sciname'] = current($commonIdArr);
+									$baseID['identifiedBy']=$identArr['identifiedBy'];
 								}
 							}
 						}
@@ -1207,7 +1207,7 @@ class OccurrenceHarvester{
 					}
 
 					$baseID['isCurrent'] = 1;
-					if($baseDataIdentified) $baseID['dateIdentified'] = $baseDataIdentified;
+					if($baseDateIdentified) $baseID['dateIdentified'] = $baseDateIdentified;
 					$baseID['taxonRemarks'] = 'Identification source: harvested from NEON API';
 					$dwcArr['identifications'][] = $baseID;
 					//Append associations
