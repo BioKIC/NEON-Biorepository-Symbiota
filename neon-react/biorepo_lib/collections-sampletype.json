@@ -9,7 +9,7 @@
         "children": [
           {
             "id": 3,
-            "name": "Aquatic Microalgae (Freeze-dried)",
+            "name": "Aquatic Microalgae (Freeze-dried Diatoms)",
             "collid": 46
           },
           {
@@ -458,7 +458,7 @@
     "children": [
       {
         "id": 79,
-        "name": "Aquatic Microalgae (Periphyton, Seston, and Phytoplankton)",
+        "name": "Aquatic Microalgae (Diatoms)",
         "collid": 49
       },
       {

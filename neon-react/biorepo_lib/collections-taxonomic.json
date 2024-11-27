@@ -278,18 +278,24 @@
     "children": [
       {
         "id": 44,
+        "name": "Diatoms",
+        "children": [
+          {
+            "id": 45,
+            "name": "Freeze-dried",
+            "collid": 46
+          },
+          {
+            "id": 46,
+            "name": "Microscope Slides",
+            "collid": 49
+          }
+        ]
+      },
+      {
+        "id": 44,
         "name": "Chemically Preserved",
         "collid": 47
-      },
-      {
-        "id": 45,
-        "name": "Freeze-dried",
-        "collid": 46
-      },
-      {
-        "id": 46,
-        "name": "Microscope Slides",
-        "collid": 49
       },
       {
         "id": 47,
