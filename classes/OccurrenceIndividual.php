@@ -271,7 +271,7 @@ class OccurrenceIndividual extends Manager{
 		if($detArr = $detManager->getDeterminationArr($conditionArr)){
 			$this->occArr['dets'] = $detArr;
 			$currentDisplay = array('identifiedBy', 'dateIdentified', 'family', 'sciname', 'scientificNameAuthorship', 'tidInterpreted',
-					'identificationQualifier', 'identificationReferences', 'identificationRemarks', 'taxonRemarks');
+				'identificationQualifier', 'identificationReferences', 'identificationRemarks', 'taxonRemarks');
 			foreach($detArr as $detArr){
 				if($detArr['isCurrent']){
 					foreach($currentDisplay as $field){
