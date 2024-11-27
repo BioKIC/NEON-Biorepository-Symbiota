@@ -170,7 +170,7 @@ class OccurrenceHarvester{
 					if(in_array(8, $collArr)) {$collArr[] = 109;}
 					if(in_array(9, $collArr)) { $collArr[] = 107;}
 					//if(in_array(22, $collArr)) {$collArr[] = 100;}
-					//if(in_array(45, $collArr)) {$collArr[] = 104;}
+					if(in_array(45, $collArr)) {$collArr[] = 104;}
 					//if(in_array(47, $collArr)) {$collArr[] = 110;}
 					//if(in_array(49, $collArr)) {$collArr[] = 111;}
 					if(in_array(50, $collArr)) {$collArr[] = 105;}
@@ -488,7 +488,7 @@ class OccurrenceHarvester{
 				//if(strpos($tableName,'perarchivesample')) continue;
 				//if(strpos($tableName,'persample')) continue;
 				//if(strpos($tableName,'pertaxon')) continue;
-				//if(strpos($tableName,'pervial')) continue;
+				if(strpos($tableName,'zoo_perVial_in')) continue;
 				if($tableName == 'mpr_perpitprofile_in') continue;
 				$fieldArr = $eArr['smsFieldEntries'];
 				$fateLocation = ''; $fateDate = '';
@@ -580,6 +580,7 @@ class OccurrenceHarvester{
 								}
 							elseif($fArr['smsKey'] == 'identification_references' && $fArr['smsValue']) $identArr['identificationReferences'] = $fArr['smsValue'];
 							elseif($fArr['smsKey'] == 'identification_qualifier' && $fArr['smsValue']) $identArr['identificationQualifier'] = $fArr['smsValue'];
+							elseif(in_array($tableName,array('zoo_perTaxon_in')) && $fArr['smsKey'] == 'specimen_count' && $fArr['smsValue']) $identArr['subsampleIndividualCount'] = $fArr['smsValue'];
 						}
 					}
 				}
@@ -1027,7 +1028,7 @@ class OccurrenceHarvester{
 		elseif(in_array($dwcArr['collid'], array(11,12,14,15,17,18,46,62))){
 			$dwcArr['individualCount'] = NULL;
 		}
-		elseif(in_array($dwcArr['collid'], array(61))){
+		elseif(in_array($dwcArr['collid'], array(45,61))){
 			$dwcArr['individualCount'] = NULL;
 			$dwcArr['lifeStage'] = NULL;
 		}
@@ -1080,7 +1081,7 @@ class OccurrenceHarvester{
 		$collArr[8] = array('targetCollid' => 109, 'lotId' => 'dynamic','defaultId' => 'Plantae');
 		$collArr[9] = array('targetCollid' => 107, 'lotId' => 'dynamic','defaultId' => 'Plantae');
 		//$collArr[22] = array('targetCollid' => 100, 'lotId' => 'dynamic','defaultId' => 'Chironomidae');
-		//$collArr[45] = array('targetCollid' => 104, 'lotId' => 'dynamic','defaultId' => 'Zooplankton');
+		$collArr[45] = array('targetCollid' => 104, 'defaultId' => 'Zooplankton');
 		//$collArr[47] = array('targetCollid' => 110, 'lotId' => 'dynamic','defaultId' => 'ECO');
 		//$collArr[49] = array('targetCollid' => 111, 'lotId' => 'dynamic','defaultId' => 'ECO');
 		$collArr[50] = array('targetCollid' => 105, 'lotId' => 'dynamic','defaultId' => 'Plantae');
@@ -1137,6 +1138,9 @@ class OccurrenceHarvester{
 						$dwcArrClone['collid'] = $targetCollid;
 						$identArr['isCurrent'] = 1;
 						$dwcArrClone['identifications'] = array($identArr);
+						if(!empty($identArr['subsampleIndividualCount'])){
+							$dwcArrClone['individualCount']=$identArr['subsampleIndividualCount'];
+						}
 						unset($dwcArrClone['associations']);
 						unset($dwcArrClone['identifiers']);
 						$existingOccid = 0;
@@ -1204,6 +1208,7 @@ class OccurrenceHarvester{
 					// make the baseID the default lotID if one exists and the current sciname is undefined or empty
 					if (($baseID['sciname'] === 'undefined' || empty($baseID['sciname'])) && !empty($collArr[$sourceCollid]['defaultId'])) {
 						$baseID['sciname'] = $collArr[$sourceCollid]['defaultId'];
+						$baseID['identifiedBy']=$identArr['identifiedBy'];
 					}
 
 					$baseID['isCurrent'] = 1;
