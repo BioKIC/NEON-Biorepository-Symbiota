@@ -29,23 +29,24 @@ $_SESSION['citationvar'] = $searchVar;
 	include_once($SERVER_ROOT . '/includes/googleanalytics.php');
 	parse_str($searchVar, $params);
 	?>
+	
+	<!--NEON start-->
 	<script>
-	  // PHP parameters parsed into JavaScript
 	  const params = <?php echo json_encode($params, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_AMP | JSON_HEX_QUOT); ?>;
-  
-	  // Convert parameters into event-friendly format
+
 	  const eventParams = {};
 	  Object.keys(params).forEach(key => {
 		eventParams[key] = Array.isArray(params[key]) ? params[key].join(',') : params[key];
 	  });
-  
-	  // Track the event with Google Analytics
+
 	  gtag('event', 'search_query', {
 		event_category: 'Search',
 		event_label: 'Search Parameters',
-		...eventParams, // Spread the parsed parameters into the event
+		...eventParams,
 	  });
 	</script>
+	<!-- NEON end-->
+	
 	<link href="<?php echo $CSS_BASE_PATH; ?>/symbiota/collections/listdisplay.css" type="text/css" rel="stylesheet" />
 	<script src="../js/jquery-3.2.1.min.js" type="text/javascript"></script>
 	<script src="../js/jquery-ui/jquery-ui.min.js" type="text/javascript"></script>
