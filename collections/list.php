@@ -27,18 +27,22 @@ $_SESSION['citationvar'] = $searchVar;
 	<?php
 	include_once($SERVER_ROOT . '/includes/head.php');
 	include_once($SERVER_ROOT . '/includes/googleanalytics.php');
+	
+	// NEON start
 	parse_str($searchVar, $params);
+	$encodedSearchVar = json_encode($searchVar, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_AMP | JSON_HEX_QUOT);
 	?>
 	
-	<!--NEON start-->
 	<script>
 	  const params = <?php echo json_encode($params, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_AMP | JSON_HEX_QUOT); ?>;
-
+	  const rawSearchVar = <?php echo $encodedSearchVar; ?>;
+	  
 	  const eventParams = {};
 	  Object.keys(params).forEach(key => {
 		eventParams[key] = Array.isArray(params[key]) ? params[key].join(',') : params[key];
 	  });
-
+	  eventParams.rawSearchVar = rawSearchVar;
+	  
 	  gtag('event', 'search_query', {
 		event_category: 'Search',
 		event_label: 'Search Parameters',
