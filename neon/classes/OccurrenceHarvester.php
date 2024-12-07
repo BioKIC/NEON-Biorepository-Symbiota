@@ -1458,7 +1458,7 @@ class OccurrenceHarvester{
 					if($samplePK) $this->conn->query('UPDATE NeonSample SET harvestTimestamp = now() WHERE (samplePK = '.$samplePK.')');
 					if(isset($dwcArr['identifiers'])) $this->setOccurrenceIdentifiers($dwcArr['identifiers'], $occid);
 					if(isset($dwcArr['assocMedia'])) $this->setAssociatedMedia($dwcArr['assocMedia'], $occid);
-					if(isset($dwcArr['identifications'])) $this->setIdentifications($occid, $dwcArr['identifications']);
+					if(isset($dwcArr['identifications'])) $this->setIdentifications($occid, $dwcArr['identifications'],$dwcArr['collid']);
 					if(isset($dwcArr['associations'])) $this->setAssociations($occid, $dwcArr['associations']);
 					$this->setDatasetIndexing($domainID,$occid);
 					$this->setDatasetIndexing($siteID,$occid);
@@ -1559,7 +1559,7 @@ class OccurrenceHarvester{
 		}
 	}
 
-	private function setIdentifications($occid, $identArr){
+	private function setIdentifications($occid, $identArr,$collID){
 		if($occid){
 			//Set default values
 			foreach($identArr as $k => $v){
@@ -1621,8 +1621,10 @@ class OccurrenceHarvester{
 					if(!$newID || !empty($cdArr['securityStatus'])) $newID = $idArr['sciname'];
 				}
 			}
-			if($oldID && $newID && $oldID != $newID){
-				$this->setSampleErrorMessage('occid:'.$occid, 'Curatorial Check: possible ID conflict');
+			if(in_array($collID,array(7,8,9,11,12,14,15,17,18,19,20,28,29,39,48,52,53,54,55,70))){
+				if($oldID && $newID && $oldID != $newID){
+					$this->setSampleErrorMessage('occid:'.$occid, 'Curatorial Check: possible ID conflict');
+				}
 			}
 			foreach($identArr as $idArr){
 				if(($idArr['identifiedBy'] != 'manifest' && $idArr['identifiedBy'] != 'sampleID') || !empty($idArr['isCurrent'])){
