@@ -164,7 +164,7 @@ $isGeneralObservation = (($labelManager->getMetaDataTerm('colltype') == 'General
 				<legend><?= $fieldsetTitle; ?></legend>
 				<?php
 				if($isEditor == 3 || $group == 'u' || ($group == 'c' && $isEditor > 1))
-					echo '<div style="float:right" title="Create a new label profile"><img class="edit-icon" src="../../images/add.png" style="width:1.5em" onclick="$(\'#edit-'.$group.'\').toggle()" /></div>';
+					echo '<div style="float:right" title="Create a new label profile"><img class="edit-icon" src="../../images/add.png" onclick="$(\'#edit-'.$group.'\').toggle()" /></div>';
 				$index = '';
 				$formatArr = array();
 				do{
@@ -180,7 +180,7 @@ $isGeneralObservation = (($labelManager->getMetaDataTerm('colltype') == 'General
 								<span class="field-value"><?= htmlspecialchars($formatArr['title']); ?></span>
 								<?php
 								if($isEditor == 3 || $group == 'u' || ($group == 'c' && $isEditor > 1))
-									echo '<span title="Edit label profile"> <a href="#" onclick="toggleEditDiv(\''.$group.'-'.$index.'\');return false;"><img class="edit-icon" src="../../images/edit.png" style="width:1.3em" /></a></span>';
+									echo '<span title="Edit label profile"> <a href="#" onclick="toggleEditDiv(\''.$group.'-'.$index.'\');return false;"><img class="edit-icon" src="../../images/edit.png" /></a></span>';
 								?>
 							</div>
 							<?php
@@ -236,7 +236,7 @@ $isGeneralObservation = (($labelManager->getMetaDataTerm('colltype') == 'General
 								<span class="label">Title:</span>
 								<span class="field-elem"><input name="title" type="text" value="<?= ($formatArr?htmlspecialchars($formatArr['title']):''); ?>" required /> </span>
 								<?php
-								if($formatArr) echo '<span title="Edit label profile"> <img class="edit-icon" src="../../images/edit.png" style="width:1.3em" onclick="toggleEditDiv(\''.$group.'-'.$index.'\')" /></span>';
+								if($formatArr) echo '<span title="Edit label profile"> <img class="edit-icon" src="../../images/edit.png" onclick="toggleEditDiv(\''.$group.'-'.$index.'\')" /></span>';
 								?>
 							</div>
 							<fieldset class="fieldset-block">
@@ -359,11 +359,11 @@ $isGeneralObservation = (($labelManager->getMetaDataTerm('colltype') == 'General
 							<div class="field-block">
 								<div class="label">JSON:
 									<span title="Edit JSON label definition">
-										<a href="#" onclick="makeJsonEditable('<?= $group.(is_numeric($index)?'-'.$index:''); ?>');return false"><img class="edit-icon" src="../../images/edit.png" style="width:1.2em" /></a>
+										<a href="#" onclick="makeJsonEditable('<?= $group.(is_numeric($index)?'-'.$index:''); ?>');return false"><img class="edit-icon" src="../../images/edit.png" ></a>
 										<a href="#" onclick="makeJsonEditable('<?= $group.(is_numeric($index)?'-'.$index:''); ?>');return false">(edit via text interface)</a>
 									</span>
 									<span title="Edit JSON label definition (Visual Interface)">
-										<a href="#" onclick="openJsonEditorPopup('<?= $group.(is_numeric($index)?'-'.$index:''); ?>');return false"><img class="edit-icon" src="../../images/editsquare.png" style="1.3em" />(edit via visual interface)</a>
+										<a href="#" onclick="openJsonEditorPopup('<?= $group.(is_numeric($index)?'-'.$index:''); ?>');return false"><img class="edit-icon" src="../../images/editsquare.png" >(edit via visual interface)</a>
 									</span>
 								</div>
 								<div class="field-block">
