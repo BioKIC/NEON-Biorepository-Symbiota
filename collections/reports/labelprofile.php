@@ -113,7 +113,7 @@ $isGeneralObservation = (($labelManager->getMetaDataTerm('colltype') == 'General
 			.label-inline{ font-weight: bold; }
 			.field-value{  }
 			.field-inline{  }
-			.edit-icon{ width:13px; }
+			.edit-icon{ width: 15px; }
 			#preview-label{ border: 1px solid gray; min-height: 100px; padding: 0.5em; }
 			#preview-label.field-block{ line-height: 1.1rem; }
 			#preview-label>.field-block>div{ display: inline; }
