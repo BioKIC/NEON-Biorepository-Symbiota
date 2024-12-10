@@ -2233,7 +2233,8 @@ class OccurrenceHarvester{
 		}
 		else{
 			//Look to see if string can be translated via NeonPersonnel table
-			$sql = 'SELECT full_info FROM NeonPersonnel WHERE neon_email = ? OR orcid = ?';
+			$sql = "SELECT full_info FROM NeonPersonnel 
+			WHERE SUBSTRING_INDEX(neon_email, '@', 1) = SUBSTRING_INDEX(?, '@', 1) OR orcid = ?";
 			if($stmt = $this->conn->prepare($sql)){
 				$stmt->bind_param('ss', $persStr, $persStr);
 				$stmt->execute();
