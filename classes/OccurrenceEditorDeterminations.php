@@ -323,7 +323,7 @@ class OccurrenceEditorDeterminations extends OccurrenceEditorManager{
 		$this->addDetermination($detArr, $isEditor);
 	}
 
-	public function getNewDetItem($catNum, $sciName, $allCatNum = 0, $fieldSite){
+	public function getNewDetItem($catNum, $sciName, $allCatNum, $fieldSite){
 		$retArr = array();
 		if($catNum || $sciName || $fieldSite){
 			$sql = 'SELECT o.occid, o.catalogNumber, o.otherCatalogNumbers, o.sciname, CONCAT_WS(" ", o.recordedby, IFNULL(o.recordnumber, o.eventdate)) AS collector, '.
