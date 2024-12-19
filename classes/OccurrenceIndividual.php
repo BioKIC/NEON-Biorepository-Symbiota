@@ -507,26 +507,27 @@ class OccurrenceIndividual extends Manager{
 				$indUrl = str_replace('--CATALOGNUMBER--',$this->occArr['catalognumber'],$iUrl);
 				$displayStr = $this->occArr['catalognumber'];
 			}
-			elseif(strpos($iUrl,'--OTHERCATALOGNUMBERS--') !== false && $this->occArr['othercatalognumbers']){
-				if(substr($this->occArr['othercatalognumbers'],0,1) == '{'){
-					if($ocnArr = json_decode($this->occArr['othercatalognumbers'],true)){
-						foreach($ocnArr as $idKey => $idArr){
-							if(!$displayStr || $idKey == 'NEON sampleID' || $idKey == 'NEON sampleCode (barcode)'){
-								$displayStr = $idArr[0];
-								if($idKey == 'NEON sampleCode (barcode)') $iUrl = str_replace('sampleTag','barcode',$iUrl);
-								$indUrl = str_replace('--OTHERCATALOGNUMBERS--',$idArr[0],$iUrl);
-								if($idKey == 'NEON sampleCode (barcode)') break;
+			elseif (strpos($iUrl, '--OTHERCATALOGNUMBERS--') !== false && $this->occArr['othercatalognumbers']) {
+				if (substr($this->occArr['othercatalognumbers'], 0, 1) == '{') {
+					if ($ocnArr = json_decode($this->occArr['othercatalognumbers'], true)) {
+						$preferredKeys = [
+							'NEON sampleCode (barcode)',
+							'NEON sampleID',
+							'Originating NEON barcode',
+							'Originating NEON sampleID'
+						];
+						foreach ($preferredKeys as $key) {
+							if (isset($ocnArr[$key]) && !empty($ocnArr[$key][0])) {
+								$displayStr = $ocnArr[$key][0];
+								$indUrl = str_replace('--OTHERCATALOGNUMBERS--', $displayStr, $iUrl);
+								
+								if ($key === 'NEON sampleCode (barcode)' || $key === 'Originating NEON barcode') {
+									$indUrl = str_replace('sampleTag', 'barcode', $indUrl);
+								}
+								break; 
 							}
 						}
 					}
-				}
-				else{
-					$ocn = str_replace($this->occArr['othercatalognumbers'], ',', ';');
-					$ocnArr = explode(';',$ocn);
-					$ocnValue = trim(array_pop($ocnArr));
-					if(stripos($ocnValue,':')) $ocnValue = trim(array_pop(explode(':',$ocnValue)));
-					$indUrl = str_replace('--OTHERCATALOGNUMBERS--',$ocnValue,$iUrl);
-					$displayStr = $ocnValue;
 				}
 			}
 			elseif(strpos($iUrl,'--OCCURRENCEID--') !== false && $this->occArr['occurrenceid']){

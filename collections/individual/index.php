@@ -357,6 +357,13 @@ $traitArr = $indManager->getTraitArr();
 									if($assocArr['subtype']) echo ' ('.$assocArr['subtype'].')';
 									echo ': ';
 									$relID = $assocArr['identifier'];
+									
+									// Start NEON custom addition
+									if (strpos($relID, ':') !== false && substr($relID, strpos($relID, ':') + 1) === '') {
+										$relID .= $assocArr['occidassoc'];
+									}
+									// End NEON custom addition
+									
 									$relUrl = $assocArr['resourceurl'];
 									if(!$relUrl && $assocArr['occidassoc']) $relUrl = $GLOBALS['CLIENT_ROOT'].'/collections/individual/index.php?occid='.$assocArr['occidassoc'];
 									if($relUrl) $relID = '<a href="'.$relUrl.'">'.$relID.'</a>';
