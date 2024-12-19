@@ -135,9 +135,28 @@ elseif (array_key_exists('CollAdmin', $USER_RIGHTS) || array_key_exists('CollEdi
                 img.width = width;
                 return img;
             }
-           
-            const newImage1 = createImage('/neon/portal/images/layout/logo_symbiota.png', 60, 167);
-            const newImage2 = createImage('/neon/portal/images/layout/logo-asu-biokic.jpg', 60, 167);
+            
+            function createClickableImage(src, height, width, href) {
+                const link = document.createElement('a');
+                link.href = href; 
+                link.target = '_blank'; 
+                const img = createImage(src, height, width);
+                link.appendChild(img);
+                return link;
+            }
+            
+            const newImage1 = createClickableImage(
+                '/neon/portal/images/layout/logo_symbiota.png',
+                60,
+                167,
+                'https://symbiota.org/'
+            );
+            const newImage2 = createClickableImage(
+                '/neon/portal/images/layout/logo-asu-biokic.jpg',
+                60,
+                167,
+                'https://biokic.asu.edu/collections'
+            );
             
             footerLogoDiv.appendChild(newImage1);
             footerLogoDiv.appendChild(newImage2);
