@@ -100,14 +100,14 @@
     }
     
     // image count
-    $sql = 'SELECT COUNT(*) FROM images;';
+    $sql = 'SELECT * FROM images WHERE occid IS NOT NULL;';
     $result = $this->conn->query($sql);
     while ($row = $result->fetch_array()){
       $dataArr['noImages'] = $row[0];
     }
     
     // years
-    $dataArr['noYears'] = date("Y")-2020;
+    $dataArr['noYears'] = date("Y")-2014;
     
     // sample types
     $dataArr['noSampleTypes'] = 20;
