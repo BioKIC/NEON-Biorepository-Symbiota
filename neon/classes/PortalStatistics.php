@@ -106,13 +106,13 @@
       $dataArr['noImages'] = $row[0];
     }
     
-    // image count
+    // years
     $dataArr['noYears'] = date("Y")-2020;
     
-    // image count
+    // sample types
     $dataArr['noSampleTypes'] = 20;
     
-    // image count
+    // sites
     $dataArr['noSites'] = 81;
     
     $result->free(); 
