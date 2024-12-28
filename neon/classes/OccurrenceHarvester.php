@@ -1114,7 +1114,6 @@ class OccurrenceHarvester{
 		$collArr[7] = array('targetCollid' => 108, 'lotId' => 'dynamic','defaultId' => 'Plantae');
 		$collArr[8] = array('targetCollid' => 109, 'lotId' => 'dynamic','defaultId' => 'Plantae');
 		$collArr[9] = array('targetCollid' => 107, 'lotId' => 'dynamic','defaultId' => 'Plantae');
-		//$collArr[22] = array('targetCollid' => 100, 'lotId' => 'dynamic','defaultId' => 'Chironomidae');
 		$collArr[22] = array('targetCollid' => 100, 'lotId' => 'dynamic','defaultId' => 'Chironomidae');
 		$collArr[45] = array('targetCollid' => 104, 'defaultId' => 'Zooplankton');
 		//$collArr[47] = array('targetCollid' => 110, 'lotId' => 'dynamic','defaultId' => 'ECO');
