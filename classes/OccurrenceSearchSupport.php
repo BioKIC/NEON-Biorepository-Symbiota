@@ -300,7 +300,8 @@ class OccurrenceSearchSupport {
 			$dbStr .= implode(',',$catArr);
 		}
 		if(!$dbStr) $dbStr = 'all';
-		if(!preg_match('/^[a-z0-9,;]+$/', $dbStr)) $dbStr = 'all';
+		if(strpos($dbStr, "'")) $dbStr = '0';		//SQL Injection attempt, thus set to return nothing rather than a query that puts a load on the db server
+		elseif(!preg_match('/^[a-z0-9,;]+$/', $dbStr)) $dbStr = 'all';
 		return $dbStr;
 	}
 
@@ -313,16 +314,10 @@ class OccurrenceSearchSupport {
 			}
 			elseif($dbSearchTerm == 'allobs'){
 				$sqlRet .= 'AND (o.collid IN(SELECT collid FROM omcollections WHERE colltype IN("General Observations","Observations"))) ';
-			}
-			else{
+			} else {
+				// Check in case there is ; inside dbSearchTerm
 				$dbArr = explode(';',$dbSearchTerm);
-				$dbStr = '';
-				if(isset($dbArr[0]) && $dbArr[0]){
-					$dbStr = "(o.collid IN(".$dbArr[0].")) ";
-				}
-				if(isset($dbArr[1]) && $dbArr[1]){
-					//$dbStr .= ($dbStr?'OR ':'').'(o.CollID IN(SELECT collid FROM omcollcatlink WHERE (ccpk IN('.$dbArr[1].')))) ';
-				}
+				$dbStr = "o.collid IN(" . (is_array($dbArr)? implode(',', $dbArr): $dbArr) . ")";
 				$sqlRet .= 'AND ('.$dbStr.') ';
 			}
 		}
