@@ -120,7 +120,10 @@ $imgLibManager = new ImageLibrarySearch();
 		fieldset { padding: 15px; }
 		legend { font-weight: bold; }
 		.checkbox-elem { margin: 5px; padding: 5px; border: 1px dashed orange; }
+		/*.ui-tabs .ui-tabs-nav li { width: 32%; }
+		/*NEON edits*/
 		.ui-tabs .ui-tabs-nav li { width: 24%; }
+		/*end NEON edits*/
 		.ui-tabs .ui-tabs-nav li a { margin-left: 10px; }
 		.protected-span { color: red; }
 	</style>
