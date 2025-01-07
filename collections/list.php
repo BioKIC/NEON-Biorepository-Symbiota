@@ -11,6 +11,9 @@ $targetTid = array_key_exists('targettid', $_REQUEST) ? filter_var($_REQUEST['ta
 $tabIndex = array_key_exists('tabindex', $_REQUEST) ? filter_var($_REQUEST['tabindex'], FILTER_SANITIZE_NUMBER_INT) : 1;
 $cntPerPage = array_key_exists('cntperpage', $_REQUEST) ? filter_var($_REQUEST['cntperpage'], FILTER_SANITIZE_NUMBER_INT) : 100;
 $pageNumber = array_key_exists('page', $_REQUEST) ? filter_var($_REQUEST['page'], FILTER_SANITIZE_NUMBER_INT) : 1;
+//NEON edit
+$imagePageNumber = array_key_exists('imagepage', $_REQUEST) ? filter_var($_REQUEST['imagepage'], FILTER_SANITIZE_NUMBER_INT) : 1;
+//end NEON edit
 $datasetid = array_key_exists('datasetid', $_REQUEST) ? filter_var($_REQUEST['datasetid'], FILTER_SANITIZE_NUMBER_INT) : '';
 $_SESSION['datasetid'] = filter_var($datasetid, FILTER_SANITIZE_NUMBER_INT);
 
@@ -443,10 +446,11 @@ $imgLibManager = new ImageLibrarySearch();
 					</div>
 				</form>
 			</div>
+			<!--NEON edit-->
 			<div id="imagesdiv">
 				<div id="imagebox">
 					<?php
-					$imageArr = $imgLibManager->getImageArr($pageNumber,$cntPerPage);
+					$imageArr = $imgLibManager->getImageArr($imagePageNumber,$cntPerPage);
 					$recordCnt = $imgLibManager->getRecordCnt();
 					if($imageArr){
 						?>
@@ -461,31 +465,31 @@ $imgLibManager = new ImageLibrarySearch();
 						echo '<div style="clear:both;margin:5 0 5 0;"><hr /></div>';
 						
 						$lastPage = ceil($recordCnt / $cntPerPage);
-						$startPage = ($pageNumber > 4?$pageNumber - 4:1);
+						$startPage = ($imagePageNumber > 4?$imagePageNumber - 4:1);
 						$endPage = ($lastPage > $startPage + 9?$startPage + 9:$lastPage);
-						$url = 'search.php?'.$imgLibManager->getQueryTermStr().'&submitaction=search';
+						$url = $CLIENT_ROOT . '/collections/list.php?'.$collManager->getQueryTermStr();
 						$pageBar = '<div style="float:left" >';
 						if($startPage > 1){
-							$pageBar .= '<span class="pagination" style="margin-right:5px;"><a href="'.$url.'&page=1">First</a></span>';
-							$pageBar .= '<span class="pagination" style="margin-right:5px;"><a href="'.$url.'&page='.(($pageNumber - 10) < 1 ?1:$pageNumber - 10).'">&lt;&lt;</a></span>';
+							$pageBar .= '<span class="pagination" style="margin-right:5px;"><a href="'.$url.'&tabindex=3&imagepage=1">First</a></span>';
+							$pageBar .= '<span class="pagination" style="margin-right:5px;"><a href="'.$url.'&tabindex=3&imagepage='.(($imagePageNumber - 10) < 1 ?1:$imagePageNumber - 10).'">&lt;&lt;</a></span>';
 						}
 						for($x = $startPage; $x <= $endPage; $x++){
-							if($pageNumber != $x){
-								$pageBar .= '<span class="pagination" style="margin-right:3px;"><a href="'.$url.'&page='.$x.'">'.$x.'</a></span>';
+							if($imagePageNumber != $x){
+								$pageBar .= '<span class="pagination" style="margin-right:3px;"><a href="'.$url.'&tabindex=3&imagepage='.$x.'">'.$x.'</a></span>';
 							}
 							else{
 								$pageBar .= "<span class='pagination' style='margin-right:3px;font-weight:bold;'>".$x."</span>";
 							}
 						}
 						if(($lastPage - $startPage) >= 10){
-							$pageBar .= '<span class="pagination" style="margin-left:5px;"><a href="'.$url.'&page='.(($pageNumber + 10) > $lastPage?$lastPage:($pageNumber + 10)).'">&gt;&gt;</a></span>';
-							if($recordCnt < 10000) $pageBar .= '<span class="pagination" style="margin-left:5px;"><a href="'.$url.'&page='.$lastPage.'">Last</a></span>';
+							$pageBar .= '<span class="pagination" style="margin-left:5px;"><a href="'.$url.'&tabindex=3&imagepage='.(($imagePageNumber + 10) > $lastPage?$lastPage:($imagePageNumber + 10)).'">&gt;&gt;</a></span>';
+							if($recordCnt < 10000) $pageBar .= '<span class="pagination" style="margin-left:5px;"><a href="'.$url.'&tabindex=3&imagepage='.$lastPage.'">Last</a></span>';
 						}
 						$pageBar .= '</div><div style="float:right;margin-top:4px;margin-bottom:8px;">';
-						$beginNum = ($pageNumber - 1)*$cntPerPage + 1;
+						$beginNum = ($imagePageNumber - 1)*$cntPerPage + 1;
 						$endNum = $beginNum + $cntPerPage - 1;
 						if($endNum > $recordCnt) $endNum = $recordCnt;
-						$pageBar .= "Page ".$pageNumber.", records ".number_format($beginNum)."-".number_format($endNum)." of ".number_format($recordCnt)."</div>";
+						$pageBar .= "Page ".$imagePageNumber.", records ".number_format($beginNum)."-".number_format($endNum)." of ".number_format($recordCnt)."</div>";
 						$paginationStr = $pageBar;
 						echo '<div style="width:100%;">'.$paginationStr.'</div>';
 						echo '<div style="clear:both;margin:5 0 5 0;"><hr /></div>';
@@ -568,7 +572,8 @@ $imgLibManager = new ImageLibrarySearch();
 					}
 					?>
 				</div>
-			</div>						
+			</div>
+			<!--end NEON edit-->
 		</div>
 	</div>
 	<?php
