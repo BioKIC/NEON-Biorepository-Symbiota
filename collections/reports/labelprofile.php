@@ -54,8 +54,8 @@ $isGeneralObservation = (($labelManager->getMetaDataTerm('colltype') == 'General
 		<?php
 		include_once($SERVER_ROOT.'/includes/head.php');
 		?>
-		<script src="../../js/jquery.js" type="text/javascript"></script>
-		<script src="../../js/jquery-ui.js" type="text/javascript"></script>
+		<script src="<?php echo $CLIENT_ROOT; ?>/js/jquery-3.7.1.min.js" type="text/javascript"></script>
+		<script src="<?php echo $CLIENT_ROOT; ?>/js/jquery-ui.min.js" type="text/javascript"></script>
 		<script type="text/javascript">
 			var activeProfileCode = "";
 
@@ -180,7 +180,7 @@ $isGeneralObservation = (($labelManager->getMetaDataTerm('colltype') == 'General
 								<span class="field-value"><?= htmlspecialchars($formatArr['title']); ?></span>
 								<?php
 								if($isEditor == 3 || $group == 'u' || ($group == 'c' && $isEditor > 1))
-									echo '<span title="Edit label profile"> <a href="#" onclick="toggleEditDiv(\''.$group.'-'.$index.'\');return false;"><img class="edit-icon" src="../../images/edit.png" /></a></span>';
+									echo '<span title="Edit label profile"> <a href="#" onclick="toggleEditDiv(\''.$group.'-'.$index.'\');return false;"><img class="edit-icon" src="../../images/edit.png" style="width:1.3em" /></a></span>';
 								?>
 							</div>
 							<?php
@@ -236,7 +236,7 @@ $isGeneralObservation = (($labelManager->getMetaDataTerm('colltype') == 'General
 								<span class="label">Title:</span>
 								<span class="field-elem"><input name="title" type="text" value="<?= ($formatArr?htmlspecialchars($formatArr['title']):''); ?>" required /> </span>
 								<?php
-								if($formatArr) echo '<span title="Edit label profile"> <img class="edit-icon" src="../../images/edit.png" onclick="toggleEditDiv(\''.$group.'-'.$index.'\')" /></span>';
+								if($formatArr) echo '<span title="Edit label profile"> <img class="edit-icon" src="../../images/edit.png" style="width:1.3em" onclick="toggleEditDiv(\''.$group.'-'.$index.'\')" /></span>';
 								?>
 							</div>
 							<fieldset class="fieldset-block">
