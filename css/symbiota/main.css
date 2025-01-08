@@ -324,6 +324,7 @@ button.inverse-color {
 
 .button-secondary {
   background-color: var(--bright-color);
+  color: var(--darkest-color);
 }
 
 .button-secondary > a {
@@ -331,7 +332,7 @@ button.inverse-color {
 }
 
 .button-tertiary {
-  background-color: none;
+  background-color: transparent;
   border: 1px solid var(--bright-color);
   padding: 0.5rem 0.9rem;
 }
@@ -548,6 +549,24 @@ table.styledtable tr.alt td {
 
 .float-right {
   float: right;
+}
+
+/* Games styling  */
+
+.games-content {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+}
+
+.games-body {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+}
+
+.games-body div{
+  margin: 0.5rem;
 }
 
 /* JQUERY UI modifications */

@@ -927,6 +927,7 @@ if ($SYMB_UID) {
 			<div>
 				<form name="image-search-form" action="<?= $CLIENT_ROOT ?>/imagelib/search.php" method="get">
 					<input name="db" value="<?= $collid ?>" type="hidden">
+					<input name="imagetype" value="1" type="hidden">
 					<button name="submitaction" type="submit" value="search" class="button button-primary">
 						<?= $LANG['IMAGE_SEARCH_THIS_COLLECTION'] ?>
 					</button>
