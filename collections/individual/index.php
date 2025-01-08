@@ -414,28 +414,35 @@ $traitArr = $indManager->getTraitArr();
 						}
 						if(array_key_exists('relation',$occArr)){
 							?>
-								<fieldset id="association-div" class="top-light-margin">
-									<legend><?php echo (isset($LANG['RELATED_OCCUR'])?$LANG['RELATED_OCCUR']:'Related Occurrences'); ?></legend>
-									<?php
-									$displayLimit = 5;
-									$cnt = 0;
-									foreach($occArr['relation'] as $id => $assocArr){
-										if($cnt == $displayLimit){
-											echo '<div class="relation-hidden"><a href="#" onclick="$(\'.relation-hidden\').toggle();return false;">show all records</a></div>';
-											echo '<div class="relation-hidden" style="display:none">';
-										}
-										echo '<div>';
-										echo $assocArr['relationship'];
-										if($assocArr['subtype']) echo ' ('.$assocArr['subtype'].')';
-										echo ': ';
-										$relID = $assocArr['objectID'];
-										$relUrl = $assocArr['resourceurl'];
-										if(!$relUrl && $assocArr['occidassoc']) $relUrl = $GLOBALS['CLIENT_ROOT'].'/collections/individual/index.php?occid='.$assocArr['occidassoc'];
-										if($relUrl) $relID = '<a href="' . $relUrl . '" target="_blank">' . ($relID ? $relID : $relUrl) . '</a>';
-										if($relID) echo $relID;
-										if($assocArr['sciname']) echo ' [' . $assocArr['sciname'] . ']';
-										echo '</div>';
-										$cnt++;
+							<fieldset id="association-div">
+								<legend><?php echo (isset($LANG['RELATED_OCCUR'])?$LANG['RELATED_OCCUR']:'Related Occurrences'); ?></legend>
+								<?php
+								$displayLimit = 5;
+								$cnt = 0;
+								foreach($occArr['relation'] as $id => $assocArr){
+									if($cnt == $displayLimit){
+										echo '<div class="relation-hidden"><a href="#" onclick="$(\'.relation-hidden\').toggle();return false;">show all records</a></div>';
+										echo '<div class="relation-hidden" style="display:none">';
+									}
+									echo '<div>';
+									echo $assocArr['relationship'];
+									if($assocArr['subtype']) echo ' ('.$assocArr['subtype'].')';
+									echo ': ';
+									$relID = $assocArr['identifier'];
+									
+									// Start NEON custom addition
+									if (strpos($relID, ':') !== false && substr($relID, strpos($relID, ':') + 1) === '') {
+										$relID .= $assocArr['occidassoc'];
+									}
+									// End NEON custom addition
+									
+									$relUrl = $assocArr['resourceurl'];
+									if(!$relUrl && $assocArr['occidassoc']) $relUrl = $GLOBALS['CLIENT_ROOT'].'/collections/individual/index.php?occid='.$assocArr['occidassoc'];
+									if($relUrl) $relID = '<a href="'.$relUrl.'">'.$relID.'</a>';
+									if($relID) echo $relID;
+									elseif($assocArr['sciname']) echo $assocArr['sciname'];
+									echo '</div>';
+									$cnt++;
 								}
 								if(count($occArr['relation']) > $displayLimit) echo '</div>';
 								?>

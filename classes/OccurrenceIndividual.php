@@ -596,15 +596,26 @@ class OccurrenceIndividual extends Manager{
 				$indUrl = str_replace('--CATALOGNUMBER--',$this->occArr['catalognumber'],$iUrl);
 				$displayStr = $this->occArr['catalognumber'];
 			}
-			elseif(strpos($iUrl,'--OTHERCATALOGNUMBERS--') !== false && $this->occArr['othercatalognumbers']){
-				foreach($this->occArr['othercatalognumbers'] as $idArr){
-					$tagName = $idArr['name'];
-					$idValue = $idArr['value'];
-					if(!$displayStr || $tagName == 'NEON sampleID' || $tagName == 'NEON sampleCode (barcode)'){
-						$displayStr = $tagName;
-						if($tagName == 'NEON sampleCode (barcode)') $iUrl = str_replace('sampleTag','barcode',$iUrl);
-						$indUrl = str_replace('--OTHERCATALOGNUMBERS--', $idValue, $iUrl);
-						if($tagName == 'NEON sampleCode (barcode)') break;
+			elseif (strpos($iUrl, '--OTHERCATALOGNUMBERS--') !== false && $this->occArr['othercatalognumbers']) {
+				if (substr($this->occArr['othercatalognumbers'], 0, 1) == '{') {
+					if ($ocnArr = json_decode($this->occArr['othercatalognumbers'], true)) {
+						$preferredKeys = [
+							'NEON sampleCode (barcode)',
+							'NEON sampleID',
+							'Originating NEON barcode',
+							'Originating NEON sampleID'
+						];
+						foreach ($preferredKeys as $key) {
+							if (isset($ocnArr[$key]) && !empty($ocnArr[$key][0])) {
+								$displayStr = $ocnArr[$key][0];
+								$indUrl = str_replace('--OTHERCATALOGNUMBERS--', $displayStr, $iUrl);
+								
+								if ($key === 'NEON sampleCode (barcode)' || $key === 'Originating NEON barcode') {
+									$indUrl = str_replace('sampleTag', 'barcode', $indUrl);
+								}
+								break; 
+							}
+						}
 					}
 				}
 			}

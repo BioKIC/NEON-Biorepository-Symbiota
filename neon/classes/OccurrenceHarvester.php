@@ -123,7 +123,7 @@ class OccurrenceHarvester{
 				$sampleArr['sampleCode'] = $r->sampleCode ?? '';
 				$sampleArr['sampleClass'] = $r->sampleClass ?? '';
 				$sampleArr['taxonID'] = $r->taxonID ?? '';
-				$sampleArr['individualCount'] = $r->individualCount ?? '';
+				//$sampleArr['individualCount'] = $r->individualCount ?? '';
 				$sampleArr['filterVolume'] = $r->filterVolume ?? '';
 				$sampleArr['namedLocation'] = $r->namedLocation ?? '';
 				$sampleArr['collectDate'] = $r->collectDate ?? '';
@@ -166,11 +166,11 @@ class OccurrenceHarvester{
 				//Update stats for each collection affected
 				if($collArr){
 					echo '<li>Update stats and associations for each collection...</li>';
-					//if(in_array(7, $collArr)) {$collArr[] = 108;}
-					//if(in_array(8, $collArr)) {$collArr[] = 109;}
-					//if(in_array(9, $collArr)) { $collArr[] = 107;}
+					if(in_array(7, $collArr)) {$collArr[] = 108;}
+					if(in_array(8, $collArr)) {$collArr[] = 109;}
+					if(in_array(9, $collArr)) { $collArr[] = 107;}
 					//if(in_array(22, $collArr)) {$collArr[] = 100;}
-					//if(in_array(45, $collArr)) {$collArr[] = 104;}
+					if(in_array(45, $collArr)) {$collArr[] = 104;}
 					//if(in_array(47, $collArr)) {$collArr[] = 110;}
 					//if(in_array(49, $collArr)) {$collArr[] = 111;}
 					if(in_array(50, $collArr)) {$collArr[] = 105;}
@@ -488,7 +488,7 @@ class OccurrenceHarvester{
 				//if(strpos($tableName,'perarchivesample')) continue;
 				//if(strpos($tableName,'persample')) continue;
 				//if(strpos($tableName,'pertaxon')) continue;
-				//if(strpos($tableName,'pervial')) continue;
+				if(strpos($tableName,'zoo_perVial_in')) continue;
 				if($tableName == 'mpr_perpitprofile_in') continue;
 				$fieldArr = $eArr['smsFieldEntries'];
 				$fateLocation = ''; $fateDate = '';
@@ -514,7 +514,20 @@ class OccurrenceHarvester{
 						elseif($fArr['smsKey'] == 'collected_by' && $fArr['smsValue']) $tableArr['collected_by'] = $fArr['smsValue'];
 						elseif($fArr['smsKey'] == 'collect_start_date' && $fArr['smsValue']) $tableArr['collect_start_date'] = $fArr['smsValue'];
 						elseif($fArr['smsKey'] == 'collect_end_date' && $fArr['smsValue']) $tableArr['collect_end_date'] = $fArr['smsValue'];
-						elseif($fArr['smsKey'] == 'specimen_count' && $fArr['smsValue']) $tableArr['specimen_count'] = $fArr['smsValue'];
+						elseif (
+							$fArr['smsKey'] == 'specimen_count' && 
+							$fArr['smsValue'] && 
+							!(
+								strpos($tableName, 'bet_') !== false || 
+								strpos($tableName, 'ptx_') !== false || 
+								strpos($tableName, 'cfc_') !== false || 
+								strpos($tableName, 'mic_') !== false || 
+								strpos($tableName, 'sls_') !== false || 
+								strpos($tableName, 'metabarcode') !== false
+							)
+						) {
+							$tableArr['specimen_count'] = $fArr['smsValue'];
+						}												
 						elseif($fArr['smsKey'] == 'temperature' && $fArr['smsValue']) $tableArr['temperature'] = $fArr['smsValue'];
 						elseif($fArr['smsKey'] == 'decimal_latitude' && $fArr['smsValue']) $tableArr['decimal_latitude'] = $fArr['smsValue'];
 						elseif($fArr['smsKey'] == 'decimal_longitude' && $fArr['smsValue']) $tableArr['decimal_longitude'] = $fArr['smsValue'];
@@ -526,7 +539,20 @@ class OccurrenceHarvester{
 						elseif($fArr['smsKey'] == 'maximum_depth_in_meters' && $fArr['smsValue']) $tableArr['maximum_depth_in_meters'] = $fArr['smsValue'];
 						elseif($fArr['smsKey'] == 'reproductive_condition' && $fArr['smsValue']) $tableArr['reproductive_condition'] = $fArr['smsValue'];
 						elseif($fArr['smsKey'] == 'sex' && $fArr['smsValue']) $tableArr['sex'] = $fArr['smsValue'];
-						elseif($fArr['smsKey'] == 'life_stage' && $fArr['smsValue']) $tableArr['life_stage'] = $fArr['smsValue'];
+						elseif (
+							$fArr['smsKey'] == 'life_stage' && 
+							$fArr['smsValue'] && 
+							!(
+								strpos($tableName, 'bet_') !== false || 
+								strpos($tableName, 'ptx_') !== false || 
+								strpos($tableName, 'cfc_') !== false || 
+								strpos($tableName, 'mic_') !== false || 
+								strpos($tableName, 'sls_') !== false || 
+								strpos($tableName, 'metabarcode') !== false
+							)
+						) {
+							$tableArr['life_stage'] = $fArr['smsValue'];
+						}								
 						elseif($fArr['smsKey'] == 'associated_taxa' && $fArr['smsValue']) $tableArr['associated_taxa'] = $fArr['smsValue'];
 						elseif($fArr['smsKey'] == 'remarks' && $fArr['smsValue'] && !in_array($tableName,array('ptx_taxonomy_in'))) $tableArr['remarks'] = $fArr['smsValue'];
 						elseif($fArr['smsKey'] == 'preservative_concentration' && $fArr['smsValue']) $tableArr['preservative_concentration'] = $fArr['smsValue'];
@@ -580,6 +606,7 @@ class OccurrenceHarvester{
 								}
 							elseif($fArr['smsKey'] == 'identification_references' && $fArr['smsValue']) $identArr['identificationReferences'] = $fArr['smsValue'];
 							elseif($fArr['smsKey'] == 'identification_qualifier' && $fArr['smsValue']) $identArr['identificationQualifier'] = $fArr['smsValue'];
+							elseif(in_array($tableName,array('zoo_perTaxon_in')) && $fArr['smsKey'] == 'specimen_count' && $fArr['smsValue']) $identArr['subsampleIndividualCount'] = $fArr['smsValue'];
 						}
 					}
 				}
@@ -674,7 +701,7 @@ class OccurrenceHarvester{
 					}
 				}
 				$prepArr = array();
-					if(!in_array($dwcArr['collid'], array(19,28,42,46,17,64))){
+					if(!in_array($dwcArr['collid'], array(7,8,9,19,28,42,46,17,64))){
 						if(!in_array($dwcArr['collid'],array(31,50,73))){
 							if(!empty($sampleArr['preservative_type'])) $prepArr[] = 'preservative type: '.$sampleArr['preservative_type'];
 						}
@@ -1024,9 +1051,6 @@ class OccurrenceHarvester{
 		elseif(in_array($dwcArr['collid'], array(29,39,44,63,65,66,71,75,82,90,91,95))) {
 			$dwcArr['individualCount'] = 1;
 		}
-		elseif(in_array($dwcArr['collid'], array(46,11,12,14,15,17,18))){
-			$dwcArr['individualCount'] = NULL;
-		}
 	}
 
 	private function protectTaxonomyTest($idArr){
@@ -1072,11 +1096,11 @@ class OccurrenceHarvester{
 
 	private function subSampleIdentifications(&$dwcArr, $parentOccid){
 		$collArr = array();
-		//$collArr[7] = array('targetCollid' => 108, 'lotId' => 'dynamic','defaultId' => 'Plantae');
-		//$collArr[8] = array('targetCollid' => 109, 'lotId' => 'dynamic','defaultId' => 'Plantae');
-		//$collArr[9] = array('targetCollid' => 107, 'lotId' => 'dynamic','defaultId' => 'Plantae');
+		$collArr[7] = array('targetCollid' => 108, 'lotId' => 'dynamic','defaultId' => 'Plantae');
+		$collArr[8] = array('targetCollid' => 109, 'lotId' => 'dynamic','defaultId' => 'Plantae');
+		$collArr[9] = array('targetCollid' => 107, 'lotId' => 'dynamic','defaultId' => 'Plantae');
 		//$collArr[22] = array('targetCollid' => 100, 'lotId' => 'dynamic','defaultId' => 'Chironomidae');
-		//$collArr[45] = array('targetCollid' => 104, 'lotId' => 'dynamic','defaultId' => 'Zooplankton');
+		$collArr[45] = array('targetCollid' => 104, 'defaultId' => 'Zooplankton');
 		//$collArr[47] = array('targetCollid' => 110, 'lotId' => 'dynamic','defaultId' => 'ECO');
 		//$collArr[49] = array('targetCollid' => 111, 'lotId' => 'dynamic','defaultId' => 'ECO');
 		$collArr[50] = array('targetCollid' => 105, 'lotId' => 'dynamic','defaultId' => 'Plantae');
@@ -1104,7 +1128,7 @@ class OccurrenceHarvester{
 							}
 						}
 						if(!$dateIdentified){
-							//If date does not exist and collector does exist, increase group by 1, thus making it a sepparate and preferred group for subsampling
+							//If date does not exist and collector does exist, increase group by 1, thus making it a separate and preferred group for subsampling
 							if(!empty($idArr['identifiedBy']) && $idArr['identifiedBy'] != 'undefined'){
 								$dateIdentified = 1;
 							}
@@ -1114,9 +1138,8 @@ class OccurrenceHarvester{
 
 					//Select group of identifications that were identified the latest
 					krsort($identificationsGrouped);
-					$baseDataIdentified = key($identificationsGrouped);
+					$baseDateIdentified = key($identificationsGrouped);
 					$targetIdentifications = current($identificationsGrouped);
-
 					//Subsample records
 					echo '<li style="margin-left:30px">Creating/updating ' . count($targetIdentifications) . ' subSample records ... </li>';
 					$currentSubsampleArr = $this->getSubSamples($parentOccid);
@@ -1134,6 +1157,9 @@ class OccurrenceHarvester{
 						$dwcArrClone['collid'] = $targetCollid;
 						$identArr['isCurrent'] = 1;
 						$dwcArrClone['identifications'] = array($identArr);
+						if(!empty($identArr['subsampleIndividualCount'])){
+							$dwcArrClone['individualCount']=$identArr['subsampleIndividualCount'];
+						}
 						unset($dwcArrClone['associations']);
 						unset($dwcArrClone['identifiers']);
 						$existingOccid = 0;
@@ -1189,6 +1215,7 @@ class OccurrenceHarvester{
 								if($commonIdArr = $this->getCommonID($tidArr)){
 									$baseID['tidInterpreted'] = key($commonIdArr);
 									$baseID['sciname'] = current($commonIdArr);
+									$baseID['identifiedBy']=$identArr['identifiedBy'];
 								}
 							}
 						}
@@ -1200,10 +1227,11 @@ class OccurrenceHarvester{
 					// make the baseID the default lotID if one exists and the current sciname is undefined or empty
 					if (($baseID['sciname'] === 'undefined' || empty($baseID['sciname'])) && !empty($collArr[$sourceCollid]['defaultId'])) {
 						$baseID['sciname'] = $collArr[$sourceCollid]['defaultId'];
+						$baseID['identifiedBy']=$identArr['identifiedBy'];
 					}
 
 					$baseID['isCurrent'] = 1;
-					if($baseDataIdentified) $baseID['dateIdentified'] = $baseDataIdentified;
+					if($baseDateIdentified) $baseID['dateIdentified'] = $baseDateIdentified;
 					$baseID['taxonRemarks'] = 'Identification source: harvested from NEON API';
 					$dwcArr['identifications'][] = $baseID;
 					//Append associations
@@ -1449,7 +1477,7 @@ class OccurrenceHarvester{
 					if($samplePK) $this->conn->query('UPDATE NeonSample SET harvestTimestamp = now() WHERE (samplePK = '.$samplePK.')');
 					if(isset($dwcArr['identifiers'])) $this->setOccurrenceIdentifiers($dwcArr['identifiers'], $occid);
 					if(isset($dwcArr['assocMedia'])) $this->setAssociatedMedia($dwcArr['assocMedia'], $occid);
-					if(isset($dwcArr['identifications'])) $this->setIdentifications($occid, $dwcArr['identifications']);
+					if(isset($dwcArr['identifications'])) $this->setIdentifications($occid, $dwcArr['identifications'],$dwcArr['collid']);
 					if(isset($dwcArr['associations'])) $this->setAssociations($occid, $dwcArr['associations']);
 					$this->setDatasetIndexing($domainID,$occid);
 					$this->setDatasetIndexing($siteID,$occid);
@@ -1550,7 +1578,7 @@ class OccurrenceHarvester{
 		}
 	}
 
-	private function setIdentifications($occid, $identArr){
+	private function setIdentifications($occid, $identArr,$collID){
 		if($occid){
 			//Set default values
 			foreach($identArr as $k => $v){
@@ -1612,8 +1640,10 @@ class OccurrenceHarvester{
 					if(!$newID || !empty($cdArr['securityStatus'])) $newID = $idArr['sciname'];
 				}
 			}
-			if($oldID && $newID && $oldID != $newID){
-				$this->setSampleErrorMessage('occid:'.$occid, 'Curatorial Check: possible ID conflict');
+			if(in_array($collID,array(7,8,9,11,12,14,15,17,18,19,20,28,29,39,48,52,53,54,55,70))){
+				if($oldID && $newID && $oldID != $newID){
+					$this->setSampleErrorMessage('occid:'.$occid, 'Curatorial Check: possible ID conflict');
+				}
 			}
 			foreach($identArr as $idArr){
 				if(($idArr['identifiedBy'] != 'manifest' && $idArr['identifiedBy'] != 'sampleID') || !empty($idArr['isCurrent'])){
@@ -2222,7 +2252,8 @@ class OccurrenceHarvester{
 		}
 		else{
 			//Look to see if string can be translated via NeonPersonnel table
-			$sql = 'SELECT full_info FROM NeonPersonnel WHERE neon_email = ? OR orcid = ?';
+			$sql = "SELECT full_info FROM NeonPersonnel 
+			WHERE SUBSTRING_INDEX(neon_email, '@', 1) = SUBSTRING_INDEX(?, '@', 1) OR orcid = ?";
 			if($stmt = $this->conn->prepare($sql)){
 				$stmt->bind_param('ss', $persStr, $persStr);
 				$stmt->execute();
