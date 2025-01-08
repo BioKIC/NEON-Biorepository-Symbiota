@@ -16,9 +16,6 @@ $eMode = array_key_exists('emode', $_REQUEST) ? $collManager->sanitizeInt($_REQU
 $action = array_key_exists('action', $_REQUEST) ? $_REQUEST['action'] : '';
 
 $SHOULD_INCLUDE_CULTIVATED_AS_DEFAULT = $SHOULD_INCLUDE_CULTIVATED_AS_DEFAULT ?? false;
-$SHOULD_USE_HARVESTPARAMS = $SHOULD_USE_HARVESTPARAMS ?? false;
-$actionPage = $SHOULD_USE_HARVESTPARAMS ? ($CLIENT_ROOT . "/collections/harvestparams.php") : ($CLIENT_ROOT . "/collections/search/index.php");
-
 
 if ($eMode && !$SYMB_UID) header('Location: ../../profile/index.php?refurl=../collections/misc/collprofiles.php?' . htmlspecialchars($_SERVER['QUERY_STRING'], ENT_QUOTES));
 
@@ -137,6 +134,9 @@ if ($SYMB_UID) {
 			margin-left: 3rem;
 		}
 
+		#quicksearch-box {
+			margin-top: 5px;
+		}
 		#quicksearch-box input {
 			width: 100%;
 		}
@@ -148,7 +148,6 @@ if ($SYMB_UID) {
 		.quicksearch-container {
 			top: 1rem;
 			right: 1rem;
-			position:sticky;
 			width: 100vw;
 			margin-left: calc(50% - 50vw);
 		}
@@ -589,6 +588,9 @@ if ($SYMB_UID) {
 											<?= $LANG['RESTORE_BACKUP'] ?>
 										</a>
 									</li>
+									<?php
+								}
+								?>
 								<!--
 								<li style="margin-left:10px;">
 									<a href="../../imagelib/admin/igsnmapper.php?collid=<?= $collid ?>">
@@ -596,9 +598,6 @@ if ($SYMB_UID) {
 									</a>
 								</li>
 								 -->
-									<?php
-								}
-								?>
 								<li style="margin-left:10px;">
 									<a href="../../imagelib/admin/thumbnailbuilder.php?collid=<?= $collid ?>">
 										<?= $LANG['THUMBNAIL_MAINTENANCE'] ?>
@@ -912,9 +911,13 @@ if ($SYMB_UID) {
 			</div>
 			<?php
 			include('collprofilestats.php');
+			/*
+			 * Deactivating button below, at least for now.
+			 * The NEON search form is failing to self-set based on input variables (e.g. collection self-selecting when db=x).
+			 * Furthermore, this page is being replaced by a NEON specific collection profile page
 			?>
 			<div style="margin-bottom: 2rem;">
-				<form name="coll-search-form" action="<?= $actionPage ?>" method="get">
+				<form name="coll-search-form" action="<?= $CLIENT_ROOT ?>/neon/search/index.php" method="get">
 					<input name="db" value="<?= $collid ?>" type="hidden">
 					<button type="submit" class="button button-primary">
 						<?= $LANG['ADVANCED_SEARCH_THIS_COLLECTION'] ?>
@@ -931,6 +934,7 @@ if ($SYMB_UID) {
 				</form>
 			</div>
 			<?php
+			*/
 		} elseif($collectionData) {
 			?>
 			<h2><?= $DEFAULT_TITLE . ' ' . $LANG['COLLECTION_PROJECTS']  ?></h2>
@@ -976,10 +980,10 @@ if ($SYMB_UID) {
 								</a>
 							</h3>
 							<div style='margin:10px;'>
-								<div class="coll-description bottom-breathing-room-rel"><?= $collData['fulldescription'] ?></div>
+								<div class="coll-description bottom-breathing-room-rel"><?= $collArr['fulldescription'] ?></div>
 								<?php
-								if(isset($collData['resourcejson'])){
-									if($resourceArr = json_decode($collData['resourcejson'], true)){
+								if(isset($collArr['resourcejson'])){
+									if($resourceArr = json_decode($collArr['resourcejson'], true)){
 										$title = $LANG['HOMEPAGE'];
 										foreach($resourceArr as $rArr){
 											if(!empty($rArr['title'][$LANG_TAG])) $title = $rArr['title'][$LANG_TAG];
@@ -991,8 +995,8 @@ if ($SYMB_UID) {
 										}
 									}
 								}
-								if(!empty($collData['contactjson'])){
-									if($contactArr = json_decode($collData['contactjson'], true)){
+								if(!empty($collArr['contactjson'])){
+									if($contactArr = json_decode($collArr['contactjson'], true)){
 										if(!empty($contactArr)){
 											?>
 											<section style="margin-left: 0;">

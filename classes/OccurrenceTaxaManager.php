@@ -109,9 +109,9 @@ class OccurrenceTaxaManager {
 				}
 				else{
 					if($this->taxaArr['usethes']){
-						$sql .= 'INNER JOIN taxstatus ts ON t.tid = ts.tidaccepted
-							INNER JOIN taxa t2 ON ts.tid = t2.tid
-							WHERE (ts.taxauthid = '.$this->taxAuthId.') AND (t2.sciname IN("'.$this->cleanInStr($searchTerm).'"))';
+						$sql .= 'LEFT JOIN taxstatus ts ON t.tid = ts.tidaccepted
+							LEFT JOIN taxa t2 ON ts.tid = t2.tid
+							WHERE (ts.taxauthid = '.$this->taxAuthId.') AND (t2.sciname IN("'.$this->cleanInStr($searchTerm).'")) OR t.sciname IN("'.$this->cleanInStr($searchTerm).'")';
 					}
 					else{
 						$sql .= 'WHERE t.sciname IN("'.$this->cleanInStr($searchTerm).'")';
@@ -409,7 +409,8 @@ class OccurrenceTaxaManager {
 
 	protected function cleanInputStr($str){
 		if(!is_string($str) && !is_numeric($str) && !is_bool($str)) return '';
-		if(stripos($str, 'sleep(') !== false) return '';
+		if(preg_match('/^\d+\'+$/', $str)) return 0;	//SQL Injection attempt, thus set to return nothing rather than a query that puts a load on the db server
+		if(strpos($str, '=') !== false) return '';
 		$str = preg_replace('/%%+/', '%',$str);
 		$str = preg_replace('/^[\s%]+/', '',$str);
 		$str = trim($str,' ,;');

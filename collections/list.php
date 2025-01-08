@@ -37,11 +37,33 @@ $_SESSION['citationvar'] = $searchVar;
 	<?php
 	include_once($SERVER_ROOT . '/includes/head.php');
 	include_once($SERVER_ROOT . '/includes/googleanalytics.php');
+	
+	// NEON start
+	parse_str($searchVar, $params);
+	$encodedSearchVar = json_encode($searchVar, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_AMP | JSON_HEX_QUOT);
 	?>
-	<link href="<?= $CSS_BASE_PATH; ?>/symbiota/collections/listdisplay.css" type="text/css" rel="stylesheet" />
-	<link href="<?php echo $CSS_BASE_PATH; ?>/jquery-ui.min.css" type="text/css" rel="stylesheet">
-	<script src="<?php echo $CLIENT_ROOT; ?>/js/jquery-3.7.1.min.js" type="text/javascript"></script>
-	<script src="<?php echo $CLIENT_ROOT; ?>/js/jquery-ui.min.js" type="text/javascript"></script>
+	<script>
+	  const params = <?php echo json_encode($params, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_AMP | JSON_HEX_QUOT); ?>;
+	  const rawSearchVar = <?php echo $encodedSearchVar; ?>;
+	  
+	  const eventParams = {};
+	  Object.keys(params).forEach(key => {
+		eventParams[key] = Array.isArray(params[key]) ? params[key].join(',') : params[key];
+	  });
+	  eventParams.rawSearchVar = rawSearchVar;
+	  
+	  gtag('event', 'search_query', {
+		event_category: 'Search',
+		event_label: 'Search Parameters',
+		...eventParams,
+	  });
+	</script>
+	<!-- NEON end-->
+	
+	<link href="<?php echo $CSS_BASE_PATH; ?>/symbiota/collections/listdisplay.css" type="text/css" rel="stylesheet" />
+	<script src="../js/jquery-3.2.1.min.js" type="text/javascript"></script>
+	<script src="../js/jquery-ui/jquery-ui.min.js" type="text/javascript"></script>
+	<link href="../js/jquery-ui/jquery-ui.min.css" type="text/css" rel="Stylesheet" />
 	<script type="text/javascript">
 		var urlQueryStr = "<?php if($searchVar) echo $searchVar . '&page=' . $pageNumber; ?>";
 
@@ -101,58 +123,23 @@ $_SESSION['citationvar'] = $searchVar;
 	</script>
 	<script src="../js/symb/collections.list.js?ver=4" type="text/javascript"></script>
 	<style type="text/css">
-		fieldset {
-			padding: 15px;
-		}
-
-		legend {
-			font-weight: bold;
-		}
-
-		.checkbox-elem {
-			margin: 5px;
-			padding: 5px;
-			border: 1px dashed orange;
-		}
-
-		.ui-tabs .ui-tabs-nav li {
-			width: 32%;
-		}
-
-		.ui-tabs .ui-tabs-nav li a {
-			margin-left: 10px;
-		}
-		#tabs {
-			width:95%;
-		}
+		fieldset { padding: 15px; }
+		legend { font-weight: bold; }
+		.checkbox-elem { margin: 5px; padding: 5px; border: 1px dashed orange; }
+		.ui-tabs .ui-tabs-nav li { width: 32%; }
+		.ui-tabs .ui-tabs-nav li a { margin-left: 10px; }
+		.protected-span { color: red; }
 	</style>
 </head>
-
 <body>
 	<?php
 	$displayLeftMenu = (isset($collections_listMenu) ? $collections_listMenu : false);
 	include($SERVER_ROOT . '/includes/header.php');
-	if (isset($collections_listCrumbs)) {
-		if ($collections_listCrumbs) {
-			echo '<div class="navpath">';
-			echo '<a href="../index.php">' . htmlspecialchars($LANG['NAV_HOME'], ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . '</a> &gt;&gt; ';
-			echo $collections_listCrumbs . ' &gt;&gt; ';
-			echo '<b>' . $LANG['NAV_SPECIMEN_LIST'] . '</b>';
-			echo '</div>';
-		}
-	}
-	else {
-		echo '<div class="navpath">';
-		echo '<a href="../index.php">' . htmlspecialchars($LANG['NAV_HOME'], ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . '</a> &gt;&gt; ';
-		if($comingFrom == 'harvestparams'){
-			echo '<a href="index.php">' . htmlspecialchars($LANG['NAV_COLLECTIONS'], ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . '</a> &gt;&gt; ';
-			echo '<a href="' . $CLIENT_ROOT . '/collections/harvestparams.php">' . htmlspecialchars($LANG['NAV_SEARCH'], ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . '</a> &gt;&gt; ';
-		} else{
-			echo '<a href="' . $CLIENT_ROOT . '/collections/search/index.php">' . htmlspecialchars($LANG['NAV_SEARCH'], ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . '</a> &gt;&gt; ';
-		}
-		echo '<b>' . $LANG['NAV_SPECIMEN_LIST'] . '</b>';
-		echo '</div>';
-	}
+	echo '<div class="navpath">';
+	echo '<a href="../index.php">' . $LANG['NAV_HOME'] . '</a> &gt;&gt; ';
+	echo '<a href="' . $CLIENT_ROOT . '/neon/search/index.php">' . $LANG['NAV_SEARCH'] . '</a> &gt;&gt; ';
+	echo '<b>' . $LANG['NAV_SPECIMEN_LIST'] . '</b>';
+	echo '</div>';
 	?>
 	<!-- This is inner text! -->
 	<div role="main" id="innertext">
@@ -337,7 +324,7 @@ $_SESSION['citationvar'] = $searchVar;
 									if ($fieldArr["state"]) $localStr .= ', ' . $fieldArr["state"];
 									if ($fieldArr["county"]) $localStr .= ', ' . $fieldArr["county"];
 									if ($fieldArr['locality'] == 'PROTECTED') {
-										$localStr .= ', <span style="color:red;">' . $LANG['PROTECTED'] . '</span>';
+										$localStr .= ', <span class="protected-span">' . $LANG['PROTECTED'] . '</span>';
 									} else {
 										if ($fieldArr['locality']) $localStr .= ', ' . $fieldArr['locality'];
 										if ($fieldArr['declat']) $localStr .= ', ' . $fieldArr['declat'] . ' ' . $fieldArr['declong'];
