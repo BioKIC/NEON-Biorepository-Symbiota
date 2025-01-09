@@ -1032,23 +1032,63 @@ class ProfileManager extends Manager{
 		return $tPath;
 	}
 
-	//setter and getters
-	public function setRememberMe($test){
-		$this->rememberMe = $test;
+	//Accessubility functions
+	private function setAccessibilityPreference($pref, $uid){
+		$status = false;
+		$currentDynamicProperties = $this->getDynamicProperties($uid);
+		if(!$currentDynamicProperties) $currentDynamicProperties = array();
+		$currentDynamicProperties['accessibilityPref'] = $pref;
+		$status = $this->setDynamicProperties($uid, $currentDynamicProperties);
+		return $status;
 	}
 
-	public function getRememberMe(){
-		return $this->rememberMe;
-	}
+	private function setDynamicProperties($uid, $dynPropArr){
+		$status = false;
+		if(!$uid) return $status;
 
-	public function setToken($token){
-		$this->token = $token;
-	}
+		$jsonDynProps = json_encode($dynPropArr);
 
-	public function setUid($uid){
-		if(is_numeric($uid)){
-			$this->uid = $uid;
+		$this->resetConnection(); // @TODO decided whether this is necessary
+		$sql = 'UPDATE users SET dynamicProperties = ? WHERE (uid = ?)';
+		if($stmt = $this->conn->prepare($sql)){
+			$stmt->bind_param('si', $jsonDynProps, $uid);
+			$stmt->execute();
+			if(!$stmt->error) $status = true; // note: removed $stmt->affected_rows &&
+			$stmt->close();
 		}
+		return $status;
+	}
+
+	public function getAccessibilityPreference($uid){
+		if(!$uid){
+			return false;
+		}
+		$returnVal = false;
+		$dynPropArr = $this->getDynamicProperties($uid);
+
+		if($dynPropArr && isset($dynPropArr['accessibilityPref'])){
+			$returnVal = ($dynPropArr['accessibilityPref'] === true) ? true : false;
+		}
+		return $returnVal;
+	}
+
+	private function getDynamicProperties($uid){
+		$returnVal = false;
+		$sql = 'SELECT dynamicProperties FROM users WHERE uid = ?';
+		$stmt = $this->conn->prepare($sql);
+		$stmt->bind_param('i', $uid);
+		$stmt->execute();
+		$respns= $stmt->get_result();
+		if($fetchedObj = $respns->fetch_object()){
+			$dynPropStr = $fetchedObj->dynamicProperties;
+		}
+		$respns->free();
+		if(isset($dynPropStr)){
+			if($dynPropArr = json_decode($dynPropStr, true)){
+				$returnVal = $dynPropArr;
+			}
+		}
+		return $returnVal;
 	}
 
 	public function setAccessibilityPreference($pref, $uid){
@@ -1131,6 +1171,25 @@ class ProfileManager extends Manager{
 	private function encodeArr(&$inArr,$cSet){
 		foreach($inArr as $k => $v){
 			$inArr[$k] = $this->encodeString($v,$cSet);
+		}
+	}
+
+	//setter and getters
+	public function setRememberMe($test){
+		$this->rememberMe = $test;
+	}
+
+	public function getRememberMe(){
+		return $this->rememberMe;
+	}
+
+	public function setToken($token){
+		$this->token = $token;
+	}
+
+	public function setUid($uid){
+		if(is_numeric($uid)){
+			$this->uid = $uid;
 		}
 	}
 }
