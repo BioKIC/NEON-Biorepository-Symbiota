@@ -44,7 +44,7 @@ if (array_key_exists('code', $_REQUEST) && $_REQUEST['code']) {
       if ($email = $oidc->requestUserInfo('email')){
         // Authprovider returned a subscriber; however, user was not authenticated to local user account
         try{
-          $status = $profManager->linkLocalUserOidSub($email, $sub, $oidc->getProviderURL(), $oidc->requestUserInfo('user_id'), $oidc->requestUserInfo('given_name'), $oidc->requestUserInfo('family_name'));
+          $status = $profManager->linkLocalUserOidSub($email, $sub, $oidc->getProviderURL());
         }catch (Exception $ex){
           $_SESSION['last_message'] = $LANG['CAUGHT_EXCEPTION'] . ' '  . $ex->getMessage();
           header('Location:' . $CLIENT_ROOT . '/profile/index.php');
@@ -52,11 +52,8 @@ if (array_key_exists('code', $_REQUEST) && $_REQUEST['code']) {
         }
         if($status){
           if($profManager->authenticate($sub, $providerUrls['oid'])){
-            if (isset($_SESSION['refurl']) && !empty($_SESSION['refurl'])) {
+            if($_SESSION['refurl']){
               header("Location:" . $_SESSION['refurl']);
-              unset($_SESSION['refurl']);
-            } else {
-              header("Location: " . $CLIENT_ROOT . '/index.php');
               unset($_SESSION['refurl']);
             }
           }
@@ -76,9 +73,7 @@ if (array_key_exists('code', $_REQUEST) && $_REQUEST['code']) {
         header('Location:' . $CLIENT_ROOT . '/profile/index.php');
       }
     }
-  } else {
-    $_SESSION['last_message'] = $LANG['AUTHENTICATION_FAILED'] . " <ERR/>";
-    header('Location:' . $CLIENT_ROOT . '/profile/index.php');    
   }
-
+  $_SESSION['last_message'] = $LANG['AUTHENTICATION_FAILED'] . " <ERR/>";
+  header('Location:' . $CLIENT_ROOT . '/profile/index.php');
 }
