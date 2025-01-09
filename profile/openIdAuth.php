@@ -28,6 +28,11 @@ $oidc->addAuthParam(['prompt' => 'login']);
 $oidc->authenticate();
 
 ?>
+ <?php
+echo '<script type="text/javascript">
+       window.onload = function () { alert("Welcome"); } 
+</script>'; 
+?> 
 <!DOCTYPE html>
 <html lang="<?php echo $LANG_TAG ?>">
 <head>
