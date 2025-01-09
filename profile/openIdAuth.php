@@ -23,16 +23,15 @@ if(isset($shouldVerifyPeers)){
   $oidc->setVerifyPeer($shouldVerifyPeers);
 }
 
+echo '<script type="text/javascript">
+       window.onload = function () { alert("Welcome"); } 
+</script>'; 
+
 // $_SESSION['oidIssuer'] = $oidc->getIssuer(); // moot for microsoft where it's the same as the providerUrl, but potentially useful for other auth providers?
 $oidc->addAuthParam(['prompt' => 'login']);
 $oidc->authenticate();
 
 ?>
- <?php
-echo '<script type="text/javascript">
-       window.onload = function () { alert("Welcome"); } 
-</script>'; 
-?> 
 <!DOCTYPE html>
 <html lang="<?php echo $LANG_TAG ?>">
 <head>
