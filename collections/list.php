@@ -119,6 +119,12 @@ $_SESSION['citationvar'] = $searchVar;
 		.checkbox-elem { margin: 5px; padding: 5px; border: 1px dashed orange; }
 		.ui-tabs .ui-tabs-nav li { width: 32%; }
 		.ui-tabs .ui-tabs-nav li a { margin-left: 10px; }
+		.ui-tabs-anchor {
+			white-space: nowrap;
+			max-width: 75%;
+			overflow: hidden;
+			text-overflow: ellipsis;
+		 }
 		.protected-span { color: red; }
 	</style>
 </head>
