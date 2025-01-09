@@ -315,7 +315,7 @@ class ProfileManager extends Manager{
 		$lastName = strip_tags($postArr['lastname']);
 		$pwd = $postArr['pwd'];
 		$email = filter_var($postArr['email'], FILTER_VALIDATE_EMAIL);
-		
+
 		$title = array_key_exists('title', $postArr) ? strip_tags($postArr['title']) : '';
 		$institution = array_key_exists('institution', $postArr) ? strip_tags($postArr['institution']) : '';
 		$city = array_key_exists('city', $postArr) ? strip_tags($postArr['city']) : '';
@@ -1077,65 +1077,6 @@ class ProfileManager extends Manager{
 		$sql = 'SELECT dynamicProperties FROM users WHERE uid = ?';
 		$stmt = $this->conn->prepare($sql);
 		$stmt->bind_param('i', $uid);
-		$stmt->execute();
-		$respns= $stmt->get_result();
-		if($fetchedObj = $respns->fetch_object()){
-			$dynPropStr = $fetchedObj->dynamicProperties;
-		}
-		$respns->free();
-		if(isset($dynPropStr)){
-			if($dynPropArr = json_decode($dynPropStr, true)){
-				$returnVal = $dynPropArr;
-			}
-		}
-		return $returnVal;
-	}
-
-	public function setAccessibilityPreference($pref, $uid){
-		$status = false;
-		$currentDynamicProperties = $this->getDynamicProperties($uid) ? $this->getDynamicProperties($uid) : array();
-		$currentDynamicProperties['accessibilityPref'] = $pref;
-		$status = $this->setDynamicProperties($uid, $currentDynamicProperties);
-		return $status;
-	}
-
-	public function setDynamicProperties($uid, $dynPropArr){
-		$status = false;
-		if(!$uid) return $status;
-
-		$jsonDynProps = json_encode($dynPropArr);
-
-
-		$this->resetConnection(); // @TODO decided whether this is necessary
-		$sql = 'UPDATE users SET dynamicProperties = ? WHERE (uid = ?)';
-		if($stmt = $this->conn->prepare($sql)){
-			$stmt->bind_param('si', $jsonDynProps, $uid);
-			$stmt->execute();
-			if(!$stmt->error) $status = true; // note: removed $stmt->affected_rows && 
-			$stmt->close();
-		}
-		return $status;
-
-	}
-
-	public function getAccessibilityPreference($uid){
-		$returnVal = false;
-		$dynPropArr = $this->getDynamicProperties($uid);
-		
-		if($dynPropArr && isset($dynPropArr['accessibilityPref'])){
-			$returnVal = ($dynPropArr['accessibilityPref'] === '1') ? true : false;
-		}
-		return $returnVal;
-	}
-
-	public function getDynamicProperties($uid){
-		if(! $uid){
-			return false;
-		}
-		$returnVal = false;
-		$sql = 'SELECT dynamicProperties FROM users WHERE uid = ?';
-		$stmt = $this->conn->prepare($sql);
-		$stmt->bind_param("i", $uid);
 		$stmt->execute();
 		$respns= $stmt->get_result();
 		if($fetchedObj = $respns->fetch_object()){
