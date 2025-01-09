@@ -387,9 +387,9 @@ elseif (array_key_exists('CollAdmin', $USER_RIGHTS) || array_key_exists('CollEdi
 	//setLanguageDiv();
 </script>
 <?php
-//if ($USERNAME != 0) {
-//    echo "logged in as " . $USERNAME . ' <a href="http://localhost/neon/profile/index.php?submit=logout">Log out</a>';
-//} else {
-//    echo 'logged out <a href="http://localhost/neon/profile/index.php">Log in</a>';
-//}
+if ($USERNAME != 0) {
+    echo "logged in as " . $USERNAME . ' <a href="http://localhost/neon/profile/index.php?submit=logout">Log out</a>';
+} else {
+    echo 'logged out <a href="http://localhost/neon/profile/index.php">Log in</a>';
+}
 ?>
