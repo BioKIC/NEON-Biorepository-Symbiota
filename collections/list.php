@@ -128,6 +128,12 @@ $imgLibManager = new ImageLibrarySearch();
 		.ui-tabs .ui-tabs-nav li { width: 24%; }
 		/*end NEON edits*/
 		.ui-tabs .ui-tabs-nav li a { margin-left: 10px; }
+		.ui-tabs-anchor {
+			white-space: nowrap;
+			max-width: 75%;
+			overflow: hidden;
+			text-overflow: ellipsis;
+		 }
 		.protected-span { color: red; }
 	</style>
 </head>
