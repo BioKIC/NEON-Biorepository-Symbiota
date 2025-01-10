@@ -942,3 +942,5 @@ hideColCheckbox(96);
 // Hides subsample collections for the moment
 hideColCheckbox(110);
 hideColCheckbox(111);
+// Hides large invert collection for now
+hideColCheckbox(114);
