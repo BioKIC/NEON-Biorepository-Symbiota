@@ -88,10 +88,10 @@ class ShipmentManager{
 
 	public function getSampleArr($samplePK = null, $filter = null){
 		$retArr = array();
-		$headerArr = array('sampleID','hashedSampleID','alternativeSampleID','sampleCode','sampleClass','taxonID','individualCount','filterVolume','namedLocation','domainRemarks','collectDate','quarantineStatus',
+		$headerArr = array('sampleID','hashedSampleID','alternativeSampleID','sampleCode','sampleClass','sampleUuid','taxonID','individualCount','filterVolume','namedLocation','domainRemarks','collectDate','quarantineStatus',
 			'sampleReceived','acceptedForAnalysis','sampleCondition','dynamicProperties','symbiotaTarget','sampleNotes','occurErr','occid','harvestTimestamp','checkinUser','checkinRemarks','checkinTimestamp');
 		$targetArr = array();
-		$sql = 'SELECT s.samplePK, s.sampleID, s.hashedSampleID, s.alternativeSampleID, s.sampleCode, s.sampleClass, s.taxonID, s.individualCount, s.filterVolume, s.namedLocation, s.domainRemarks, s.collectDate, '.
+		$sql = 'SELECT s.samplePK, s.sampleID, s.hashedSampleID, s.alternativeSampleID, s.sampleCode, s.sampleClass, s.sampleUuid,s.taxonID, s.individualCount, s.filterVolume, s.namedLocation, s.domainRemarks, s.collectDate, '.
 			's.quarantineStatus, s.sampleReceived, s.acceptedForAnalysis, s.sampleCondition, s.dynamicProperties, s.symbiotaTarget, s.notes as sampleNotes, s.errorMessage as occurErr, '.
 			'CONCAT_WS(", ", u.lastname, u.firstname) as checkinUser, s.checkinRemarks, s.checkinTimestamp, s.occid, s.harvestTimestamp '.
 			'FROM NeonSample s LEFT JOIN users u ON s.checkinuid = u.uid ';
@@ -599,6 +599,7 @@ class ShipmentManager{
 		if(is_numeric($postArr['samplepk'])){
 			$sampleID = (isset($postArr['sampleid']) && $postArr['sampleid']?$postArr['sampleid']:NULL);
 			$sampleCode = (isset($postArr['samplecode']) && $postArr['samplecode']?$postArr['samplecode']:NULL);
+			$sampleUuid = (isset($postArr['sampleuuid']) && $postArr['sampleuuid']?$postArr['sampleuuid']:NULL);
 			//Get old values
 			$occid = '';
 			$identifierArr = array();
@@ -614,16 +615,21 @@ class ShipmentManager{
 					$identifierArr[$r->occid]['NEON sampleCode (barcode)']['idKey'] = $r->idomoccuridentifiers;
 					$identifierArr[$r->occid]['NEON sampleCode (barcode)']['idValue'] = $r->identifierValue;
 				}
+				elseif(strpos($r->identifierName,'sampleUUID')){
+					$identifierArr[$r->occid]['NEON sampleUUID']['idKey'] = $r->idomoccuridentifiers;
+					$identifierArr[$r->occid]['NEON sampleUUID']['idValue']  = $r->identifierValue;
+				}
 			}
 			$rs->free();
 			if($occid){
 				$identifierArr[$occid]['NEON sampleID']['neonID'] = $sampleID;
 				$identifierArr[$occid]['NEON sampleCode (barcode)']['neonID'] = $sampleCode;
+				$identifierArr[$occid]['NEON sampleUUID']['neonID'] = $sampleUuid;
 			}
 
 			//Update target record
 			$sql = 'UPDATE NeonSample
-				SET sampleID = ?, alternativeSampleID = ?, sampleCode = ?, sampleClass = ?, quarantineStatus = ?, namedLocation = ?, collectDate = ?, taxonID = ?,
+				SET sampleID = ?, alternativeSampleID = ?, sampleCode = ?, sampleClass = ?, sampleUuid = ?,quarantineStatus = ?, namedLocation = ?, collectDate = ?, taxonID = ?,
 				individualCount = ?, filterVolume = ?, domainRemarks = ?, notes = ? WHERE (samplepk = ?)';
 			$stmt = $this->conn->stmt_init();
 			$stmt->prepare($sql);
@@ -638,7 +644,7 @@ class ShipmentManager{
 				$filterVol = isset($postArr['filtervolume'])&&$postArr['filtervolume']?$postArr['filtervolume']:NULL;
 				$domainRemarks = isset($postArr['domainremarks'])&&$postArr['domainremarks']?$postArr['domainremarks']:NULL;
 				$sampleNotes = isset($postArr['samplenotes'])&&$postArr['samplenotes']?$postArr['samplenotes']:NULL;
-				$stmt->bind_param('ssssssssiissi', $sampleID, $altID, $sampleCode, $sampleClass, $quarStatus, $namedLoc, $collDate, $taxonID,
+				$stmt->bind_param('sssssssssiissi', $sampleID, $altID, $sampleCode, $sampleClass, $sampleUuid, $quarStatus, $namedLoc, $collDate, $taxonID,
 					$indCnt, $filterVol, $domainRemarks, $sampleNotes, $postArr['samplepk']);
 				$stmt->execute();
 				if($stmt->error==null) $status = true;
@@ -654,7 +660,10 @@ class ShipmentManager{
 			$stmt->close();
 
 			if($status && $occid){
-				//An occurrence record exists, thus update sampleID and sampleCode identifiers if they have been changed
+				//An occurrence record exists, thus update sampleID, sampleCode, and sampleUuid identifiers if they have been changed
+				echo '	id array	';
+				print_r($identifierArr);
+				echo '	id array	';
 				foreach($identifierArr as $occid => $idArr){
 					foreach($idArr as $idName => $unitArr){
 						$sql = '';
@@ -941,6 +950,10 @@ class ShipmentManager{
 				$sqlWhere .= 'AND (m.sampleClass LIKE "%'.$this->cleanInStr($_REQUEST['sampleClass']).'%") ';
 				$this->searchArr['sampleClass'] = $_REQUEST['sampleClass'];
 			}
+			if(isset($_REQUEST['sampleUuid']) && $_REQUEST['sampleUuid']){
+				$sqlWhere .= 'AND (m.sampleUuid LIKE "%'.$this->cleanInStr($_REQUEST['sampleUuid']).'%") ';
+				$this->searchArr['sampleUuid'] = $_REQUEST['sampleUuid'];
+			}
 			if(isset($_REQUEST['taxonID']) && $_REQUEST['taxonID']){
 				$sqlWhere .= 'AND (m.taxonID = "'.$_REQUEST['taxonID'].'") ';
 				$this->searchArr['taxonID'] = $_REQUEST['taxonID'];
@@ -1089,7 +1102,7 @@ class ShipmentManager{
 		$fileName = 'sampleExport_';
 		if($this->shipmentPK) $fileName .= $this->shipmentPK.'_';
 		$fileName .= date('Y-m-d').'.csv';
-		$sql = 'SELECT s.shipmentID, m.samplePK, m.sampleID, m.alternativeSampleID, m.sampleCode, m.sampleClass, m.taxonID, m.individualCount, m.filterVolume, m.namedlocation, '.
+		$sql = 'SELECT s.shipmentID, m.samplePK, m.sampleID, m.alternativeSampleID, m.sampleCode, m.sampleClass, m.sampleUuid, m.taxonID, m.individualCount, m.filterVolume, m.namedlocation, '.
 			'm.domainremarks, m.collectdate, m.quarantineStatus, m.sampleReceived, m.acceptedForAnalysis, m.sampleCondition, m.dynamicProperties, m.symbiotaTarget, m.errorMessage, m.notes, m.occid, '.
 			'CONCAT_WS(", ",u.lastname, u.firstname) AS checkinUser, sess.sessionName, sess.startTime AS sessionStartTime, sess.endTime AS sessionEndTime, m.checkinTimestamp, m.initialtimestamp '.
 			'FROM NeonShipment s INNER JOIN NeonSample m ON s.shipmentpk = m.shipmentpk '.
@@ -1422,7 +1435,7 @@ class ShipmentManager{
 
 	public function getTargetArr(){
 		$retArr = array('shipmentID','domainID','dateShipped','shippedFrom','senderID','destinationFacility','sentToID','shipmentService','shipmentMethod','trackingNumber','shipmentNotes',
-			'sampleID','alternativeSampleId','sampleCode','sampleClass','taxonID','individualCount','filterVolume','namedLocation','domainRemarks','collectDate','quarantineStatus','dynamicProperties');
+			'sampleID','alternativeSampleId','sampleCode','sampleClass','sampleUuid','taxonID','individualCount','filterVolume','namedLocation','domainRemarks','collectDate','quarantineStatus','dynamicProperties');
 		sort($retArr);
 		return $retArr;
 	}
