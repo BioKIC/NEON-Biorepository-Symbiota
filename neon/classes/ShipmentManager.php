@@ -661,9 +661,6 @@ class ShipmentManager{
 
 			if($status && $occid){
 				//An occurrence record exists, thus update sampleID, sampleCode, and sampleUuid identifiers if they have been changed
-				echo '	id array	';
-				print_r($identifierArr);
-				echo '	id array	';
 				foreach($identifierArr as $occid => $idArr){
 					foreach($idArr as $idName => $unitArr){
 						$sql = '';
