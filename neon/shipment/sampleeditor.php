@@ -103,7 +103,7 @@ if($isEditor){
 				}).done(function( resJson ) {
 					if(resJson.code == 1){
 						$('<div></div>').appendTo('body')
-						.html('<div>This sampleClass change requieres occurrence<br/>record to be transferred to '+resJson.collCode+'.<br/>Do you want it to be done automatically?</div>')
+						.html('<div>This sampleClass change requires occurrence<br/>record to be transferred to '+resJson.collCode+'.<br/>Do you want it to be done automatically?</div>')
 						.dialog({
 							modal: true,
 							title: 'Delete message',
@@ -180,6 +180,11 @@ if($isEditor){
 				<div class="fieldGroupDiv">
 					<div class="fieldDiv">
 						<b>Sample Class:</b> <input name="sampleClass" type="text" value="<?php echo isset($sampleArr['sampleClass'])?$sampleArr['sampleClass']:''; ?>" onchange="checkCollectionTransfer(this.form)" style="width:600px" required />
+					</div>
+				</div>
+				<div class="fieldGroupDiv">
+					<div class="fieldDiv">
+						<b>sampleUuid:</b> <input name="sampleUuid" type="text" value="<?php echo isset($sampleArr['sampleUuid'])?$sampleArr['sampleUuid']:''; ?>" style="width:500px" />
 					</div>
 				</div>
 				<div class="fieldGroupDiv">
