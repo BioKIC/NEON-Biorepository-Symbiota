@@ -16,7 +16,7 @@ elseif (array_key_exists('CollAdmin', $USER_RIGHTS) || array_key_exists('CollEdi
 ?>
 
 <!--neon react links-->
-<!--React last updated: 12/16/2024, 2:35:24 PM-->
+<!--React last updated: 1/14/2025, 5:30:01 PM-->
 <meta name="viewport" content="width=device-width,initial-scale=1,shrink-to-fit=no"/><meta name="theme-color" content="#000000"/><link rel="manifest" href="<?php echo $CLIENT_ROOT; ?>/neon-react/manifest.json"/><link rel="shortcut icon" href="<?php echo $CLIENT_ROOT; ?>/neon-react/favicon.ico?v=201912"/><link rel="preconnect" href="https://www.neonscience.org" crossorigin="anonymous"/><link rel="stylesheet" data-meta="drupal-fonts" href="<?php echo $CLIENT_ROOT; ?>/neon-react/assets/css/drupal-fonts.css"/><link rel="stylesheet" data-meta="drupal-theme" href="<?php echo $CLIENT_ROOT; ?>/neon-react/assets/css/drupal-theme.e26dccb4b915a92adb9c77ae139e9824.min.css"/><link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons"/><script src="https://code.jquery.com/jquery-3.5.0.min.js" integrity="sha256-xNzN2a4ltkB44Mc/Jz3pT4iU1cmeR0FkXs4pru/JxaQ=" crossorigin="anonymous"></script><script>window.gtmDataLayer=[{page_category:"Core Components"}]</script><script>!function(e,t,a,n){e[n]=e[n]||[],e[n].push({"gtm.start":(new Date).getTime(),event:"gtm.js"});var g=t.getElementsByTagName(a)[0],m=t.createElement(a),r="&l="+n;m.async=!0,m.src="https://www.googletagmanager.com/gtm.js?id=GTM-K4S83R2"+r,g.parentNode.insertBefore(m,g)}(window,document,"script","gtmDataLayer")</script><script>window.NEON_SERVER_DATA="__NEON_SERVER_DATA__"</script><link href="<?php echo $CLIENT_ROOT; ?>/neon-react/static/css/main.24d10e69.css" rel="stylesheet">
 <!--end of neon react links-->
 
@@ -34,7 +34,7 @@ elseif (array_key_exists('CollAdmin', $USER_RIGHTS) || array_key_exists('CollEdi
         
         //javascript code created by React
         var reactScript = document.createElement('script');
-        reactScript.src = '<?php echo $CLIENT_ROOT; ?>/neon-react/static/js/main.8700e79d.js';
+        reactScript.src = '<?php echo $CLIENT_ROOT; ?>/neon-react/static/js/main.82d9ab03.js';
         reactScript.defer = true;
         
         reactScript.onload = function() {
@@ -107,7 +107,7 @@ elseif (array_key_exists('CollAdmin', $USER_RIGHTS) || array_key_exists('CollEdi
             githubLink.style.alignItems = 'center';
           
             const githubLogo = document.createElement('img');
-            githubLogo.src = '/neon/portal/images/icons/github-mark-white.svg'; // Inverted GitHub logo URL
+            githubLogo.src = '<?php echo $CLIENT_ROOT; ?>/images/icons/github-mark-white.svg';
             githubLogo.alt = 'GitHub Logo';
             githubLogo.style.width = '16px';
             githubLogo.style.height = '16px';
@@ -146,13 +146,13 @@ elseif (array_key_exists('CollAdmin', $USER_RIGHTS) || array_key_exists('CollEdi
             }
             
             const newImage1 = createClickableImage(
-                '/neon/portal/images/layout/logo_symbiota.png',
+                '<?php echo $CLIENT_ROOT; ?>/images/layout/logo_symbiota.png',
                 60,
                 167,
                 'https://symbiota.org/'
             );
             const newImage2 = createClickableImage(
-                '/neon/portal/images/layout/logo-asu-biokic.jpg',
+                '<?php echo $CLIENT_ROOT; ?>/images/layout/logo-asu-biokic.jpg',
                 60,
                 167,
                 'https://biokic.asu.edu/collections'
@@ -373,11 +373,9 @@ elseif (array_key_exists('CollAdmin', $USER_RIGHTS) || array_key_exists('CollEdi
 <!--end-->
 
 
-<link href="<?php echo $CLIENT_ROOT; ?>/css/v202209/jquery-ui.css" type="text/css" rel="stylesheet">
 <!-- UNIVERSAL CSS –––––––––––––––––––––––––––––––––––––––––––––––––– -->
 <link rel="stylesheet" href="<?php echo $CLIENT_ROOT; ?>/css/normalize.css">
 <!--<link rel="stylesheet" href="<?php echo $CLIENT_ROOT; ?>/css/skeleton.css">-->
-<link rel="stylesheet" href="<?php echo $CLIENT_ROOT; ?>/css/base.css?ver=2" type="text/css">
 <link rel="stylesheet" href="<?php echo $CLIENT_ROOT; ?>/css/neon.css?ver=4">
 <!--<link rel="stylesheet" href="<?php echo $CLIENT_ROOT; ?>/css/main.css?ver=4" type="text/css">-->
 

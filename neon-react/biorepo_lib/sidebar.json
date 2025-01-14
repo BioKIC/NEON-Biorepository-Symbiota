@@ -1,5 +1,5 @@
 {
-  "/neon/portal/collections/datasets/publiclist.php": {
+  "publiclist.php": {
     "sidebarTitle": "Impact",
     "links": [
         {
@@ -33,7 +33,7 @@
         },
         {
           "name": "Sample Portal",
-          "hash": "https://biokic4.rc.asu.edu/neon/portal/index.php"
+          "hash": "index.php"
         },
         {
           "name": "Themes",
