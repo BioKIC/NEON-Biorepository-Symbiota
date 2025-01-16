@@ -40,6 +40,24 @@
                         }
                     },
                     {
+                        "name": "datasetID",
+                        "in": "query",
+                        "description": "associated NEON sampleClasses",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "productID",
+                        "in": "query",
+                        "description": "associated NEON product IDs",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
                         "name": "limit",
                         "in": "query",
                         "description": "Controls the number of results per page",
