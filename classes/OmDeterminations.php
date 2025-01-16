@@ -13,18 +13,18 @@ class OmDeterminations extends Manager{
 
 	public function __construct($conn){
 		parent::__construct(null, 'write', $conn);
-		$this->schemaMap = array('identifiedBy' => 's', 'identifiedByAgentID' => 'i', 'identifiedByID' => 's', 'dateIdentified' => 's', 'dateIdentifiedInterpreted' => 's',
-			'higherClassification' => 's', 'family' => 's', 'sciname' => 's', 'verbatimIdentification' => 's', 'scientificNameAuthorship' => 's', 'tidInterpreted' => 'i',
-			'identificationUncertain' => 'i', 'identificationQualifier' => 's', 'genus' => 's', 'specificEpithet' => 's', 'verbatimTaxonRank' => 's', 'taxonRank' => 's',
-			'infraSpecificEpithet' => 's', 'isCurrent' => 'i', 'printQueue' => 'i', 'appliedStatus' => 'i', 'securityStatus' => 'i', 'securityStatusReason' => 's',
-			'detType' => 's', 'identificationReferences' => 's', 'identificationRemarks' => 's', 'taxonRemarks' => 's', 'identificationVerificationStatus' => 's',
-			'taxonConceptID' => 's', 'sourceIdentifier' => 's', 'sortSequence' => 'i', 'recordID' => 's', 'createdUid' => 'i', 'modifiedUid' => 'i', 'dateLastModified' => 's');
-		 /*
+		/*
+		 $this->fieldMap = array('identifiedBy' => 's', 'identifiedByAgentID' => 'i', 'identifiedByID' => 's', 'dateIdentified' => 's', 'dateIdentifiedInterpreted' => 's',
+		 'higherClassification' => 's', 'family' => 's', 'sciname' => 's', 'verbatimIdentification' => 's', 'scientificNameAuthorship' => 's', 'tidInterpreted' => 'i',
+		 'identificationUncertain' => 'i', 'identificationQualifier' => 's', 'genus' => 's', 'specificEpithet' => 's', 'verbatimTaxonRank' => 's', 'taxonRank' => 's',
+		 'infraSpecificEpithet' => 's', 'isCurrent' => 'i', 'printQueue' => 'i', 'appliedStatus' => 'i', 'securityStatus' => 'i', 'securityStatusReason' => 's',
+		 'detType' => 's', 'identificationReferences' => 's', 'identificationRemarks' => 's', 'taxonRemarks' => 's', 'identificationVerificationStatus' => 's',
+		 'taxonConceptID' => 's', 'sourceIdentifier' => 's', 'sortSequence' => 'i', 'recordID' => 's', 'createdUid' => 'i', 'modifiedUid' => 'i', 'dateLastModified' => 's');
+		 */
 		$this->schemaMap = array('identifiedBy' => 's', 'dateIdentified' => 's', 'higherClassification' => 's', 'family' => 's', 'sciname' => 's', 'verbatimIdentification' => 's',
 			'scientificNameAuthorship' => 's', 'identificationQualifier' => 's', 'isCurrent' => 'i', 'printQueue' => 'i', 'appliedStatus' => 'i',
 			'securityStatus' => 'i', 'securityStatusReason' => 's', 'detType' => 's', 'identificationReferences' => 's', 'identificationRemarks' => 's', 'taxonRemarks' => 's',
 			'identificationVerificationStatus' => 's', 'taxonConceptID' => 's', 'sourceIdentifier' => 's', 'sortSequence' => 'i');
-		 */
 	}
 
 	public function __destruct(){
@@ -99,8 +99,8 @@ class OmDeterminations extends Manager{
 				if($rs = $stmt->get_result()){
 					while($r = $rs->fetch_assoc()){
 						$retArr[$r['occid']][$r['detID']] = $r;
-						if($r['createdUid']) $uidArr[$r['createdUid']] = $r['createdUid'];
-						if($r['modifiedUid']) $uidArr[$r['modifiedUid']] = $r['modifiedUid'];
+						//if($r['createdUid']) $uidArr[$r['createdUid']] = $r['createdUid'];
+						//if($r['modifiedUid']) $uidArr[$r['modifiedUid']] = $r['modifiedUid'];
 					}
 					$rs->free();
 				}

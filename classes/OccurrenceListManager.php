@@ -108,7 +108,7 @@ class OccurrenceListManager extends OccurrenceManager{
 		$status = false;
 		$detManager = new OmDeterminations($this->conn);
 		$conditionArr = array('isCurrent' => 1, 'appliedStatus' => 1);
-		$targetArr = array('sciname', 'family', 'tidInterpreted', 'scientificNameAuthorship');
+		$targetArr = array('sciname', 'family', 'scientificNameAuthorship');
 		if($setArr = $detManager->getDeterminationSetArr(array_keys($occurArr), $conditionArr)){
 			foreach($setArr as $occid => $dArr){
 				foreach($dArr as $recArr){

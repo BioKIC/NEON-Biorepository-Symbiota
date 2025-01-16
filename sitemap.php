@@ -46,11 +46,7 @@ if(!$schemaVersion){
 		<div id="sitemap">
 			<h2><?= $LANG['COLLECTIONS'] ?></h2>
 			<ul>
-				<?php
-				$SHOULD_USE_HARVESTPARAMS = $SHOULD_USE_HARVESTPARAMS ?? false;
-				$collectionSearchUrl = $SHOULD_USE_HARVESTPARAMS ? 'collections/index.php' : 'collections/search/index.php';
-				?>
-				<li><a href="<?= $collectionSearchUrl ?>"><?= $LANG['SEARCHENGINE'] ?></a> - <?= $LANG['SEARCH_COLL'] ?></li>
+				<li><a href="neon/search/index.php"><?= $LANG['SEARCHENGINE'] ?></a> - <?= $LANG['SEARCH_COLL'] ?></li>
 				<li><a href="collections/misc/collprofiles.php"><?= $LANG['COLLECTIONS'] ?></a> - <?= $LANG['LISTOFCOLL'] ?></li>
 				<li><a href="collections/misc/collstats.php"><?= $LANG['COLLSTATS'] ?></a></li>
 				<?php
