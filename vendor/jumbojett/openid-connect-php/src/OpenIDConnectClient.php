@@ -645,10 +645,10 @@ class OpenIDConnectClient
      * @param string $url Sets redirect URL for auth flow
      */
     public function setRedirectURL(string $url) {
-        if (parse_url($url,PHP_URL_HOST) !== false) {
-            $this->redirectURL = $url;
-        }
-        //$this->redirectURL = 'https://biokic4.rc.asu.edu/neon/portal/profile/authCallback.php';
+        //if (parse_url($url,PHP_URL_HOST) !== false) {
+        //    $this->redirectURL = $url;
+        //}
+        $this->redirectURL = 'https://biokic4.rc.asu.edu/neon/portal/profile/authCallback.php';
     }
 
     /**
