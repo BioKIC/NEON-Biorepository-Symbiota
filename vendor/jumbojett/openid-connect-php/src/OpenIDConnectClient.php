@@ -215,7 +215,7 @@ class OpenIDConnectClient
     /**
      * @var string
      */
-    public $redirectURL;
+    private $redirectURL;
 
     /**
      * @var int defines which URL-encoding http_build_query() uses
@@ -648,7 +648,6 @@ class OpenIDConnectClient
         if (parse_url($url,PHP_URL_HOST) !== false) {
             $this->redirectURL = $url;
         }
-        //$this->redirectURL = 'https://biokic4.rc.asu.edu/neon/portal/profile/authCallback.php';
     }
 
     /**
