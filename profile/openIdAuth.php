@@ -2,8 +2,6 @@
 include_once('../config/symbini.php');
 include_once($SERVER_ROOT . '/vendor/autoload.php');
 include_once($SERVER_ROOT . '/config/auth_config.php');
-if($LANG_TAG != 'en' && file_exists($SERVER_ROOT.'/content/lang/profile/openIdAuth.' . $LANG_TAG . '.php')) include_once($SERVER_ROOT.'/content/lang/profile/openIdAuth.' . $LANG_TAG . '.php');
-else include_once($SERVER_ROOT . '/content/lang/profile/openIdAuth.en.php');
 
 use Jumbojett\OpenIDConnectClient;
 
@@ -27,19 +25,21 @@ if(isset($shouldVerifyPeers)){
 
 // $_SESSION['oidIssuer'] = $oidc->getIssuer(); // moot for microsoft where it's the same as the providerUrl, but potentially useful for other auth providers?
 $oidc->addAuthParam(['prompt' => 'login']);
-$oidc->authenticate();
+print_r($oidc);
+//$oidc->authenticate();
 
 ?>
 <!DOCTYPE html>
 <html lang="<?php echo $LANG_TAG ?>">
 <head>
-    <title><?php echo $LANG['OPEN_ID_CONNECT_CLIENT']; ?></title>
+    <title>OpenID Connect Client</title>
 </head>
 <body>
-    <h1 class="page-heading"><?php echo $LANG['OPEN_ID_CONNECT_CLIENT']; ?></h1>
+    <h1 class="page-heading">OpenID Connect Client</h1>
     <div>
         Hello <?php echo $name; ?>
     </div>
 
 </body>
 </html>
+
