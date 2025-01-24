@@ -15,6 +15,7 @@ $oidc->addScope(array('email'));
 $oidc->setResponseTypes(array('code'));
 //$oidc->setResponseTypes(array('id_token'));
 $oidc->setRedirectUrl($callBackRedirect);
+echo($callBackRedirect);
 
 if(isset($shouldUpgradeInsecureRequests)){
   $oidc->setHttpUpgradeInsecureRequests($shouldUpgradeInsecureRequests);
@@ -26,7 +27,7 @@ if(isset($shouldVerifyPeers)){
 // $_SESSION['oidIssuer'] = $oidc->getIssuer(); // moot for microsoft where it's the same as the providerUrl, but potentially useful for other auth providers?
 $oidc->addAuthParam(['prompt' => 'login']);
 //print_r($oidc);
-$oidc->authenticate();
+//$oidc->authenticate();
 
 ?>
 <!DOCTYPE html>
