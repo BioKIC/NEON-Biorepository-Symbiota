@@ -940,9 +940,7 @@ hideColCheckbox(55);
 //Hides opal soils
 hideColCheckbox(96); 
 // Hides subsample collections for the moment
-hideColCheckbox(100);
-hideColCheckbox(101);
-hideColCheckbox(102);
-hideColCheckbox(103);
 hideColCheckbox(110);
 hideColCheckbox(111);
+// Hides large invert collection for now
+hideColCheckbox(114);
