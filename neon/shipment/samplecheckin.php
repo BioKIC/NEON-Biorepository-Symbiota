@@ -34,8 +34,8 @@ elseif(array_key_exists('CollAdmin',$USER_RIGHTS) || array_key_exists('CollEdito
 			}
 		}
 		?>
-		<script src="../../js/jquery-3.2.1.min.js" type="text/javascript"></script>
-		<script src="../../js/jquery-ui-1.12.1/jquery-ui.min.js" type="text/javascript"></script>
+		<script src="../../js/jquery-3.7.1.min.js" type="text/javascript"></script>
+		<script src="../../js/jquery-ui.min.js" type="text/javascript"></script>
 		<script type="text/javascript">
 			function checkinSample(f){
 				if(f.sampleReceived.value == "0"){

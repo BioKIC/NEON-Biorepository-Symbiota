@@ -22,8 +22,8 @@ elseif(array_key_exists('CollAdmin',$USER_RIGHTS) || array_key_exists('CollEdito
 		$activateJQuery = true;
 		include_once($SERVER_ROOT.'/includes/head.php');
 		?>
-		<script src="../../js/jquery-3.2.1.min.js" type="text/javascript"></script>
-		<script src="../../js/jquery-ui-1.12.1/jquery-ui.min.js" type="text/javascript"></script>
+		<script src="../../js/jquery-3.7.1.min.js" type="text/javascript"></script>
+		<script src="../../js/jquery-ui.min.js" type="text/javascript"></script>
     <style>
       .helper {
         font-size: 0.875rem;
