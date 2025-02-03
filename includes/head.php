@@ -30,6 +30,11 @@ elseif (array_key_exists('CollAdmin', $USER_RIGHTS) || array_key_exists('CollEdi
         var innerText = document.getElementById("innertext");
         if (innerText) {
             innerText.parentNode.insertBefore(biorepoPage, innerText);
+            var returnMessage = document.createElement("p");
+            returnMessage.textContent = "Click here to return to the old version of this page";
+        
+            // Insert it at the top of innerText
+            innerText.insertBefore(returnMessage, innerText.firstChild);
         } 
         
         //javascript code created by React
@@ -364,7 +369,7 @@ elseif (array_key_exists('CollAdmin', $USER_RIGHTS) || array_key_exists('CollEdi
     });
     
     window.onload = function () {
-        const breadcrumbLink = document.querySelector('nav a[href="https://biokic4.rc.asu.edu/neon/portal/collections/misc/neoncollprofiles.php?collid=#"]');
+        const breadcrumbLink = document.querySelector('nav a[href="https://biorepo.neonscience.org/prodreview/collections/misc/neoncollprofiles.php?collid=#"]');
         if (breadcrumbLink) {
             breadcrumbLink.href = breadcrumbLink.href.replace('#', '<?php echo isset($collid) ? $collid : '#'; ?>');
         }
