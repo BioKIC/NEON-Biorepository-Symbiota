@@ -34,7 +34,7 @@ elseif (array_key_exists('CollAdmin', $USER_RIGHTS) || array_key_exists('CollEdi
             var oldPageUrl = window.location.href.replace("prodreview", "portal");
             var returnLink = document.createElement("a");
             returnLink.href = oldPageUrl;
-            returnLink.textContent = "Click here to return to the old version of this page";
+            returnLink.textContent = "View the original page version";
             returnLink.style.display = "block"; // Makes it a full-width block element
             returnLink.style.marginBottom = "10px"; // Adds spacing below
             innerText.insertBefore(returnLink, innerText.firstChild);
