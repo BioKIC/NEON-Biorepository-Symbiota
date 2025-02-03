@@ -30,11 +30,14 @@ elseif (array_key_exists('CollAdmin', $USER_RIGHTS) || array_key_exists('CollEdi
         var innerText = document.getElementById("innertext");
         if (innerText) {
             innerText.parentNode.insertBefore(biorepoPage, innerText);
-            var returnMessage = document.createElement("p");
-            returnMessage.textContent = "Click here to return to the old version of this page";
-        
-            // Insert it at the top of innerText
-            innerText.insertBefore(returnMessage, innerText.firstChild);
+            //old page link
+            var oldPageUrl = window.location.href.replace("prodreview", "portal");
+            var returnLink = document.createElement("a");
+            returnLink.href = oldPageUrl;
+            returnLink.textContent = "Click here to return to the old version of this page";
+            returnLink.style.display = "block"; // Makes it a full-width block element
+            returnLink.style.marginBottom = "10px"; // Adds spacing below
+            innerText.insertBefore(returnLink, innerText.firstChild);
         } 
         
         //javascript code created by React
