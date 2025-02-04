@@ -446,9 +446,9 @@ li.header-title {
   font-family: 'Inter', sans-serif !important;
 }
 
-body:not(.home-page) button,
-body:not(.home-page) button.ui-button.ui-widget.ui-corner-all,
-body:not(.home-page) input[type='submit' i] {
+button,
+button.ui-button.ui-widget.ui-corner-all,
+input[type='submit' i] {
   font-family: 'Inter', sans-serif !important;
   font-size: 0.7rem;
   font-weight: 600;
