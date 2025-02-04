@@ -579,6 +579,38 @@ button.inverse-color {
   padding: 0.5rem 0.9rem;
 }
 
+body:not(.home-page) button,
+body:not(.home-page) button.ui-button.ui-widget.ui-corner-all,
+body:not(.home-page) input[type='submit' i] {
+  font-family: 'Inter', sans-serif !important;
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: white;
+  border-style: none;
+  border-color: #0073cf;
+  border-bottom-left-radius: 2px;
+  border-bottom-right-radius: 2px;
+  border-bottom-width: 0px;
+  border-right-width: 0px;
+  background-color: #005dab;
+  box-sizing: border-box;
+  box-shadow: 0px 3px 1px -2px rgb(0 0 0 / 20%),
+    0px 2px 2px 0px rgb(0 0 0 / 14%), 0px 1px 5px 0px rgb(0 0 0 / 12%);
+  padding: 8px 16px;
+  margin-bottom: 12px;
+  white-space: nowrap;
+  transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,
+    box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,
+    border 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  transition-property: background-color, box-shadow, border;
+  transition-duration: 250ms, 250ms, 250ms;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1),
+    cubic-bezier(0.4, 0, 0.2, 1), cubic-bezier(0.4, 0, 0.2, 1);
+  transition-delay: 0ms, 0ms, 0ms;
+}
+
 button:hover {
   background-color: #0092e2 !important;
   box-shadow: 0px 2px 4px -1px rgb(0 0 0 / 20%),
