@@ -391,7 +391,6 @@ elseif (array_key_exists('CollAdmin', $USER_RIGHTS) || array_key_exists('CollEdi
 <!--<link rel="stylesheet" href="<?php echo $CLIENT_ROOT; ?>/css/skeleton.css">-->
 <link rel="stylesheet" href="<?php echo $CLIENT_ROOT; ?>/css/neon.css?ver=4">
 <link href="<?= $CSS_BASE_PATH ?>/main-neon.css?ver=<?= $CSS_VERSION ?>" type="text/css" rel="stylesheet">
-<link href="<?= $CSS_BASE_PATH ?>/symbiota/main.css?ver=<?= $CSS_VERSION ?>" type="text/css" rel="stylesheet">
 <link href="<?= $CSS_BASE_PATH ?>/symbiota/customizations.css?ver=<?= $CSS_VERSION ?>" type="text/css" rel="stylesheet">
 
 <script src="<?= $CLIENT_ROOT ?>/js/symb/lang.js" type="text/javascript"></script>
