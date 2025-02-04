@@ -596,29 +596,30 @@ class OccurrenceIndividual extends Manager{
 				$indUrl = str_replace('--CATALOGNUMBER--',$this->occArr['catalognumber'],$iUrl);
 				$displayStr = $this->occArr['catalognumber'];
 			}
+			//neon
 			elseif (strpos($iUrl, '--OTHERCATALOGNUMBERS--') !== false && $this->occArr['othercatalognumbers']) {
-				if (substr($this->occArr['othercatalognumbers'], 0, 1) == '{') {
-					if ($ocnArr = json_decode($this->occArr['othercatalognumbers'], true)) {
-						$preferredKeys = [
-							'NEON sampleCode (barcode)',
-							'NEON sampleID',
-							'Originating NEON barcode',
-							'Originating NEON sampleID'
-						];
-						foreach ($preferredKeys as $key) {
-							if (isset($ocnArr[$key]) && !empty($ocnArr[$key][0])) {
-								$displayStr = $ocnArr[$key][0];
-								$indUrl = str_replace('--OTHERCATALOGNUMBERS--', $displayStr, $iUrl);
-								
-								if ($key === 'NEON sampleCode (barcode)' || $key === 'Originating NEON barcode') {
-									$indUrl = str_replace('sampleTag', 'barcode', $indUrl);
-								}
-								break; 
+				if (is_array($this->occArr['othercatalognumbers'])) {
+					$preferredKeys = [
+						'NEON sampleCode (barcode)',
+						'NEON sampleID',
+						'Originating NEON barcode',
+						'Originating NEON sampleID'
+					];
+				
+					foreach ($this->occArr['othercatalognumbers'] as $item) {
+						if (isset($item['name'], $item['value']) && in_array($item['name'], $preferredKeys)) {
+							$displayStr = $item['value'];
+							$indUrl = str_replace('--OTHERCATALOGNUMBERS--', $displayStr, $iUrl);
+							
+							if ($item['name'] === 'NEON sampleCode (barcode)' || $item['name'] === 'Originating NEON barcode') {
+								$indUrl = str_replace('sampleTag', 'barcode', $indUrl);
 							}
+							break;
 						}
 					}
 				}
-			}
+
+			}//end neon
 			elseif(strpos($iUrl,'--OCCURRENCEID--') !== false && $this->occArr['occurrenceid']){
 				$indUrl = str_replace('--OCCURRENCEID--',$this->occArr['occurrenceid'],$iUrl);
 				$displayStr = $this->occArr['occurrenceid'];
