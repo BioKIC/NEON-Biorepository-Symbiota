@@ -418,7 +418,7 @@ if(!$schemaVersion){
 						if($collList = $smManager->getCollArr()){
 							foreach($collList as $k => $cArr){
 								echo '<li>';
-								echo '<a href="' . $CLIENT_ROOT . '/collections/misc/collprofiles.php?collid=' . $k . '&emode=1">';
+								echo '<a href="' . $CLIENT_ROOT . '/collections/misc/neoncollprofiles.php?collid=' . $k . '&emode=1">';
 								echo $cArr['name'];
 								echo '</a>';
 								echo '</li>';
