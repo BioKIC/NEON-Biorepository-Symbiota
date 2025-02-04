@@ -571,38 +571,3 @@ hr:first-of-type {
   margin-bottom: 1rem !important;
   padding-bottom: 10px !important;
 }
-
-/******* 9. FOOTER ********/
-
-#footer {
-  /* padding: 3rem !important; */
-  border-top: 2px solid #e7e7e7 !important;
-}
-
-footer {
-  display: inline-flex !important;
-  vertical-align: top;
-}
-
-@media (min-width: 1024px) {
-  #footer {
-    padding: 3rem;
-    margin: 3rem;
-  }
-  #footer .footer-bottom .footer-bottom-left {
-    width: 50%;
-    padding-top: 1.2em;
-  }
-  #footer .footer-bottom .footer-bottom-left {
-    display: flex !important;
-    flex-direction: row;
-    align-items: flex-start;
-    justify-content: flex-start;
-    max-width: 100%;
-    float: left;
-  }
-  #footer .footer-bottom .footer-bottom-right {
-    width: auto;
-    float: right;
-  }
-}
