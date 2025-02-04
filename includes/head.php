@@ -217,6 +217,7 @@ elseif (array_key_exists('CollAdmin', $USER_RIGHTS) || array_key_exists('CollEdi
                     myAccountButton.style.borderRadius = '0';
                     myAccountButton.style.borderColor = '#0073cf';
                     myAccountButton.style.padding = '5px 10px';
+                    myAccountButton.style.display = 'inline';
                     myAccountButton.innerHTML = '<span class="MuiButton-label">My Account</span>';
                     myAccountButton.addEventListener('click', () => {
                 EOL;
@@ -250,6 +251,7 @@ elseif (array_key_exists('CollAdmin', $USER_RIGHTS) || array_key_exists('CollEdi
                     signoutButton.style.borderRadius = '0';
                     signoutButton.style.borderColor = '#0073cf';
                     signoutButton.style.padding = '5px 10px';
+                    signoutButton.style.display = 'inline';
                     signoutButton.innerHTML = '<span class="MuiButton-label">Sign Out</span>';
                     signoutButton.addEventListener('click', () => {
                 EOL;
@@ -283,6 +285,7 @@ elseif (array_key_exists('CollAdmin', $USER_RIGHTS) || array_key_exists('CollEdi
                     signinButton.style.borderRadius = '0';
                     signinButton.style.borderColor = '#0073cf';
                     signinButton.style.padding = '5px 10px';
+                    signinButton.style.display = 'inline';
                     signinButton.innerHTML = '<span class="MuiButton-label">Sign In</span>';
                     signinButton.addEventListener('click', () => {
                 EOL;
@@ -321,6 +324,7 @@ elseif (array_key_exists('CollAdmin', $USER_RIGHTS) || array_key_exists('CollEdi
                     dataManagementButton.style.borderRadius = '0';
                     dataManagementButton.style.borderColor = '#0073cf';
                     dataManagementButton.style.padding = '5px 10px';
+                    dataManagementButton.style.display = 'inline';
                     dataManagementButton.innerHTML = '<span class="MuiButton-label">Management Tools</span>';
                     dataManagementButton.addEventListener('click', () => {
                 EOL;
@@ -352,6 +356,7 @@ elseif (array_key_exists('CollAdmin', $USER_RIGHTS) || array_key_exists('CollEdi
                     utilitiesButton.style.borderRadius = '0';
                     utilitiesButton.style.borderColor = '#0073cf';
                     utilitiesButton.style.padding = '5px 10px';
+                    utilitiesButton.style.display = 'inline';
                     utilitiesButton.innerHTML = '<span class="MuiButton-label">Sitemap</span>';
                     utilitiesButton.addEventListener('click', () => {
                 EOL;
