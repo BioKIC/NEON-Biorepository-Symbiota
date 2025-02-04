@@ -385,9 +385,10 @@ elseif (array_key_exists('CollAdmin', $USER_RIGHTS) || array_key_exists('CollEdi
 <link rel="stylesheet" href="<?php echo $CLIENT_ROOT; ?>/css/normalize.css">
 <!--<link rel="stylesheet" href="<?php echo $CLIENT_ROOT; ?>/css/skeleton.css">-->
 <link rel="stylesheet" href="<?php echo $CLIENT_ROOT; ?>/css/neon.css?ver=4">
-<!--<link rel="stylesheet" href="<?php echo $CLIENT_ROOT; ?>/css/main.css?ver=4" type="text/css">-->
+<link href="<?= $CSS_BASE_PATH ?>/symbiota/main.css?ver=<?= $CSS_VERSION ?>" type="text/css" rel="stylesheet">
+<link href="<?= $CSS_BASE_PATH ?>/symbiota/customizations.css?ver=<?= $CSS_VERSION ?>" type="text/css" rel="stylesheet">
 
-<script type="text/javascript" src="<?php echo $CLIENT_ROOT; ?>/js/symb/lang.js"></script>
+<script src="<?= $CLIENT_ROOT ?>/js/symb/lang.js" type="text/javascript"></script>
 <script type="text/javascript">
 	//Uncomment following line to support toggling of database content containing DIVs with lang classes in form of: <div class="lang en">Content in English</div><div class="lang es">Content in Spanish</div>
 	//setLanguageDiv();
