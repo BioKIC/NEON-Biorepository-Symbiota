@@ -766,3 +766,104 @@ table.styledtable tr.alt td {
   /*background-color:	#FCFCFC; */
   background-color: #dfdfdf;
 }
+
+/*
+* OccurrenceSearchSupport
+*/
+.search-button-div {
+  float: right;
+  margin-top: 20px;
+}
+.sticky-buttons {
+  position: sticky;
+  top: 1rem;
+  float: right;
+}
+.fieldset-like {
+  position: relative;
+  border: 0.2rem solid;
+  border-top: none;
+  margin: 2rem 0 1rem 1rem;
+  padding: 0.8rem;
+  padding-top: 1.5rem;
+}
+
+.fieldset-like h1,
+.fieldset-like h2,
+.fieldset-like h3 {
+  margin: 0;
+  display: flex;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+}
+
+.fieldset-like h1 span,
+.fieldset-like h2 span,
+.fieldset-like h3 span {
+  margin: 0 0.3rem;
+}
+
+.fieldset-like h1 span,
+.fieldset-like h2:not(.subheader) span,
+.fieldset-like h3:not(.subheader) span {
+  transform: translateY(-50%);
+}
+
+.fieldset-like h1:before,
+.fieldset-like h2:before,
+.fieldset-like h3:before {
+  border-top: 0.2rem solid;
+  content: " ";
+  width: 1.2rem;
+}
+
+.fieldset-like h1:after,
+.fieldset-like h2:after,
+.fieldset-like h3:after {
+  border-top: 0.2rem solid;
+  content: " ";
+  flex-grow: 1;
+}
+
+/**
+/* overriding jQuery UI CSS */
+.ui-widget,
+.ui-widget input,
+.ui-widget select,
+.ui-widget textarea,
+.ui-widget button,
+.ui-widget-content a {
+  font-family: var(--body-font-family);
+}
+
+#maps.ui-widget-content button a {
+  color: #fff;
+  text-decoration: none;
+}
+
+#maps.ui-widget-content button:hover a {
+  color: #000;
+}
+
+#innertext #tabs {
+  max-width: 100%;
+}
+
+#tabs {
+  font-family: var(--body-font-family);
+  font-size: var(--body-font-size);
+}
+
+#tabs div:first-child {
+}
+
+#tabs a {
+  color: var(--darkest-color);
+  transition: all 0.2s ease-in-out;
+}
+
+#tabs a:hover {
+  color: var(--bright-color);
+}
