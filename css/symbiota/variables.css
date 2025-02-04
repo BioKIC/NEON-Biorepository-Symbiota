@@ -15,11 +15,11 @@
   --body-font-family: 'Inter', sans-serif;
   --footer-bg-color: #f2f0e9;
   --heading-font-family: 'Inter', sans-serif;
-  --link-color: #126c00;
-  --darkest-color: #1b3d2f;
-  --medium-color: #5a5a53;
-  --light-color: #f2f0e9;
-  --bright-color: #b9d432;
+  --link-color: #0073cf;
+  --darkest-color: #004986;
+  --medium-color: #0073cf;
+  --light-color: #5ca6e3;
+  --bright-color: #0073cf;
   --danger-color: #b31b1b;
   --max-innertext-width: 1024px;
 }
