@@ -41,8 +41,8 @@ if($isEditor){
 	$activateJQuery = true;
 	include_once($SERVER_ROOT.'/includes/head.php');
 	?>
-	<script src="../js/jquery-3.2.1.min.js" type="text/javascript"></script>
-	<script src="../js/jquery-ui-1.12.1/jquery-ui.min.js" type="text/javascript"></script>
+	<script src="../js/jquery-3.7.1.min.js" type="text/javascript"></script>
+	<script src="../js/jquery-ui.min.js" type="text/javascript"></script>
 	<script type="text/javascript">
 		function verifySync(f){
 			if(f.recTarget.value == 'notsubmitted'){
@@ -65,7 +65,6 @@ if($isEditor){
 		.fieldGroupDiv{ clear:both; margin:10px; }
 		.fieldDiv{ float:left; }
 		label{ font-weight: bold; }
-		button{ width: 250px; }
 	</style>
 </head>
 <body>
