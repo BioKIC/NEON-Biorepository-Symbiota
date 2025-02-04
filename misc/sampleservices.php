@@ -28,7 +28,7 @@ header('Content-Type: text/html; charset=' . $CHARSET);
 			</ul>
 			<h2>Considerations for Approval</h2>
 			<p>The internal evaluation and approval of sample requests will focus on technical and logistical criteria as well as scientific justification, particularly for requests for destructive or consumptive use. The latter is not intended to subsume the scientific merit review that may have been conducted by the sponsoring agency; but rather is a means to ensure the highest and best use of this valuable but limited resource, as well as transparency and accountability to the greater research and collections communities.</p>
-			<p><a class="link--button link--arrow" href="https://biorepo.neonscience.org/portal/misc/samplepolicy.php">Read our Sample Use Policy</a></p>
+			<p><a class="link--button link--arrow" href="<?php echo $CLIENT_ROOT; ?>/misc/samplepolicy.php">Read our Sample Use Policy</a></p>
 			<div class="align-right">
 				<figure>
 					<img loading="eager" width="100%" src="../images/home-card-images/2021_04_photo_Handling-Frozen-Samples-Biorepository_jpg.jpg" alt="Biorepository Samples" />
