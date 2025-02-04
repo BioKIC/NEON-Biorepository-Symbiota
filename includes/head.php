@@ -206,7 +206,7 @@ elseif (array_key_exists('CollAdmin', $USER_RIGHTS) || array_key_exists('CollEdi
                     myAccountButton.setAttribute('data-selenium', 'neon-menu.data-management-button');
                     myAccountButton.style.color = '#0073cf';
                     myAccountButton.style.fontSize = '0.55rem';
-                    myAccountButton.style.fontFamily = '"Inter", Helvetica, Arial, sans-serif';
+                    myAccountButton.style.setProperty('font-family', '"Inter", Helvetica, Arial, sans-serif', 'important');
                     myAccountButton.style.fontWeight = '600';
                     myAccountButton.style.lineHeight = '1.75';
                     myAccountButton.style.whiteSpace = 'nowrap';
@@ -240,7 +240,7 @@ elseif (array_key_exists('CollAdmin', $USER_RIGHTS) || array_key_exists('CollEdi
                     signoutButton.setAttribute('data-selenium', 'neon-menu.data-management-button');
                     signoutButton.style.color = '#0073cf';
                     signoutButton.style.fontSize = '0.55rem';
-                    signoutButton.style.fontFamily = '"Inter", Helvetica, Arial, sans-serif';
+                    signoutButton.style.setProperty('font-family', '"Inter", Helvetica, Arial, sans-serif', 'important');
                     signoutButton.style.fontWeight = '600';
                     signoutButton.style.lineHeight = '1.75';
                     signoutButton.style.whiteSpace = 'nowrap';
@@ -274,7 +274,7 @@ elseif (array_key_exists('CollAdmin', $USER_RIGHTS) || array_key_exists('CollEdi
                     signinButton.setAttribute('data-selenium', 'neon-menu.data-management-button');
                     signinButton.style.color = '#0073cf';
                     signinButton.style.fontSize = '0.55rem';
-                    signinButton.style.fontFamily = '"Inter", Helvetica, Arial, sans-serif';
+                    signinButton.style.setProperty('font-family', '"Inter", Helvetica, Arial, sans-serif', 'important');
                     signinButton.style.fontWeight = '600';
                     signinButton.style.lineHeight = '1.75';
                     signinButton.style.whiteSpace = 'nowrap';
@@ -313,7 +313,7 @@ elseif (array_key_exists('CollAdmin', $USER_RIGHTS) || array_key_exists('CollEdi
                     dataManagementButton.setAttribute('data-selenium', 'neon-menu.data-management-button');
                     dataManagementButton.style.color = '#0073cf';
                     dataManagementButton.style.fontSize = '0.55rem';
-                    dataManagementButton.style.fontFamily = '"Inter", Helvetica, Arial, sans-serif';
+                    dataManagementButton.style.setProperty('font-family', '"Inter", Helvetica, Arial, sans-serif', 'important');
                     dataManagementButton.style.fontWeight = '600';
                     dataManagementButton.style.lineHeight = '1.75';
                     dataManagementButton.style.whiteSpace = 'nowrap';
@@ -345,7 +345,7 @@ elseif (array_key_exists('CollAdmin', $USER_RIGHTS) || array_key_exists('CollEdi
                     utilitiesButton.setAttribute('data-selenium', 'neon-menu.data-management-button');
                     utilitiesButton.style.color = '#0073cf';
                     utilitiesButton.style.fontSize = '0.55rem';
-                    utilitiesButton.style.fontFamily = '"Inter", Helvetica, Arial, sans-serif';
+                    utilitiesButton.style.setProperty('font-family', '"Inter", Helvetica, Arial, sans-serif', 'important');
                     utilitiesButton.style.fontWeight = '600';
                     utilitiesButton.style.lineHeight = '1.75';
                     utilitiesButton.style.whiteSpace = 'nowrap';
