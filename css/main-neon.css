@@ -446,9 +446,9 @@ li.header-title {
   font-family: 'Inter', sans-serif !important;
 }
 
-/*button,
-button.ui-button.ui-widget.ui-corner-all,
-input[type='submit' i] {
+body:not(.home-page) button,
+body:not(.home-page) button.ui-button.ui-widget.ui-corner-all,
+body:not(.home-page) input[type='submit' i] {
   font-family: 'Inter', sans-serif !important;
   font-size: 0.7rem;
   font-weight: 600;
@@ -476,7 +476,7 @@ input[type='submit' i] {
   transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1),
     cubic-bezier(0.4, 0, 0.2, 1), cubic-bezier(0.4, 0, 0.2, 1);
   transition-delay: 0ms, 0ms, 0ms;
-}*/
+}
 
 button:hover {
   background-color: #0092e2 !important;
