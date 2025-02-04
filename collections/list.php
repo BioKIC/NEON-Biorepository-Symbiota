@@ -134,6 +134,7 @@ $_SESSION['citationvar'] = $searchVar;
 		/*.ui-tabs .ui-tabs-nav li { width: 32%; }
 		/*NEON edits*/
 		.ui-tabs .ui-tabs-nav li { width: 24%; }
+		.ui-state-active { color: '#454545'; }
 		/*end NEON edits*/
 		.ui-tabs .ui-tabs-nav li a { margin-left: 10px; }
 		.ui-tabs-anchor {
