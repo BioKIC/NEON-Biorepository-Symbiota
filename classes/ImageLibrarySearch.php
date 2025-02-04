@@ -33,7 +33,6 @@ class ImageLibrarySearch extends OccurrenceTaxaManager{
 			$this->tidFocus = $GLOBALS['TID_FOCUS'];
 		}
 		//neon
-		$LANG = 'en';
 		$this->occurrenceManager = new OccurrenceManager();
 		//end neon
 	}
