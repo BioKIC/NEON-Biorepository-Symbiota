@@ -14,7 +14,10 @@ labels.forEach((label) => {
 	let catNums = label.querySelector(".other-catalog-numbers");
 	let catNumsText = catNums.innerText;
 	let bcSrc = label.querySelector(".cn-barcode img");
-	catNums.innerHTML = bcSrc.src.split("bctext=")[1];
+	let match = catNumsText.match(/NEON sampleID:\s*([\w.-]+)/);
+    if (match) {
+        catNums.innerHTML = match[1];
+    }
 
 	let newBcSrc = '';
 	let cArr = catNumsText.split(";");
