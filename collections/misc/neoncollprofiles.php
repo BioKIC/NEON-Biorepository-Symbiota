@@ -192,7 +192,7 @@ ER  -
 		}
 		#collimages img {
 			height: auto;
-			width: auto;
+			width: auto !important;
 			object-fit: contain;
 		}
 		
