@@ -1757,9 +1757,6 @@ class OccurrenceHarvester{
 			
 					$old_tid = $result_old ? $result_old->fetch_assoc() : null;
 					$new_tid = $result_new ? $result_new->fetch_assoc() : null;
-
-					print_r($oldID);
-					print_r($newID);
 			
 					if ($old_tid && $new_tid && $old_tid['tidaccepted'] != $new_tid['tidaccepted']) {
 						$this->setSampleErrorMessage(
