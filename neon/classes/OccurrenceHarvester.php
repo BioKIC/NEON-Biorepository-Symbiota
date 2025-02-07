@@ -1758,8 +1758,11 @@ class OccurrenceHarvester{
 					$old_tid = $result_old ? $result_old->fetch_assoc() : null;
 					$new_tid = $result_new ? $result_new->fetch_assoc() : null;
 			
-					if ($old_tid_accepted && $new_tid_accepted && $old_tid['tidaccepted'] != $new_tid['tidaccepted']) {
-						$this->setSampleErrorMessage('occid:'.$occid, 'Curatorial Check: possible ID conflict');
+					if ($old_tid && $new_tid && $old_tid['tidaccepted'] != $new_tid['tidaccepted']) {
+						$this->setSampleErrorMessage(
+							'occid:'.$occid,
+							'Curatorial Check: possible ID conflict (old ID: '.$oldID.'; new ID: '.$newID.')'
+						);
 					}
 				}
 			}
