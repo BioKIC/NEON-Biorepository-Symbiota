@@ -171,8 +171,8 @@ class OccurrenceHarvester{
 					if(in_array(9, $collArr)) { $collArr[] = 107;}
 					if(in_array(22, $collArr)) {$collArr[] = 100;}
 					if(in_array(45, $collArr)) {$collArr[] = 104;}
-					//if(in_array(47, $collArr)) {$collArr[] = 110;}
-					//if(in_array(49, $collArr)) {$collArr[] = 111;}
+					if(in_array(47, $collArr)) {$collArr[] = 110;}
+					if(in_array(49, $collArr)) {$collArr[] = 111;}
 					if(in_array(50, $collArr)) {$collArr[] = 105;}
 					if(in_array(52, $collArr)) {$collArr[] = 101;}
 					if(in_array(53, $collArr)) {$collArr[] = 102;}
@@ -478,6 +478,7 @@ class OccurrenceHarvester{
 				//if(strpos($tableName,'identification')) continue;
 				//if(strpos($tableName,'sorting')) continue;
 				if(strpos($tableName,'scs_archive')) continue;
+				if(strpos($tableName,'qualityCheck')) continue;
 				//if(strpos($tableName,'barcoding')) continue;
 				if(strpos($tableName,'dnaStandardTaxon')) continue;
 				if(strpos($tableName,'dnaExtraction')) continue;
@@ -592,6 +593,8 @@ class OccurrenceHarvester{
 							}
 							elseif($fArr['smsKey'] == 'identified_by' && $fArr['smsValue']) $identArr['identifiedBy'] = $this->translatePersonnel($fArr['smsValue']);
 							elseif($fArr['smsKey'] == 'identified_date' && $fArr['smsValue']) $identArr['dateIdentified'] = $fArr['smsValue'];
+							elseif($fArr['smsKey'] == 'identification_references' && $fArr['smsValue']) $identArr['identificationReferences'] = $fArr['smsValue'];
+							elseif($fArr['smsKey'] == 'identification_qualifier' && $fArr['smsValue']) $identArr['identificationQualifier'] = $fArr['smsValue'];
 							elseif(in_array($tableName,array('ptx_taxonomy_in'))){
 								if($fArr['smsKey'] == 'sample_type' && $fArr['smsValue']){
 									$identRemarks[] = $fArr['smsValue'];
@@ -603,12 +606,11 @@ class OccurrenceHarvester{
 									$identRemarks[] = $fArr['smsValue'];
 								}
 								$identArr['identificationRemarks'] = implode('; ',$identRemarks);
+								if($sampleArr['sampleClass'] == 'ptx_taxonomy.in_slideID' && $fArr['smsKey'] == 'sample_type' && $fArr['smsValue']) $identArr['subsampleSampleType'] = $fArr['smsValue'];
 							}
 							elseif(!in_array($tableName,array('ptx_taxonomy_in')) && $fArr['smsKey'] == 'identification_remarks' && $fArr['smsValue']) {
 									$identArr['identificationRemarks'] = $fArr['smsValue'];
 								}
-							elseif($fArr['smsKey'] == 'identification_references' && $fArr['smsValue']) $identArr['identificationReferences'] = $fArr['smsValue'];
-							elseif($fArr['smsKey'] == 'identification_qualifier' && $fArr['smsValue']) $identArr['identificationQualifier'] = $fArr['smsValue'];
 							elseif(in_array($tableName,array('zoo_perTaxon_in','inv_pertaxon_in')) && $fArr['smsKey'] == 'specimen_count' && $fArr['smsValue']) $identArr['subsampleIndividualCount'] = $fArr['smsValue'];
 							elseif(in_array($tableName,array('inv_pertaxon_in')) && $fArr['smsKey'] == 'life_stage' && $fArr['smsValue']) $identArr['subsampleLifeStage'] = $fArr['smsValue'];
 						}
@@ -716,8 +718,8 @@ class OccurrenceHarvester{
 					}
 				}
 				$prepArr = array();
-					if(!in_array($dwcArr['collid'], array(7,8,9,19,28,42,46,17,64))){
-						if(!in_array($dwcArr['collid'],array(31,50,73))){
+					if(!in_array($dwcArr['collid'], array(7,8,9,17,19,28,42,46,49,64))){
+						if(!in_array($dwcArr['collid'],array(31,50,47,73))){
 							if(!empty($sampleArr['preservative_type'])) $prepArr[] = 'preservative type: '.$sampleArr['preservative_type'];
 						}
 						if(!empty($sampleArr['preservative_volume'])) $prepArr[] = 'preservative volume: '.$sampleArr['preservative_volume'];
@@ -1116,25 +1118,38 @@ class OccurrenceHarvester{
 		$collArr[9] = array('targetCollid' => 107, 'lotId' => 'dynamic','defaultId' => 'Plantae');
 		$collArr[22] = array('targetCollid' => 100, 'lotId' => 'dynamic','defaultId' => 'Chironomidae');
 		$collArr[45] = array('targetCollid' => 104, 'defaultId' => 'Zooplankton');
-		//$collArr[47] = array('targetCollid' => 110, 'lotId' => 'dynamic','defaultId' => 'ECO');
-		//$collArr[49] = array('targetCollid' => 111, 'lotId' => 'dynamic','defaultId' => 'ECO');
+		$collArr[47] = array('targetCollid' => 110, 'lotId' => 'dynamic','defaultId' => 'pseudo');
+		$collArr[49] = array('targetCollid' => 111, 'lotId' => 'dynamic','defaultId' => 'pseudo');
 		$collArr[50] = array('targetCollid' => 105, 'lotId' => 'dynamic','defaultId' => 'Plantae');
 		$collArr[52] = array('targetCollid' => 101, 'lotId' => 'dynamic','defaultId' => 'Oligochaeta');
 		$collArr[53] = array('targetCollid' => 102, 'lotId' => 'dynamic','defaultId' => 'Bulk Aquatic Macroinvertebrates');
 		$collArr[57] = array('targetCollid' => 103, 'lotId' => 'dynamic','defaultId' => 'Bulk Aquatic Macroinvertebrates');
 		$collArr[73] = array('targetCollid' => 106, 'lotId' => 'dynamic','defaultId' => 'Plantae');
-		//Add option to parse ID from sampleID
+
 		//Process identifications
+		
 		$sourceCollid = $dwcArr['collid'];
+		
 		if(array_key_exists($sourceCollid, $collArr)){
 			$targetCollid = $collArr[$sourceCollid]['targetCollid'];
-			$baseID = array('sciname' => 'undefined');
+
+			//set default baseID
+			$baseID = array('sciname' => $collArr[$sourceCollid]['defaultId']);
+			$baseID['isCurrent'] = 1;
+			$baseID['taxonRemarks'] = 'Identification source: harvested from NEON API';
+			$baseID['dateIdentified'] = 's.d.';
+			
 			if(!empty($dwcArr['identifications'])){
 				if($dwcArr['identifications']){
-					if(in_array($sourceCollid,array(22,52))){
+
+					if(in_array($sourceCollid,array(22,52,47,49))){
+
+						// subset to appropriate taxonomic group for microalgae and select macroinverts
 						$validKeys = $this->subsetTaxonGroup($dwcArr['identifications'], $sourceCollid);
 						$dwcArr['identifications'] = array_intersect_key($dwcArr['identifications'], array_flip($validKeys));
+
 						if(empty($dwcArr['identifications'])){
+
 							// delete existing subsamples if now no valid subsamples are found (e.g. no oligochaetes reported in parent of oligochaete sample)
 							$sql = 'DELETE FROM omoccurrences 
 							WHERE occid IN (
@@ -1144,9 +1159,6 @@ class OccurrenceHarvester{
 								AND createdUid = 50
 							)';								
 							$this->conn->query($sql);	
-							
-							// set identifications for lot sample
-							$baseID['sciname'] = $collArr[$sourceCollid]['defaultId'];
 						}
 					}
 					if($dwcArr['identifications']){
@@ -1156,8 +1168,8 @@ class OccurrenceHarvester{
 							//if(!empty($idArr['securityStatus'])) continue;
 							if(empty($idArr['sciname'])) continue;
 							$dateIdentified = 0;
-							if(in_array($sourceCollid,array(22,52,53,57))){
-								// use all ids for macroinverts
+							if(in_array($sourceCollid,array(22,47,49,52,53,57))){
+								// use all ids for macroinverts and microalgae
 									$dateIdentified = 1;
 							}
 							elseif(!empty($idArr['dateIdentified'])){
@@ -1174,11 +1186,15 @@ class OccurrenceHarvester{
 							}
 							$identificationsGrouped[$dateIdentified][] = $idKey;
 						}
+
 						$baseDateIdentified = key($identificationsGrouped);
+
 						//Select group of identifications
 						krsort($identificationsGrouped);
+
 						// only most recent otherwise
 						$targetIdentifications = current($identificationsGrouped);
+						
 						//Subsample records
 							echo '<li style="margin-left:30px">Creating/updating ' . count($targetIdentifications) . ' subSample records ... </li>';
 						$currentSubsampleArr = $this->getSubSamples($parentOccid);
@@ -1250,6 +1266,7 @@ class OccurrenceHarvester{
 								$this->setAssociations($occid, $assocArr);
 							}
 						}
+
 						//Delete all subsamples that are not identified as a subsample import
 						$this->deleteSubSamples($currentSubsampleArr);
 						//Reset base sample (parent) with new identification unit containing lot ID
@@ -1264,16 +1281,14 @@ class OccurrenceHarvester{
 									}
 								}
 							}
-							else{
-								$baseID['sciname'] = $lotId;
-							}
 						}
+						
+						// replace baseID date identified if possible
+						if($baseDateIdentified) $baseID['dateIdentified'] = $baseDateIdentified;
 
-						// make the baseID the default lotID if one exists and the current sciname is undefined or empty
-						if (($baseID['sciname'] === 'undefined' || empty($baseID['sciname'])) && !empty($collArr[$sourceCollid]['defaultId'])) {
-							$baseID['sciname'] = $collArr[$sourceCollid]['defaultId'];
+						// add identified by if does not exist
+						if (isset($identArr['identifiedBy']) && empty($baseID['identifiedBy'])) {
 							$baseID['identifiedBy'] = $identArr['identifiedBy'];
-							$baseID['tidInterptreted'] = $collArr[$sourceCollid]['defaultId'];
 						}
 
 						if($baseDateIdentified) $baseID['dateIdentified'] = $baseDateIdentified;
@@ -1286,12 +1301,48 @@ class OccurrenceHarvester{
 						$dwcArr['associations'] = $associationArr;
 
 					}
-					// set remaining baseID fields and add to dwcArr
-					$baseID['isCurrent'] = 1;
-					$baseID['taxonRemarks'] = 'Identification source: harvested from NEON API';
-					$dwcArr['identifications'][] = $baseID;
+
 				}
 			}
+														// make the pseudotaxa the baseID for microalgae
+														if ($baseID['sciname'] === $collArr[$sourceCollid]['defaultId'] && in_array($sourceCollid,array(47,49))) {
+							
+															$sampleID = $dwcArr['identifiers']['NEON sampleID'];						
+															$lowerSampleID = strtolower($sampleID);
+														
+															if (strpos($lowerSampleID, 'epilithon') !== false) {
+																$taxonCode = 'epilithon';
+															} elseif (strpos($lowerSampleID, 'seston') !== false) {
+																$taxonCode = 'seston';
+															} elseif (strpos($lowerSampleID, 'phytoplankton') !== false) {
+																$taxonCode = 'phytoplankton';
+															} elseif (strpos($lowerSampleID, 'epiphyt') !== false) {
+																$taxonCode = 'epiphyton';
+															} elseif (strpos($lowerSampleID, 'epipsammon') !== false) {
+																$taxonCode = 'epipsammon';
+															} elseif (strpos($lowerSampleID, 'epipelon') !== false) {
+																$taxonCode = 'epipelon';
+															} elseif (strpos($lowerSampleID, 'epixylon') !== false) {
+																$taxonCode = 'epixylon';
+															}
+															else {
+																$taxonCode = null;
+															}
+															if ($taxonCode) {
+																if ($pseudotaxaArr = $this->translateTaxonCode($taxonCode)) {
+																	$baseID['sciname'] = $pseudotaxaArr['sciname'];
+																	$baseID['tidInterpreted'] = $pseudotaxaArr['tidInterpreted'];
+																} 
+															}
+			
+															if (isset($identArr['identifiedBy']) && empty($baseID['identifiedBy'])) {
+																$baseID['identifiedBy'] = $identArr['identifiedBy'];
+															}																							
+														}
+														
+			// add baseID to dwcArr
+			$dwcArr['identifications'][] = $baseID;
+			print_r($dwcArr['identifications']);
 		}
 	}
 
@@ -1311,6 +1362,12 @@ class OccurrenceHarvester{
 			// 	$sql = 'SELECT tid FROM taxaenumtree WHERE parenttid IN (132169,97420) OR tid IN (132169,97420)';
 			// }
 			
+			elseif ($sourceCollid == 49) { // diatom slides
+				$sql = 'SELECT tid FROM taxaenumtree WHERE parenttid = 10399 OR tid = 10399';
+			}
+			elseif ($sourceCollid == 47) { // chemically preserved microalgae
+				$sql = 'SELECT tid FROM taxa WHERE tid NOT IN (SELECT tid FROM taxaenumtree WHERE parenttid = 10399 OR tid = 10399);';
+			}
 			if (!empty($sql)) {
 				$rs = $this->conn->query($sql);
 				$validTids = array();

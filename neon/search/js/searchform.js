@@ -935,12 +935,9 @@ $('.expansion-icon').click(function () {
 });
 // Hides MOSC-BU checkboxes
 hideColCheckbox(58);
-// Hides identified zoops for now
+// Hides zoop reference collection for now
 hideColCheckbox(55);
 //Hides opal soils
 hideColCheckbox(96); 
-// Hides subsample collections for the moment
-hideColCheckbox(110);
-hideColCheckbox(111);
 // Hides large invert collection for now
 hideColCheckbox(114);
