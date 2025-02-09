@@ -1740,9 +1740,30 @@ class OccurrenceHarvester{
 					if(!$newID || !empty($cdArr['securityStatus'])) $newID = $idArr['sciname'];
 				}
 			}
-			if(in_array($collID,array(7,8,9,11,12,14,15,17,18,19,20,28,29,39,48,52,53,54,55,70))){
-				if($oldID && $newID && $oldID != $newID){
-					$this->setSampleErrorMessage('occid:'.$occid, 'Curatorial Check: possible ID conflict');
+
+			if (in_array($collID, [7,8,9,11,12,14,15,17,18,19,20,28,29,39,48,52,53,54,55,70])) {
+				if ($oldID && $newID && $oldID != $newID) {
+			
+					$sql_old = 'SELECT ts.tidaccepted FROM taxstatus ts 
+								LEFT JOIN taxa t ON ts.tid = t.tid
+								WHERE sciname = "'.$oldID.'"';
+			
+					$sql_new = 'SELECT ts.tidaccepted FROM taxstatus ts 
+								LEFT JOIN taxa t ON ts.tid = t.tid
+								WHERE sciname = "'.$newID.'"';
+			
+					$result_old = $this->conn->query($sql_old);
+					$result_new = $this->conn->query($sql_new);
+			
+					$old_tid = $result_old ? $result_old->fetch_assoc() : null;
+					$new_tid = $result_new ? $result_new->fetch_assoc() : null;
+			
+					if ($old_tid && $new_tid && $old_tid['tidaccepted'] != $new_tid['tidaccepted']) {
+						$this->setSampleErrorMessage(
+							'occid:'.$occid,
+							'Curatorial Check: possible ID conflict (old ID: '.$oldID.'; new ID: '.$newID.')'
+						);
+					}
 				}
 			}
 			foreach($identArr as $idArr){
