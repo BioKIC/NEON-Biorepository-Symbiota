@@ -37,10 +37,10 @@ class OccurrenceEditorManager {
 		$this->fieldArr['omoccurrences'] = array('basisofrecord' => 's', 'catalognumber' => 's', 'othercatalognumbers' => 's', 'occurrenceid' => 's', 'ownerinstitutioncode' => 's',
 			'institutioncode' => 's', 'collectioncode' => 's', 'eventid' => 's',
 			'family' => 's', 'sciname' => 's', 'tidinterpreted' => 'n', 'scientificnameauthorship' => 's', 'identifiedby' => 's', 'dateidentified' => 's',
-				'identificationreferences' => 's', 'identificationremarks' => 's', 'taxonremarks' => 's', 'identificationqualifier' => 's', 'typestatus' => 's', 'recordedby' => 's', 'recordnumber' => 's',
+			'identificationreferences' => 's', 'identificationremarks' => 's', 'taxonremarks' => 's', 'identificationqualifier' => 's', 'typestatus' => 's', 'recordedby' => 's', 'recordnumber' => 's',
 			'associatedcollectors' => 's', 'eventdate' => 'd', 'eventdate2' => 'd', 'year' => 'n', 'month' => 'n', 'day' => 'n', 'startdayofyear' => 'n', 'enddayofyear' => 'n',
 			'verbatimeventdate' => 's', 'habitat' => 's', 'substrate' => 's', 'fieldnumber' => 's', 'occurrenceremarks' => 's', 'datageneralizations' => 's',
-			'associatedtaxa' => 's', 'verbatimattributes' => 's', 'behavior' => 's', 'vitality' => 's', 'dynamicproperties' => 's', 'reproductivecondition' => 's', 'cultivationstatus' => 's', 'establishmentmeans' => 's',
+			'associatedtaxa' => 's', 'verbatimattributes' => 's', 'behavior' => 's', 'vitality' => 's', 'dynamicproperties' => 's', 'reproductivecondition' => 's', 'cultivationstatus' => 's', 'establishmentmeans' => 's', 'availability' => 'n',
 			'lifestage' => 's', 'sex' => 's', 'individualcount' => 's', 'samplingprotocol' => 's', 'preparations' => 's',
 			'continent' => 's', 'waterbody' => 's', 'islandgroup' => 's', 'island' => 's', 'countrycode' => 's',
 			'country' => 's', 'stateprovince' => 's', 'county' => 's', 'municipality' => 's', 'locationid' => 's', 'locality' => 's', 'localitysecurity' => 'n', 'localitysecurityreason' => 's',
@@ -134,7 +134,7 @@ class OccurrenceEditorManager {
 			if(array_key_exists('q_withoutimg',$_REQUEST) && $_REQUEST['q_withoutimg']) $this->qryArr['woi'] = 1;
 			for($x=1; $x<9; $x++){
 				if(array_key_exists('q_customandor'.$x,$_REQUEST) && $_REQUEST['q_customandor'.$x]) $this->qryArr['cao'.$x] = $_REQUEST['q_customandor'.$x];
-                if(array_key_exists('q_customopenparen'.$x,$_REQUEST) && $_REQUEST['q_customopenparen'.$x]) $this->qryArr['cop'.$x] = $_REQUEST['q_customopenparen'.$x];
+				if(array_key_exists('q_customopenparen'.$x,$_REQUEST) && $_REQUEST['q_customopenparen'.$x]) $this->qryArr['cop'.$x] = $_REQUEST['q_customopenparen'.$x];
 				if(array_key_exists('q_customfield'.$x,$_REQUEST) && $_REQUEST['q_customfield'.$x]) $this->qryArr['cf'.$x] = $_REQUEST['q_customfield'.$x];
 				if(array_key_exists('q_customtype'.$x,$_REQUEST) && $_REQUEST['q_customtype'.$x]) $this->qryArr['ct'.$x] = $_REQUEST['q_customtype'.$x];
 				if(array_key_exists('q_customvalue'.$x,$_REQUEST)) $this->qryArr['cv'.$x] = trim($_REQUEST['q_customvalue'.$x]);
@@ -480,14 +480,14 @@ class OccurrenceEditorManager {
 		$customWhere = '';
 		for($x=1; $x<9; $x++){
 			$cao = (array_key_exists('cao'.$x,$this->qryArr)?$this->cleanInStr($this->qryArr['cao'.$x]):'');
-            $cop = (array_key_exists('cop'.$x,$this->qryArr)?$this->cleanInStr($this->qryArr['cop'.$x]):'');
+			$cop = (array_key_exists('cop'.$x,$this->qryArr)?$this->cleanInStr($this->qryArr['cop'.$x]):'');
 			$customField = (array_key_exists('cf'.$x,$this->qryArr)?$this->cleanInStr($this->qryArr['cf'.$x]):'');
 			$customTerm = (array_key_exists('ct'.$x,$this->qryArr)?$this->cleanInStr($this->qryArr['ct'.$x]):'');
 			$customValue = (array_key_exists('cv'.$x,$this->qryArr)?$this->cleanInStr($this->qryArr['cv'.$x]):'');
 			$ccp = (array_key_exists('ccp'.$x,$this->qryArr)?$this->cleanInStr($this->qryArr['ccp'.$x]):'');
-            if(!$cao) $cao = 'AND';
-            if($customField){
-            	if($customField == 'ocrFragment'){
+			if(!$cao) $cao = 'AND';
+			if($customField){
+				if($customField == 'ocrFragment'){
 					//Used when OCR frag comes from custom field search within basic query form
 					$customField = 'ocr.rawstr';
 				}
@@ -517,7 +517,7 @@ class OccurrenceEditorManager {
 			}
 			elseif($x > 1 && !$customField && $ccp){
 				$customWhere .= ' '.$ccp.' ';
-    		}
+			}
 		}
 		if($customWhere) $sqlWhere .= 'AND ('.substr($customWhere,3).') ';
 		if($this->crowdSourceMode){
@@ -877,7 +877,7 @@ class OccurrenceEditorManager {
 				$editFieldArr['omoccurrences'] = array_intersect($editArr,array_keys($this->fieldArr['omoccurrences']));
 				if($editFieldArr['omoccurrences']){
 					$sql = 'SELECT o.collid, '.implode(',',$editFieldArr['omoccurrences']).(in_array('processingstatus',$editFieldArr['omoccurrences'])?'':',processingstatus').
-						(in_array('recordenteredby',$editFieldArr['omoccurrences'])?'':',recordenteredby').' FROM omoccurrences o WHERE o.occid = '.$this->occid;
+					(in_array('recordenteredby',$editFieldArr['omoccurrences'])?'':',recordenteredby').' FROM omoccurrences o WHERE o.occid = '.$this->occid;
 					$rs = $this->conn->query($sql);
 					$oldValueArr['omoccurrences'] = $rs->fetch_assoc();
 					$rs->free();
@@ -1526,7 +1526,7 @@ class OccurrenceEditorManager {
 				$stage = $LANG['ERROR_ARCHIVING_ASSOC'];
 				if($rs = $this->conn->query($sql)){
 					while($r = $rs->fetch_assoc()){
-					$id = $r['associd'];
+						$id = $r['associd'];
 						foreach($r as $k => $v){
 							if($v) $archiveArr['assoc'][$id][$k] = $this->encodeStrTargeted($v,$CHARSET,'utf8');
 						}
@@ -1586,8 +1586,8 @@ class OccurrenceEditorManager {
 		} catch (\Throwable $th) {
 			error_log(
 				"Error deleting occid " . $delOccid
-					. ", Line: " . $th->getLine()
-					. " : " . $th->getMessage()
+				. ", Line: " . $th->getLine()
+				. " : " . $th->getMessage()
 			);
 			$this->errorArr[] = $stage . ': ' . $th->getMessage();
 			return false;
@@ -1609,7 +1609,7 @@ class OccurrenceEditorManager {
 			}
 			if(isset($postArr['carryover']) && $postArr['carryover'] == 1){
 				$clearEventArr = array('family','sciname','tidinterpreted','scientificnameauthorship','identifiedby','dateidentified','identificationreferences','identificationremarks',
-					'taxonremarks','identificationqualifier','recordnumber','occurrenceremarks','verbatimattributes','dynamicproperties','lifestage','sex','reproductivecondition','behavior','preparations');
+						'taxonremarks','identificationqualifier','recordnumber','occurrenceremarks','verbatimattributes','dynamicproperties','lifestage','sex','reproductivecondition','behavior','preparations');
 				$postArr = array_diff_key($postArr,array_flip($clearEventArr));
 			}
 			$cloneCatNum = array();
@@ -1686,7 +1686,7 @@ class OccurrenceEditorManager {
 				unset($tempArr['collid']);
 				unset($tempArr['dbpk']);
 				unset($tempArr['datelastmodified']);
-			$oArr[$id] = $tempArr;
+				$oArr[$id] = $tempArr;
 			}
 			$rs->free();
 
@@ -1721,26 +1721,26 @@ class OccurrenceEditorManager {
 
 			//Remap determinations
 			$sql = <<<'SQL'
-			UPDATE omoccurdeterminations 
+			UPDATE omoccurdeterminations
 			SET occid = ? WHERE occid = ?
 			AND detid NOT IN (
 				SELECT source.detid FROM omoccurdeterminations source
-				JOIN omoccurdeterminations target ON target.occid = ? 
-				WHERE source.occid = ? 
+				JOIN omoccurdeterminations target ON target.occid = ?
+				WHERE source.occid = ?
 				AND source.sciname = target.sciname
 				AND source.dateIdentified = target.dateIdentified
 				AND source.identifiedBy = target.identifiedBy
 			);
 			SQL;
 			SymbUtil::execute_query($this->conn, $sql, [
-				//Update To This Occid
-				$targetOccid,
-				//From Options of This Occid
-				$sourceOccid,
-				//Check This Occid Determinations for Duplicates
-				$targetOccid,
-				//Of this Occid Record
-				$sourceOccid
+					//Update To This Occid
+					$targetOccid,
+					//From Options of This Occid
+					$sourceOccid,
+					//Check This Occid Determinations for Duplicates
+					$targetOccid,
+					//Of this Occid Record
+					$sourceOccid
 			]);
 
 			//Downgrade old determinations if new determinations have a current determination
@@ -1748,7 +1748,7 @@ class OccurrenceEditorManager {
 
 				$parameters = str_repeat('?,', count($currentDeterminations) - 1) . '?';
 				$sql = <<<"SQL"
-				UPDATE omoccurdeterminations 
+				UPDATE omoccurdeterminations
 				SET isCurrent = 0
 				WHERE occid = ? AND isCurrent = 1 AND detid NOT IN ($parameters);
 				SQL;
@@ -1849,7 +1849,7 @@ class OccurrenceEditorManager {
 			if(!$this->deleteOccurrence($sourceOccid)){
 				error_log(
 					'Error: Could not delete ' . $sourceOccid
-						. ' while trying to merge into '. $targetOccid
+					. ' while trying to merge into '. $targetOccid
 				);
 				$this->errorArr[] = $LANG['ERROR_DELETING_OCCURRENCE'];
 				return false;
@@ -1860,9 +1860,9 @@ class OccurrenceEditorManager {
 		} catch (\Throwable $th) {
 			error_log(
 				'Error: Merging Record ' . $sourceOccid . ' into '. $targetOccid
-					. ' at '. $stage
-					.', line: ' . $th->getLine()
-					. ' : ' . $th->getMessage()
+				. ' at '. $stage
+				.', line: ' . $th->getLine()
+				. ' : ' . $th->getMessage()
 			);
 			$this->errorArr[] = $stage . ' : ' . $th->getMessage();
 			return false;
@@ -2743,7 +2743,7 @@ class OccurrenceEditorManager {
 		$retStr = $inStr;
 		if($inStr){
 			$retStr = mb_convert_encoding($retStr, $GLOBALS['CHARSET'], mb_detect_encoding($retStr));
- 		}
+		}
 		return $retStr;
 	}
 

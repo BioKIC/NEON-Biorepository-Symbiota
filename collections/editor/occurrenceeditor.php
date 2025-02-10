@@ -1,11 +1,9 @@
 <?php
 include_once('../../config/symbini.php');
-include_once($SERVER_ROOT.'/content/lang/collections/editor/occurrenceeditor.'.$LANG_TAG.'.php');
 if($LANG_TAG != 'en' && file_exists($SERVER_ROOT.'/content/lang/collections/editor/occurrenceeditor.'.$LANG_TAG.'.php')) include_once($SERVER_ROOT.'/content/lang/collections/editor/occurrenceeditor.'.$LANG_TAG.'.php');
 else include_once($SERVER_ROOT.'/content/lang/collections/editor/occurrenceeditor.en.php');
-
-
 header('Content-Type: text/html; charset=' . $CHARSET);
+
 $occId = array_key_exists('occid', $_REQUEST) ? filter_var($_REQUEST['occid'], FILTER_SANITIZE_NUMBER_INT) : '';
 $collId = array_key_exists('collid', $_REQUEST) ? filter_var($_REQUEST['collid'], FILTER_SANITIZE_NUMBER_INT) : false;
 $tabTarget = array_key_exists('tabtarget', $_REQUEST) ? filter_var($_REQUEST['tabtarget'], FILTER_SANITIZE_NUMBER_INT) : 0;
@@ -112,7 +110,7 @@ if($SYMB_UID){
 			}
 			elseif($action){
 				//Lets assume that Edits where submitted and they remain on same specimen, user is still approved
-				 $isEditor = 2;
+				$isEditor = 2;
 			}
 			elseif($occManager->getObserverUid() == $SYMB_UID){
 				//Users can edit their own records
@@ -444,7 +442,6 @@ else{
 	<link href="<?= $CSS_BASE_PATH ?>/jquery-ui.css" type="text/css" rel="stylesheet">
 	<link href="<?= $CSS_BASE_PATH ?>/symbiota/variables.css" type="text/css" rel="stylesheet">
 	<?php
-	//include_once($SERVER_ROOT.'/includes/head.php');
     if($crowdSourceMode == 1){
 		?>
 		<link href="includes/config/occureditorcrowdsource.css?ver=5" type="text/css" rel="stylesheet" id="editorCssLink" />
@@ -452,7 +449,7 @@ else{
     }
     else{
 		?>
-		<link href="<?= $CSS_BASE_PATH ?>/symbiota/collections/editor/occurrenceeditor.css?ver=9" type="text/css" rel="stylesheet" id="editorCssLink" >
+		<link href="<?= $CSS_BASE_PATH ?>/symbiota/collections/editor/occurrenceeditor.css?ver=9b" type="text/css" rel="stylesheet" id="editorCssLink" >
 		<?php
 		if(isset($CSSARR)){
 			foreach($CSSARR as $cssVal){
@@ -530,8 +527,9 @@ else{
 				display: flex;
 			}
 		}
-		.fieldDiv{
+		.field-div{
 			display: inline;
+			margin: 2px;
 		}
 
 		.editimg{ width: 15px; }
@@ -561,7 +559,7 @@ else{
 	<div role="main" id="innertext">
 		<div id="titleDiv">
 			<?php
-			if($collMap) echo '<h1 class="page-heading" style="font-size: 1.5rem;"> Occurrence Editor: ' . $collMap['collectionname'].' ('.$collMap['institutioncode'].($collMap['collectioncode']?':'.$collMap['collectioncode']:'').') </h1>';
+			if($collMap) echo '<h1 class="page-heading" style="font-size: 1.2rem;"> Occurrence Editor: ' . $collMap['collectionname'].' ('.$collMap['institutioncode'].($collMap['collectioncode']?':'.$collMap['collectioncode']:'').') </h1>';
 			?>
 		</div>
 		<?php
@@ -834,7 +832,7 @@ else{
 												<input type="text" name="eventdate2" value="<?= array_key_exists('eventdate2',$occArr)?$occArr['eventdate2']:''; ?>" onchange="eventDate2Changed(this);" >
 											</div>
 											<?php
-											if($ACTIVATE_DUPLICATES){
+											if(!empty($ACTIVATE_DUPLICATES)){
 												?>
 												<div id="dupesDiv">
 													<button type="button" value="Duplicates" onclick="searchDupes(this.form);" ><?php echo $LANG['DUPLICATES']; ?></button><br/>

@@ -61,7 +61,7 @@ class OpenIdProfileManager extends ProfileManager{
 		return $status;
 	}
 
-	public function linkLocalUserOidSub($email, $sub, $provider){
+	public function linkLocalUserOidSub($email, $sub, $provider, $username, $firstname, $lastname){
 		if($email && $sub && $provider){
             $sql = 'SELECT u.uid, oid.subUuid, oid.provider from users u LEFT join usersthirdpartyauth oid ON u.uid = oid.uid 
 			WHERE u.email = ?';
@@ -72,46 +72,36 @@ class OpenIdProfileManager extends ProfileManager{
 					$stmt->close();
 				}
 				if ($results->num_rows < 1){
-					//Local user does not exist
-					throw new Exception ("User does not exist in symbiota database <ERR/>");
+					//user does not exist in user table, create user
+					$username = $username ?? $email;
+					$firstname = $firstname ?? $email;
+					$sql = 'INSERT INTO users (firstName, lastName, email, username) VALUES(?,?,?,?)';
+					$this->resetConnection();
+					if($stmt = $this->conn->prepare($sql)) {
+						$stmt->bind_param('ssss', $firstname, $lastname, $email, $username);
+						$stmt->execute();
+					}
+					$uid = $this->conn->insert_id;
+					$sql = 'INSERT INTO usersthirdpartyauth (uid, subUuid, provider) VALUES(?,?,?)';
+					$this->resetConnection();
+					if($stmt = $this->conn->prepare($sql)) {
+						$stmt->bind_param('iss', $uid, $sub, $provider);
+						$stmt->execute();
+					}
+					return true;
 				}
 				else {
-					if($results->num_rows == 1){
-						$row = $results->fetch_array(MYSQLI_ASSOC);
-						if (($row['provider'] == '' && $row['subUuid'] == '') || ($row['provider'] && $row['provider'] !== $provider)){
-						//found existing user. add 3rdparty auth info
-							$sql = 'INSERT INTO usersthirdpartyauth (uid, subUuid, provider) VALUES(?,?,?)';
-							$this->resetConnection();
-							if($stmt = $this->conn->prepare($sql)) {
-								$stmt->bind_param('iss', $row['uid'], $sub, $provider);
-								$stmt->execute();
-							}
-							$this->uid = $row['uid'];
-							return true;
-						}
-
+					$row = $results->fetch_array(MYSQLI_ASSOC);
+					//found existing user. add 3rdparty auth info
+					//email in users should be unique - that way only one user gets added per login
+					$sql = 'INSERT INTO usersthirdpartyauth (uid, subUuid, provider) VALUES(?,?,?)';
+					$this->resetConnection();
+					if($stmt = $this->conn->prepare($sql)) {
+						$stmt->bind_param('iss', $row['uid'], $sub, $provider);
+						$stmt->execute();
 					}
-					else if($results->num_rows > 1){
-						$uidPlaceholder = '';
-						while ($row = $results->fetch_array(MYSQLI_ASSOC)) {
-							$uidPlaceholder = $row['uid']; // assumes one-to-one relationship between user and email address
-							if ($row['provider'] == $provider && $row['subUuid'] !== $sub){
-								return false; // current assumption is that if this happens, the subUuid is not kosher. 
-								// If this assumption is ever violated, one solution would be to purge relevant rows from usersthirdpartyauth
-							}
-							else continue;
-						}
-						// Provider not found - handle adding new entry to usersthirdpartyauth table
-						$sql = 'INSERT INTO usersthirdpartyauth (uid, subUuid, provider) VALUES(?,?,?)';
-						$this->resetConnection();
-						if($stmt = $this->conn->prepare($sql)) {
-							$stmt->bind_param('iss', $uidPlaceholder, $sub, $provider);
-							$stmt->execute();
-						}
-						$this->uid = $row['uid'];
-						return true;
-						
-					}
+					$this->uid = $row['uid'];
+					return true;
 				}
 			}
 		}

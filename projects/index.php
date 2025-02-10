@@ -238,7 +238,7 @@ if(!$researchList && !$editMode){
 	echo '<b><a href="index.php?pid=' . htmlspecialchars($pid, ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . '">' . htmlspecialchars(($projArr?$projArr['projname']: (isset($LANG['INVPROJLIST']) ? $LANG['INVPROJLIST'] : 'Inventory Project List')), ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . '</a></b>';
 	echo "</div>";
 	?>
-
+	<div id="biorepo-page"></div>
 	<!-- This is inner text! -->
 	<div role="main" id="innertext">
 		<h1 class="page-heading screen-reader-only">View Inventory Project</h1>
@@ -480,8 +480,5 @@ if(!$researchList && !$editMode){
 		}
 		?>
 	</div>
-	<?php
-	include($SERVER_ROOT.'/includes/footer.php');
-	?>
 </body>
 </html>

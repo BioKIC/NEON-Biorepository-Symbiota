@@ -9,6 +9,11 @@ $targetTid = array_key_exists('targettid', $_REQUEST) ? filter_var($_REQUEST['ta
 $tabIndex = array_key_exists('tabindex', $_REQUEST) ? filter_var($_REQUEST['tabindex'], FILTER_SANITIZE_NUMBER_INT) : 1;
 $cntPerPage = array_key_exists('cntperpage', $_REQUEST) ? filter_var($_REQUEST['cntperpage'], FILTER_SANITIZE_NUMBER_INT) : 100;
 $pageNumber = array_key_exists('page', $_REQUEST) ? filter_var($_REQUEST['page'], FILTER_SANITIZE_NUMBER_INT) : 1;
+//NEON edit
+include_once($SERVER_ROOT.'/classes/ImageLibrarySearch.php');
+$imgLibManager = new ImageLibrarySearch();
+$imagePageNumber = array_key_exists('imagepage', $_REQUEST) ? filter_var($_REQUEST['imagepage'], FILTER_SANITIZE_NUMBER_INT) : 1;
+//end NEON edit
 $datasetid = array_key_exists('datasetid', $_REQUEST) ? filter_var($_REQUEST['datasetid'], FILTER_SANITIZE_NUMBER_INT) : '';
 $comingFrom =  (array_key_exists('comingFrom', $_REQUEST) ? $_REQUEST['comingFrom'] : '');
 if($comingFrom != 'harvestparams' && $comingFrom != 'newsearch'){
@@ -37,7 +42,29 @@ $_SESSION['citationvar'] = $searchVar;
 	<?php
 	include_once($SERVER_ROOT . '/includes/head.php');
 	include_once($SERVER_ROOT . '/includes/googleanalytics.php');
+	
+	// NEON start
+	parse_str($searchVar, $params);
+	$encodedSearchVar = json_encode($searchVar, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_AMP | JSON_HEX_QUOT);
 	?>
+	<script>
+	  const params = <?php echo json_encode($params, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_AMP | JSON_HEX_QUOT); ?>;
+	  const rawSearchVar = <?php echo $encodedSearchVar; ?>;
+	  
+	  const eventParams = {};
+	  Object.keys(params).forEach(key => {
+		eventParams[key] = Array.isArray(params[key]) ? params[key].join(',') : params[key];
+	  });
+	  eventParams.rawSearchVar = rawSearchVar;
+	  
+	  gtag('event', 'search_query', {
+		event_category: 'Search',
+		event_label: 'Search Parameters',
+		...eventParams,
+	  });
+	</script>
+	<!-- NEON end-->
+	
 	<link href="<?= $CSS_BASE_PATH; ?>/symbiota/collections/listdisplay.css" type="text/css" rel="stylesheet" />
 	<link href="<?php echo $CSS_BASE_PATH; ?>/jquery-ui.min.css" type="text/css" rel="stylesheet">
 	<script src="<?php echo $CLIENT_ROOT; ?>/js/jquery-3.7.1.min.js" type="text/javascript"></script>
@@ -101,58 +128,32 @@ $_SESSION['citationvar'] = $searchVar;
 	</script>
 	<script src="../js/symb/collections.list.js?ver=4" type="text/javascript"></script>
 	<style type="text/css">
-		fieldset {
-			padding: 15px;
-		}
-
-		legend {
-			font-weight: bold;
-		}
-
-		.checkbox-elem {
-			margin: 5px;
-			padding: 5px;
-			border: 1px dashed orange;
-		}
-
-		.ui-tabs .ui-tabs-nav li {
-			width: 32%;
-		}
-
-		.ui-tabs .ui-tabs-nav li a {
-			margin-left: 10px;
-		}
-		#tabs {
-			width:95%;
-		}
+		fieldset { padding: 15px; }
+		legend { font-weight: bold; }
+		.checkbox-elem { margin: 5px; padding: 5px; border: 1px dashed orange; }
+		/*.ui-tabs .ui-tabs-nav li { width: 32%; }
+		/*NEON edits*/
+		.ui-tabs .ui-tabs-nav li { width: 24%; }
+		/*end NEON edits*/
+		.ui-tabs .ui-tabs-nav li a { margin-left: 10px; }
+		.ui-tabs-anchor {
+			white-space: nowrap;
+			max-width: 75%;
+			overflow: hidden;
+			text-overflow: ellipsis;
+		 }		
+		.protected-span { color: red; }
 	</style>
 </head>
-
 <body>
 	<?php
 	$displayLeftMenu = (isset($collections_listMenu) ? $collections_listMenu : false);
 	include($SERVER_ROOT . '/includes/header.php');
-	if (isset($collections_listCrumbs)) {
-		if ($collections_listCrumbs) {
-			echo '<div class="navpath">';
-			echo '<a href="../index.php">' . htmlspecialchars($LANG['NAV_HOME'], ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . '</a> &gt;&gt; ';
-			echo $collections_listCrumbs . ' &gt;&gt; ';
-			echo '<b>' . $LANG['NAV_SPECIMEN_LIST'] . '</b>';
-			echo '</div>';
-		}
-	}
-	else {
-		echo '<div class="navpath">';
-		echo '<a href="../index.php">' . htmlspecialchars($LANG['NAV_HOME'], ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . '</a> &gt;&gt; ';
-		if($comingFrom == 'harvestparams'){
-			echo '<a href="index.php">' . htmlspecialchars($LANG['NAV_COLLECTIONS'], ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . '</a> &gt;&gt; ';
-			echo '<a href="' . $CLIENT_ROOT . '/collections/harvestparams.php">' . htmlspecialchars($LANG['NAV_SEARCH'], ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . '</a> &gt;&gt; ';
-		} else{
-			echo '<a href="' . $CLIENT_ROOT . '/collections/search/index.php">' . htmlspecialchars($LANG['NAV_SEARCH'], ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . '</a> &gt;&gt; ';
-		}
-		echo '<b>' . $LANG['NAV_SPECIMEN_LIST'] . '</b>';
-		echo '</div>';
-	}
+	echo '<div class="navpath">';
+	echo '<a href="../index.php">' . $LANG['NAV_HOME'] . '</a> &gt;&gt; ';
+	echo '<a href="' . $CLIENT_ROOT . '/neon/search/index.php">' . $LANG['NAV_SEARCH'] . '</a> &gt;&gt; ';
+	echo '<b>' . $LANG['NAV_SPECIMEN_LIST'] . '</b>';
+	echo '</div>';
 	?>
 	<!-- This is inner text! -->
 	<div role="main" id="innertext">
@@ -172,6 +173,11 @@ $_SESSION['citationvar'] = $searchVar;
 				<li>
 					<a href="#maps">
 						<span><?php echo $LANG['TAB_MAP']; ?></span>
+					</a>
+				</li>
+				<li>
+					<a href="#imagesdiv">
+						<span id="imagetab">Images</span>
 					</a>
 				</li>
 			</ul>
@@ -284,11 +290,11 @@ $_SESSION['citationvar'] = $searchVar;
 											$isEditor = true;
 										}
 										echo '<tr><td colspan="2"><h2>';
-										echo '<a href="misc/collprofiles.php?collid=' . htmlspecialchars($collId, ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . '">' . htmlspecialchars($fieldArr["collname"], ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . '</a>';
+										echo '<a href="misc/neoncollprofiles.php?collid=' . htmlspecialchars($collId, ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . '">' . htmlspecialchars($fieldArr["collname"], ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . '</a>';
 										echo '</h2><hr /></td></tr>';
 									}
 									echo '<tr><td width="60" valign="top" align="center">';
-									echo '<a href="misc/collprofiles.php?collid=' . htmlspecialchars($collId, ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . '&acronym=' . htmlspecialchars($fieldArr["instcode"], ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . '">';
+									echo '<a href="misc/neoncollprofiles.php?collid=' . htmlspecialchars($collId, ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . '&acronym=' . htmlspecialchars($fieldArr["instcode"], ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . '">';
 									if ($fieldArr["icon"]) {
 										$icon = (substr($fieldArr["icon"], 0, 6) == 'images' ? '../' : '') . $fieldArr["icon"];
 										echo '<img align="bottom" src="' . $icon . '" style="width:35px;border:0px;" />';
@@ -337,7 +343,7 @@ $_SESSION['citationvar'] = $searchVar;
 									if ($fieldArr["state"]) $localStr .= ', ' . $fieldArr["state"];
 									if ($fieldArr["county"]) $localStr .= ', ' . $fieldArr["county"];
 									if ($fieldArr['locality'] == 'PROTECTED') {
-										$localStr .= ', <span style="color:red;">' . $LANG['PROTECTED'] . '</span>';
+										$localStr .= ', <span class="protected-span">' . $LANG['PROTECTED'] . '</span>';
 									} else {
 										if ($fieldArr['locality']) $localStr .= ', ' . $fieldArr['locality'];
 										if ($fieldArr['declat']) $localStr .= ', ' . $fieldArr['declat'] . ' ' . $fieldArr['declong'];
@@ -440,6 +446,134 @@ $_SESSION['citationvar'] = $searchVar;
 					</div>
 				</form>
 			</div>
+			<!--NEON edit-->
+			<div id="imagesdiv">
+				<div id="imagebox">
+					<?php
+					$imageArr = $imgLibManager->getImageArr($imagePageNumber,$cntPerPage);
+					$recordCnt = $imgLibManager->getRecordCnt();
+					if($imageArr){
+						?>
+<!--						<form action="download/index.php" method="post" style="float:right" onsubmit="targetPopup(this)">
+							<button class="icon-button" title="Download Images">
+								<img src="../images/dl2.png" srcset="../images/download.svg" class="svg-icon" style="width:15px; height:15px" />
+							</button>
+							<input name="searchvar" type="hidden" value="<?php echo $searchVar; ?>" />
+							<input name="dltype" type="hidden" value="specimen" />
+						</form>-->
+						<?php
+						echo '<div style="clear:both;margin:5 0 5 0;"><hr /></div>';
+						
+						$lastPage = ceil($recordCnt / $cntPerPage);
+						$startPage = ($imagePageNumber > 4?$imagePageNumber - 4:1);
+						$endPage = ($lastPage > $startPage + 9?$startPage + 9:$lastPage);
+						$url = $CLIENT_ROOT . '/collections/list.php?'.$collManager->getQueryTermStr();
+						$pageBar = '<div style="float:left" >';
+						if($startPage > 1){
+							$pageBar .= '<span class="pagination" style="margin-right:5px;"><a href="'.$url.'&tabindex=3&imagepage=1">First</a></span>';
+							$pageBar .= '<span class="pagination" style="margin-right:5px;"><a href="'.$url.'&tabindex=3&imagepage='.(($imagePageNumber - 10) < 1 ?1:$imagePageNumber - 10).'">&lt;&lt;</a></span>';
+						}
+						for($x = $startPage; $x <= $endPage; $x++){
+							if($imagePageNumber != $x){
+								$pageBar .= '<span class="pagination" style="margin-right:3px;"><a href="'.$url.'&tabindex=3&imagepage='.$x.'">'.$x.'</a></span>';
+							}
+							else{
+								$pageBar .= "<span class='pagination' style='margin-right:3px;font-weight:bold;'>".$x."</span>";
+							}
+						}
+						if(($lastPage - $startPage) >= 10){
+							$pageBar .= '<span class="pagination" style="margin-left:5px;"><a href="'.$url.'&tabindex=3&imagepage='.(($imagePageNumber + 10) > $lastPage?$lastPage:($imagePageNumber + 10)).'">&gt;&gt;</a></span>';
+							if($recordCnt < 10000) $pageBar .= '<span class="pagination" style="margin-left:5px;"><a href="'.$url.'&tabindex=3&imagepage='.$lastPage.'">Last</a></span>';
+						}
+						$pageBar .= '</div><div style="float:right;margin-top:4px;margin-bottom:8px;">';
+						$beginNum = ($imagePageNumber - 1)*$cntPerPage + 1;
+						$endNum = $beginNum + $cntPerPage - 1;
+						if($endNum > $recordCnt) $endNum = $recordCnt;
+						$pageBar .= "Page ".$imagePageNumber.", records ".number_format($beginNum)."-".number_format($endNum)." of ".number_format($recordCnt)."</div>";
+						$paginationStr = $pageBar;
+						echo '<div style="width:100%;">'.$paginationStr.'</div>';
+						echo '<div style="clear:both;margin:5 0 5 0;"><hr /></div>';
+						echo '<div style="width:98%;margin-left:auto;margin-right:auto;">';
+						$occArr = array();
+						$collArr = array();
+						if(isset($imageArr['occ'])){
+							$occArr = $imageArr['occ'];
+							unset($imageArr['occ']);
+							$collArr = $imageArr['coll'];
+							unset($imageArr['coll']);
+						}
+						foreach($imageArr as $imgArr){
+							$imgId = $imgArr['imgid'];
+							$imgUrl = $imgArr['url'];
+							$imgTn = $imgArr['thumbnailurl'];
+							if($imgTn){
+								$imgUrl = $imgTn;
+								if($IMAGE_DOMAIN && substr($imgTn,0,1)=='/') $imgUrl = $IMAGE_DOMAIN.$imgTn;
+							}
+							elseif($IMAGE_DOMAIN && substr($imgUrl,0,1)=='/'){
+								$imgUrl = $IMAGE_DOMAIN.$imgUrl;
+							}
+							?>
+							<div class="tndiv" style="margin-bottom:15px;margin-top:15px;">
+								<div class="tnimg">
+									<?php
+									$anchorLink = '';
+									if($imgArr['occid']){
+										$anchorLink = '<a href="#" onclick="openIndPU('.$imgArr['occid'].');return false;">';
+									}
+									else{
+										$anchorLink = '<a href="#" onclick="openImagePopup('.$imgId.');return false;">';
+									}
+									echo $anchorLink.'<img src="'.$imgUrl.'" /></a>';
+									?>
+								</div>
+								<div>
+									<?php
+									$sciname = $imgArr['sciname'];
+									if(!$sciname && $imgArr['occid'] && $occArr[$imgArr['occid']]['sciname']) $sciname = $occArr[$imgArr['occid']]['sciname'];
+									if($sciname){
+										if(strpos($imgArr['sciname'],' ')) $sciname = '<i>'.$sciname.'</i>';
+										if($imgArr['tid']) echo '<a href="'.$CLIENT_ROOT.'/taxa/index.php?tid='.$imgArr['tid'].'">';
+										echo $sciname;
+										if($imgArr['tid']) echo '</a>';
+										echo '<br />';
+									}
+									$photoAuthor = '';
+									$authorLink = '';
+									//if($imgArr['uid']){
+									//	$photoAuthor = $uidList[$imgArr['uid']];
+									//	if(strlen($photoAuthor) > 23){
+									//		$nameArr = explode(',',$photoAuthor);
+									//		$photoAuthor = array_shift($nameArr);
+									//	}
+									//}
+									if($fieldArr['catnum']){
+										echo $fieldArr['catnum'].'<br />';
+									}
+									if($imgArr['occid']){
+										echo '<a href="'.$CLIENT_ROOT.'/collections/individual/index.php?occid='.$imgArr['occid'].'"><b>Full Record Details</b></a>';
+									}
+									?>
+								</div>
+							</div>
+							<?php
+						}
+						echo "</div>";
+						if($lastPage > $startPage){
+							echo "<div style='clear:both;margin:5 0 5 0;'><hr /></div>";
+							echo '<div style="width:100%;">'.$paginationStr.'</div>';
+						}
+						?>
+						<div style="clear:both;"></div>
+						<?php
+					}
+					else{
+						echo '<h3>No images exist matching your search criteria. Please modify your search and try again.</h3>';
+					}
+					?>
+				</div>
+			</div>
+			<!--end NEON edit-->			
 		</div>
 	</div>
 	<?php
