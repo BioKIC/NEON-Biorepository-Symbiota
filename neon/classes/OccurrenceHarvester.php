@@ -180,10 +180,6 @@ class OccurrenceHarvester{
 					if(in_array(73, $collArr)) {$collArr[] = 106;}
 					$collManager = new OccurrenceCollectionProfile();
 					foreach($collArr as $collID){
-						if (in_array($collID,array(17,19,24,25,26,27,28,71,90,91))){
-							echo '<li style="margin-left:15px"><b>Setting mammal occurrence associations.</b></li>';
-							$this->conn->query('call new_create_mammal_associations()');
-						}
 						echo '<li style="margin-left:15px">Stat update for collection <a href="'.$GLOBALS['CLIENT_ROOT'].'/collections/misc/collprofiles.php?collid='.$collID.'" target="_blank">#'.$collID.'</a>...</li>';
 						$collManager->setCollid($collID);
 						$collManager->updateStatistics(false);
@@ -515,20 +511,20 @@ class OccurrenceHarvester{
 						elseif($fArr['smsKey'] == 'collect_start_date' && $fArr['smsValue']) $tableArr['collect_start_date'] = $fArr['smsValue'];
 						elseif($fArr['smsKey'] == 'collect_end_date' && $fArr['smsValue']) $tableArr['collect_end_date'] = $fArr['smsValue'];
 						elseif (
-							$fArr['smsKey'] == 'specimen_count' && 
-							$fArr['smsValue'] && 
+							$fArr['smsKey'] == 'specimen_count' &&
+							$fArr['smsValue'] &&
 							!(
-								strpos($tableName, 'bet_') !== false || 
-								strpos($tableName, 'ptx_') !== false || 
-								strpos($tableName, 'cfc_') !== false || 
-								strpos($tableName, 'mic_') !== false || 
-								strpos($tableName, 'sls_') !== false || 
-								strpos($tableName, 'inv_') !== false || 
+								strpos($tableName, 'bet_') !== false ||
+								strpos($tableName, 'ptx_') !== false ||
+								strpos($tableName, 'cfc_') !== false ||
+								strpos($tableName, 'mic_') !== false ||
+								strpos($tableName, 'sls_') !== false ||
+								strpos($tableName, 'inv_') !== false ||
 								strpos($tableName, 'metabarcode') !== false
 							)
 						) {
 							$tableArr['specimen_count'] = $fArr['smsValue'];
-						}												
+						}
 						elseif($fArr['smsKey'] == 'temperature' && $fArr['smsValue']) $tableArr['temperature'] = $fArr['smsValue'];
 						elseif($fArr['smsKey'] == 'decimal_latitude' && $fArr['smsValue']) $tableArr['decimal_latitude'] = $fArr['smsValue'];
 						elseif($fArr['smsKey'] == 'decimal_longitude' && $fArr['smsValue']) $tableArr['decimal_longitude'] = $fArr['smsValue'];
@@ -541,20 +537,20 @@ class OccurrenceHarvester{
 						elseif($fArr['smsKey'] == 'reproductive_condition' && $fArr['smsValue']) $tableArr['reproductive_condition'] = $fArr['smsValue'];
 						elseif($fArr['smsKey'] == 'sex' && $fArr['smsValue']) $tableArr['sex'] = $fArr['smsValue'];
 						elseif (
-							$fArr['smsKey'] == 'life_stage' && 
-							$fArr['smsValue'] && 
+							$fArr['smsKey'] == 'life_stage' &&
+							$fArr['smsValue'] &&
 							!(
-								strpos($tableName, 'bet_') !== false || 
-								strpos($tableName, 'ptx_') !== false || 
-								strpos($tableName, 'cfc_') !== false || 
-								strpos($tableName, 'mic_') !== false || 
-								strpos($tableName, 'sls_') !== false || 
-								strpos($tableName, 'inv_') !== false || 
+								strpos($tableName, 'bet_') !== false ||
+								strpos($tableName, 'ptx_') !== false ||
+								strpos($tableName, 'cfc_') !== false ||
+								strpos($tableName, 'mic_') !== false ||
+								strpos($tableName, 'sls_') !== false ||
+								strpos($tableName, 'inv_') !== false ||
 								strpos($tableName, 'metabarcode') !== false
 							)
 						) {
 							$tableArr['life_stage'] = $fArr['smsValue'];
-						}								
+						}
 						elseif($fArr['smsKey'] == 'associated_taxa' && $fArr['smsValue']) $tableArr['associated_taxa'] = $fArr['smsValue'];
 						elseif($fArr['smsKey'] == 'remarks' && $fArr['smsValue'] && !in_array($tableName,array('ptx_taxonomy_in'))) $tableArr['remarks'] = $fArr['smsValue'];
 						elseif($fArr['smsKey'] == 'preservative_concentration' && $fArr['smsValue']) $tableArr['preservative_concentration'] = $fArr['smsValue'];
@@ -1136,15 +1132,15 @@ class OccurrenceHarvester{
 						$dwcArr['identifications'] = array_intersect_key($dwcArr['identifications'], array_flip($validKeys));
 						if(empty($dwcArr['identifications'])){
 							// delete existing subsamples if now no valid subsamples are found (e.g. no oligochaetes reported in parent of oligochaete sample)
-							$sql = 'DELETE FROM omoccurrences 
+							$sql = 'DELETE FROM omoccurrences
 							WHERE occid IN (
-								SELECT occidAssociate 
-								FROM omoccurassociations 
-								WHERE occid = ' . intval($parentOccid) . ' 
+								SELECT occidAssociate
+								FROM omoccurassociations
+								WHERE occid = ' . intval($parentOccid) . '
 								AND createdUid = 50
-							)';								
-							$this->conn->query($sql);	
-							
+							)';
+							$this->conn->query($sql);
+
 							// set identifications for lot sample
 							$baseID['sciname'] = $collArr[$sourceCollid]['defaultId'];
 						}
@@ -1210,7 +1206,7 @@ class OccurrenceHarvester{
 									$identArr['sciname'] == $subUnitArr['sciname'] &&
 									(!isset($identArr['subsampleIndividualCount']) || $identArr['subsampleIndividualCount'] == $subUnitArr['individualCount']) &&
 									(!isset($identArr['subsampleLifeStage']) || $identArr['subsampleLifeStage'] == $subUnitArr['lifeStage'])
-								){									
+								){
 									//Subsample exists, thus set occid so that subsample is updated rather than creating a new one
 									$existingOccid = $subOccid;
 									unset($currentSubsampleArr[$subOccid]);
@@ -1296,31 +1292,31 @@ class OccurrenceHarvester{
 	}
 
 	private function subsetTaxonGroup($dwcIDs, $sourceCollid) {
-		$matchingKeys = array(); 
-	
+		$matchingKeys = array();
+
 		if ($dwcIDs && !empty($dwcIDs)) {
 			$sql = '';
-			
+
 			if ($sourceCollid == 52) { // oligochaete vials
 				$sql = 'SELECT tid FROM taxaenumtree WHERE parenttid = 132169 OR tid = 132169';
-			} 
+			}
 			elseif ($sourceCollid == 22) { // chironomid vials
 				$sql = 'SELECT tid FROM taxaenumtree WHERE parenttid = 97420 OR tid = 97420';
 			}
 			// elseif ($sourceCollid == 53) { // slides
 			// 	$sql = 'SELECT tid FROM taxaenumtree WHERE parenttid IN (132169,97420) OR tid IN (132169,97420)';
 			// }
-			
+
 			if (!empty($sql)) {
 				$rs = $this->conn->query($sql);
 				$validTids = array();
-	
+
 				// Fetch all the valid taxa
 				while ($row = $rs->fetch_assoc()) {
 					$validTids[] = $row['tid'];
 				}
 				$rs->free();
-	
+
 				foreach ($dwcIDs as $key => $idArr) {
 					if (!empty($idArr['tidInterpreted']) && in_array($idArr['tidInterpreted'], $validTids)) {
 						$matchingKeys[] = $key;
@@ -1328,23 +1324,23 @@ class OccurrenceHarvester{
 				}
 			}
 		}
-		return $matchingKeys; 
+		return $matchingKeys;
 	}
-	
+
 	private function getSubSamples($parentOccid) {
 		$retArr = array();
 		if ($parentOccid) {
 			// Return existing subsample occid, if it exists
 			$sql = 'SELECT o.occid, o.sciname, o.individualCount, o.lifeStage
-					FROM omoccurassociations a 
+					FROM omoccurassociations a
 					INNER JOIN omoccurrences o ON a.occidAssociate = o.occid
-					WHERE a.occid = ' . intval($parentOccid); 
+					WHERE a.occid = ' . intval($parentOccid);
 			$rs = $this->conn->query($sql);
 			while ($r = $rs->fetch_object()) {
 				// Store the data in a structured array
 				$retArr[$r->occid] = array(
 					'sciname' => $r->sciname,
-					'individualCount' => $r->individualCount, 
+					'individualCount' => $r->individualCount,
 					'lifeStage' => $r->lifeStage,
 				);
 			}
@@ -1452,7 +1448,7 @@ class OccurrenceHarvester{
 				if($dwcArr['collid'] == 5 || $dwcArr['collid'] == 67){
 					$sciname = 'Benthic Microbe';
 					$tid = 126842;
-				} 
+				}
 				if($dwcArr['collid'] == 21 || $dwcArr['collid'] == 61){
 					$sciname = 'Bulk Aquatic Macroinvertebrates';
 					$tid = 126822;
@@ -1743,21 +1739,21 @@ class OccurrenceHarvester{
 
 			if (in_array($collID, [7,8,9,11,12,14,15,17,18,19,20,28,29,39,48,52,53,54,55,70])) {
 				if ($oldID && $newID && $oldID != $newID) {
-			
-					$sql_old = 'SELECT ts.tidaccepted FROM taxstatus ts 
+
+					$sql_old = 'SELECT ts.tidaccepted FROM taxstatus ts
 								LEFT JOIN taxa t ON ts.tid = t.tid
 								WHERE sciname = "'.$oldID.'"';
-			
-					$sql_new = 'SELECT ts.tidaccepted FROM taxstatus ts 
+
+					$sql_new = 'SELECT ts.tidaccepted FROM taxstatus ts
 								LEFT JOIN taxa t ON ts.tid = t.tid
 								WHERE sciname = "'.$newID.'"';
-			
+
 					$result_old = $this->conn->query($sql_old);
 					$result_new = $this->conn->query($sql_new);
-			
+
 					$old_tid = $result_old ? $result_old->fetch_assoc() : null;
 					$new_tid = $result_new ? $result_new->fetch_assoc() : null;
-			
+
 					if ($old_tid && $new_tid && $old_tid['tidaccepted'] != $new_tid['tidaccepted']) {
 						$this->setSampleErrorMessage(
 							'occid:'.$occid,
@@ -2283,8 +2279,8 @@ class OccurrenceHarvester{
 			INNER JOIN taxstatus ts ON t.tid = ts.tid
 			INNER JOIN taxa a ON ts.tidAccepted = a.tid
 			WHERE ts.taxauthid = 1 AND t.sciname IN("' . $this->cleanInStr($sciname) . '"' . ($this->cleanInStr($sciname2) ? ',"' . $this->cleanInStr($sciname2) . '"' : '') . ')
-			ORDER BY 
-				CASE 
+			ORDER BY
+				CASE
 					WHEN t.taxonGroup = "' . $taxonGroup . '" THEN 1
 					WHEN t.taxonGroup IS NULL THEN 2
 					ELSE 3
@@ -2303,9 +2299,9 @@ class OccurrenceHarvester{
 						$this->taxonArr[$r->sciname]['accepted'] = $r->accepted;
 						$this->taxonArr[$r->sciname]['acceptedAuthor'] = $r->acceptedAuthor;
 						$this->taxonArr[$r->sciname]['acceptedTid'] = $r->acceptedTid;
-						$targetTaxon = $r->sciname;		
+						$targetTaxon = $r->sciname;
 						$matchingGroupFound = true;
-					} 
+					}
 					// if no matching taxa from the taxon group, try ones with a null taxon group
 					elseif(!$matchingGroupFound && $r->group === null){
 						$this->taxonArr[$r->sciname]['tid'] = $r->tid;
@@ -2400,7 +2396,7 @@ class OccurrenceHarvester{
 		}
 		else{
 			//Look to see if string can be translated via NeonPersonnel table
-			$sql = "SELECT full_info FROM NeonPersonnel 
+			$sql = "SELECT full_info FROM NeonPersonnel
 			WHERE SUBSTRING_INDEX(neon_email, '@', 1) = SUBSTRING_INDEX(?, '@', 1) OR orcid = ?";
 			if($stmt = $this->conn->prepare($sql)){
 				$stmt->bind_param('ss', $persStr, $persStr);
