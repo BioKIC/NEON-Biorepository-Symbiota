@@ -149,6 +149,7 @@ class ImageLibrarySearch extends OccurrenceTaxaManager{
 							while($r = $rs->fetch_object()){
 								$famArr[] = $r->sciname;
 							}
+							$rs->free();
 						}
 						if($famArr){
 							$famArr = array_unique($famArr);
@@ -349,8 +350,8 @@ class ImageLibrarySearch extends OccurrenceTaxaManager{
 			while($r = $rs->fetch_object()){
 				$retArr[$r->tagkey] = $r->displayText;
 			}
+			$rs->free();
 		}
-		$rs->free();
 		return $retArr;
 	}
 

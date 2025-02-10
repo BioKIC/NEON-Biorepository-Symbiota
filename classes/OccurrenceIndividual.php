@@ -262,6 +262,7 @@ class OccurrenceIndividual extends Manager{
 				}
 			}
 		}
+		return $retBool;
 	}
 
 	private function setDeterminations(){
@@ -1423,7 +1424,7 @@ class OccurrenceIndividual extends Manager{
 	}
 
 	public function activateOrcidID($inStr){
-		$retStr = $this->cleanOutStr($inStr);
+		$retStr = $inStr;
 		$m = array();
 		if(preg_match('#((https://orcid.org/)?\d{4}-\d{4}-\d{4}-\d{3}[0-9X])#', $retStr, $m)){
 			$orcidAnchor = $m[1];

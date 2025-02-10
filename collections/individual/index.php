@@ -44,6 +44,7 @@ $isSecuredReader = false;
 $isEditor = false;
 if($SYMB_UID){
 	//Check editing status
+	$observerUid = $indManager->getOccData('observeruid');
 	if($IS_ADMIN || (array_key_exists('CollAdmin',$USER_RIGHTS) && in_array($collid,$USER_RIGHTS['CollAdmin']))){
 		$isEditor = true;
 	}
@@ -72,6 +73,7 @@ if($SYMB_UID){
 }
 if(!$isSecuredReader) $indManager->applyProtections();
 $occArr = $indManager->getOccData();
+
 $collMetadata = $indManager->getMetadata();
 $genticArr = $indManager->getGeneticArr();
 
