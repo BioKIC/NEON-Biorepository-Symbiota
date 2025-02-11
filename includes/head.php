@@ -26,7 +26,7 @@ elseif (array_key_exists('CollAdmin', $USER_RIGHTS) || array_key_exists('CollEdi
         // A page must have the innertext div
         var biorepoPage = document.createElement("div");
         biorepoPage.id = "biorepo-page";
-        
+
         var innerText = document.getElementById("innertext");
         if (innerText) {
             innerText.parentNode.insertBefore(biorepoPage, innerText);
@@ -38,19 +38,19 @@ elseif (array_key_exists('CollAdmin', $USER_RIGHTS) || array_key_exists('CollEdi
             returnLink.style.display = "block"; // Makes it a full-width block element
             returnLink.style.marginBottom = "10px"; // Adds spacing below
             innerText.insertBefore(returnLink, innerText.firstChild);
-        } 
-        
+        }
+
         //javascript code created by React
         var reactScript = document.createElement('script');
         reactScript.src = '<?php echo $CLIENT_ROOT; ?>/neon-react/static/js/main.9904c6af.js';
         reactScript.defer = true;
-        
+
         reactScript.onload = function() {
             // To move innertext into neon-page.content
             var innerTextDiv = document.getElementById('innertext');
             var targetDiv = document.querySelector('div[data-selenium="neon-page.content"]');
-            targetDiv.appendChild(innerTextDiv);
-            
+            if(innerTextDiv && targetDiv) targetDiv.appendChild(innerTextDiv);
+
             //remove old header, footer and breadcrumbs
             var navBar = document.getElementById("top_navbar");
             if (navBar) {
@@ -60,82 +60,82 @@ elseif (array_key_exists('CollAdmin', $USER_RIGHTS) || array_key_exists('CollEdi
             if (mainHeader) {
                 mainHeader.parentNode.removeChild(mainHeader);
             }
-            
+
             var mainFooter = document.getElementById("main-footer");
             if (mainFooter) {
                 mainFooter.parentNode.removeChild(mainFooter);
             }
-            
+
             var mainFooter = document.getElementById("main-footer");
             if (mainFooter) {
                 mainFooter.parentNode.removeChild(mainFooter);
             }
-            
+
             // Breadcrumbs
             const navpath = document.querySelector('.navpath');
             if (navpath) {
                 navpath.remove();
-            }       
+            }
 
             // Edit footer
             const footerMessageDiv = document.querySelector('.footer-bottom__message');
-          
+
             const wrapperDiv = document.createElement('div');
             wrapperDiv.style.display = 'flex';
             wrapperDiv.style.justifyContent = 'space-between';
             wrapperDiv.style.width = '100%';
-          
+
             const newParagraph1 = document.createElement('p');
-          
+
             const textBeforeLink = document.createTextNode('Site powered by ');
             const symbiotaLink = document.createElement('a');
             symbiotaLink.href = 'https://symbiota.org/';
             symbiotaLink.textContent = 'Symbiota';
             const textAfterLink = document.createTextNode(' | ');
-          
+
             const googleAnalytics = document.createElement('i');
             googleAnalytics.textContent = 'This site uses Google Analytics';
-          
+
             newParagraph1.appendChild(textBeforeLink);
             newParagraph1.appendChild(symbiotaLink);
             newParagraph1.appendChild(textAfterLink);
             newParagraph1.appendChild(googleAnalytics);
-    
+
             const reportDiv = document.createElement('div');
             reportDiv.style.display = 'flex';
             reportDiv.style.justifyContent = 'flex-end'; // Align to the right
             reportDiv.style.alignItems = 'center';
             reportDiv.style.flex = '1';
-    
+
             const githubLink = document.createElement('a');
             githubLink.href = 'https://github.com/BioKIC/NEON-Biorepository/issues';
             githubLink.style.textDecoration = 'none';
             githubLink.style.color = 'inherit';
             githubLink.style.display = 'flex';
             githubLink.style.alignItems = 'center';
-          
+
             const githubLogo = document.createElement('img');
             githubLogo.src = '<?php echo $CLIENT_ROOT; ?>/images/icons/github-mark-white.svg';
             githubLogo.alt = 'GitHub Logo';
             githubLogo.style.width = '16px';
             githubLogo.style.height = '16px';
             githubLogo.style.marginRight = '5px';
-          
+
             const reportText = document.createTextNode('Report a problem');
-          
+
             githubLink.appendChild(githubLogo);
             githubLink.appendChild(reportText);
-          
+
             reportDiv.appendChild(githubLink);
-          
+
             wrapperDiv.appendChild(newParagraph1);
             wrapperDiv.appendChild(reportDiv);
-    
-            footerMessageDiv.appendChild(wrapperDiv);
-            
+
+            if(footerMessageDiv) footerMessageDiv.appendChild(wrapperDiv);
+
             //footer logos
             const footerLogoDiv = document.querySelector('.footer-top__logo');
-            
+
             function createImage(src, height, width) {
                 const img = document.createElement('img');
                 img.src = src;
@@ -143,16 +143,16 @@ elseif (array_key_exists('CollAdmin', $USER_RIGHTS) || array_key_exists('CollEdi
                 img.width = width;
                 return img;
             }
-            
+
             function createClickableImage(src, height, width, href) {
                 const link = document.createElement('a');
-                link.href = href; 
-                link.target = '_blank'; 
+                link.href = href;
+                link.target = '_blank';
                 const img = createImage(src, height, width);
                 link.appendChild(img);
                 return link;
             }
-            
+
             const newImage1 = createClickableImage(
                 '<?php echo $CLIENT_ROOT; ?>/images/layout/logo_symbiota.png',
                 60,
@@ -165,32 +165,34 @@ elseif (array_key_exists('CollAdmin', $USER_RIGHTS) || array_key_exists('CollEdi
                 167,
                 'https://biokic.asu.edu/collections'
             );
-            
-            footerLogoDiv.appendChild(newImage1);
-            footerLogoDiv.appendChild(newImage2);
-            
+
+            if(footerLogoDiv){
+                footerLogoDiv.appendChild(newImage1);
+                footerLogoDiv.appendChild(newImage2);
+            }
+
             // image resizings for homepage
-            function updateElementWidth() {	
+            function updateElementWidth() {
                 // blue div
                 var neonPageContent = document.querySelector('div[data-selenium="neon-page.content"]');
                 var neonPageContentWidth = neonPageContent.offsetWidth;
-    
+
                 var muiContainer = document.querySelector('div.MuiContainer-root');
                 var muiContainerStyle = window.getComputedStyle(muiContainer);
                 var muiContainerRightMargin = parseFloat(muiContainerStyle.marginRight);
-    
+
                 var neonPageContentStyle = window.getComputedStyle(neonPageContent);
                 var neonPageContentpaddingLeft = parseFloat(neonPageContentStyle.paddingLeft);
-                
+
                 document.getElementById('blue-div').style.width = (neonPageContentWidth + muiContainerRightMargin) + 'px';
-                document.getElementById('statistics-container').style.width = (neonPageContentWidth - (2* neonPageContentpaddingLeft)) + 'px'; 
+                document.getElementById('statistics-container').style.width = (neonPageContentWidth - (2* neonPageContentpaddingLeft)) + 'px';
             }
-            
+
             var blueDiv = document.getElementById('blue-div');
             if (blueDiv) {
                 // Update the width on initial load
                 updateElementWidth();
-            
+
                 // Update the width on window resize
                 window.addEventListener('resize', updateElementWidth);
             }
@@ -221,7 +223,7 @@ elseif (array_key_exists('CollAdmin', $USER_RIGHTS) || array_key_exists('CollEdi
                     myAccountButton.innerHTML = '<span class="MuiButton-label">My Account</span>';
                     myAccountButton.addEventListener('click', () => {
                 EOL;
-                    
+
                 echo "window.location.href = 'https://data.neonscience.org/myaccount';";
                 echo <<<EOL
                     });
@@ -255,7 +257,7 @@ elseif (array_key_exists('CollAdmin', $USER_RIGHTS) || array_key_exists('CollEdi
                     signoutButton.innerHTML = '<span class="MuiButton-label">Sign Out</span>';
                     signoutButton.addEventListener('click', () => {
                 EOL;
-                    
+
                 echo "window.location.href = '".$CLIENT_ROOT."/profile/index.php?submit=logout';";
                 echo <<<EOL
                     });
@@ -289,7 +291,7 @@ elseif (array_key_exists('CollAdmin', $USER_RIGHTS) || array_key_exists('CollEdi
                     signinButton.innerHTML = '<span class="MuiButton-label">Sign In</span>';
                     signinButton.addEventListener('click', () => {
                 EOL;
-                    
+
                 echo "window.location.href = '".$CLIENT_ROOT."/profile/openIdAuth.php';";
                 echo <<<EOL
                     });
@@ -300,7 +302,7 @@ elseif (array_key_exists('CollAdmin', $USER_RIGHTS) || array_key_exists('CollEdi
                 EOL;
             }
             ?>
-            
+
             //utilities and management menus
             <?php
             if ($isNeonEditor) {
@@ -328,7 +330,7 @@ elseif (array_key_exists('CollAdmin', $USER_RIGHTS) || array_key_exists('CollEdi
                     dataManagementButton.innerHTML = '<span class="MuiButton-label">Management Tools</span>';
                     dataManagementButton.addEventListener('click', () => {
                 EOL;
-                    
+
                 echo "window.location.href = '".$CLIENT_ROOT."/neon/index.php';";
                 echo <<<EOL
                     });
@@ -360,22 +362,22 @@ elseif (array_key_exists('CollAdmin', $USER_RIGHTS) || array_key_exists('CollEdi
                     utilitiesButton.innerHTML = '<span class="MuiButton-label">Sitemap</span>';
                     utilitiesButton.addEventListener('click', () => {
                 EOL;
-                    
+
                 echo "window.location.href = '".$CLIENT_ROOT."/sitemap.php';";
                 echo <<<EOL
                     });
                     if (signInDiv) {
                         signInDiv.insertBefore(utilitiesButton, signInDiv.firstChild);
                     };
-                EOL;                
+                EOL;
             }
-            ?>           
+            ?>
         };
-    
+
     document.body.appendChild(reactScript);
-   
+
     });
-    
+
     window.onload = function () {
         const breadcrumbLink = document.querySelector('nav a[href="https://biorepo.neonscience.org/prodreview/collections/misc/neoncollprofiles.php?collid=#"]');
         if (breadcrumbLink) {

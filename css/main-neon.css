@@ -80,6 +80,11 @@ h4 {
   display: none;
 }
 
+.screen-reader-only {
+  position: absolute !important;
+  left: -10000px !important;
+}
+
 .ml-1 {
   margin-left: 0.5em;
 }
