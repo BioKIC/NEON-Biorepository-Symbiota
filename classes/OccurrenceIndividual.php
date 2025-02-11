@@ -271,7 +271,7 @@ class OccurrenceIndividual extends Manager{
 		$detManager->setOccid($this->occid);
 		if($detArr = $detManager->getDeterminationArr($conditionArr)){
 			$this->occArr['dets'] = $detArr;
-			$currentDisplay = array('identifiedBy', 'dateIdentified', 'family', 'sciname', 'scientificNameAuthorship', 'tidInterpreted',
+			$currentDisplay = array('identifiedBy', 'dateIdentified', 'family', 'sciname', 'scientificNameAuthorship',
 				'identificationQualifier', 'identificationReferences', 'identificationRemarks', 'taxonRemarks');
 			foreach($detArr as $detArr){
 				if($detArr['isCurrent']){
@@ -606,12 +606,12 @@ class OccurrenceIndividual extends Manager{
 						'Originating NEON barcode',
 						'Originating NEON sampleID'
 					];
-				
+
 					foreach ($this->occArr['othercatalognumbers'] as $item) {
 						if (isset($item['name'], $item['value']) && in_array($item['name'], $preferredKeys)) {
 							$displayStr = $item['value'];
 							$indUrl = str_replace('--OTHERCATALOGNUMBERS--', $displayStr, $iUrl);
-							
+
 							if ($item['name'] === 'NEON sampleCode (barcode)' || $item['name'] === 'Originating NEON barcode') {
 								$indUrl = str_replace('sampleTag', 'barcode', $indUrl);
 							}

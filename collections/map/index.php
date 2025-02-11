@@ -1,6 +1,7 @@
 <?php
 include_once('../../config/symbini.php');
 include_once($SERVER_ROOT.'/classes/OccurrenceMapManager.php');
+include_once($SERVER_ROOT.'/classes/UtilityFunctions.php');
 if($LANG_TAG == 'en' || !file_exists($SERVER_ROOT.'/content/lang/collections/map/index.' . $LANG_TAG . '.php')) include_once($SERVER_ROOT . '/content/lang/collections/map/index.en.php');
 else include_once($SERVER_ROOT . '/content/lang/collections/map/index.' . $LANG_TAG . '.php');
 
@@ -142,7 +143,7 @@ if(isset($_REQUEST['llpoint'])) {
       $lowerLng = $llbound[3];
    }
 }
-
+$serverHost = UtilityFunctions::getDomain();
 ?>
 <!DOCTYPE html>
 <html lang="<?php echo $LANG_TAG ?>">
@@ -150,8 +151,13 @@ if(isset($_REQUEST['llpoint'])) {
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 		<title><?php echo $DEFAULT_TITLE; ?> - Map Interface</title>
 		<?php
-		include_once($SERVER_ROOT.'/includes/head.php');
+		//include_once($SERVER_ROOT.'/includes/head.php');
 		?>
+		<link rel="stylesheet" href="<?php echo $CLIENT_ROOT; ?>/css/normalize.css">
+		<link rel="stylesheet" href="<?php echo $CLIENT_ROOT; ?>/css/neon.css?ver=4">
+		<link href="<?= $CSS_BASE_PATH ?>/main-neon.css?ver=<?= $CSS_VERSION ?>" type="text/css" rel="stylesheet">
+		<link href="<?= $CSS_BASE_PATH ?>/symbiota/customizations.css?ver=<?= $CSS_VERSION ?>" type="text/css" rel="stylesheet">
+
 		<link href="<?= $CSS_BASE_PATH; ?>/symbiota/collections/listdisplay.css" type="text/css" rel="stylesheet" />
 		<link href="<?= $CSS_BASE_PATH; ?>/jquery-ui.css" type="text/css" rel="stylesheet">
 		<style type="text/css">
@@ -299,6 +305,7 @@ if(isset($_REQUEST['llpoint'])) {
 		<?php } ?>
 		</style>
 		<script type="text/javascript">
+		let clientRoot = "<?= $CLIENT_ROOT ?>";
 		//Clid
 		let recordArr = [];
 		let taxaMap = [];
@@ -358,7 +365,7 @@ if(isset($_REQUEST['llpoint'])) {
                cross_portal_results.style.display = "none";
                cross_portal_list.style.display = "none";
 
-			   //Swap record table label for standard searches 
+			   //Swap record table label for standard searches
 			   cross_portal_record_label.style.display = "none";
 			   standard_record_label.style.display = "block";
             }
@@ -413,7 +420,7 @@ if(isset($_REQUEST['llpoint'])) {
 						taxaLegendMap[taxon.sn] = taxon
 						taxaLegendMap[taxon.sn].origin = origin;
 						taxaLegendMap[taxon.sn].id_map = [{tid: taxon.tid, index: i}];
-						
+
 					} else {
 						taxaLegendMap[taxon.sn].id_map.push({tid: taxon.tid, index: i});
 					}
@@ -431,7 +438,7 @@ if(isset($_REQUEST['llpoint'])) {
 					}
 				}
 				else if(a.family > b.family) return 1;
-				else return -1;			
+				else return -1;
 			})
 
 			let prev_family;
@@ -1121,7 +1128,7 @@ if(isset($_REQUEST['llpoint'])) {
 				let formData = new FormData(document.getElementById("mapsearchform"));
 
 				const group = genMapGroups(recordArr, taxaMap, collArr, "<?=$LANG['CURRENT_PORTAL']?>");
-				group.origin = "<?= $SERVER_HOST . $CLIENT_ROOT?>";
+				group.origin = "<?= $serverHost . $CLIENT_ROOT?>";
 				mapGroups = [group];
 
 				getOccurenceRecords(formData).then(res => {
@@ -1681,7 +1688,7 @@ if(isset($_REQUEST['llpoint'])) {
 				let formData = new FormData(document.getElementById("mapsearchform"));
 
 				const group = genGroups(recordArr, taxaMap, collArr, "<?= $LANG['CURRENT_PORTAL']?>");
-				group.origin = "<?= $SERVER_HOST . $CLIENT_ROOT?>";
+				group.origin = "<?= $serverHost . $CLIENT_ROOT?>";
 				mapGroups = [
 					group
 				]
